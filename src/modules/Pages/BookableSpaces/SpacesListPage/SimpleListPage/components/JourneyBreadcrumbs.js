@@ -9,6 +9,20 @@ export const removeJourneyBreadcrumbsFromHeader = breadcrumbParent => {
     breadcrumbParent?.querySelectorAll('[data-journey-breadcrumb="true"]').forEach(node => node.remove());
 };
 
+export const getJourneyBreadcrumbSiteHeader = () => document.querySelector('uq-site-header');
+
+export const cleanupJourneyBreadcrumbs = ({ siteHeader, cleanupListeners = [] } = {}) => {
+    cleanupListeners.forEach(listener => {
+        if (typeof listener === 'function') {
+            listener();
+        }
+    });
+
+    const breadcrumbParent = siteHeader?.shadowRoot?.getElementById('breadcrumb_nav');
+    removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
+    return true;
+};
+
 export const buildJourneyBreadcrumbHtml = items =>
     items.map((item, index) => {
         const id = `journey-site-breadcrumb-${index}`;
@@ -20,7 +34,8 @@ export const buildJourneyBreadcrumbHtml = items =>
     });
 
 export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateToView, setSelectedSpace }) => {
-    const safeNavigateToView = typeof navigateToView === 'function' ? navigateToView : () => {};
+    const safeNavigateToView =
+        typeof navigateToView === 'function' ? navigateToView : /* istanbul ignore next */ () => {};
     const safeSetSelectedSpace = typeof setSelectedSpace === 'function' ? setSelectedSpace : () => {};
 
     const buildEntry = (label, nextView, intentId, spaceId, onClick) => ({
@@ -32,19 +47,6 @@ export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateTo
     if (view === 'landing') return [];
 
     const items = [];
-
-    // if (view === 'intent') {
-    //     items.push({ label: 'Choose an experience' });
-    //     return items;
-    // }
-
-    // items.push(
-    //     buildEntry('Choose an experience', 'intent', null, null, () => {
-    //         setSelectedIntentId(null);
-    //         setSelectedSpace(null);
-    //         navigateToView('intent', { intentId: null, spaceId: null });
-    //     }),
-    // );
 
     if (view === 'results') {
         items.push({ label: 'Results' });
@@ -62,6 +64,40 @@ export const buildJourneyBreadcrumbItems = ({ view, selectedIntentId, navigateTo
     }
 
     return items;
+};
+
+export const syncJourneyBreadcrumbs = ({ items = [], siteHeader, cleanupListeners = [] } = {}) => {
+    if (!siteHeader) {
+        return false;
+    }
+
+    const breadcrumbParent = siteHeader.shadowRoot?.getElementById('breadcrumb_nav');
+    if (!breadcrumbParent) {
+        return false;
+    }
+
+    removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
+    if (!items.length) {
+        return true;
+    }
+
+    buildJourneyBreadcrumbHtml(items).forEach(html => {
+        breadcrumbParent.insertAdjacentHTML('beforeend', html);
+    });
+
+    const registeredListeners = items.flatMap((item, index) => {
+        if (typeof item.onClick !== 'function' || !item.href) return [];
+        const el = breadcrumbParent.querySelector(`#journey-site-breadcrumb-${index}`);
+        if (!el) return [];
+        const handler = () => item.onClick();
+        el.addEventListener('click', handler);
+        return [() => el.removeEventListener('click', handler)];
+    });
+
+    return {
+        success: true,
+        cleanupListeners: [...cleanupListeners, ...registeredListeners],
+    };
 };
 
 const JourneyBreadcrumbs = ({
@@ -86,18 +122,14 @@ const JourneyBreadcrumbs = ({
     );
 
     React.useEffect(() => {
-        const siteHeader = document.querySelector('uq-site-header');
+        const siteHeader = getJourneyBreadcrumbSiteHeader();
 
         let intervalId = null;
         let cleanupListeners = [];
 
         const cleanup = () => {
             if (intervalId) window.clearInterval(intervalId);
-            cleanupListeners.forEach(fn => {
-                fn();
-            });
-            const breadcrumbParent = siteHeader?.shadowRoot?.getElementById('breadcrumb_nav');
-            removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
+            cleanupJourneyBreadcrumbs({ siteHeader, cleanupListeners });
         };
 
         if (!siteHeader) {
@@ -108,27 +140,12 @@ const JourneyBreadcrumbs = ({
         siteHeader.setAttribute('secondLevelUrl', breadcrumbs.bookablespaces.pathname);
 
         const sync = () => {
-            const breadcrumbParent = siteHeader.shadowRoot?.getElementById('breadcrumb_nav');
-            if (!breadcrumbParent) return false;
+            const synced = syncJourneyBreadcrumbs({ items, siteHeader, cleanupListeners });
+            if (synced === false) {
+                return false;
+            }
 
-            removeJourneyBreadcrumbsFromHeader(breadcrumbParent);
-            if (!items.length) return true;
-
-            buildJourneyBreadcrumbHtml(items).forEach(html => {
-                breadcrumbParent.insertAdjacentHTML('beforeend', html);
-            });
-
-            cleanupListeners = items.flatMap((item, index) => {
-                if (typeof item.onClick !== 'function' || !item.href) return [];
-                const el = breadcrumbParent.querySelector(`#journey-site-breadcrumb-${index}`);
-                if (!el) return [];
-                const handler = () => {
-                    item.onClick();
-                };
-                el.addEventListener('click', handler);
-                return [() => el.removeEventListener('click', handler)];
-            });
-
+            cleanupListeners = synced.cleanupListeners;
             return true;
         };
 

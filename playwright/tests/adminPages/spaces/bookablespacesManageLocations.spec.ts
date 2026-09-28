@@ -994,4 +994,16 @@ test.describe('Spaces Admin - manage locations', () => {
         visitDashBoardButton.click();
         await expect(page).toHaveURL('http://localhost:2020/admin/spaces?user=libSpaces');
     });
+    test('can check all vaildation messages', async ({ page }) => {
+        await page.goto('http://localhost:2020/admin/spaces?user=libSpaces');
+
+        await page.getByTestId('edit-space-123456-button').click();
+        await page.getByRole('combobox', { name: 'Campus * St Lucia' }).click();
+        await page.locator('.MuiBackdrop-root').click();
+        await page.getByRole('textbox', { name: 'Space name *' }).click();
+        await page.getByRole('textbox', { name: 'Space name *' }).fill('');
+
+        await expect(page.getByRole('button', { name: 'A Name is required.' })).toBeVisible();
+        // pending further jest tests
+    });
 });

@@ -24,19 +24,27 @@ jest.mock(
     () => 'mock-journey-detail-image',
 );
 
-import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
-import { buildLegacyBrowseNavigationUrl } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
-import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
+import BookableSpacesWrapper, {
+    applyJourneyIntentFilters,
+    buildLegacyBrowseNavigationUrl,
+    resolveJourneyIntentFilters,
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import {
+    JourneyResultsView,
+    applyJourneySidebarFilters,
+    clampJourneyPage,
+    getJourneyDetailUrl,
+    getJourneyResultSummary,
+    getJourneySpaceDetailId,
+    handleJourneySidebarToggle,
+    toggleJourneySidebarFilter,
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
+import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 
 import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
-import {
-    deserialiseJourneyMapFilterState,
-    parseJourneyStateFromUrl,
-    serialiseJourneyMapFilterState,
-    serialiseJourneyUrl,
-} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { parseJourneyStateFromUrl, serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 jest.mock('@mui/material', () => {
     const actual = jest.requireActual('@mui/material');
@@ -107,10 +115,254 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         weeklyHoursError: null,
     };
 
+    const mockUsers = {
+        loggedOut: { id: null, label: 'Guest' },
+        noFavourites: { id: 101, label: 'No favourites user' },
+        withFavourites: { id: 202, label: 'Favourite user' },
+    };
+
     beforeEach(() => {
         MockDate.reset();
         window.history.replaceState({}, '', '/#/spaces');
         window.sessionStorage.clear();
+    });
+
+    it('covers the exported journey result helper branches', () => {
+        expect(clampJourneyPage(4, 3)).toBe(3);
+        expect(clampJourneyPage(2, 3)).toBe(2);
+
+        expect(getJourneyResultSummary(4, 10)).toBe('4 of 10');
+        expect(getJourneyResultSummary(4)).toBe('4');
+
+        expect(getJourneySpaceDetailId({ space_uuid: 'abc-123', space_id: 998 })).toBe('abc-123');
+        expect(getJourneySpaceDetailId({ space_id: 998 })).toBe('998');
+        expect(getJourneySpaceDetailId({})).toBe('');
+
+        expect(getJourneyDetailUrl({ space_uuid: 'abc-123' })).toContain('/spaces/detail/abc-123');
+        expect(getJourneyDetailUrl({ space_id: 998 })).toContain('/spaces/detail/998');
+
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(true);
+
+        document.body.innerHTML = '';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(handleJourneySidebarToggle()).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        const setShowAdvancedFilters = jest.fn();
+        applyJourneySidebarFilters({ isDesktopResultsLayout: false, setShowAdvancedFilters });
+        expect(setShowAdvancedFilters).toHaveBeenCalledWith(false);
+
+        applyJourneySidebarFilters({ isDesktopResultsLayout: true, setShowAdvancedFilters });
+        expect(setShowAdvancedFilters).toHaveBeenCalledTimes(1);
+    });
+
+    it('covers the remaining default, fallback, and invalid-value intent filter branches', () => {
+        const quietIntent = { id: 'quiet', matchers: [/quiet/i, /low noise/i] };
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [
+                            { facility_type_id: 39, facility_type_name: 'Power points' },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+        const mixedList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: {
+                            invalid: true,
+                        },
+                    },
+                    {
+                        facility_type_group_id: 12,
+                        facility_type_group_name: 'Study types',
+                        facility_type_children: [
+                            { facility_type_id: 'not-a-number', facility_type_name: undefined },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        const defaultCallSetSelectedFacilityTypes = jest.fn();
+        const defaultResult = applyJourneyIntentFilters({
+            intent: quietIntent,
+            facilityTypeList,
+            setSelectedFacilityTypes: defaultCallSetSelectedFacilityTypes,
+        });
+        expect(defaultResult.applied).toBe(true);
+        expect(defaultResult.lastAppliedIntentId).toBe('quiet');
+
+        const fallbackResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: null,
+            facilityTypeList: mixedList,
+            setSelectedFacilityTypes: jest.fn(),
+        });
+        expect(fallbackResult.applied).toBe(true);
+        expect(fallbackResult.nextFilters).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ facility_type_id: 8, facility_type_name: 'Quiet study', selected: true }),
+            ]),
+        );
+
+        const noNameResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                { facility_type_id: 8, facility_type_name: null, selected: false, unselected: false },
+            ],
+            facilityTypeList: mixedList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes: jest.fn(),
+        });
+        expect(noNameResult.applied).toBe(true);
+        expect(noNameResult.nextFilters[0]).toMatchObject({ facility_type_id: 8, facility_type_name: 'Quiet study' });
+    });
+
+    it('covers the exported intent filter helper branches and the landing guard', () => {
+        const facilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [
+                            { facility_type_id: 39, facility_type_name: 'Power points' },
+                            { facility_type_id: 8, facility_type_name: 'Quiet study' },
+                        ],
+                    },
+                ],
+            },
+        };
+        const unmatchedFacilityTypeList = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 10,
+                        facility_type_group_name: 'Features',
+                        facility_type_children: [{ facility_type_id: 39, facility_type_name: 'Power points' }],
+                    },
+                ],
+            },
+        };
+
+        const quietIntent = { id: 'quiet', matchers: [/quiet/i, /low noise/i] };
+        const setSelectedFacilityTypes = jest.fn();
+
+        expect(
+            resolveJourneyIntentFilters({
+                intent: quietIntent,
+                facilityTypeList: { data: { facility_type_groups: [] } },
+                setSelectedFacilityTypes,
+            }),
+        ).toMatchObject({ applied: false, lastAppliedIntentId: null });
+
+        const defaultArgResult = resolveJourneyIntentFilters({ intent: quietIntent, facilityTypeList });
+        expect(defaultArgResult.applied).toBe(true);
+        expect(defaultArgResult.lastAppliedIntentId).toBe('quiet');
+
+        const selectedResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 8,
+                    facility_type_name: 'Quiet study',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: false,
+            setSelectedFacilityTypes,
+        });
+        expect(selectedResult.applied).toBe(true);
+        expect(selectedResult.lastAppliedIntentId).toBe('quiet');
+
+        const mismatchResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 39,
+                    facility_type_name: 'Power points',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes,
+        });
+        expect(mismatchResult.applied).toBe(true);
+        expect(mismatchResult.lastAppliedIntentId).toBe('quiet');
+
+        const noMatchResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 39,
+                    facility_type_name: 'Power points',
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList: unmatchedFacilityTypeList,
+            replaceExistingFilters: true,
+            setSelectedFacilityTypes,
+        });
+        expect(noMatchResult.applied).toBe(false);
+        expect(noMatchResult.lastAppliedIntentId).toBe(null);
+
+        const unchangedResult = resolveJourneyIntentFilters({
+            intent: quietIntent,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 10,
+                    facility_type_id: 8,
+                    facility_type_name: 'Quiet study',
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            facilityTypeList,
+            replaceExistingFilters: false,
+            setSelectedFacilityTypes,
+        });
+        expect(unchangedResult.applied).toBe(true);
+        expect(unchangedResult.lastAppliedIntentId).toBe('quiet');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'landing',
+            showFavouriteSpacesOnly: true,
+            selectedFacilityTypes: [],
+            facilityTypeListError: false,
+        });
+        expect(screen.getByText('Bookable Spaces')).toBeInTheDocument();
     });
 
     const renderJourney = props => {
@@ -124,6 +376,179 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    it('renders the journey panel with and without top spacing', () => {
+        const { rerender } = rtlRender(
+            <StyledJourneyPanelSection data-testid="journey-panel-no-spacing" hasTopSpacing={false} />,
+        );
+        expect(screen.getByTestId('journey-panel-no-spacing')).toBeInTheDocument();
+
+        rerender(<StyledJourneyPanelSection data-testid="journey-panel-with-spacing" hasTopSpacing />);
+        expect(screen.getByTestId('journey-panel-with-spacing')).toBeInTheDocument();
+    });
+
+    it('renders fallback result content and the empty-state message for no results', () => {
+        const fallbackSpace = {
+            ...baseSpace,
+            space_name: '',
+            space_uuid: undefined,
+            space_description: '',
+            space_external_book_url: undefined,
+            space_type_details: {
+                space_type_name: 'Study space',
+                space_type_description: '',
+            },
+            space_outages: [],
+        };
+
+        const { rerender } = rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={[fallbackSpace]}
+                    totalSpaceCount={1}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={0}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={0}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout={false}
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText(/Unnamed space/i)).toBeInTheDocument();
+        expect(screen.queryByText('No results match your criteria')).not.toBeInTheDocument();
+
+        rerender(
+            <WithRouter>
+                <JourneyResultsView
+                    intentSpaceLocations={[]}
+                    totalSpaceCount={0}
+                    handleClearJourneyFilters={jest.fn()}
+                    goToLegacyBrowse={jest.fn()}
+                    selectedFacilityTypes={[]}
+                    setSelectedFacilityTypes={jest.fn()}
+                    filteredFacilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeList={{ data: { facility_type_groups: [] } }}
+                    facilityTypeListLoading={false}
+                    facilityTypeListError={null}
+                    minimumSpaceCapacity={1}
+                    maximumSpaceCapacity={20}
+                    capacityFilterValue={[1, 20]}
+                    setCapacityFilterValue={jest.fn()}
+                    campusList={[]}
+                    selectedCampus={0}
+                    handleCampusSelection={jest.fn()}
+                    activeFilterCount={0}
+                    librariesForCampus={[]}
+                    selectedLibrary={0}
+                    handleLibrarySelection={jest.fn()}
+                    shouldShowAdvancedFilters={false}
+                    isDesktopResultsLayout={false}
+                    setShowAdvancedFilters={jest.fn()}
+                    weeklyHours={null}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={null}
+                    isFavouriteActionInProgress={false}
+                    onFavouriteToggle={jest.fn()}
+                    spacesFavouritesList={[]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText('No results match your criteria')).toBeInTheDocument();
+    });
+
+    it('exercises the mobile sidebar toggle helper directly for hidden, shown, and missing sidebar states', () => {
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(true);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(false);
+
+        document.body.innerHTML = '<div id="filterSidebar"></div>';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+        expect(document.getElementById('filterSidebar').classList.contains('mobileHidden')).toBe(true);
+
+        document.body.innerHTML = '';
+        expect(toggleJourneySidebarFilter('filterSidebar')).toBe(false);
+    });
+
+    const mockUserScenarios = [
+        {
+            name: 'logged out user',
+            state: { isLoggedIn: false, spacesFavouritesList: [] },
+            expectHeading: false,
+            expectEmptyState: false,
+            expectFavouriteCard: false,
+        },
+        {
+            name: 'logged in user with no favourites',
+            state: { isLoggedIn: true, spacesFavouritesList: [] },
+            expectHeading: true,
+            expectEmptyState: true,
+            expectFavouriteCard: false,
+        },
+        {
+            name: 'logged in user with favourites',
+            state: {
+                isLoggedIn: true,
+                spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+                filteredSpaceLocations: [baseSpace],
+                allSpaceLocations: [baseSpace],
+                highlightedSpace: baseSpace,
+            },
+            expectHeading: true,
+            expectEmptyState: false,
+            expectFavouriteCard: true,
+        },
+    ];
+
+    it.each(mockUserScenarios)(
+        'renders the landing state for a $name',
+        ({ state, expectHeading, expectEmptyState, expectFavouriteCard }) => {
+            renderJourney({
+                ...defaultProps,
+                ...state,
+            });
+
+            expect(screen.getByText('Find library study spaces')).toBeInTheDocument();
+
+            if (expectHeading) {
+                expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+            } else {
+                expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
+            }
+
+            if (expectEmptyState) {
+                expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toBeInTheDocument();
+            }
+
+            if (expectFavouriteCard) {
+                expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+            }
+        },
+    );
 
     const renderSidebarFilters = props =>
         rtlRender(
@@ -278,6 +703,292 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
+    it('renders the empty favourites state for a logged-in user with no favourites', () => {
+        const user = mockUsers.noFavourites;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText(/Click the star icon next to a space/i)).toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
+    it('renders the favourites block for a logged-in user with saved spaces', () => {
+        const user = mockUsers.withFavourites;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-homepage-favourites-all-link')).toBeInTheDocument();
+    });
+
+    it('does not render the favourites UI for a logged-out user', () => {
+        const user = mockUsers.loggedOut;
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: !!user.id,
+            spacesFavouritesList: [],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.queryByText('Your favourite spaces')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-empty-state')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
+    });
+
+    it('keeps the original results list when there are no valid campus assignments', () => {
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            campusList: [
+                { campus_id: null, campus_name: 'Missing id', campus_space_count: 5 },
+                { campus_id: 300, campus_name: '', campus_space_count: 5 },
+            ],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+    });
+
+    it('ignores restored intent filters when the facility groups list is empty', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+            facilityTypeList: { data: { facility_type_groups: [] } },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not apply any intent filters when the available facility ids are invalid', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: null, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: null, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).not.toHaveBeenCalled();
+        });
+    });
+
+    it('leaves filters unselected when the restored intent matches no facility names', async () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        window.sessionStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            setSelectedFacilityTypes,
+            selectedFacilityTypes: [],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Power points' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Power points' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        await waitFor(() => {
+            expect(setSelectedFacilityTypes).toHaveBeenCalledWith(
+                expect.arrayContaining([
+                    expect.objectContaining({ facility_type_id: 11, selected: false, unselected: false }),
+                ]),
+            );
+        });
+    });
+
+    it('ignores malformed persisted journey state instead of crashing', () => {
+        window.sessionStorage.setItem('bookableSpacesJourneyViewState', '{not valid json');
+        window.history.replaceState({}, '', '/#/spaces/results');
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            filteredSpaceLocations: [baseSpace],
+        });
+
+        expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+    });
+
+    it('uses the controlled favourite filter prop without mutating local state', () => {
+        const setControlledShowFavouriteSpacesOnly = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            isLoggedIn: true,
+            showFavouriteSpacesOnly: true,
+            setShowFavouriteSpacesOnly: setControlledShowFavouriteSpacesOnly,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+        });
+
+        fireEvent.click(screen.getByRole('checkbox', { name: /your favourites/i }));
+
+        expect(setControlledShowFavouriteSpacesOnly).toHaveBeenCalledWith(false);
+    });
+
+    it('does not reset scroll state when the current route is outside the journey', () => {
+        const scrollToMock = jest.fn();
+        window.scrollTo = scrollToMock;
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/library']}>
+                <BookableSpacesWrapper {...defaultProps} />
+            </WithRouter>,
+        );
+
+        expect(scrollToMock).not.toHaveBeenCalled();
+    });
+
+    it('activates the favourites-only flow when the favourite intent is selected', () => {
+        const setSelectedFacilityTypes = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            setSelectedFacilityTypes,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+            filteredSpaceLocations: [baseSpace],
+            highlightedSpace: baseSpace,
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: true,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Low noise level' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-homepage-favourites-all-link'));
+
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+        const favouritesToggle = screen.getByRole('checkbox', { name: /your favourites/i });
+        expect(favouritesToggle).toBeChecked();
+    });
+
+    it('clears the journey state when the user chooses see all spaces from the landing page', () => {
+        const onResetAllFilters = jest.fn();
+
+        renderJourney({
+            ...defaultProps,
+            onResetAllFilters,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+        });
+
+        fireEvent.click(screen.getByRole('link', { name: /see all spaces/i }));
+
+        expect(onResetAllFilters).toHaveBeenCalled();
+    });
+
     it('uses a simple results link for the landing card without encoding intent in the URL', () => {
         window.history.replaceState({}, '', '/spaces');
 
@@ -305,7 +1016,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
         expect(parsedUrl.pathname).toBe('/spaces/results');
         expect(parsedUrl.search).toBe('');
-        expect(deserialiseJourneyMapFilterState(parsedUrl.searchParams)).toBeNull();
+        // mapFilters parameter is no longer used
+        expect(parsedUrl.searchParams.get('mapFilters')).toBeNull();
     });
 
     it('applies the matching intent filters when an intent card is clicked', () => {
@@ -570,44 +1282,6 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
 
         expect(nextUrl).toBe('https://example.com/spaces/mapresults');
-    });
-
-    it('serialises and deserialises journey mapFilters state for the map view', () => {
-        const encodedState = serialiseJourneyMapFilterState({
-            selectedFacilityTypes: [
-                {
-                    facility_type_id: 11,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: null,
-                },
-                {
-                    facility_type_id: 12,
-                    selected: false,
-                    unselected: true,
-                    facility_special_action: null,
-                },
-            ],
-            selectedCampus: 2,
-            selectedLibrary: 3,
-            capacityFilterValue: [4, 8],
-        });
-
-        expect(encodedState.startsWith('b64.')).toBe(true);
-
-        const params = new URLSearchParams(`mapFilters=${encodedState}`);
-        const parsedState = deserialiseJourneyMapFilterState(params);
-
-        expect(parsedState.selectedCampus).toBe(2);
-        expect(parsedState.selectedLibrary).toBe(3);
-        expect(parsedState.capacityFilterValue).toEqual([4, 8]);
-        expect(parsedState.selectedFacilityTypes).toEqual([
-            {
-                facility_type_id: 11,
-                selected: true,
-                facility_special_action: null,
-            },
-        ]);
     });
 
     it('applies an intent filter when the current filter list is empty on initial load', async () => {

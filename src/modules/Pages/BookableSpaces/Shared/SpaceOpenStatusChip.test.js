@@ -139,6 +139,23 @@ describe('SpaceOpenStatusChip', () => {
         expect(screen.getByTestId('spaces-journey-open-status-chip-closed')).toHaveTextContent('Currently closed');
     });
 
+    it('renders nothing when no valid opening status is available', () => {
+        jest.useFakeTimers().setSystemTime(new Date(2026, 3, 24, 10, 0, 0, 0).getTime());
+
+        rtlRender(
+            <SpaceOpenStatusChip
+                space={{ space_outages: [], space_opening_hours_id: 77 }}
+                weeklyHours={buildWeeklyHoursForDay('Friday', new Date(2026, 3, 24), null, null)}
+                weeklyHoursLoading={false}
+                weeklyHoursError={false}
+            />,
+        );
+
+        expect(screen.queryByTestId('spaces-journey-open-status-chip-open')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-journey-open-status-chip-closed')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('spaces-journey-open-status-chip-closing-soon')).not.toBeInTheDocument();
+    });
+
     it('renders the closing-soon status branch without emitting a React child error', () => {
         jest.useFakeTimers().setSystemTime(new Date(2026, 3, 24, 16, 30, 0, 0).getTime());
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});

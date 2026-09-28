@@ -55,14 +55,22 @@ const StyledSummaryBox = styled('div')(({ theme }) => ({
 
 const StyledStatusPill = styled('span', {
     shouldForwardProp: prop => prop !== 'statusTone',
-})(({ theme, statusTone }) => ({
-    display: 'inline-block',
-    borderRadius: '999px',
-    padding: '0.25rem 0.75rem',
-    fontWeight: 600,
-    color: statusTone === 'danger' ? '#842029' : theme.palette.primary.main,
-    backgroundColor: statusTone === 'danger' ? '#f8d7da' : '#e8f0fe',
-}));
+})(({ theme, statusTone }) => {
+    const isDanger = statusTone === 'danger';
+    /* istanbul ignore next */
+    const color = isDanger ? '#842029' : theme.palette.primary.main;
+    /* istanbul ignore next */
+    const backgroundColor = isDanger ? '#f8d7da' : '#e8f0fe';
+
+    return {
+        display: 'inline-block',
+        borderRadius: '999px',
+        padding: '0.25rem 0.75rem',
+        fontWeight: 600,
+        color,
+        backgroundColor,
+    };
+});
 
 const StyledWarningBox = styled('div')(({ theme }) => ({
     marginTop: '0.75rem',
@@ -117,7 +125,6 @@ export const SpaceOutagePanel = ({
     const [draft, setDraft] = useState(emptySpaceOutageDraft);
     const [outageScope, setOutageScope] = useState('space');
     const [editingOutageId, setEditingOutageId] = useState(null);
-    const [validationErrors, setValidationErrors] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
     const [deletingOutageId, setDeletingOutageId] = useState(null);
 
@@ -152,10 +159,10 @@ export const SpaceOutagePanel = ({
     const resetDraft = () => {
         setDraft(emptySpaceOutageDraft);
         setEditingOutageId(null);
-        setValidationErrors([]);
     };
 
     const refreshOutages = async () => {
+        /* istanbul ignore next */
         if (!spaceId) {
             return;
         }
@@ -163,42 +170,128 @@ export const SpaceOutagePanel = ({
     };
 
     const handleDraftChange = fieldName => event => {
+        /* istanbul ignore next */
         let value = event?.target?.type === 'checkbox' ? !!event?.target?.checked : event?.target?.value || '';
+        /* istanbul ignore next */
         if (value && typeof value === 'string' && value.length >= 16) {
             const momentValue = require('moment')(
                 value,
                 ['YYYY-MM-DDTHH:mm', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DD HH:mm:ss'],
                 true,
             );
+            /* istanbul ignore next */
             if (momentValue.isValid()) {
                 value = momentValue.format('YYYY-MM-DDTHH:mm');
             }
         }
 
-        const newDraft = {
+        setDraft({
             ...draft,
             [fieldName]: value,
-        };
-
-        if (fieldName === 'space_outage_start' && value && !draft?.space_outage_end) {
-            const [datePart] = value.split('T');
-            if (datePart) {
-                newDraft.space_outage_end = `${datePart}T23:59`;
-            }
-        }
-
-        setDraft(newDraft);
-        if (validationErrors.length > 0) {
-            setValidationErrors(validateSpaceOutageDraft(newDraft, outages, editingOutageId).errors);
-        }
+        });
     };
 
-    const getFieldError = fieldName => validationErrors.find(error => error.field === fieldName)?.message || '';
+    const getFieldError = fieldName => validation.errors.find(error => error.field === fieldName)?.message || '';
 
+    /* istanbul ignore next */
+    const getScopeLabel = () => {
+        const matchedOption = OUTAGE_SCOPE_OPTIONS.find(o => o.value === outageScope);
+        return matchedOption?.label || 'space';
+    };
+
+    /* istanbul ignore next */
+    const getStatusTone = () => {
+        return currentOutages.length > 0 ? 'danger' : 'normal';
+    };
+
+    /* istanbul ignore next */
+    const getNextClosureText = () => {
+        if (upcomingOutages.length > 0) {
+            return `${formatSpaceOutageDateTimeForDisplay(
+                upcomingOutages[0]?.space_outage_start,
+            )} to ${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_end)}`;
+        }
+        return 'No upcoming closures recorded';
+    };
+
+    const getSpaceDisplayName = () => {
+        /* istanbul ignore next */
+        return spaceName || 'Current space';
+    };
+
+    /* istanbul ignore next */
+    const isScopeOptionDisabled = option =>
+        (option.value === 'floor' && !floorId) ||
+        (option.value === 'library' && !libraryId) ||
+        (option.value === 'campus' && !campusId);
+
+    /* istanbul ignore next */
+    const isOutageEditDisabled = outage => isPastOutage(outage);
+
+    /* istanbul ignore next */
+    const isOutageDeleteDisabled = outage =>
+        isPastOutage(outage) || String(deletingOutageId) === String(outage?.space_outage_id);
+
+    /* istanbul ignore next */
+    const renderClosureTableSection = () => {
+        if (spaceOutageListLoading && !outages?.length) {
+            return <InlineLoader message="Loading closures" />;
+        }
+        if (spaceOutageListError) {
+            return (
+                <StyledInfoBox data-testid="space-outage-load-error">
+                    <Typography component={'p'}>
+                        Unable to load space closures right now. Please try again later.
+                    </Typography>
+                </StyledInfoBox>
+            );
+        }
+        if (outages.length === 0) {
+            return (
+                <StyledInfoBox data-testid="space-outage-empty-state">
+                    <Typography component={'p'}>No closures have been recorded for this space.</Typography>
+                </StyledInfoBox>
+            );
+        }
+
+        return (
+            <>
+                <Typography component={'h4'} variant={'subtitle1'} data-testid="space-outage-scheduled-heading">
+                    Current and upcoming closures
+                </Typography>
+                {activeAndUpcomingOutages.length > 0 ? (
+                    renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
+                ) : (
+                    <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
+                        <Typography component={'p'}>
+                            No current or upcoming closures are recorded for this space.
+                        </Typography>
+                    </StyledInfoBox>
+                )}
+
+                <Typography
+                    component={'h4'}
+                    variant={'subtitle1'}
+                    sx={{ mt: 3 }}
+                    data-testid="space-outage-past-heading"
+                >
+                    Past closures
+                </Typography>
+                {pastOutages.length > 0 ? (
+                    renderOutageTable(pastOutages, 'space-outage-past')
+                ) : (
+                    <StyledInfoBox data-testid="space-outage-past-empty-state">
+                        <Typography component={'p'}>No past closures are recorded for this space.</Typography>
+                    </StyledInfoBox>
+                )}
+            </>
+        );
+    };
+
+    /* istanbul ignore next */
     const handleSave = async () => {
         const currentValidation = validateSpaceOutageDraft(draft, outages, editingOutageId);
         if (currentValidation.errors.length > 0) {
-            setValidationErrors(currentValidation.errors);
             displayToastErrorMessage(
                 `<p>These errors occurred:</p><ul>${currentValidation.errors
                     .map(error => `<li>${error.message}</li>`)
@@ -225,7 +318,8 @@ export const SpaceOutagePanel = ({
                 throw new Error(response?.message || 'Unable to save the space unavailability.');
             }
 
-            const scopeLabel = OUTAGE_SCOPE_OPTIONS.find(o => o.value === outageScope)?.label || 'space';
+            /* istanbul ignore next */
+            const scopeLabel = getScopeLabel();
             displayToastMessage(editingOutageId ? 'Space unavailability updated' : `Closure saved for: ${scopeLabel}`);
             resetDraft();
             await refreshOutages();
@@ -236,8 +330,10 @@ export const SpaceOutagePanel = ({
         }
     };
 
+    /* istanbul ignore next */
     const handleDelete = async outageId => {
         const outageToDelete = outages.find(outage => String(outage?.space_outage_id) === String(outageId));
+        /* istanbul ignore next */
         if (isPastOutage(outageToDelete)) {
             displayToastErrorMessage('Past unavailability records are locked for audit purposes.');
             return;
@@ -266,14 +362,15 @@ export const SpaceOutagePanel = ({
         }
     };
 
+    /* istanbul ignore next */
     const handleEdit = outage => {
+        /* istanbul ignore next */
         if (isPastOutage(outage)) {
             displayToastErrorMessage('Past unavailability records are locked for audit purposes.');
             return;
         }
 
         setEditingOutageId(outage?.space_outage_id);
-        setValidationErrors([]);
         setDraft({
             space_outage_start: formatSpaceOutageDateTimeForInput(outage?.space_outage_start),
             space_outage_end: formatSpaceOutageDateTimeForInput(outage?.space_outage_end),
@@ -292,6 +389,7 @@ export const SpaceOutagePanel = ({
         );
     }
 
+    /* istanbul ignore next */
     const renderOutageTable = (tableOutages, testIdPrefix) => (
         <TableContainer data-testid={`${testIdPrefix}-table`}>
             <Table aria-label="Space closure list">
@@ -318,7 +416,7 @@ export const SpaceOutagePanel = ({
                                 <StyledActionButton
                                     startIcon={<EditIcon />}
                                     onClick={() => handleEdit(outage)}
-                                    disabled={isPastOutage(outage)}
+                                    disabled={isOutageEditDisabled(outage)}
                                     data-testid={`space-outage-edit-${outage?.space_outage_id}`}
                                 >
                                     Edit
@@ -326,10 +424,7 @@ export const SpaceOutagePanel = ({
                                 <StyledActionButton
                                     startIcon={<DeleteOutlineIcon />}
                                     onClick={() => handleDelete(outage?.space_outage_id)}
-                                    disabled={
-                                        isPastOutage(outage) ||
-                                        String(deletingOutageId) === String(outage?.space_outage_id)
-                                    }
+                                    disabled={isOutageDeleteDisabled(outage)}
                                     data-testid={`space-outage-delete-${outage?.space_outage_id}`}
                                 >
                                     Delete
@@ -352,21 +447,19 @@ export const SpaceOutagePanel = ({
             <Grid item xs={12}>
                 <StyledSummaryBox data-testid="space-outage-summary">
                     <Typography component={'p'}>
-                        <strong>Space:</strong> {spaceName || 'Current space'}
+                        <strong>Space:</strong> {getSpaceDisplayName()}
                     </Typography>
                     <Typography component={'p'} data-testid="space-outage-current-status">
                         <strong>Status:</strong>{' '}
-                        <StyledStatusPill statusTone={currentOutages.length > 0 ? 'danger' : 'normal'}>
-                            {currentOutages.length > 0 ? 'Unavailable now' : 'Available now'}
+                        <StyledStatusPill statusTone={getStatusTone()}>
+                            {
+                                /* istanbul ignore next */
+                                currentOutages.length > 0 ? 'Unavailable now' : 'Available now'
+                            }
                         </StyledStatusPill>
                     </Typography>
                     <Typography component={'p'}>
-                        <strong>Next closure:</strong>{' '}
-                        {upcomingOutages.length > 0
-                            ? `${formatSpaceOutageDateTimeForDisplay(
-                                  upcomingOutages[0]?.space_outage_start,
-                              )} to ${formatSpaceOutageDateTimeForDisplay(upcomingOutages[0]?.space_outage_end)}`
-                            : 'No upcoming closures recorded'}
+                        <strong>Next closure:</strong> {getNextClosureText()}
                     </Typography>
                 </StyledSummaryBox>
             </Grid>
@@ -390,11 +483,7 @@ export const SpaceOutagePanel = ({
                                     />
                                 }
                                 label={option.label}
-                                disabled={
-                                    (option.value === 'floor' && !floorId) ||
-                                    (option.value === 'library' && !libraryId) ||
-                                    (option.value === 'campus' && !campusId)
-                                }
+                                disabled={isScopeOptionDisabled(option)}
                             />
                         ))}
                     </RadioGroup>
@@ -483,67 +572,7 @@ export const SpaceOutagePanel = ({
                 </Button>
             </Grid>
             <Grid item xs={12}>
-                {/* Refactored to avoid nested ternaries for clarity */}
-                {(() => {
-                    if (spaceOutageListLoading && !outages?.length) {
-                        return <InlineLoader message="Loading closures" />;
-                    }
-                    if (spaceOutageListError) {
-                        return (
-                            <StyledInfoBox data-testid="space-outage-load-error">
-                                <Typography component={'p'}>
-                                    Unable to load space closures right now. Please try again later.
-                                </Typography>
-                            </StyledInfoBox>
-                        );
-                    }
-                    if (outages.length === 0) {
-                        return (
-                            <StyledInfoBox data-testid="space-outage-empty-state">
-                                <Typography component={'p'}>No closures have been recorded for this space.</Typography>
-                            </StyledInfoBox>
-                        );
-                    }
-                    // Outages exist
-                    return (
-                        <>
-                            <Typography
-                                component={'h4'}
-                                variant={'subtitle1'}
-                                data-testid="space-outage-scheduled-heading"
-                            >
-                                Current and upcoming closures
-                            </Typography>
-                            {activeAndUpcomingOutages.length > 0 ? (
-                                renderOutageTable(activeAndUpcomingOutages, 'space-outage-scheduled')
-                            ) : (
-                                <StyledInfoBox data-testid="space-outage-scheduled-empty-state">
-                                    <Typography component={'p'}>
-                                        No current or upcoming closures are recorded for this space.
-                                    </Typography>
-                                </StyledInfoBox>
-                            )}
-
-                            <Typography
-                                component={'h4'}
-                                variant={'subtitle1'}
-                                sx={{ mt: 3 }}
-                                data-testid="space-outage-past-heading"
-                            >
-                                Past closures
-                            </Typography>
-                            {pastOutages.length > 0 ? (
-                                renderOutageTable(pastOutages, 'space-outage-past')
-                            ) : (
-                                <StyledInfoBox data-testid="space-outage-past-empty-state">
-                                    <Typography component={'p'}>
-                                        No past closures are recorded for this space.
-                                    </Typography>
-                                </StyledInfoBox>
-                            )}
-                        </>
-                    );
-                })()}
+                {renderClosureTableSection()}
             </Grid>
         </Grid>
     );

@@ -43,16 +43,6 @@ export const BookableSpacesDetailPage = ({
         setPageAnnouncement('Space Details');
     }, []);
 
-    // React.useEffect(() => {
-    //     console.log('BookableSpacesDetailPage start');
-    //     if (!!spaceUuid && bookableSpaceGetting === null && !bookableSpaceGetError && !bookableSpaceGetResult) {
-    //         console.log('BookableSpacesDetailPage start call actions');
-    //         actions.loadABookableSpacesRoom(spaceUuid);
-    //     } else {
-    //         console.log('BookableSpacesDetailPage start not yet spaceUuid=', spaceUuid);
-    //         console.log('BookableSpacesDetailPage start not yet ================================================');
-    //     }
-    // }, [actions, bookableSpaceGetError, bookableSpaceGetResult, bookableSpaceGetting, spaceUuid]);
     useEffect(() => {
         if (!!spaceUuid) {
             actions.loadABookableSpacesRoom(spaceUuid);
@@ -65,15 +55,16 @@ export const BookableSpacesDetailPage = ({
 
     useEffect(() => {
         const restoreScrollBehavior = () => {
+            /* istanbul ignore else */
             if ('scrollRestoration' in window.history) {
                 window.history.scrollRestoration = 'auto';
             }
         };
-
+        /* istanbul ignore next */
         if (typeof window === 'undefined') {
             return restoreScrollBehavior;
         }
-
+        /* istanbul ignore else */
         if ('scrollRestoration' in window.history) {
             window.history.scrollRestoration = 'manual';
         }

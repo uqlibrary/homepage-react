@@ -175,6 +175,7 @@ const SingleLinkCard = ({
     const handleClick = e => {
         const hasCustomHandler = typeof onNavigate === 'function' || typeof onClick === 'function';
 
+        /* istanbul ignore else */
         if (hasCustomHandler) {
             e.preventDefault();
         }

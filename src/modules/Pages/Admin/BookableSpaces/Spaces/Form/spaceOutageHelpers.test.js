@@ -1,11 +1,19 @@
+import React from 'react';
+import moment from 'moment';
+import { rtlRender, screen } from 'test-utils';
+
 import {
+    buildBulkOutagePayload,
     buildSpaceOutagePayload,
+    formatSpaceOutageDateTimeForDisplay,
     formatSpaceOutageDateTimeForInput,
+    formatSpaceOutageDateTimeForPayload,
     getSpaceOutageShowTimePublic,
     getVisibleSpaceOutage,
     getOverlappingSpaceOutages,
     getSpaceOutageStatus,
     normalizeSpaceOutageList,
+    parseSpaceOutageDate,
     sortSpaceOutages,
     validateSpaceOutageDraft,
 } from './spaceOutageHelpers';
@@ -13,6 +21,7 @@ import {
     formatSpaceOutageDateTimeForPublicNotice,
     formatSpaceOutageRangeForPublicNotice,
     formatSpaceOutageUntilForPublicNotice,
+    SpacesOutageNotice,
 } from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
 
 describe('spaceOutageHelpers', () => {
@@ -35,7 +44,20 @@ describe('spaceOutageHelpers', () => {
         expect(normalizeSpaceOutageList(sampleOutages)).toEqual(sampleOutages);
         expect(normalizeSpaceOutageList({ data: sampleOutages })).toEqual(sampleOutages);
         expect(normalizeSpaceOutageList({ data: { space_outages: sampleOutages } })).toEqual(sampleOutages);
+        expect(normalizeSpaceOutageList({ space_outages: sampleOutages })).toEqual(sampleOutages);
         expect(normalizeSpaceOutageList(null)).toEqual([]);
+    });
+
+    it('handles empty or invalid date parsing and display fallbacks', () => {
+        expect(parseSpaceOutageDate()).toBeNull();
+        expect(parseSpaceOutageDate('not-a-date')).toBeNull();
+        expect(formatSpaceOutageDateTimeForInput(null)).toEqual('');
+        expect(formatSpaceOutageDateTimeForInput('not-a-date')).toEqual('');
+        expect(formatSpaceOutageDateTimeForPayload(null)).toBeNull();
+        expect(formatSpaceOutageDateTimeForPayload('')).toBeNull();
+        expect(formatSpaceOutageDateTimeForPayload('not-a-date')).toBeNull();
+        expect(formatSpaceOutageDateTimeForDisplay(null)).toEqual('Not set');
+        expect(formatSpaceOutageDateTimeForDisplay('not-a-date')).toEqual('Not set');
     });
 
     it('formats dates for datetime-local inputs', () => {
@@ -58,9 +80,44 @@ describe('spaceOutageHelpers', () => {
         expect(formatSpaceOutageRangeForPublicNotice('2026-04-24 08:00:00', '2026-05-05 14:00:00', false)).toEqual(
             '24 Apr. to 5 May 2026',
         );
+
+        expect(formatSpaceOutageRangeForPublicNotice('not-a-date', '2026-12-25 13:00:00')).toEqual(
+            'Not set to 25/12/2026 1:00pm',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2026-12-25 13:00:00', false)).toEqual(
+            '25 Dec. 2026',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2026-12-26 17:00:00', false)).toEqual(
+            '25 Dec. to 26 Dec. 2026',
+        );
+
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2027-01-10 17:00:00')).toEqual(
+            '8:00am 25 Dec. 2026 to 5:00pm 10 Jan. 2027',
+        );
+        expect(formatSpaceOutageRangeForPublicNotice('2026-12-25 08:00:00', '2027-01-10 17:00:00', false)).toEqual(
+            '25 Dec. 2026 to 10 Jan. 2027',
+        );
+    });
+
+    it('handles invalid or empty display values for outage dates', () => {
+        expect(formatSpaceOutageDateTimeForDisplay('')).toEqual('Not set');
+        expect(formatSpaceOutageDateTimeForDisplay(undefined)).toEqual('Not set');
+        expect(formatSpaceOutageDateTimeForDisplay('2026-04-20 08:30:00')).toEqual(
+            new Intl.DateTimeFormat('en-AU', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+            }).format(moment('2026-04-20 08:30:00', 'YYYY-MM-DD HH:mm:ss').toDate()),
+        );
     });
 
     it('formats current outage until wording for public notices', () => {
+        jest.useFakeTimers().setSystemTime(new Date('2026-12-25T09:00:00').getTime());
+
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00')).toEqual('1:00pm on 25 Dec. 2026');
+        expect(formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00')).toEqual('5:00pm 26 Dec. 2026');
+
         expect(formatSpaceOutageUntilForPublicNotice('2026-12-25 13:00:00', new Date('2026-12-25T09:00:00'))).toEqual(
             '1:00pm on 25 Dec. 2026',
         );
@@ -72,6 +129,9 @@ describe('spaceOutageHelpers', () => {
         expect(
             formatSpaceOutageUntilForPublicNotice('2026-12-26 17:00:00', new Date('2026-12-25T09:00:00'), false),
         ).toEqual('26 Dec. 2026');
+
+        expect(formatSpaceOutageUntilForPublicNotice('not-a-date')).toEqual('Not set');
+        jest.useRealTimers();
     });
 
     it('parses space_outage_show_time_public from mixed values', () => {
@@ -80,17 +140,137 @@ describe('spaceOutageHelpers', () => {
         expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: false })).toBe(false);
         expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: 0 })).toBe(false);
         expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: 'no' })).toBe(false);
+        expect(getSpaceOutageShowTimePublic({ space_outage_show_time_public: 'yes' })).toBe(true);
         expect(getSpaceOutageShowTimePublic({})).toBe(true);
+    });
+
+    it('renders outage notice states and omits hidden reasons when needed', () => {
+        const { container, rerender } = rtlRender(
+            <SpacesOutageNotice bookableSpace={{ space_id: 42 }} visibleOutage={null} />,
+        );
+
+        expect(container).toBeEmptyDOMElement();
+
+        rerender(
+            <SpacesOutageNotice
+                bookableSpace={{ space_id: 42 }}
+                visibleOutage={{
+                    status: 'Current',
+                    tone: 'error',
+                    outage: { space_outage_end: '2026-12-25 13:00:00', space_outage_show_time_public: false },
+                    reason: 'Lift works',
+                }}
+            />,
+        );
+
+        expect(screen.getByTestId('space-42-outage-message')).toHaveTextContent('Currently unavailable');
+        expect(screen.getByTestId('space-42-outage-message')).toHaveTextContent('25 Dec. 2026');
+        expect(screen.getByTestId('space-42-outage-reason')).toHaveTextContent('Reason: Lift works');
+
+        rerender(
+            <SpacesOutageNotice
+                bookableSpace={{ space_id: 99 }}
+                visibleOutage={{
+                    status: 'Upcoming',
+                    tone: 'warning',
+                    outage: {
+                        space_outage_start: '2026-12-25 08:00:00',
+                        space_outage_end: '2026-12-25 13:00:00',
+                        space_outage_show_time_public: true,
+                    },
+                    reason: 'Planned maintenance',
+                }}
+                hideReason
+            />,
+        );
+
+        expect(screen.getByTestId('space-99-outage-message')).toHaveTextContent('Unavailable');
+        expect(screen.getByTestId('space-99-outage-message')).toHaveTextContent('8:00am to 1:00pm on 25 Dec. 2026');
+        expect(screen.queryByTestId('space-99-outage-reason')).not.toBeInTheDocument();
     });
 
     it('sorts outages by start time', () => {
         expect(sortSpaceOutages(sampleOutages).map(outage => outage.space_outage_id)).toEqual([1, 2]);
+        expect(
+            sortSpaceOutages([
+                { space_outage_id: 8, space_outage_start: 'not-a-date' },
+                { space_outage_id: 9, space_outage_start: '2026-04-22 10:00:00' },
+            ]).map(outage => outage.space_outage_id),
+        ).toEqual([8, 9]);
+        expect(
+            sortSpaceOutages([
+                { space_outage_id: 10, space_outage_start: '2026-04-22 10:00:00' },
+                { space_outage_id: 11, space_outage_start: 'not-a-date' },
+            ]).map(outage => outage.space_outage_id),
+        ).toEqual([11, 10]);
+    });
+
+    it('uses default time and blank reason fallbacks when no explicit value is supplied', () => {
+        const now = moment();
+        const futureStart = now.clone().add(1, 'day').hour(9).minute(0).second(0);
+        const futureEnd = futureStart.clone().add(3, 'hours');
+        const currentStart = now.clone().subtract(1, 'hour');
+        const currentEnd = now.clone().add(1, 'hour');
+
+        expect(
+            getSpaceOutageStatus({
+                space_outage_start: futureStart.format('YYYY-MM-DD HH:mm:ss'),
+                space_outage_end: futureEnd.format('YYYY-MM-DD HH:mm:ss'),
+            }),
+        ).toEqual('Upcoming');
+
+        expect(
+            getVisibleSpaceOutage(
+                [
+                    {
+                        space_outage_id: 10,
+                        space_outage_start: futureStart.format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_end: futureEnd.format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_reason: '   ',
+                    },
+                ],
+                undefined,
+                7,
+            ),
+        ).toMatchObject({
+            status: 'Upcoming',
+            tone: 'warning',
+            reason: '',
+        });
+
+        expect(
+            getVisibleSpaceOutage(
+                [
+                    {
+                        space_outage_id: 11,
+                        space_outage_start: currentStart.format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_end: currentEnd.format('YYYY-MM-DD HH:mm:ss'),
+                        space_outage_reason: '   ',
+                    },
+                ],
+                now.toDate(),
+                7,
+            ),
+        ).toMatchObject({
+            status: 'Current',
+            tone: 'error',
+            reason: '',
+        });
     });
 
     it('reports outage status correctly', () => {
         expect(getSpaceOutageStatus(sampleOutages[0], new Date('2026-04-22T10:30:00'))).toEqual('Current');
         expect(getSpaceOutageStatus(sampleOutages[0], new Date('2026-04-22T09:30:00'))).toEqual('Upcoming');
         expect(getSpaceOutageStatus(sampleOutages[0], new Date('2026-04-22T12:30:00'))).toEqual('Past');
+        expect(getSpaceOutageStatus({ space_outage_start: 'not-a-date' }, new Date('2026-04-22T12:30:00'))).toEqual(
+            'Invalid',
+        );
+        expect(
+            getSpaceOutageStatus(
+                { space_outage_start: '2026-04-22 10:00:00', space_outage_end: '2026-04-22 09:00:00' },
+                new Date('2026-04-22T10:30:00'),
+            ),
+        ).toEqual('Past');
     });
 
     it('returns the current outage notice before upcoming ones', () => {
@@ -152,6 +332,33 @@ describe('spaceOutageHelpers', () => {
         ).toBeNull();
     });
 
+    it('skips invalid items before finding the next valid upcoming outage', () => {
+        const visibleOutage = getVisibleSpaceOutage(
+            [
+                {
+                    space_outage_id: 6,
+                    space_outage_start: 'not-a-date',
+                    space_outage_end: 'still-not-a-date',
+                    space_outage_reason: 'Broken record',
+                },
+                {
+                    space_outage_id: 7,
+                    space_outage_start: '2026-05-01 09:00:00',
+                    space_outage_end: '2026-05-01 12:00:00',
+                    space_outage_reason: 'Planned maintenance',
+                },
+            ],
+            new Date('2026-04-24T10:30:00'),
+        );
+
+        expect(visibleOutage).toMatchObject({
+            status: 'Upcoming',
+            tone: 'warning',
+            reason: 'Planned maintenance',
+        });
+        expect(visibleOutage.outage.space_outage_id).toEqual(7);
+    });
+
     it('finds overlapping outages excluding the edited row', () => {
         const overlapping = getOverlappingSpaceOutages(
             {
@@ -173,6 +380,30 @@ describe('spaceOutageHelpers', () => {
             2,
         );
         expect(excludedOverlap).toEqual([]);
+
+        expect(
+            getOverlappingSpaceOutages(
+                { space_outage_start: 'not-a-date', space_outage_end: '2026-04-22 13:00:00' },
+                sampleOutages,
+            ),
+        ).toEqual([]);
+
+        expect(
+            getOverlappingSpaceOutages(
+                { space_outage_start: '2026-04-22 11:00:00', space_outage_end: '2026-04-22 13:00:00' },
+                [
+                    { space_outage_start: 'not-a-date', space_outage_end: '2026-04-22 12:30:00' },
+                    { space_outage_start: '2026-04-22 12:00:00', space_outage_end: '2026-04-22 12:30:00' },
+                ],
+            ),
+        ).toHaveLength(1);
+
+        expect(
+            getOverlappingSpaceOutages({
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 13:00:00',
+            }),
+        ).toEqual([]);
     });
 
     it('validates required fields and ordering while warning on overlap', () => {
@@ -187,6 +418,24 @@ describe('spaceOutageHelpers', () => {
         );
         expect(validation.errors[0].message).toEqual('The end date and time must be after the start.');
 
+        const invalidDateValidation = validateSpaceOutageDraft(
+            {
+                space_outage_start: 'not-a-date',
+                space_outage_end: '2026-04-22 13:00:00',
+                space_outage_reason: '  ',
+            },
+            sampleOutages,
+        );
+        expect(invalidDateValidation.errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    field: 'space_outage_start',
+                    message: 'The start date and time is invalid.',
+                }),
+                expect.objectContaining({ field: 'space_outage_reason', message: 'A reason is required.' }),
+            ]),
+        );
+
         const warningValidation = validateSpaceOutageDraft(
             {
                 space_outage_start: '2026-04-22 11:00:00',
@@ -195,6 +444,31 @@ describe('spaceOutageHelpers', () => {
             sampleOutages,
         );
         expect(warningValidation.warnings).toHaveLength(1);
+
+        const invalidEndValidation = validateSpaceOutageDraft(
+            {
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: 'not-a-date',
+                space_outage_reason: 'Lab maintenance',
+            },
+            sampleOutages,
+        );
+        expect(invalidEndValidation.errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ field: 'space_outage_end', message: 'The end date and time is invalid.' }),
+            ]),
+        );
+
+        expect(
+            validateSpaceOutageDraft({
+                space_outage_start: '2026-04-22 11:00:00',
+                space_outage_end: '2026-04-22 13:00:00',
+                space_outage_reason: 'Maintenance',
+            }),
+        ).toEqual({
+            errors: [],
+            warnings: [],
+        });
     });
 
     it('builds the API payload shape', () => {
@@ -214,6 +488,56 @@ describe('spaceOutageHelpers', () => {
             space_outage_end: '2026-04-22 12:00:00',
             space_outage_reason: 'HVAC works',
             space_outage_show_time_public: false,
+        });
+
+        expect(
+            buildSpaceOutagePayload({
+                spaceId: 456,
+                draft: {
+                    space_outage_start: '',
+                    space_outage_end: null,
+                    space_outage_reason: '   ',
+                    space_outage_show_time_public: undefined,
+                },
+            }),
+        ).toEqual({
+            space_id: 456,
+            space_outage_start: null,
+            space_outage_end: null,
+            space_outage_reason: null,
+            space_outage_show_time_public: false,
+        });
+
+        expect(
+            buildBulkOutagePayload({
+                draft: {
+                    space_outage_start: '2026-04-22T11:00',
+                    space_outage_end: '2026-04-22T12:00',
+                    space_outage_reason: '  Bulk works  ',
+                    space_outage_show_time_public: true,
+                },
+            }),
+        ).toEqual({
+            space_outage_start: '2026-04-22 11:00:00',
+            space_outage_end: '2026-04-22 12:00:00',
+            space_outage_reason: 'Bulk works',
+            space_outage_show_time_public: true,
+        });
+
+        expect(
+            buildBulkOutagePayload({
+                draft: {
+                    space_outage_start: '',
+                    space_outage_end: undefined,
+                    space_outage_reason: '',
+                    space_outage_show_time_public: '1',
+                },
+            }),
+        ).toEqual({
+            space_outage_start: null,
+            space_outage_end: null,
+            space_outage_reason: null,
+            space_outage_show_time_public: true,
         });
     });
 });

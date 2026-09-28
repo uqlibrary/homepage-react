@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
 import { StyledIconWordWrapperDiv } from 'modules/Pages/BookableSpaces/Shared/SharedStyles';
-import { spaceOpeningHours } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getSpaceOpenStatus } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 export const closingSoonMessage = (message = 'Closing soon') => {
     // https://www.streamlinehq.com/icons/download/technology-device-wearable-smart-watch-circle-app-1--27614
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-closing-soon'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
                 <path
                     stroke="#51247a"
                     strokeLinecap="round"
@@ -62,7 +62,7 @@ export const closingSoonMessage = (message = 'Closing soon') => {
                     d="M17.725 9.02502c0.7375 0.91208 1.1399 2.04948 1.1399 3.22248s-0.4024 2.3104 -1.1399 3.2225"
                     strokeWidth="1.5"
                 />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
@@ -70,11 +70,11 @@ export const closingSoonMessage = (message = 'Closing soon') => {
 const closedNowMessage = (message = 'Currently closed') => {
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-closed'}>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="css-1m01c8l">
+            {/* <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="css-1m01c8l">
                 <circle cx="12" cy="12" r="9.25" stroke="#51247A" strokeWidth="1.5" />
                 <path d="M12 7.8v4" stroke="#51247A" strokeWidth="1.5" strokeLinecap="round" />
                 <circle cx="11.9" cy="15.6" r=".6" fill="#000" stroke="#51247A" />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
@@ -83,7 +83,7 @@ const openNowMessage = (message = 'Open now') => {
     // https://www.streamlinehq.com/icons/download/shop-sign-open--27633
     return (
         <StyledIconWordWrapperDiv data-testid={'spaces-journey-open-status-chip-open'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
                 <path
                     stroke="#51247a"
                     strokeLinecap="round"
@@ -147,50 +147,10 @@ const openNowMessage = (message = 'Open now') => {
                     d="M19.5 19.749v-7.5l3 7.5v-7.5"
                     strokeWidth="1.5"
                 />
-            </svg>
+            </svg> */}
             <span>{message}</span>
         </StyledIconWordWrapperDiv>
     );
-};
-
-const getSpaceHoursStatus = (space, weeklyHours) => {
-    const days = spaceOpeningHours(space, weeklyHours);
-    if (!days || days.length === 0) {
-        console.log('getSpaceHoursStatus return null 1');
-        return null;
-    }
-    const today = days[0];
-    if (!today) {
-        console.log('getSpaceHoursStatus return null 2');
-        return null;
-    }
-
-    const status = today?.times?.status;
-    if (status === 'closed') return 'closed';
-    if (status === '24hours') return 'open';
-
-    const openStr = today?.open; // e.g. "07:30:00"
-    const closeStr = today?.close; // e.g. "19:30:00"
-
-    if (!openStr || !closeStr) {
-        console.log('getSpaceHoursStatus return null 3');
-        return null;
-    }
-
-    const now = new Date();
-    const [oh, om] = openStr.split(':').map(Number);
-    const [ch, cm] = closeStr.split(':').map(Number);
-
-    const openTime = new Date();
-    openTime.setHours(oh, om, 0, 0);
-    const closeTime = new Date();
-    closeTime.setHours(ch, cm, 0, 0);
-
-    if (now < openTime || now >= closeTime) return 'closed';
-
-    const minsUntilClose = (closeTime - now) / 60000;
-    if (minsUntilClose <= 60) return 'closing-soon';
-    return 'open';
 };
 
 export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, weeklyHoursError }) => {
@@ -206,7 +166,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
         return null;
     }
 
-    const status = getSpaceHoursStatus(space, weeklyHours);
+    const status = getSpaceOpenStatus(space, weeklyHours);
     if (!status) {
         return null;
     }
@@ -217,12 +177,7 @@ export const SpaceOpenStatusChip = ({ space, weeklyHours, weeklyHoursLoading, we
     if (status === 'closing-soon') {
         return closingSoonMessage();
     }
-    if (status === 'closed') {
-        return closedNowMessage();
-    }
-
-    console.log('unexpectedly no valid status available');
-    return null;
+    return closedNowMessage();
 };
 
 SpaceOpenStatusChip.propTypes = {

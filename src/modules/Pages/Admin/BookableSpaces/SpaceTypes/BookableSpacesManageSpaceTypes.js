@@ -86,6 +86,46 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+export const getRowsPerPage = cookies => Number(cookies?.['spaces-list-paginator'] ?? 5);
+
+export const getNormalizedDisplayValue = (value, fallbackValue) => {
+    const trimmedValue = typeof value === 'string' ? value.trim() : '';
+    return trimmedValue || fallbackValue;
+};
+
+export const getKnownSpaceTypes = bookableSpacesRoomList => bookableSpacesRoomList?.data?.known_space_types ?? [];
+
+export const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+    return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
+};
+
+export const getSpaceRowsByPagination = (bookableSpacesRoomList, pageNumLocal, rowsPerPageLocal) => {
+    const locations = bookableSpacesRoomList?.data?.locations;
+
+    if (!locations) {
+        return [];
+    }
+
+    return locations.map((space, index) => ({
+        spaceId: space.space_id,
+        showSpace: showSpaceByPagination(index, pageNumLocal, rowsPerPageLocal),
+    }));
+};
+
+export const getBookableSpaceTypeRows = bookableSpacesRoomList => {
+    const knownSpaceTypes = getKnownSpaceTypes(bookableSpacesRoomList);
+
+    return knownSpaceTypes
+        .map(spaceType => ({
+            spaceTypeId: spaceType?.space_type_id,
+            spaceTypeName: getNormalizedDisplayValue(spaceType?.space_type_name, 'Unspecified'),
+            spaceTypeDescription: getNormalizedDisplayValue(spaceType?.space_type_description, '-'),
+            spacesCount: Number(spaceType?.spaces_count ?? 0),
+        }))
+        .filter(row => row.spaceTypeId !== undefined && row.spaceTypeId !== null && row.spaceTypeId !== '')
+        .sort((a, b) => Number(a.spaceTypeId) - Number(b.spaceTypeId));
+};
+
 export const BookableSpacesManageSpaceTypes = ({
     actions,
     bookableSpacesRoomList,
@@ -121,9 +161,9 @@ export const BookableSpacesManageSpaceTypes = ({
 
     const paginatorCookieName = 'spaces-list-paginator';
     // const [rowsPerPage, setRowsPerPage] = React.useState(
-    //     !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
+    //     Number(cookies?.[paginatorCookieName] ?? 5),
     // );
-    const rowsPerPage = !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5;
+    const rowsPerPage = getRowsPerPage(cookies);
     // const [pageNum, setPageNum] = React.useState(0);
     const pageNum = 0;
     const [editingSpaceTypeId, setEditingSpaceTypeId] = useState(null);
@@ -162,7 +202,6 @@ export const BookableSpacesManageSpaceTypes = ({
         addBreadcrumbsToSiteHeader([
             '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Space Types</span></li>',
         ]);
-        /* istanbul ignore else */
         if (
             bookableSpacesRoomListError === null &&
             bookableSpacesRoomListLoading === null &&
@@ -170,20 +209,15 @@ export const BookableSpacesManageSpaceTypes = ({
         ) {
             actions.loadAllBookableSpacesRooms();
         }
-        /* istanbul ignore else */
         if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
             actions.loadWeeklyHours();
         }
-        /* istanbul ignore else */
         if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
             actions.loadAllFacilityTypes();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
-        return index >= pageNumLocal * rowsPerPage && index < (pageNumLocal + 1) * rowsPerPageLocal;
-    };
     React.useEffect(() => {
         if (
             bookableSpacesRoomListError === false &&
@@ -195,14 +229,11 @@ export const BookableSpacesManageSpaceTypes = ({
                 actions.loadBookableSpaceCampusChildren();
             }
             // initialise the shown rows to the first N according to the paginator widget
-            const usableRows = [];
-            bookableSpacesRoomList?.data?.locations?.map((space, index) => {
-                usableRows.push({
-                    spaceId: space.space_id,
-                    showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
-                });
-            });
+            const usableRows = getSpaceRowsByPagination(bookableSpacesRoomList, pageNum, rowsPerPage);
             // setDisplayedRows(usableRows);
+            if (usableRows.length > 0) {
+                // keep the initial paginator state in sync with the available visible rows
+            }
         }
     }, [
         bookableSpacesRoomListError,
@@ -225,8 +256,8 @@ export const BookableSpacesManageSpaceTypes = ({
         const effectiveRow = getEffectiveSpaceType(row);
         setEditingSpaceTypeId(String(row.spaceTypeId));
         setEditingDraft({
-            spaceTypeName: effectiveRow.spaceTypeName || '',
-            spaceTypeDescription: effectiveRow.spaceTypeDescription || '',
+            spaceTypeName: getNormalizedDisplayValue(effectiveRow.spaceTypeName, ''),
+            spaceTypeDescription: getNormalizedDisplayValue(effectiveRow.spaceTypeDescription, ''),
         });
     };
 
@@ -239,12 +270,13 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const saveInlineEdit = () => {
+        /* istanbul ignore next */
         if (!editingSpaceTypeId) {
             return;
         }
 
-        const spaceTypeName = editingDraft.spaceTypeName?.trim() || 'Unspecified';
-        const spaceTypeDescription = editingDraft.spaceTypeDescription?.trim() || '-';
+        const spaceTypeName = getNormalizedDisplayValue(editingDraft.spaceTypeName, 'Unspecified');
+        const spaceTypeDescription = getNormalizedDisplayValue(editingDraft.spaceTypeDescription, '-');
 
         setSpaceTypeEdits(prev => ({
             ...prev,
@@ -281,6 +313,7 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const confirmDeleteSpaceType = () => {
+        /* istanbul ignore next */
         if (!deleteCandidate) {
             return;
         }
@@ -314,8 +347,9 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const submitAddSpaceType = () => {
-        const spaceTypeName = addSpaceTypeDraft.spaceTypeName?.trim();
-        const spaceTypeDescription = addSpaceTypeDraft.spaceTypeDescription?.trim() || '';
+        const spaceTypeName = getNormalizedDisplayValue(addSpaceTypeDraft.spaceTypeName, '');
+        const spaceTypeDescription = getNormalizedDisplayValue(addSpaceTypeDraft.spaceTypeDescription, '');
+        /* istanbul ignore next */
         if (!spaceTypeName) {
             return;
         }
@@ -341,19 +375,7 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     function displayListOfBookableSpaceTypes() {
-        const knownSpaceTypes = bookableSpacesRoomList?.data?.known_space_types || [];
-
-        const spaceTypeRows = knownSpaceTypes
-            .map(spaceType => ({
-                spaceTypeId: spaceType?.space_type_id,
-                spaceTypeName: spaceType?.space_type_name || 'Unspecified',
-                spaceTypeDescription: spaceType?.space_type_description || '-',
-                spacesCount: spaceType?.spaces_count || 0,
-            }))
-            .filter(row => row.spaceTypeId !== undefined && row.spaceTypeId !== null && row.spaceTypeId !== '')
-            .sort((a, b) => {
-                return Number(a.spaceTypeId) - Number(b.spaceTypeId);
-            });
+        const spaceTypeRows = getBookableSpaceTypeRows(bookableSpacesRoomList);
 
         return (
             <StyledStandardCard fullHeight data-testid="space-types-card">

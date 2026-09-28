@@ -18,6 +18,9 @@ const StyledHeadingWrapperSpan = styled(Grid)(() => ({
         paddingLeft: 0,
         paddingRight: '15px',
     },
+    '& .spaceTitleRoomName': {
+        whiteSpace: 'nowrap',
+    },
     '&:has(.openNewWrapper)': {
         paddingRight: '2rem',
     },
@@ -115,7 +118,9 @@ const SidebarSpacesList = ({
                                             data-testid={`space-${bookableSpace.space_id}-name`}
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}{' '}
-                                            {bookableSpace?.space_name}
+                                            {!!bookableSpace?.space_name && (
+                                                <span className="spaceTitleRoomName">{bookableSpace.space_name}</span>
+                                            )}
                                         </span>
                                         {isExpanded && (
                                             <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>

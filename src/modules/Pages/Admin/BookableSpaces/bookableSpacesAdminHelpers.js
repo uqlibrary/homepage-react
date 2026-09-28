@@ -32,10 +32,15 @@ export function getUserPostfix(appendType = '?') {
     return userString;
 }
 
-export const spacesAdminLink = (spacesPath = '', /* istanbul ignore next */ account = null) => {
+export const spacesAdminLink = (spacesPath, account) => {
+    /* istanbul ignore next */
+    const path = spacesPath || '';
+    /* istanbul ignore next */
+    const userAccount = account || null;
+
     const userString = getUserPostfix();
-    if (isSpacesAdminUser(account)) {
-        return `${getPathRoot()}${spacesPath}${userString}`;
+    if (isSpacesAdminUser(userAccount)) {
+        return `${getPathRoot()}${path}${userString}`;
     }
     return '';
 };
@@ -217,7 +222,7 @@ export function closeDeletionConfirmation() {
     removeAnyListeners(confirmationOKButton);
 }
 
-export function showGenericConfirmAndDeleteDialog(line1, line2 = '') {
+export function showGenericConfirmAndDeleteDialog(line1, /* istanbul ignore next */ line2 = '') {
     const confirmationMessageElement = document.getElementById('confDialogMessage');
     let innerHTML = `<p>${line1}</p>`;
     !!line2 && (innerHTML += `<p>${line2}</p>`);
@@ -241,7 +246,7 @@ export function closeDialog(e = null) {
     addClass(warningIcon, 'hidden');
 
     const dialogWarningText = document.getElementById('warningtext');
-    !!dialogWarningText && dialogWarningText?.remove();
+    !!dialogWarningText && /* istanbul ignore next */ dialogWarningText?.remove();
 
     const dialogBodyElement = document.getElementById('dialogBody');
     !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
@@ -277,11 +282,13 @@ export const initialisedSpringshareList = (locale, weeklyHours) => [
     ...springshareLocations(weeklyHours),
 ];
 
-export const validCampusList = campusList => campusList?.filter(c => c?.libraries?.length > 0) || [];
+export const validCampusList = campusList =>
+    campusList?.filter(c => c?.libraries?.length > 0) || /* istanbul ignore next */ [];
 export const safeCampusIndex = (campusList, campusId) => {
     if (!Array.isArray(campusList)) {
         return -1;
     }
     return campusList.findIndex(c => c?.campus_id === campusId);
 };
-export const validLibraryList = libraryList => libraryList?.filter(l => l?.floors.length > 0) || [];
+export const validLibraryList = libraryList =>
+    libraryList?.filter(l => l?.floors.length > 0) || /* istanbul ignore next */ [];

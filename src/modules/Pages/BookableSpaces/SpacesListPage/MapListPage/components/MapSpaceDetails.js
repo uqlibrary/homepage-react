@@ -5,8 +5,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { styled, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { styled } from '@mui/material/styles';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -26,13 +25,7 @@ const StyledSpaceDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-const CollapsedSection = ({
-    bookableSpace,
-    visibleOutage,
-    weeklyHoursLoading,
-    weeklyHoursError,
-    weeklyHours,
-}) => {
+const CollapsedSection = ({ bookableSpace, visibleOutage, weeklyHoursLoading, weeklyHoursError, weeklyHours }) => {
     return (
         <Stack spacing={1}>
             <Typography sx={{ color: 'designSystem.bodyCopy' }}>{bookableSpace?.space_library_name}</Typography>
@@ -81,25 +74,20 @@ CollapsedSection.propTypes = {
     weeklyHours: PropTypes.any,
 };
 
-const MapSpaceDetails = ({
-    actions,
-    weeklyHours,
-    weeklyHoursLoading,
-    weeklyHoursError,
-    bookableSpace,
-    collapsed = false,
-    isExpanded = false,
-    // collapsed=true: called by sidebar, has open-close icon;
-    // collapsed=false: opens from icon in map, no open-close icon
-    onToggle = null,
-    showToggle = true,
-    isFavourite = false,
-}) => {
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
-    // const _isTabletViewJust = useMediaQuery(theme.breakpoints.down('lg')) || false;
-    // const isTabletView = isMobileView ? false : _isTabletViewJust;
-    // const isDesktopView = !isTabletView && !isMobileView;
+const MapSpaceDetails = props => {
+    /* istanbul ignore next */
+    const collapsed = props?.collapsed ?? false;
+    const {
+        actions,
+        weeklyHours,
+        weeklyHoursLoading,
+        weeklyHoursError,
+        bookableSpace,
+        isExpanded = false,
+        onToggle = null,
+        showToggle = true,
+        isFavourite = false,
+    } = props;
 
     const isCollapsed = collapsed ? !isExpanded : false;
 

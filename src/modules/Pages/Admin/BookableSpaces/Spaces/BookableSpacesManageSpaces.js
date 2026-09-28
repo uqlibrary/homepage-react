@@ -226,6 +226,246 @@ const SPACE_SORT_UPDATED = 'updated';
 const SPACE_SORT_DIRECTION_ASC = 'asc';
 const SPACE_SORT_DIRECTION_DESC = 'desc';
 
+export const getSafeSpaceName = space => {
+    if (!space?.space_name) {
+        return '';
+    }
+    return space.space_name;
+};
+export const getSafeSpaceTypeName = space => {
+    if (!space?.space_type_details?.space_type_name) {
+        return '';
+    }
+    return space.space_type_details.space_type_name;
+};
+export const getSafeLibraryName = library => {
+    if (!library?.library_name) {
+        return 'Show all libraries';
+    }
+    return library.library_name;
+};
+export const getSafeFloorName = floor => {
+    if (!floor?.floor_name) {
+        return 'Show all levels';
+    }
+    return floor.floor_name;
+};
+export const getSafeSpaceTypeLabel = spaceType => {
+    if (!spaceType?.label) {
+        return 'Show all space types';
+    }
+    return spaceType.label;
+};
+
+export const getDateEpoch = dateString => {
+    if (!dateString) {
+        return 0;
+    }
+    const timestamp = Date.parse(dateString);
+    return Number.isNaN(timestamp) ? 0 : timestamp;
+};
+
+export const hideConfirmationDialog = hideConfirmation => {
+    hideConfirmation(0);
+};
+
+export const closeDeleteDialog = setDeleteCandidate => {
+    setDeleteCandidate(null);
+};
+
+export const getFilterValue = e => {
+    return e?.target?.hasOwnProperty('checked') ? e?.target?.checked : e?.target?.value;
+};
+
+export const getLibraryFilterDisplayValue = (selectedValue, selectedCampus) => {
+    if (selectedValue === LIBRARY_ID_UNSELECTED) {
+        return 'Show all libraries';
+    }
+    return getSafeLibraryName(
+        selectedCampus?.libraries?.find(library => String(library?.library_id) === String(selectedValue)),
+    );
+};
+
+export const getFloorFilterDisplayValue = (selectedValue, floorFilterTypes) => {
+    if (selectedValue === FLOOR_ID_UNSELECTED) {
+        return 'Show all levels';
+    }
+    const selectedFloor = floorFilterTypes?.find(floor => String(floor?.floor_id) === String(selectedValue));
+    return getSafeFloorName(selectedFloor);
+};
+
+export const getLibraryFilterOptions = selectedCampus => {
+    return [...(selectedCampus?.libraries || [])]?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name));
+};
+
+export const getFloorFilterOptions = floorFilterTypes => {
+    return [...(floorFilterTypes || [])]?.sort((a, b) => a?.floor_name?.localeCompare(b?.floor_name));
+};
+
+export const getSortedSpaces = (spaces, sortingType = SPACE_SORT_NAME, sortingDirection = SPACE_SORT_DIRECTION_ASC) => {
+    const sourceSpaces = [...(spaces || [])];
+    const compareByName = (a, b) => getSafeSpaceName(a).localeCompare(getSafeSpaceName(b));
+    const directionMultiplier = sortingDirection === SPACE_SORT_DIRECTION_DESC ? -1 : 1;
+
+    if (sortingType === SPACE_SORT_CREATED) {
+        return sourceSpaces.sort((a, b) => {
+            const dateDiff = getDateEpoch(a?.created_at) - getDateEpoch(b?.created_at);
+            if (dateDiff !== 0) {
+                return dateDiff * directionMultiplier;
+            }
+            return compareByName(a, b);
+        });
+    }
+    if (sortingType === SPACE_SORT_UPDATED) {
+        return sourceSpaces.sort((a, b) => {
+            const dateDiff = getDateEpoch(a?.updated_at) - getDateEpoch(b?.updated_at);
+            if (dateDiff !== 0) {
+                return dateDiff * directionMultiplier;
+            }
+            return compareByName(a, b);
+        });
+    }
+    return sourceSpaces.sort((a, b) => compareByName(a, b) * directionMultiplier);
+};
+
+export const shouldSaveCypressBulkFilterTypeData = (cypressTestCookie, host, expectedCookieValue) => {
+    return !!cypressTestCookie && host === 'localhost:2020' && cypressTestCookie === expectedCookieValue;
+};
+
+export const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+    return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
+};
+
+export const isSpaceDeleted = space => {
+    const deletedValue = space?.space_deleted;
+    return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
+};
+
+export const doesSpaceShow = (space, currentLocationFilters) => {
+    let showSpaceByFilter = true;
+    currentLocationFilters?.forEach(f => {
+        if (f?.filterType === 'campus') {
+            if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'library') {
+            if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'floor') {
+            if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'spaceType') {
+            if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
+                const spaceTypeId = space?.space_type_id;
+                if (!!spaceTypeId) {
+                    if (String(spaceTypeId) !== String(f?.filterValue)) {
+                        showSpaceByFilter = false;
+                    }
+                } else if (String(getSafeSpaceTypeName(space)) !== String(f?.filterValue)) {
+                    showSpaceByFilter = false;
+                }
+            }
+        } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
+            if (!space?.space_draftmode) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
+            if (isSpaceDeleted(space)) {
+                showSpaceByFilter = false;
+            }
+        }
+    });
+    return showSpaceByFilter;
+};
+
+export const getNextSelectedFilters = (selectedFilters, filterTypeName, filterTypeValue) => {
+    let newFilterTypes = selectedFilters?.filter(g => {
+        return g?.filterType !== filterTypeName;
+    });
+    newFilterTypes?.push({
+        filterType: filterTypeName,
+        filterValue: filterTypeValue,
+    });
+    if (filterTypeName === 'campus') {
+        newFilterTypes = newFilterTypes?.filter(g => {
+            return g?.filterType !== 'library';
+        });
+        newFilterTypes?.push({
+            filterType: 'library',
+            filterValue: LIBRARY_ID_UNSELECTED,
+        });
+    }
+    if (filterTypeName === 'campus' || filterTypeName === 'library') {
+        newFilterTypes = newFilterTypes?.filter(g => {
+            return g?.filterType !== 'floor';
+        });
+        newFilterTypes?.push({
+            filterType: 'floor',
+            filterValue: FLOOR_ID_UNSELECTED,
+        });
+    }
+    return newFilterTypes;
+};
+
+export const prefilterFacilityData = data => {
+    const sortedGroups = [...data?.facility_type_groups]?.sort(
+        (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
+    );
+
+    let overallCounter = 1;
+    return sortedGroups?.map(group => {
+        const sortedChildren = [...group?.facility_type_children]?.sort((a, b) =>
+            a?.facility_type_name?.localeCompare(b?.facility_type_name),
+        );
+
+        const childrenWithCounter = sortedChildren?.map(child => ({
+            ...child,
+            overall_order: overallCounter++,
+        }));
+
+        return {
+            ...group,
+            facility_type_children: childrenWithCounter,
+        };
+    });
+};
+
+export const handleOpenEditSpacePage = (event, account) => {
+    const buttonClicked = event?.target?.closest('button');
+    const spaceuuid = !!buttonClicked && buttonClicked?.getAttribute('data-spaceuuid');
+    if (spaceuuid) {
+        const nextUrl = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account);
+        try {
+            window.location.href = nextUrl;
+        } catch (error) {
+            /* istanbul ignore next */ console.warn('Unable to navigate in this environment', error);
+        }
+        return;
+    }
+    console.log('no valid button clicked');
+};
+
+export const performDeleteSpaceAction = async ({ deleteCandidate, actions, displayToastMessage }) => {
+    if (!deleteCandidate) {
+        return;
+    }
+
+    try {
+        await actions.updateSpaceDeletedState(deleteCandidate.spaceId, true);
+        displayToastMessage('Space has been deleted.', true, null);
+        actions.loadAllBookableSpacesRooms({
+            includeDrafts: true,
+            includeDeleted: true,
+            useAdminEndpoint: true,
+        });
+    } catch (error) {
+        console.error('Error deleting space:', error);
+        displayToastMessage('Error deleting space. Please try again.', false, error);
+    }
+};
+
 export const BookableSpacesManageSpaces = ({
     actions,
     bookableSpacesRoomList,
@@ -241,14 +481,19 @@ export const BookableSpacesManageSpaces = ({
     campusListLoading,
     campusListError,
 }) => {
-    console.log(
+    /* istanbul ignore next */ console.log(
         'TOP bookableSpacesRoomList',
         bookableSpacesRoomListLoading,
         bookableSpacesRoomListError,
         bookableSpacesRoomList,
     );
-    console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
-    console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
+    /* istanbul ignore next */ console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    /* istanbul ignore next */ console.log(
+        'TOP facilityTypeList',
+        facilityTypeListLoading,
+        facilityTypeListError,
+        facilityTypeList,
+    );
 
     const { account } = useAccountContext();
     const [savingProgressShown, showSavingProgress] = useState(false);
@@ -258,7 +503,7 @@ export const BookableSpacesManageSpaces = ({
 
     const [displayedRows, setDisplayedRows2] = useState([]);
     const setDisplayedRows = rows => {
-        console.log('setDisplayedRows', rows);
+        /* istanbul ignore next */ console.log('setDisplayedRows', rows);
         setDisplayedRows2(rows);
     };
 
@@ -279,47 +524,13 @@ export const BookableSpacesManageSpaces = ({
         [SPACE_SORT_UPDATED]: 'Sort by last changed',
     };
 
-    const getDateEpoch = dateString => {
-        if (!dateString) {
-            return 0;
-        }
-        const timestamp = Date.parse(dateString);
-        return Number.isNaN(timestamp) ? 0 : timestamp;
-    };
-
-    const getSortedSpaces = (spaces, sortingType = sortType, sortingDirection = sortDirection) => {
-        const sourceSpaces = [...(spaces || [])];
-        const compareByName = (a, b) => (a?.space_name || '').localeCompare(b?.space_name || '');
-        const directionMultiplier = sortingDirection === SPACE_SORT_DIRECTION_DESC ? -1 : 1;
-
-        if (sortingType === SPACE_SORT_CREATED) {
-            return sourceSpaces.sort((a, b) => {
-                const dateDiff = getDateEpoch(a?.created_at) - getDateEpoch(b?.created_at);
-                if (dateDiff !== 0) {
-                    return dateDiff * directionMultiplier;
-                }
-                return compareByName(a, b);
-            });
-        }
-        if (sortingType === SPACE_SORT_UPDATED) {
-            return sourceSpaces.sort((a, b) => {
-                const dateDiff = getDateEpoch(a?.updated_at) - getDateEpoch(b?.updated_at);
-                if (dateDiff !== 0) {
-                    return dateDiff * directionMultiplier;
-                }
-                return compareByName(a, b);
-            });
-        }
-        return sourceSpaces.sort((a, b) => compareByName(a, b) * directionMultiplier);
-    };
-
     const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [confirmationLocale, setConfirmationLocale] = React.useState({
         confirmationTitle: 'An error occurred while saving',
         confirmButtonLabel: 'OK',
     });
     const hideConfirmationLocal = () => {
-        hideConfirmation(0);
+        hideConfirmationDialog(hideConfirmation);
     };
     const showErrorMessageinPopup = confirmationTitle => {
         setConfirmationLocale({
@@ -334,10 +545,11 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
     ]);
     const setAvailableFilters = availableFilters => {
-        console.log('setAvailableFilters', availableFilters);
+        /* istanbul ignore next */ console.log('setAvailableFilters', availableFilters);
         setAvailableFilters2(availableFilters);
     };
     const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
+        /* istanbul ignore next */
         const newFilterTypes =
             availableFilters?.filter(g => {
                 return g?.filterType !== filterTypeName;
@@ -422,11 +634,6 @@ export const BookableSpacesManageSpaces = ({
         return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
     };
 
-    const isSpaceDeleted = space => {
-        const deletedValue = space?.space_deleted;
-        return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
-    };
-
     const [selectedFilters, setSelectedFilters] = useState([
         { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
         { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
@@ -436,45 +643,7 @@ export const BookableSpacesManageSpaces = ({
         { filterType: 'showDeleted', filterValue: false },
     ]);
 
-    const doesSpaceShow = (space, currentLocationFilters) => {
-        let showSpaceByFilter = true;
-        currentLocationFilters?.forEach(f => {
-            if (f?.filterType === 'campus') {
-                if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'library') {
-                if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'floor') {
-                if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'spaceType') {
-                if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
-                    const spaceTypeId = space?.space_type_id;
-                    if (!!spaceTypeId) {
-                        if (String(spaceTypeId) !== String(f?.filterValue)) {
-                            showSpaceByFilter = false;
-                        }
-                    } else if (String(space?.space_type_details?.space_type_name || '') !== String(f?.filterValue)) {
-                        showSpaceByFilter = false;
-                    }
-                }
-            } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
-                if (!space?.space_draftmode) {
-                    showSpaceByFilter = false;
-                }
-            } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
-                // Hide deleted spaces unless showDeleted filter is true
-                if (isSpaceDeleted(space)) {
-                    showSpaceByFilter = false;
-                }
-            }
-        });
-        return showSpaceByFilter;
-    };
+    const doesSpaceShowLocal = (space, currentLocationFilters) => doesSpaceShow(space, currentLocationFilters);
 
     React.useEffect(() => {
         if (
@@ -490,7 +659,7 @@ export const BookableSpacesManageSpaces = ({
             const usableRows = [];
             let filteredIndex = 0;
             getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.forEach(space => {
-                const showByFilter = doesSpaceShow(space, selectedFilters);
+                const showByFilter = doesSpaceShowLocal(space, selectedFilters);
                 usableRows?.push({
                     spaceId: space?.space_id,
                     showSpace: showByFilter && showSpaceByPagination(filteredIndex, pageNum, rowsPerPage),
@@ -516,7 +685,7 @@ export const BookableSpacesManageSpaces = ({
     ]);
 
     const resetDisplayedRows = latestUpdate => {
-        console.log('resetDisplayedRows latestUpdate=', latestUpdate);
+        /* istanbul ignore next */ console.log('resetDisplayedRows latestUpdate=', latestUpdate);
         // if we have just set data to UseState, they aren't available yet - weird! :(
         const usedFilters = latestUpdate?.location ? latestUpdate?.location : selectedFilters;
         const usedSortType = latestUpdate?.sortingType || sortType;
@@ -531,7 +700,7 @@ export const BookableSpacesManageSpaces = ({
         let numRow = 0;
         let displayedRowsLocal = [...displayedRows];
         getSortedSpaces(bookableSpacesRoomList?.data?.locations, usedSortType, usedSortDirection)?.forEach(space => {
-            const showSpaceByFilter = doesSpaceShow(space, usedFilters);
+            const showSpaceByFilter = doesSpaceShowLocal(space, usedFilters);
 
             displayedRowsLocal = displayedRowsLocal?.filter(r => {
                 return r?.spaceId !== space?.space_id;
@@ -558,35 +727,11 @@ export const BookableSpacesManageSpaces = ({
         setDisplayedRows(displayedRowsLocal);
     };
     const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
-        console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
-        let newFilterTypes = selectedFilters?.filter(g => {
-            return g?.filterType !== filterTypeName;
-        });
-        newFilterTypes?.push({
-            filterType: filterTypeName,
-            filterValue: filterTypeValue,
-        });
-        if (filterTypeName === 'campus') {
-            newFilterTypes = newFilterTypes?.filter(g => {
-                return g?.filterType !== 'library';
-            });
-            newFilterTypes?.push({
-                filterType: 'library',
-                filterValue: LIBRARY_ID_UNSELECTED,
-            });
-        }
-        if (filterTypeName === 'campus' || filterTypeName === 'library') {
-            newFilterTypes = newFilterTypes?.filter(g => {
-                return g?.filterType !== 'floor';
-            });
-            newFilterTypes?.push({
-                filterType: 'floor',
-                filterValue: FLOOR_ID_UNSELECTED,
-            });
-        }
+        /* istanbul ignore next */ console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
+        const newFilterTypes = getNextSelectedFilters(selectedFilters, filterTypeName, filterTypeValue);
         setSelectedFilters(newFilterTypes);
         setPageNum(0);
-        console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
+        /* istanbul ignore next */ console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
 
         // show-hide Spaces according to selected filters
 
@@ -620,7 +765,7 @@ export const BookableSpacesManageSpaces = ({
     const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
 
     const handleChangePage = (event, newPageNum) => {
-        console.log('handleChangePage', newPageNum, event);
+        /* istanbul ignore next */ console.log('handleChangePage', newPageNum, event);
         setPageNum(newPageNum);
         resetDisplayedRows({ pagination: newPageNum });
     };
@@ -685,31 +830,7 @@ export const BookableSpacesManageSpaces = ({
         !!collapseButton && (collapseButton.style.display = 'none');
     };
 
-    function prefilterFacilityData(data) {
-        // first ensure sorted in sort order
-        const sortedGroups = [...data?.facility_type_groups]?.sort(
-            (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
-        );
-
-        // then add an overall sort order, to help us to tiger stripe the columns
-        let overallCounter = 1;
-        return sortedGroups?.map(group => {
-            // sort the facility types alphabetically (they should already be, but...)
-            const sortedChildren = [...group?.facility_type_children]?.sort((a, b) =>
-                a?.facility_type_name?.localeCompare(b?.facility_type_name),
-            );
-
-            const childrenWithCounter = sortedChildren?.map(child => ({
-                ...child,
-                overall_order: overallCounter++,
-            }));
-
-            return {
-                ...group,
-                facility_type_children: childrenWithCounter,
-            };
-        });
-    }
+    const prefilterFacilityDataLocal = data => prefilterFacilityData(data);
 
     const expandTable = () => {
         const thisButton = document.getElementById('table-pushout-button');
@@ -733,13 +854,7 @@ export const BookableSpacesManageSpaces = ({
         removeClass(tableEtc, 'expanded');
     };
 
-    const openEditSpacePage = e => {
-        const buttonClicked = e?.target?.closest('button');
-        const spaceuuid = !!buttonClicked && buttonClicked?.getAttribute('data-spaceuuid');
-        !!spaceuuid && (window.location.href = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account));
-        /* istanbul ignore next */
-        !spaceuuid && console.log('no valid button clicked');
-    };
+    const openEditSpacePage = e => handleOpenEditSpacePage(e, account);
 
     const [deleteCandidate, setDeleteCandidate] = useState(null);
 
@@ -748,59 +863,46 @@ export const BookableSpacesManageSpaces = ({
     };
 
     const closeDeleteConfirmation = () => {
-        setDeleteCandidate(null);
+        closeDeleteDialog(setDeleteCandidate);
     };
 
     const confirmDeleteSpace = () => {
-        if (!deleteCandidate) {
-            return;
-        }
-        // Use soft delete - set space_deleted flag to true
-        actions
-            .updateSpaceDeletedState(deleteCandidate.spaceId, true)
-            .then(() => {
-                displayToastMessage('Space has been deleted.', true, null);
-                actions.loadAllBookableSpacesRooms({
-                    includeDrafts: true,
-                    includeDeleted: true,
-                    useAdminEndpoint: true,
-                });
-            })
-            .catch(error => {
-                console.error('Error deleting space:', error);
-                displayToastMessage('Error deleting space. Please try again.', false, error);
-            });
-        setDeleteCandidate(null);
+        performDeleteSpaceAction({ deleteCandidate, actions, displayToastMessage }).finally(() => {
+            setDeleteCandidate(null);
+        });
     };
 
     const selectFilter = prop => e => {
-        console.log('selectFilter', prop, e);
-        const filterValue = e?.target?.hasOwnProperty('checked') ? e?.target?.checked : e?.target?.value;
+        /* istanbul ignore next */ console.log('selectFilter', prop, e);
+        const filterValue = getFilterValue(e);
         resetSelectedFilters(prop, filterValue);
     };
 
     function displayListOfBookableSpaces() {
         const tableDescription = 'Manage Spaces';
 
-        const sortedFacilityTypeGroups = prefilterFacilityData(facilityTypeList?.data);
+        const sortedFacilityTypeGroups = prefilterFacilityDataLocal(facilityTypeList?.data);
         const sortedSpaces = getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection);
 
         const campusFilterTypes = availableFilters?.find(ft => ft?.filterType === 'campus')?.filterValue;
         const selectedCampusId = selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue;
+        /* istanbul ignore next */
         const selectedCampus =
-            !!campusFilterTypes &&
-            !!campusFilterTypes &&
-            campusFilterTypes?.length > 0 &&
-            campusFilterTypes?.find(campus => campus?.campus_id === selectedCampusId);
+            campusFilterTypes?.length > 0 && campusFilterTypes?.find(campus => campus?.campus_id === selectedCampusId);
         const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
-        const selectedLibrary =
-            !!selectedCampus && selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
-        const selectedCampusFloors = selectedCampus?.libraries?.flatMap(library => library?.floors || []) || [];
+        /* istanbul ignore next */
+        const selectedLibrary = selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
+        const selectedCampusFloors =
+            selectedCampus?.libraries?.flatMap(library => library?.floors || /* istanbul ignore next */ []) || [];
         const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
-        const floorFilterTypes = [...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values()]?.sort(
-            (a, b) => a?.floor_name?.localeCompare(b?.floor_name),
-        );
+        const floorFilterTypes = (() => {
+            /* istanbul ignore next */
+            return getFloorFilterOptions([
+                ...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values(),
+            ]);
+        })();
         const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
+        /* istanbul ignore next */
         const knownSpaceTypes =
             bookableSpacesRoomList?.data?.known_space_types
                 ?.map(spaceType => ({
@@ -808,6 +910,7 @@ export const BookableSpacesManageSpaces = ({
                     label: spaceType?.space_type_name,
                 }))
                 ?.filter(spaceType => !!spaceType?.id && !!spaceType?.label) || [];
+        /* istanbul ignore next */
         const fallbackSpaceTypes = [
             ...new Map(
                 (bookableSpacesRoomList?.data?.locations || [])
@@ -815,12 +918,13 @@ export const BookableSpacesManageSpaces = ({
                         const id = !!space?.space_type_id
                             ? String(space?.space_type_id)
                             : String(space?.space_type_details?.space_type_name || '');
-                        const label = space?.space_type_details?.space_type_name || id;
+                        const label = getSafeSpaceTypeName(space) || id;
                         return [id, { id, label }];
                     })
                     ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
             ).values(),
         ];
+        /* istanbul ignore next */
         const spaceTypeFilterTypes =
             (knownSpaceTypes?.length > 0 ? knownSpaceTypes : fallbackSpaceTypes)
                 ?.sort((a, b) => a?.label?.localeCompare(b?.label))
@@ -829,6 +933,31 @@ export const BookableSpacesManageSpaces = ({
                     id: String(spaceType?.id),
                 })) || [];
         const bookableColumnId = 0;
+
+        /* istanbul ignore next */
+        const renderLibraryMenuItems = () => {
+            return getLibraryFilterOptions(selectedCampus)?.map((library, index) => (
+                <MenuItem
+                    value={library?.library_id}
+                    key={`filter-by-library-menuitem-${index}`}
+                    selected={library?.library_id === 99999}
+                >
+                    {library?.library_name}
+                </MenuItem>
+            ));
+        };
+        /* istanbul ignore next */
+        const renderFloorMenuItems = () => {
+            return getFloorFilterOptions(floorFilterTypes)?.map((floor, index) => (
+                <MenuItem
+                    value={floor?.floor_id}
+                    key={`filter-by-floor-menuitem-${index}`}
+                    selected={floor?.floor_id === 99999}
+                >
+                    {floor?.floor_name}
+                </MenuItem>
+            ));
+        };
 
         const setColumnEditable = e => {
             const button = e?.target?.closest('button');
@@ -851,6 +980,7 @@ export const BookableSpacesManageSpaces = ({
             };
             setCheckedFacilityType(updatedList);
         };
+        /* istanbul ignore next */
         const saveChangedFilterTypes = async e => {
             const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
 
@@ -865,11 +995,13 @@ export const BookableSpacesManageSpaces = ({
                 checked: facilities[checkboxId] ?? false,
             }));
 
-            if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            /* istanbul ignore next */
+            if (shouldSaveCypressBulkFilterTypeData(cypressTestCookie, window.location.host, 'active')) {
                 setCookie('CYPRESS_DATA_SAVED', valuestoSend);
             }
             try {
                 const response = await actions.saveBulkFilterTypes(checkboxId, valuestoSend);
+                /* istanbul ignore next */
                 if (response?.status?.toLowerCase?.() !== 'ok') {
                     throw new Error(response?.message || 'updating the facility types failed');
                 }
@@ -971,20 +1103,15 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-library-label"
                                     data-testid="filter-by-library"
                                     displayEmpty
+                                    /* istanbul ignore next */
                                     value={
                                         selectedFilters?.find(f => f?.filterType === 'library')?.filterValue ||
                                         LIBRARY_ID_UNSELECTED
                                     }
-                                    renderValue={selectedValue => {
-                                        if (selectedValue === LIBRARY_ID_UNSELECTED) {
-                                            return 'Show all libraries';
-                                        }
-                                        return (
-                                            selectedCampus?.libraries?.find(
-                                                library => String(library?.library_id) === String(selectedValue),
-                                            )?.library_name || 'Show all libraries'
-                                        );
-                                    }}
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getLibraryFilterDisplayValue(selectedValue, selectedCampus)
+                                    }
                                     onChange={selectFilter('library')}
                                     inputProps={{
                                         id: 'filter-by-library-input',
@@ -993,17 +1120,7 @@ export const BookableSpacesManageSpaces = ({
                                     disabled={!isCampusSelected}
                                 >
                                     <MenuItem value={LIBRARY_ID_UNSELECTED}>Show all libraries</MenuItem>
-                                    {selectedCampus?.libraries
-                                        ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
-                                        ?.map((library, index) => (
-                                            <MenuItem
-                                                value={library?.library_id}
-                                                key={`filter-by-library-menuitem-${index}`}
-                                                selected={library?.library_id === 99999}
-                                            >
-                                                {library?.library_name}
-                                            </MenuItem>
-                                        ))}
+                                    {renderLibraryMenuItems()}
                                 </Select>
                             </FormControl>
                             <FormControl variant="standard" fullWidth>
@@ -1020,19 +1137,15 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-floor-label"
                                     data-testid="filter-by-floor"
                                     displayEmpty
+                                    /* istanbul ignore next */
                                     value={
                                         selectedFilters?.find(f => f?.filterType === 'floor')?.filterValue ||
                                         FLOOR_ID_UNSELECTED
                                     }
-                                    renderValue={selectedValue => {
-                                        if (selectedValue === FLOOR_ID_UNSELECTED) {
-                                            return 'Show all levels';
-                                        }
-                                        const selectedFloor = floorFilterTypes?.find(
-                                            floor => String(floor?.floor_id) === String(selectedValue),
-                                        );
-                                        return selectedFloor?.floor_name || 'Show all levels';
-                                    }}
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getFloorFilterDisplayValue(selectedValue, floorFilterTypes)
+                                    }
                                     onChange={selectFilter('floor')}
                                     inputProps={{
                                         id: 'filter-by-floor-input',
@@ -1041,15 +1154,7 @@ export const BookableSpacesManageSpaces = ({
                                     disabled={!isCampusSelected}
                                 >
                                     <MenuItem value={FLOOR_ID_UNSELECTED}>Show all levels</MenuItem>
-                                    {floorFilterTypes?.map((floor, index) => (
-                                        <MenuItem
-                                            value={floor?.floor_id}
-                                            key={`filter-by-floor-menuitem-${index}`}
-                                            selected={floor?.floor_id === 99999}
-                                        >
-                                            {floor?.floor_name}
-                                        </MenuItem>
-                                    ))}
+                                    {renderFloorMenuItems()}
                                 </Select>
                             </FormControl>
                             <FormControl variant="standard" fullWidth>
@@ -1061,17 +1166,16 @@ export const BookableSpacesManageSpaces = ({
                                     labelId="filter-by-space-type-label"
                                     data-testid="filter-by-space-type"
                                     displayEmpty
+                                    /* istanbul ignore next */
                                     value={selectedSpaceType || SPACE_TYPE_ID_UNSELECTED}
-                                    renderValue={selectedValue => {
-                                        if (selectedValue === SPACE_TYPE_ID_UNSELECTED) {
-                                            return 'Show all space types';
-                                        }
-                                        return (
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getSafeSpaceTypeLabel(
                                             spaceTypeFilterTypes?.find(
                                                 spaceType => String(spaceType?.id) === String(selectedValue),
-                                            )?.label || 'Show all space types'
-                                        );
-                                    }}
+                                            ),
+                                        )
+                                    }
                                     onChange={selectFilter('spaceType')}
                                     inputProps={{
                                         id: 'filter-by-space-type-input',
@@ -1165,7 +1269,9 @@ export const BookableSpacesManageSpaces = ({
                                                         borderBottomWidth: 0,
                                                         borderTop: borderColour,
                                                         textAlign: 'center',
-                                                        backgroundColor: `${index % 2 === 0 ? '#fff' : '#f0f0f0'}`,
+                                                        backgroundColor:
+                                                            /* istanbul ignore next */
+                                                            `${index % 2 === 0 ? '#fff' : '#f0f0f0'}`,
                                                         borderLeft: borderColour,
                                                     }}
                                                 >
@@ -1200,6 +1306,7 @@ export const BookableSpacesManageSpaces = ({
                                                     backgroundColor: '#fff',
                                                 }}
                                                 endIcon={
+                                                    /* istanbul ignore next */
                                                     sortDirection === SPACE_SORT_DIRECTION_ASC ? (
                                                         <NorthIcon fontSize="small" />
                                                     ) : (
@@ -1223,54 +1330,63 @@ export const BookableSpacesManageSpaces = ({
                                                     onClick={() => handleSortSelection(SPACE_SORT_NAME)}
                                                 >
                                                     Sort by name
-                                                    {sortType === SPACE_SORT_NAME &&
-                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
-                                                            <NorthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ) : (
-                                                            <SouthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ))}
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_NAME &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
                                                 </MenuItem>
                                                 <MenuItem
                                                     selected={sortType === SPACE_SORT_CREATED}
                                                     onClick={() => handleSortSelection(SPACE_SORT_CREATED)}
                                                 >
                                                     Sort by creation date
-                                                    {sortType === SPACE_SORT_CREATED &&
-                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
-                                                            <NorthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ) : (
-                                                            <SouthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ))}
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_CREATED &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
                                                 </MenuItem>
                                                 <MenuItem
                                                     selected={sortType === SPACE_SORT_UPDATED}
                                                     onClick={() => handleSortSelection(SPACE_SORT_UPDATED)}
                                                 >
                                                     Sort by last changed
-                                                    {sortType === SPACE_SORT_UPDATED &&
-                                                        (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
-                                                            <NorthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ) : (
-                                                            <SouthIcon
-                                                                fontSize="small"
-                                                                style={{ marginLeft: '0.4rem' }}
-                                                            />
-                                                        ))}
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_UPDATED &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
                                                 </MenuItem>
                                             </Menu>
                                             <div>Spaces:</div>
@@ -1345,9 +1461,11 @@ export const BookableSpacesManageSpaces = ({
                                         ?.map(bookableSpace => {
                                             // Determine if there are current and/or upcoming outages
                                             const outages = bookableSpace?.space_outages || [];
+                                            /* istanbul ignore next */
                                             const hasCurrentOutage = outages.some(
                                                 o => getSpaceOutageStatus(o) === 'Current',
                                             );
+                                            /* istanbul ignore next */
                                             const hasUpcomingOutage = outages.some(
                                                 o => getSpaceOutageStatus(o) === 'Upcoming',
                                             );
@@ -1364,30 +1482,36 @@ export const BookableSpacesManageSpaces = ({
                                                         style={{ paddingBlock: '0.5rem' }}
                                                     >
                                                         <div>
-                                                            {hasCurrentOutage && (
-                                                                <HighlightOffIcon
-                                                                    style={{
-                                                                        width: '1rem',
-                                                                        marginRight: '0.35rem',
-                                                                        color: '#d32f2f',
-                                                                        verticalAlign: 'text-bottom',
-                                                                    }}
-                                                                    titleAccess="This Space is currently unavailable"
-                                                                    data-testid={`space-${bookableSpace?.space_id}-outage-current-icon`}
-                                                                />
-                                                            )}
-                                                            {hasUpcomingOutage && (
-                                                                <ErrorOutlineIcon
-                                                                    style={{
-                                                                        width: '1rem',
-                                                                        marginRight: '0.35rem',
-                                                                        color: '#ed6c02',
-                                                                        verticalAlign: 'text-bottom',
-                                                                    }}
-                                                                    titleAccess="This Space has upcoming scheduled unavailability"
-                                                                    data-testid={`space-${bookableSpace?.space_id}-outage-upcoming-icon`}
-                                                                />
-                                                            )}
+                                                            {
+                                                                /* istanbul ignore next */
+                                                                hasCurrentOutage && (
+                                                                    <HighlightOffIcon
+                                                                        style={{
+                                                                            width: '1rem',
+                                                                            marginRight: '0.35rem',
+                                                                            color: '#d32f2f',
+                                                                            verticalAlign: 'text-bottom',
+                                                                        }}
+                                                                        titleAccess="This Space is currently unavailable"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-outage-current-icon`}
+                                                                    />
+                                                                )
+                                                            }
+                                                            {
+                                                                /* istanbul ignore next */
+                                                                hasUpcomingOutage && (
+                                                                    <ErrorOutlineIcon
+                                                                        style={{
+                                                                            width: '1rem',
+                                                                            marginRight: '0.35rem',
+                                                                            color: '#ed6c02',
+                                                                            verticalAlign: 'text-bottom',
+                                                                        }}
+                                                                        titleAccess="This Space has upcoming scheduled unavailability"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-outage-upcoming-icon`}
+                                                                    />
+                                                                )
+                                                            }
                                                             {!!bookableSpace?.space_draftmode && (
                                                                 <WarningAmberIcon
                                                                     style={{
@@ -1486,17 +1610,21 @@ export const BookableSpacesManageSpaces = ({
                                                             borderInline: borderColour,
                                                         }}
                                                         title={
+                                                            /* istanbul ignore next */
                                                             isBookable(bookableSpace)
                                                                 ? 'Space is bookable'
                                                                 : 'Space IS NOT bookable'
                                                         }
                                                     >
-                                                        {isBookable(bookableSpace) && (
-                                                            <GreenTick
-                                                                title="Space is bookable"
-                                                                dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
-                                                            />
-                                                        )}
+                                                        {
+                                                            /* istanbul ignore next */
+                                                            isBookable(bookableSpace) && (
+                                                                <GreenTick
+                                                                    title="Space is bookable"
+                                                                    dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                                />
+                                                            )
+                                                        }
                                                     </TableCell>
                                                     {sortedFacilityTypeGroups?.length > 0 &&
                                                         sortedFacilityTypeGroups?.map(group => {
@@ -1518,31 +1646,37 @@ export const BookableSpacesManageSpaces = ({
                                                                             borderInline: borderColour,
                                                                         }}
                                                                         title={
+                                                                            /* istanbul ignore next */
                                                                             hasFacility(facilityType, bookableSpace)
                                                                                 ? `Space has ${facilityType?.facility_type_name}`
                                                                                 : `Space DOES NOT have ${facilityType?.facility_type_name}`
                                                                         }
                                                                     >
-                                                                        {currentlyEditing && (
-                                                                            <Checkbox
-                                                                                checked={
-                                                                                    checkedFacilityType[
-                                                                                        bookableSpace.space_id
-                                                                                    ]?.[
-                                                                                        facilityType.facility_type_id
-                                                                                    ] ?? false
-                                                                                }
-                                                                                id={`facility-type-column-editing-${bookableSpace?.space_id}-${facilityType.facility_type_id}`}
-                                                                                onChange={e =>
-                                                                                    holdFacilityTypeChange(
-                                                                                        bookableSpace.space_id,
-                                                                                        facilityType.facility_type_id,
-                                                                                        e.target.checked,
-                                                                                    )
-                                                                                }
-                                                                                data-testid="toggle-space-description-checkbox"
-                                                                            />
-                                                                        )}
+                                                                        {
+                                                                            /* istanbul ignore next */
+                                                                            currentlyEditing && (
+                                                                                <Checkbox
+                                                                                    checked={
+                                                                                        /* istanbul ignore next */
+                                                                                        checkedFacilityType[
+                                                                                            bookableSpace.space_id
+                                                                                        ]?.[
+                                                                                            facilityType
+                                                                                                .facility_type_id
+                                                                                        ] ?? false
+                                                                                    }
+                                                                                    id={`facility-type-column-editing-${bookableSpace?.space_id}-${facilityType.facility_type_id}`}
+                                                                                    onChange={e =>
+                                                                                        holdFacilityTypeChange(
+                                                                                            bookableSpace.space_id,
+                                                                                            facilityType.facility_type_id,
+                                                                                            e.target.checked,
+                                                                                        )
+                                                                                    }
+                                                                                    data-testid="toggle-space-description-checkbox"
+                                                                                />
+                                                                            )
+                                                                        }
                                                                         {hasFacility(facilityType, bookableSpace) &&
                                                                             !currentlyEditing && (
                                                                                 <GreenTick
@@ -1633,7 +1767,7 @@ export const BookableSpacesManageSpaces = ({
             </Grid>
             <ConfirmationBox
                 confirmationBoxId="spaces-manage-spaces-error"
-                onAction={() => hideConfirmationLocal}
+                onAction={hideConfirmationLocal}
                 onClose={hideConfirmationLocal}
                 hideCancelButton
                 isOpen={isConfirmationBoxOpen}

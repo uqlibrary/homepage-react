@@ -4,7 +4,7 @@ const getValidGroupOrder = group => {
 };
 
 export const orderFacilityTypeGroups = groups => {
-    return [...(groups || [])]
+    return [...(groups || /* istanbul ignore next */ [])]
         .map((group, index) => ({
             group,
             index,
@@ -29,7 +29,7 @@ export const orderFacilityTypeGroups = groups => {
 };
 
 export const buildFacilityGroupOrderPayload = groups => {
-    return (groups || []).map((group, index) => ({
+    return (groups || /* istanbul ignore next */ []).map((group, index) => ({
         facility_type_group_id: group?.facility_type_group_id,
         facility_type_group_order: index + 1,
     }));

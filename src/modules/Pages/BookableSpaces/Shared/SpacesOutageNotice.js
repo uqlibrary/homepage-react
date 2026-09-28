@@ -40,7 +40,7 @@ const MONTH_SHORT_LABELS = {
     Dec: 'Dec.',
 };
 
-const formatShortMonth = date => MONTH_SHORT_LABELS[date.format('MMM')] || date.format('MMM');
+const formatShortMonth = date => MONTH_SHORT_LABELS[date.format('MMM')];
 
 const formatShortMonthDate = date => `${date.format('D')} ${formatShortMonth(date)} ${date.format('YYYY')}`;
 

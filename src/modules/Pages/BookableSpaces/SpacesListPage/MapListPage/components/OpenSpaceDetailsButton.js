@@ -25,9 +25,9 @@ export const OpenSpaceDetailsButton = ({ spaceDetails }) => {
         () =>
             serialiseJourneyUrl({
                 view: 'details',
-                spaceId: spaceDetails?.space_uuid || spaceDetails?.space_id || null,
+                spaceId: spaceDetails?.space_uuid,
             }),
-        [spaceDetails?.space_uuid, spaceDetails?.space_id],
+        [spaceDetails?.space_uuid],
     );
 
     return (

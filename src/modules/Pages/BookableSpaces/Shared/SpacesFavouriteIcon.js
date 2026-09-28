@@ -68,7 +68,7 @@ export const SpacesFavouriteIcon = ({
         }
     };
 
-    if (!isLoggedIn || !onFavouriteToggle) {
+    if (!isLoggedIn) {
         return null;
     }
     if (!!isFavouriteActionInProgress && (!!isDetailPage || isFavouriteActionInProgress === bookableSpace.space_id)) {

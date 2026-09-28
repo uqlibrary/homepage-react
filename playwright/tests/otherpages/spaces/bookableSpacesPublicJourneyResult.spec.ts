@@ -64,7 +64,7 @@ test.describe('Spaces Journey Result page', () => {
         const firstSpacePane = page.getByTestId('spaces-result-list-item-1');
 
         // load the spaces results page
-        await page.goto('/spaces/results');
+        await page.goto('/spaces/results?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await expect(page.getByTestId('sidebarCheckboxes')).toBeVisible();
@@ -171,7 +171,7 @@ test.describe('Spaces Journey Result page', () => {
     });
     test('on mobile, clear filters button works', async ({ page }) => {
         // load the spaces results page
-        await page.goto('/spaces/results');
+        await page.goto('/spaces/results?user=libSpaces');
         await page.setViewportSize({ width: 390, height: 736 });
         await expect(page.locator('body').getByText(/Search results/)).toBeVisible();
 
@@ -205,7 +205,7 @@ test.describe('Spaces Journey Result page', () => {
     test.describe('Favourites', () => {
         test('can UNfavourite a space on the result page', async ({ page }) => {
             // load the spaces results page
-            await page.goto('/spaces/results');
+            await page.goto('/spaces/results?user=libSpaces');
             await page.setViewportSize({ width: 1300, height: 1000 });
 
             // the page has loaded
