@@ -1,0 +1,1816 @@
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
+import { useAccountContext } from 'context';
+
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DoneIcon from '@mui/icons-material/Done';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import SouthIcon from '@mui/icons-material/South';
+import NorthIcon from '@mui/icons-material/North';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+
+import {
+    addClass,
+    removeClass,
+    scrollToTopOfPage,
+    slugifyName,
+    standardText,
+    StyledPrimaryButton,
+    StyledSecondaryButton,
+} from 'helpers/general';
+import {
+    getFlatFacilityTypeList,
+    getFriendlyLocationDescription,
+    isBookable,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { getSpaceOutageStatus } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+import {
+    addBreadcrumbsToSiteHeader,
+    displayToastMessage,
+    spacesAdminLink,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+import SpacesAdminPage from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import { useConfirmationState } from 'hooks';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+
+const backgroundColorColumn = '#f0f0f0';
+const borderColour = '1px solid rgb(224 224 224 / 1)';
+
+const StyledStandardCard = styled(StandardCard)(() => ({
+    '& .MuiCardHeader-root': {
+        paddingBottom: 0,
+    },
+    '& .MuiCardContent-root': {
+        paddingBlock: 0,
+    },
+}));
+const StyledBookableSpaceGridItem = styled(Grid)(() => ({
+    marginTop: '12px',
+}));
+const StyledTablePagination = styled(TablePagination)(() => ({
+    overflow: 'hidden',
+    '& .MuiTablePagination-toolbar': {
+        display: 'flex !important',
+        alignItems: 'center !important',
+        justifyContent: 'center !important',
+        gap: 0,
+        flexWrap: 'wrap',
+        paddingInline: 0,
+    },
+    '& .MuiTablePagination-spacer': {
+        display: 'none',
+    },
+    '& .MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows, .MuiTablePagination-actions ':
+        {
+            flexShrink: 0,
+        },
+    '& .MuiTablePagination-input': {
+        marginLeft: 0,
+        '& select': {
+            paddingLeft: 0,
+        },
+    },
+    '& .MuiTablePagination-actions': {
+        marginLeft: '0 !important',
+    },
+}));
+const StyledTableContainer = styled(TableContainer)(() => ({
+    position: 'relative',
+    overflow: 'auto',
+    whiteSpace: 'nowrap',
+}));
+const StyledTableHead = styled(TableHead)(() => ({
+    '& th:first-of-type': {
+        position: 'sticky',
+        left: 0,
+    },
+}));
+
+const StyledHeadingFacilityTableCell = styled(TableCell)(() => ({
+    whiteSpace: 'break-spaces',
+    textAlign: 'center',
+    verticalAlign: 'bottom',
+}));
+
+const StyledHeaderTableRow = styled(TableRow)(({ theme }) => ({
+    '& th, & td': {
+        ...standardText(theme),
+    },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '& th, & td': {
+        ...standardText(theme),
+    },
+    '&:hover': {
+        backgroundColor: 'rgb(189 186 186)',
+        '& th, & td': {
+            backgroundColor: 'rgb(189 186 186)',
+        },
+    },
+    '&.hiddenRow': {
+        display: 'none',
+    },
+    '& button': {
+        paddingBlock: 0,
+        '&:hover, &:focus': {
+            backgroundColor: 'inherit',
+            color: '#fff',
+        },
+    },
+}));
+const StyledStickyTableCell = styled(TableCell)(() => ({
+    position: 'sticky',
+    backgroundColor: backgroundColorColumn,
+    left: 0,
+    '< div:first-of-type': {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginInline: '-1px',
+    },
+    '& .spaceDescription': {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+}));
+const StyledTableWrapperDiv = styled('div')(() => ({
+    '&.expanded': {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '95vw',
+        height: '92vh',
+        zIndex: 100,
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginInline: '20px',
+        border: 'thick solid black',
+        marginTop: '4px',
+        borderRadius: '10px',
+        '& .tableContainer': {
+            height: '90%',
+        },
+    },
+}));
+const StyledFilterWrapperDiv = styled('div')(() => ({
+    display: 'flex',
+    columnGap: '1rem',
+    marginBottom: '1rem',
+}));
+const StyledExpandCollapseTableIconButton = styled(IconButton)(({ theme }) => ({
+    transform: 'scale(-1, 1)',
+    transformOrigin: 'center',
+    backgroundColor: theme.palette.primary.main,
+    border: `1px solid ${theme.palette.primary.main}`,
+    color: 'white',
+    '&:hover, &:focus': {
+        backgroundColor: 'white',
+        color: theme.palette.primary.main,
+    },
+    marginRight: '1rem',
+}));
+
+const GreenTick = ({ title, dataTestId }) => {
+    return <DoneIcon titleAccess={title} style={{ stroke: 'green' }} data-testid={dataTestId} />;
+};
+GreenTick.propTypes = {
+    title: PropTypes.string,
+    dataTestId: PropTypes.string,
+};
+
+const CAMPUS_ID_UNSELECTED = '';
+const LIBRARY_ID_UNSELECTED = '';
+const FLOOR_ID_UNSELECTED = '';
+const SPACE_TYPE_ID_UNSELECTED = '';
+const SPACE_SORT_NAME = 'name';
+const SPACE_SORT_CREATED = 'created';
+const SPACE_SORT_UPDATED = 'updated';
+const SPACE_SORT_DIRECTION_ASC = 'asc';
+const SPACE_SORT_DIRECTION_DESC = 'desc';
+
+export const getSafeSpaceName = space => {
+    if (!space?.space_name) {
+        return '';
+    }
+    return space.space_name;
+};
+export const getSafeSpaceTypeName = space => {
+    if (!space?.space_type_details?.space_type_name) {
+        return '';
+    }
+    return space.space_type_details.space_type_name;
+};
+export const getSafeLibraryName = library => {
+    if (!library?.library_name) {
+        return 'Show all libraries';
+    }
+    return library.library_name;
+};
+export const getSafeFloorName = floor => {
+    if (!floor?.floor_name) {
+        return 'Show all levels';
+    }
+    return floor.floor_name;
+};
+export const getSafeSpaceTypeLabel = spaceType => {
+    if (!spaceType?.label) {
+        return 'Show all space types';
+    }
+    return spaceType.label;
+};
+
+export const getDateEpoch = dateString => {
+    if (!dateString) {
+        return 0;
+    }
+    const timestamp = Date.parse(dateString);
+    return Number.isNaN(timestamp) ? 0 : timestamp;
+};
+
+export const hideConfirmationDialog = hideConfirmation => {
+    hideConfirmation(0);
+};
+
+export const closeDeleteDialog = setDeleteCandidate => {
+    setDeleteCandidate(null);
+};
+
+export const getFilterValue = e => {
+    return e?.target?.hasOwnProperty('checked') ? e?.target?.checked : e?.target?.value;
+};
+
+export const getLibraryFilterDisplayValue = (selectedValue, selectedCampus) => {
+    if (selectedValue === LIBRARY_ID_UNSELECTED) {
+        return 'Show all libraries';
+    }
+    return getSafeLibraryName(
+        selectedCampus?.libraries?.find(library => String(library?.library_id) === String(selectedValue)),
+    );
+};
+
+export const getFloorFilterDisplayValue = (selectedValue, floorFilterTypes) => {
+    if (selectedValue === FLOOR_ID_UNSELECTED) {
+        return 'Show all levels';
+    }
+    const selectedFloor = floorFilterTypes?.find(floor => String(floor?.floor_id) === String(selectedValue));
+    return getSafeFloorName(selectedFloor);
+};
+
+export const getLibraryFilterOptions = selectedCampus => {
+    return [...(selectedCampus?.libraries || [])]?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name));
+};
+
+export const getFloorFilterOptions = floorFilterTypes => {
+    return [...(floorFilterTypes || [])]?.sort((a, b) => a?.floor_name?.localeCompare(b?.floor_name));
+};
+
+export const getSortedSpaces = (spaces, sortingType = SPACE_SORT_NAME, sortingDirection = SPACE_SORT_DIRECTION_ASC) => {
+    const sourceSpaces = [...(spaces || [])];
+    const compareByName = (a, b) => getSafeSpaceName(a).localeCompare(getSafeSpaceName(b));
+    const directionMultiplier = sortingDirection === SPACE_SORT_DIRECTION_DESC ? -1 : 1;
+
+    if (sortingType === SPACE_SORT_CREATED) {
+        return sourceSpaces.sort((a, b) => {
+            const dateDiff = getDateEpoch(a?.created_at) - getDateEpoch(b?.created_at);
+            if (dateDiff !== 0) {
+                return dateDiff * directionMultiplier;
+            }
+            return compareByName(a, b);
+        });
+    }
+    if (sortingType === SPACE_SORT_UPDATED) {
+        return sourceSpaces.sort((a, b) => {
+            const dateDiff = getDateEpoch(a?.updated_at) - getDateEpoch(b?.updated_at);
+            if (dateDiff !== 0) {
+                return dateDiff * directionMultiplier;
+            }
+            return compareByName(a, b);
+        });
+    }
+    return sourceSpaces.sort((a, b) => compareByName(a, b) * directionMultiplier);
+};
+
+export const shouldSaveCypressBulkFilterTypeData = (cypressTestCookie, host, expectedCookieValue) => {
+    return !!cypressTestCookie && host === 'localhost:2020' && cypressTestCookie === expectedCookieValue;
+};
+
+export const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+    return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
+};
+
+export const isSpaceDeleted = space => {
+    const deletedValue = space?.space_deleted;
+    return deletedValue === true || deletedValue === 1 || deletedValue === '1' || deletedValue === 'true';
+};
+
+export const doesSpaceShow = (space, currentLocationFilters) => {
+    let showSpaceByFilter = true;
+    currentLocationFilters?.forEach(f => {
+        if (f?.filterType === 'campus') {
+            if (f?.filterValue !== CAMPUS_ID_UNSELECTED && space?.space_campus_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'library') {
+            if (f?.filterValue !== LIBRARY_ID_UNSELECTED && space?.space_library_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'floor') {
+            if (f?.filterValue !== FLOOR_ID_UNSELECTED && space?.space_floor_id !== f?.filterValue) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'spaceType') {
+            if (f?.filterValue !== SPACE_TYPE_ID_UNSELECTED) {
+                const spaceTypeId = space?.space_type_id;
+                if (!!spaceTypeId) {
+                    if (String(spaceTypeId) !== String(f?.filterValue)) {
+                        showSpaceByFilter = false;
+                    }
+                } else if (String(getSafeSpaceTypeName(space)) !== String(f?.filterValue)) {
+                    showSpaceByFilter = false;
+                }
+            }
+        } else if (f?.filterType === 'draftOnly' && f?.filterValue === true) {
+            if (!space?.space_draftmode) {
+                showSpaceByFilter = false;
+            }
+        } else if (f?.filterType === 'showDeleted' && f?.filterValue === false) {
+            if (isSpaceDeleted(space)) {
+                showSpaceByFilter = false;
+            }
+        }
+    });
+    return showSpaceByFilter;
+};
+
+export const getNextSelectedFilters = (selectedFilters, filterTypeName, filterTypeValue) => {
+    let newFilterTypes = selectedFilters?.filter(g => {
+        return g?.filterType !== filterTypeName;
+    });
+    newFilterTypes?.push({
+        filterType: filterTypeName,
+        filterValue: filterTypeValue,
+    });
+    if (filterTypeName === 'campus') {
+        newFilterTypes = newFilterTypes?.filter(g => {
+            return g?.filterType !== 'library';
+        });
+        newFilterTypes?.push({
+            filterType: 'library',
+            filterValue: LIBRARY_ID_UNSELECTED,
+        });
+    }
+    if (filterTypeName === 'campus' || filterTypeName === 'library') {
+        newFilterTypes = newFilterTypes?.filter(g => {
+            return g?.filterType !== 'floor';
+        });
+        newFilterTypes?.push({
+            filterType: 'floor',
+            filterValue: FLOOR_ID_UNSELECTED,
+        });
+    }
+    return newFilterTypes;
+};
+
+export const prefilterFacilityData = data => {
+    const sortedGroups = [...data?.facility_type_groups]?.sort(
+        (a, b) => a?.facility_type_group_order - b?.facility_type_group_order,
+    );
+
+    let overallCounter = 1;
+    return sortedGroups?.map(group => {
+        const sortedChildren = [...group?.facility_type_children]?.sort((a, b) =>
+            a?.facility_type_name?.localeCompare(b?.facility_type_name),
+        );
+
+        const childrenWithCounter = sortedChildren?.map(child => ({
+            ...child,
+            overall_order: overallCounter++,
+        }));
+
+        return {
+            ...group,
+            facility_type_children: childrenWithCounter,
+        };
+    });
+};
+
+export const handleOpenEditSpacePage = (event, account) => {
+    const buttonClicked = event?.target?.closest('button');
+    const spaceuuid = !!buttonClicked && buttonClicked?.getAttribute('data-spaceuuid');
+    if (spaceuuid) {
+        const nextUrl = spacesAdminLink(`/admin/spaces/edit/${spaceuuid}`, account);
+        try {
+            window.location.href = nextUrl;
+        } catch (error) {
+            /* istanbul ignore next */ console.warn('Unable to navigate in this environment', error);
+        }
+        return;
+    }
+    console.log('no valid button clicked');
+};
+
+export const performDeleteSpaceAction = async ({ deleteCandidate, actions, displayToastMessage }) => {
+    if (!deleteCandidate) {
+        return;
+    }
+
+    try {
+        await actions.updateSpaceDeletedState(deleteCandidate.spaceId, true);
+        displayToastMessage('Space has been deleted.', true, null);
+        actions.loadAllBookableSpacesRooms({
+            includeDrafts: true,
+            includeDeleted: true,
+            useAdminEndpoint: true,
+        });
+    } catch (error) {
+        console.error('Error deleting space:', error);
+        displayToastMessage('Error deleting space. Please try again.', false, error);
+    }
+};
+
+export const BookableSpacesManageSpaces = ({
+    actions,
+    bookableSpacesRoomList,
+    bookableSpacesRoomListLoading,
+    bookableSpacesRoomListError,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
+    campusList,
+    campusListLoading,
+    campusListError,
+}) => {
+    /* istanbul ignore next */ console.log(
+        'TOP bookableSpacesRoomList',
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomListError,
+        bookableSpacesRoomList,
+    );
+    /* istanbul ignore next */ console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+    /* istanbul ignore next */ console.log(
+        'TOP facilityTypeList',
+        facilityTypeListLoading,
+        facilityTypeListError,
+        facilityTypeList,
+    );
+
+    const { account } = useAccountContext();
+    const [savingProgressShown, showSavingProgress] = useState(false);
+
+    const [currentEditColumn, setCurrentEditColumn] = useState(null);
+    const [checkedFacilityType, setCheckedFacilityType] = useState({});
+
+    const [displayedRows, setDisplayedRows2] = useState([]);
+    const setDisplayedRows = rows => {
+        /* istanbul ignore next */ console.log('setDisplayedRows', rows);
+        setDisplayedRows2(rows);
+    };
+
+    const [cookies, setCookie] = useCookies();
+
+    const paginatorCookieName = 'spaces-list-paginator';
+    const [rowsPerPage, setRowsPerPage] = React.useState(
+        !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
+    );
+    const [pageNum, setPageNum] = React.useState(0);
+    const [sortType, setSortType] = useState(SPACE_SORT_NAME);
+    const [sortDirection, setSortDirection] = useState(SPACE_SORT_DIRECTION_ASC);
+    const [sortMenuAnchor, setSortMenuAnchor] = useState(null);
+
+    const sortTypeLabelMap = {
+        [SPACE_SORT_NAME]: 'Sort by name',
+        [SPACE_SORT_CREATED]: 'Sort by creation date',
+        [SPACE_SORT_UPDATED]: 'Sort by last changed',
+    };
+
+    const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationLocale, setConfirmationLocale] = React.useState({
+        confirmationTitle: 'An error occurred while saving',
+        confirmButtonLabel: 'OK',
+    });
+    const hideConfirmationLocal = () => {
+        hideConfirmationDialog(hideConfirmation);
+    };
+    const showErrorMessageinPopup = confirmationTitle => {
+        setConfirmationLocale({
+            ...confirmationLocale,
+            confirmationTitle: confirmationTitle,
+        });
+        showConfirmation();
+    };
+
+    // the filters we will show on the page
+    const [availableFilters, setAvailableFilters2] = useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+    ]);
+    const setAvailableFilters = availableFilters => {
+        /* istanbul ignore next */ console.log('setAvailableFilters', availableFilters);
+        setAvailableFilters2(availableFilters);
+    };
+    const resetAvailableFilters = (filterTypeName, filterTypeValue) => {
+        /* istanbul ignore next */
+        const newFilterTypes =
+            availableFilters?.filter(g => {
+                return g?.filterType !== filterTypeName;
+            }) || [];
+        newFilterTypes?.push({
+            filterType: filterTypeName,
+            filterValue: filterTypeValue,
+        });
+        setAvailableFilters(newFilterTypes);
+    };
+
+    React.useEffect(() => {
+        if (campusListError === false && campusListLoading === false && !!campusList) {
+            const campusIdList = [
+                ...new Set(bookableSpacesRoomList?.data?.locations?.map(space => space?.space_campus_id)),
+            ];
+
+            const availableCampusList = campusList?.filter(c => campusIdList?.includes(c?.campus_id));
+            availableCampusList?.unshift({
+                campus_id: CAMPUS_ID_UNSELECTED,
+                campus_number: 'none',
+                campus_name: 'Show all campuses',
+                libraries: [],
+            });
+
+            resetAvailableFilters('campus', availableCampusList);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [campusListError, campusListLoading, campusList, bookableSpacesRoomList?.data?.locations]);
+
+    const initialFilterTypeValues = () => {
+        const state = {};
+        const flatFacilityTypeList = getFlatFacilityTypeList(facilityTypeList);
+        for (const space of bookableSpacesRoomList?.data?.locations) {
+            state[space.space_id] = {};
+            const enabledIds = new Set(space.facility_types.map(f => f.facility_type_id));
+
+            for (const ft of flatFacilityTypeList) {
+                state[space.space_id][ft.facility_type_id] = enabledIds.has(ft.facility_type_id);
+            }
+        }
+        return state;
+    };
+
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList?.data?.locations &&
+            bookableSpacesRoomList?.data?.locations.length > 0 &&
+            facilityTypeListError === false &&
+            facilityTypeListLoading === false &&
+            !!facilityTypeList?.data?.facility_type_groups &&
+            facilityTypeList?.data?.facility_type_groups.length > 0
+        ) {
+            setCheckedFacilityType(initialFilterTypeValues());
+        }
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        facilityTypeListError,
+        facilityTypeListLoading,
+        facilityTypeList,
+    ]);
+
+    React.useEffect(() => {
+        addBreadcrumbsToSiteHeader([
+            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Manage Spaces</span></li>',
+        ]);
+        actions.loadAllBookableSpacesRooms({ includeDrafts: true, includeDeleted: true, useAdminEndpoint: true });
+        if (weeklyHoursError === null && weeklyHoursLoading === null && weeklyHours === null) {
+            actions.loadWeeklyHours();
+        }
+        if (facilityTypeListError === null && facilityTypeListLoading === null && facilityTypeList === null) {
+            actions.loadAllFacilityTypes();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+        return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
+    };
+
+    const [selectedFilters, setSelectedFilters] = useState([
+        { filterType: 'campus', filterValue: CAMPUS_ID_UNSELECTED },
+        { filterType: 'library', filterValue: LIBRARY_ID_UNSELECTED },
+        { filterType: 'floor', filterValue: FLOOR_ID_UNSELECTED },
+        { filterType: 'spaceType', filterValue: SPACE_TYPE_ID_UNSELECTED },
+        { filterType: 'draftOnly', filterValue: false },
+        { filterType: 'showDeleted', filterValue: false },
+    ]);
+
+    const doesSpaceShowLocal = (space, currentLocationFilters) => doesSpaceShow(space, currentLocationFilters);
+
+    React.useEffect(() => {
+        if (
+            bookableSpacesRoomListError === false &&
+            bookableSpacesRoomListLoading === false &&
+            !!bookableSpacesRoomList
+        ) {
+            // because we don't want campusList available before bookableSpacesRoomList (race condition)
+            if (campusListError === null && campusListLoading === null && campusList === null) {
+                actions.loadBookableSpaceCampusChildren();
+            }
+            // Apply active filters before pagination so a soft-deleted row does not reappear post-refresh.
+            const usableRows = [];
+            let filteredIndex = 0;
+            getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection)?.forEach(space => {
+                const showByFilter = doesSpaceShowLocal(space, selectedFilters);
+                usableRows?.push({
+                    spaceId: space?.space_id,
+                    showSpace: showByFilter && showSpaceByPagination(filteredIndex, pageNum, rowsPerPage),
+                });
+
+                if (showByFilter) {
+                    filteredIndex++;
+                }
+            });
+            setDisplayedRows(usableRows);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        bookableSpacesRoomListError,
+        bookableSpacesRoomListLoading,
+        bookableSpacesRoomList,
+        campusListError,
+        campusListLoading,
+        campusList,
+        selectedFilters,
+        sortType,
+        sortDirection,
+    ]);
+
+    const resetDisplayedRows = latestUpdate => {
+        /* istanbul ignore next */ console.log('resetDisplayedRows latestUpdate=', latestUpdate);
+        // if we have just set data to UseState, they aren't available yet - weird! :(
+        const usedFilters = latestUpdate?.location ? latestUpdate?.location : selectedFilters;
+        const usedSortType = latestUpdate?.sortingType || sortType;
+        const usedSortDirection = latestUpdate?.sortingDirection || sortDirection;
+        let suppliedPageNum = 'pagination' in latestUpdate ? latestUpdate?.pagination : pageNum;
+        let suppliedRowsPerPage = rowsPerPage;
+        if (latestUpdate?.rowsPerPage) {
+            suppliedRowsPerPage = latestUpdate?.rowsPerPage;
+            suppliedPageNum = 0;
+        }
+
+        let numRow = 0;
+        let displayedRowsLocal = [...displayedRows];
+        getSortedSpaces(bookableSpacesRoomList?.data?.locations, usedSortType, usedSortDirection)?.forEach(space => {
+            const showSpaceByFilter = doesSpaceShowLocal(space, usedFilters);
+
+            displayedRowsLocal = displayedRowsLocal?.filter(r => {
+                return r?.spaceId !== space?.space_id;
+            });
+            const spaceRow = document.getElementById(`space-${space?.space_id}`);
+            if (!!showSpaceByFilter && showSpaceByPagination(numRow, suppliedPageNum, suppliedRowsPerPage)) {
+                removeClass(spaceRow, 'hiddenRow');
+                displayedRowsLocal?.push({
+                    spaceId: space?.space_id,
+                    showSpace: true,
+                });
+            } else {
+                addClass(spaceRow, 'hiddenRow');
+                displayedRowsLocal?.push({
+                    spaceId: space?.space_id,
+                    showSpace: false,
+                });
+            }
+            if (!!showSpaceByFilter) {
+                numRow++;
+            }
+        });
+
+        setDisplayedRows(displayedRowsLocal);
+    };
+    const resetSelectedFilters = (filterTypeName, filterTypeValue) => {
+        /* istanbul ignore next */ console.log('resetSelectedFilters', filterTypeName, filterTypeValue);
+        const newFilterTypes = getNextSelectedFilters(selectedFilters, filterTypeName, filterTypeValue);
+        setSelectedFilters(newFilterTypes);
+        setPageNum(0);
+        /* istanbul ignore next */ console.log('resetSelectedFilters newFilterTypes=', newFilterTypes);
+
+        // show-hide Spaces according to selected filters
+
+        resetDisplayedRows({ location: newFilterTypes, pagination: 0 });
+    };
+    const isCampusSelected =
+        selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue !== CAMPUS_ID_UNSELECTED;
+
+    function hasFacility(facilityType, bookableSpace) {
+        return bookableSpace?.facility_types?.some(spaceFacility => {
+            return spaceFacility?.facility_type_id === facilityType?.facility_type_id;
+        });
+    }
+
+    // function getSpaceUnavailabilityStatus(bookableSpace) {
+    //     const outageStatuses = (bookableSpace?.space_outages || []).map(spaceOutage => {
+    //         const outageStatus = getSpaceOutageStatus(spaceOutage);
+    //         return outageStatus;
+    //     });
+    //
+    //     if (outageStatuses.includes('Current')) {
+    //         return 'Current';
+    //     }
+    //     if (outageStatuses.includes('Upcoming')) {
+    //         return 'Upcoming';
+    //     }
+    //
+    //     return null;
+    // }
+
+    const getColumnBackgroundColor = ii => (ii % 2 === 0 ? backgroundColorColumn : '#fff');
+
+    const handleChangePage = (event, newPageNum) => {
+        /* istanbul ignore next */ console.log('handleChangePage', newPageNum, event);
+        setPageNum(newPageNum);
+        resetDisplayedRows({ pagination: newPageNum });
+    };
+    const handleChangeRowsPerPage = event => {
+        const newRowsPerPage = parseInt(event?.target?.value, 10);
+
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear?.setFullYear(current?.getFullYear() + 1);
+        setCookie(paginatorCookieName, newRowsPerPage, { expires: nextYear });
+
+        setRowsPerPage(newRowsPerPage);
+        setPageNum(0);
+        resetDisplayedRows({ rowsPerPage: newRowsPerPage });
+    };
+
+    const openSortMenu = event => {
+        setSortMenuAnchor(event?.currentTarget);
+    };
+
+    const closeSortMenu = () => {
+        setSortMenuAnchor(null);
+    };
+
+    const handleSortSelection = selectedSortType => {
+        const nextSortDirection =
+            selectedSortType === sortType && sortDirection === SPACE_SORT_DIRECTION_ASC
+                ? SPACE_SORT_DIRECTION_DESC
+                : SPACE_SORT_DIRECTION_ASC;
+
+        setSortType(selectedSortType);
+        setSortDirection(nextSortDirection);
+        setPageNum(0);
+        resetDisplayedRows({
+            pagination: 0,
+            sortingType: selectedSortType,
+            sortingDirection: nextSortDirection,
+        });
+        closeSortMenu();
+    };
+
+    const expandButtonElementId = spaceId => `expand-button-space-${spaceId}`;
+    const collapseButtonElementId = spaceId => `collapse-button-space-${spaceId}`;
+    // const spaceExtraElementsId = spaceId => `space-more-${spaceId}`;
+    const spaceDescriptionElementsId = spaceId => `space-description-${spaceId}`;
+    const expandSpace = spaceId => {
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription && (spaceDescription.style.display = 'block');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'none');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'inline-flex');
+    };
+    const collapseSpace = spaceId => {
+        const spaceDescription = document.getElementById(spaceDescriptionElementsId(spaceId));
+        !!spaceDescription && (spaceDescription.style.display = 'none');
+
+        const expandButton = document.getElementById(expandButtonElementId(spaceId));
+        !!expandButton && (expandButton.style.display = 'inline-flex');
+        const collapseButton = document.getElementById(collapseButtonElementId(spaceId));
+        !!collapseButton && (collapseButton.style.display = 'none');
+    };
+
+    const prefilterFacilityDataLocal = data => prefilterFacilityData(data);
+
+    const expandTable = () => {
+        const thisButton = document.getElementById('table-pushout-button');
+        !!thisButton && (thisButton.style.display = 'none');
+
+        const otherButton = document.getElementById('table-pushin-button');
+        !!otherButton && (otherButton.style.display = 'inline-flex');
+
+        const tableEtc = document.getElementById('wrappedTableList');
+        addClass(tableEtc, 'expanded');
+    };
+
+    const collapseTable = () => {
+        const thisButton = document.getElementById('table-pushin-button');
+        !!thisButton && (thisButton.style.display = 'none');
+
+        const otherButton = document.getElementById('table-pushout-button');
+        !!otherButton && (otherButton.style.display = 'inline-flex');
+
+        const tableEtc = document.getElementById('wrappedTableList');
+        removeClass(tableEtc, 'expanded');
+    };
+
+    const openEditSpacePage = e => handleOpenEditSpacePage(e, account);
+
+    const [deleteCandidate, setDeleteCandidate] = useState(null);
+
+    const openDeleteConfirmation = space => {
+        setDeleteCandidate(space);
+    };
+
+    const closeDeleteConfirmation = () => {
+        closeDeleteDialog(setDeleteCandidate);
+    };
+
+    const confirmDeleteSpace = () => {
+        performDeleteSpaceAction({ deleteCandidate, actions, displayToastMessage }).finally(() => {
+            setDeleteCandidate(null);
+        });
+    };
+
+    const selectFilter = prop => e => {
+        /* istanbul ignore next */ console.log('selectFilter', prop, e);
+        const filterValue = getFilterValue(e);
+        resetSelectedFilters(prop, filterValue);
+    };
+
+    function displayListOfBookableSpaces() {
+        const tableDescription = 'Manage Spaces';
+
+        const sortedFacilityTypeGroups = prefilterFacilityDataLocal(facilityTypeList?.data);
+        const sortedSpaces = getSortedSpaces(bookableSpacesRoomList?.data?.locations, sortType, sortDirection);
+
+        const campusFilterTypes = availableFilters?.find(ft => ft?.filterType === 'campus')?.filterValue;
+        const selectedCampusId = selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue;
+        /* istanbul ignore next */
+        const selectedCampus =
+            campusFilterTypes?.length > 0 && campusFilterTypes?.find(campus => campus?.campus_id === selectedCampusId);
+        const selectedLibraryId = selectedFilters?.find(f => f?.filterType === 'library')?.filterValue;
+        /* istanbul ignore next */
+        const selectedLibrary = selectedCampus?.libraries?.find(library => library?.library_id === selectedLibraryId);
+        const selectedCampusFloors =
+            selectedCampus?.libraries?.flatMap(library => library?.floors || /* istanbul ignore next */ []) || [];
+        const availableFloors = selectedLibrary?.floors || selectedCampusFloors;
+        const floorFilterTypes = (() => {
+            /* istanbul ignore next */
+            return getFloorFilterOptions([
+                ...new Map(availableFloors?.map(floor => [floor?.floor_id, floor])).values(),
+            ]);
+        })();
+        const selectedSpaceType = selectedFilters?.find(f => f?.filterType === 'spaceType')?.filterValue;
+        /* istanbul ignore next */
+        const knownSpaceTypes =
+            bookableSpacesRoomList?.data?.known_space_types
+                ?.map(spaceType => ({
+                    id: String(spaceType?.space_type_id),
+                    label: spaceType?.space_type_name,
+                }))
+                ?.filter(spaceType => !!spaceType?.id && !!spaceType?.label) || [];
+        /* istanbul ignore next */
+        const fallbackSpaceTypes = [
+            ...new Map(
+                (bookableSpacesRoomList?.data?.locations || [])
+                    ?.map(space => {
+                        const id = !!space?.space_type_id
+                            ? String(space?.space_type_id)
+                            : String(space?.space_type_details?.space_type_name || '');
+                        const label = getSafeSpaceTypeName(space) || id;
+                        return [id, { id, label }];
+                    })
+                    ?.filter(([id, spaceType]) => !!id && !!spaceType?.label),
+            ).values(),
+        ];
+        /* istanbul ignore next */
+        const spaceTypeFilterTypes =
+            (knownSpaceTypes?.length > 0 ? knownSpaceTypes : fallbackSpaceTypes)
+                ?.sort((a, b) => a?.label?.localeCompare(b?.label))
+                ?.map(spaceType => ({
+                    ...spaceType,
+                    id: String(spaceType?.id),
+                })) || [];
+        const bookableColumnId = 0;
+
+        /* istanbul ignore next */
+        const renderLibraryMenuItems = () => {
+            return getLibraryFilterOptions(selectedCampus)?.map((library, index) => (
+                <MenuItem
+                    value={library?.library_id}
+                    key={`filter-by-library-menuitem-${index}`}
+                    selected={library?.library_id === 99999}
+                >
+                    {library?.library_name}
+                </MenuItem>
+            ));
+        };
+        /* istanbul ignore next */
+        const renderFloorMenuItems = () => {
+            return getFloorFilterOptions(floorFilterTypes)?.map((floor, index) => (
+                <MenuItem
+                    value={floor?.floor_id}
+                    key={`filter-by-floor-menuitem-${index}`}
+                    selected={floor?.floor_id === 99999}
+                >
+                    {floor?.floor_name}
+                </MenuItem>
+            ));
+        };
+
+        const setColumnEditable = e => {
+            const button = e?.target?.closest('button');
+
+            const idTemplate = 'facility-type-column-edit-';
+            const id = Number(button?.id?.replace(idTemplate, ''));
+            setCurrentEditColumn(id);
+        };
+        const clearColumnEditable = () => {
+            setCurrentEditColumn(null);
+            setCheckedFacilityType(initialFilterTypeValues());
+        };
+        const holdFacilityTypeChange = (spaceId, facilityTypeId, checked) => {
+            const updatedList = {
+                ...checkedFacilityType,
+                [spaceId]: {
+                    ...checkedFacilityType[spaceId],
+                    [facilityTypeId]: checked,
+                },
+            };
+            setCheckedFacilityType(updatedList);
+        };
+        /* istanbul ignore next */
+        const saveChangedFilterTypes = async e => {
+            const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+
+            scrollToTopOfPage();
+            showSavingProgress(true);
+
+            const buttonIdTemplate = 'facility-type-column-save-';
+            const button = e?.target?.closest('button');
+            const checkboxId = Number(button?.id?.replace(buttonIdTemplate, ''));
+            const valuestoSend = Object.entries(checkedFacilityType).map(([spaceId, facilities]) => ({
+                space_id: spaceId,
+                checked: facilities[checkboxId] ?? false,
+            }));
+
+            /* istanbul ignore next */
+            if (shouldSaveCypressBulkFilterTypeData(cypressTestCookie, window.location.host, 'active')) {
+                setCookie('CYPRESS_DATA_SAVED', valuestoSend);
+            }
+            try {
+                const response = await actions.saveBulkFilterTypes(checkboxId, valuestoSend);
+                /* istanbul ignore next */
+                if (response?.status?.toLowerCase?.() !== 'ok') {
+                    throw new Error(response?.message || 'updating the facility types failed');
+                }
+                displayToastMessage('Change to facility types saved.');
+            } catch (error) {
+                console.error('Error updating bulk facilities', error);
+                const message = error?.message || 'updating the facility types failed';
+                showErrorMessageinPopup(
+                    `[BSMS-001] Sorry, an error occurred - ${message}. The admins have been informed`,
+                );
+            } finally {
+                setCurrentEditColumn(null);
+                showSavingProgress(false);
+                actions.loadAllBookableSpacesRooms({
+                    includeDrafts: true,
+                    includeDeleted: true,
+                    useAdminEndpoint: true,
+                });
+            }
+        };
+
+        return (
+            <>
+                <StyledTableWrapperDiv
+                    id="wrappedTableList"
+                    style={{ backgroundColor: '#fff' }}
+                    data-testid="table-wrapper"
+                >
+                    <div data-testid="tablefilter" style={{ width: '100%' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <StyledExpandCollapseTableIconButton
+                                color="primary"
+                                id="table-pushout-button"
+                                data-testid="table-pushout-button"
+                                onClick={expandTable}
+                                aria-label="Expand the table to full window"
+                                style={{ display: 'inline-flex' }}
+                            >
+                                <OpenInFullIcon />
+                            </StyledExpandCollapseTableIconButton>
+                            <StyledExpandCollapseTableIconButton
+                                color="primary"
+                                id="table-pushin-button"
+                                data-testid="table-pushin-button"
+                                onClick={collapseTable}
+                                aria-label="Expand the table to full window"
+                                style={{ display: 'none' }}
+                            >
+                                <CloseFullscreenIcon />
+                            </StyledExpandCollapseTableIconButton>
+                            <Typography component={'h3'} variant={'h6'}>
+                                Filter the list:
+                            </Typography>
+                        </div>
+                        <StyledFilterWrapperDiv>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel id="filter-by-campus-label" htmlFor="filter-by-campus-input">
+                                    By campus
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-campus"
+                                    labelId="filter-by-campus-label"
+                                    data-testid="filter-by-campus"
+                                    value={
+                                        selectedFilters?.find(f => f?.filterType === 'campus')?.filterValue ||
+                                        CAMPUS_ID_UNSELECTED
+                                    }
+                                    onChange={selectFilter('campus')}
+                                    inputProps={{
+                                        id: 'filter-by-campus-input',
+                                        title: 'Filter the displayed Spaces by campus',
+                                    }}
+                                >
+                                    {!!campusFilterTypes &&
+                                        !!campusFilterTypes &&
+                                        campusFilterTypes?.length > 0 &&
+                                        campusFilterTypes?.map((campus, index) => (
+                                            <MenuItem
+                                                value={campus?.campus_id}
+                                                key={`filter-by-campus-menuitem-${index}`}
+                                                selected={campus?.campus_id === 99999}
+                                            >
+                                                {campus.campus_name}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel
+                                    id="filter-by-library-label"
+                                    htmlFor="filter-by-library-input"
+                                    shrink
+                                    disabled={!isCampusSelected}
+                                >
+                                    By library
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-library"
+                                    labelId="filter-by-library-label"
+                                    data-testid="filter-by-library"
+                                    displayEmpty
+                                    /* istanbul ignore next */
+                                    value={
+                                        selectedFilters?.find(f => f?.filterType === 'library')?.filterValue ||
+                                        LIBRARY_ID_UNSELECTED
+                                    }
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getLibraryFilterDisplayValue(selectedValue, selectedCampus)
+                                    }
+                                    onChange={selectFilter('library')}
+                                    inputProps={{
+                                        id: 'filter-by-library-input',
+                                        title: 'Filter the displayed Spaces by library',
+                                    }}
+                                    disabled={!isCampusSelected}
+                                >
+                                    <MenuItem value={LIBRARY_ID_UNSELECTED}>Show all libraries</MenuItem>
+                                    {renderLibraryMenuItems()}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel
+                                    id="filter-by-floor-label"
+                                    htmlFor="filter-by-floor-input"
+                                    shrink
+                                    disabled={!isCampusSelected}
+                                >
+                                    By level
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-floor"
+                                    labelId="filter-by-floor-label"
+                                    data-testid="filter-by-floor"
+                                    displayEmpty
+                                    /* istanbul ignore next */
+                                    value={
+                                        selectedFilters?.find(f => f?.filterType === 'floor')?.filterValue ||
+                                        FLOOR_ID_UNSELECTED
+                                    }
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getFloorFilterDisplayValue(selectedValue, floorFilterTypes)
+                                    }
+                                    onChange={selectFilter('floor')}
+                                    inputProps={{
+                                        id: 'filter-by-floor-input',
+                                        title: 'Filter the displayed Spaces by level',
+                                    }}
+                                    disabled={!isCampusSelected}
+                                >
+                                    <MenuItem value={FLOOR_ID_UNSELECTED}>Show all levels</MenuItem>
+                                    {renderFloorMenuItems()}
+                                </Select>
+                            </FormControl>
+                            <FormControl variant="standard" fullWidth>
+                                <InputLabel id="filter-by-space-type-label" htmlFor="filter-by-space-type-input" shrink>
+                                    By space type
+                                </InputLabel>
+                                <Select
+                                    id="filter-by-space-type"
+                                    labelId="filter-by-space-type-label"
+                                    data-testid="filter-by-space-type"
+                                    displayEmpty
+                                    /* istanbul ignore next */
+                                    value={selectedSpaceType || SPACE_TYPE_ID_UNSELECTED}
+                                    /* istanbul ignore next */
+                                    renderValue={selectedValue =>
+                                        getSafeSpaceTypeLabel(
+                                            spaceTypeFilterTypes?.find(
+                                                spaceType => String(spaceType?.id) === String(selectedValue),
+                                            ),
+                                        )
+                                    }
+                                    onChange={selectFilter('spaceType')}
+                                    inputProps={{
+                                        id: 'filter-by-space-type-input',
+                                        title: 'Filter the displayed Spaces by space type',
+                                    }}
+                                >
+                                    <MenuItem value={SPACE_TYPE_ID_UNSELECTED}>Show all space types</MenuItem>
+                                    {spaceTypeFilterTypes?.map((spaceType, index) => (
+                                        <MenuItem value={spaceType?.id} key={`filter-by-space-type-menuitem-${index}`}>
+                                            {spaceType?.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </StyledFilterWrapperDiv>
+                        <div data-testid="filter-by-draftmode-wrapper">
+                            <FormControlLabel
+                                label="Show drafts only"
+                                control={
+                                    <Checkbox
+                                        checked={
+                                            selectedFilters?.find(f => f?.filterType === 'draftOnly')?.filterValue ||
+                                            false
+                                        }
+                                        onChange={selectFilter('draftOnly')}
+                                        data-testid="filter-by-draftmode"
+                                    />
+                                }
+                            />
+                        </div>
+                        <div data-testid="filter-by-deleted-wrapper">
+                            <FormControlLabel
+                                label="Show deleted spaces"
+                                control={
+                                    <Checkbox
+                                        checked={
+                                            selectedFilters?.find(f => f?.filterType === 'showDeleted')?.filterValue ||
+                                            false
+                                        }
+                                        onChange={selectFilter('showDeleted')}
+                                        data-testid="filter-by-deleted"
+                                    />
+                                }
+                            />
+                        </div>
+                    </div>
+                    <StyledTableContainer className="tableContainer">
+                        <Table
+                            aria-label={tableDescription}
+                            aria-describedby="tableDescriptionElement"
+                            data-testid="space-table"
+                        >
+                            <StyledTableHead>
+                                {facilityTypeList?.data?.facility_type_groups?.length > 0 && (
+                                    // top row of the two-row table head, to label the facilities block
+                                    <StyledHeaderTableRow data-testid="spaces-dashboard-header-row">
+                                        <TableCell
+                                            component="th"
+                                            sx={{
+                                                borderBottomWidth: 0,
+                                                paddingBlock: 0,
+                                                backgroundColor: '#fff',
+                                                textAlign: 'right',
+                                            }}
+                                            key={'header-cell-0'}
+                                        >
+                                            Filters:
+                                        </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            sx={{
+                                                borderBottomWidth: 0,
+                                                borderTop: borderColour,
+                                                textAlign: 'center',
+                                                borderLeft: borderColour,
+                                                backgroundColor: backgroundColorColumn,
+                                                verticalAlign: 'bottom',
+                                                paddingBottom: '4rem',
+                                            }}
+                                            rowSpan={2}
+                                        >
+                                            Bookable
+                                        </TableCell>
+                                        {sortedFacilityTypeGroups?.map((group, index) => {
+                                            return (
+                                                <TableCell
+                                                    key={`header-cell-${index}`}
+                                                    component="th"
+                                                    colSpan={group?.facility_type_children?.length}
+                                                    sx={{
+                                                        borderBottomWidth: 0,
+                                                        borderTop: borderColour,
+                                                        textAlign: 'center',
+                                                        backgroundColor:
+                                                            /* istanbul ignore next */
+                                                            `${index % 2 === 0 ? '#fff' : '#f0f0f0'}`,
+                                                        borderLeft: borderColour,
+                                                    }}
+                                                >
+                                                    {group?.facility_type_group_name}
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </StyledHeaderTableRow>
+                                )}
+                                <StyledHeaderTableRow>
+                                    <StyledStickyTableCell
+                                        component="th"
+                                        sx={{ backgroundColor: { backgroundColorColumn }, verticalAlign: 'bottom' }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'flex-start',
+                                            }}
+                                        >
+                                            <Button
+                                                variant="outlined"
+                                                onClick={openSortMenu}
+                                                data-testid="spaces-sort-button"
+                                                aria-controls={sortMenuAnchor ? 'spaces-sort-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={sortMenuAnchor ? 'true' : undefined}
+                                                sx={{
+                                                    textTransform: 'none',
+                                                    marginBottom: '0.35rem',
+                                                    backgroundColor: '#fff',
+                                                }}
+                                                endIcon={
+                                                    /* istanbul ignore next */
+                                                    sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                        <NorthIcon fontSize="small" />
+                                                    ) : (
+                                                        <SouthIcon fontSize="small" />
+                                                    )
+                                                }
+                                            >
+                                                {sortTypeLabelMap[sortType]}
+                                            </Button>
+                                            <Menu
+                                                id="spaces-sort-menu"
+                                                anchorEl={sortMenuAnchor}
+                                                open={!!sortMenuAnchor}
+                                                onClose={closeSortMenu}
+                                                MenuListProps={{
+                                                    'aria-labelledby': 'spaces-sort-button',
+                                                }}
+                                            >
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_NAME}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_NAME)}
+                                                >
+                                                    Sort by name
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_NAME &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
+                                                </MenuItem>
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_CREATED}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_CREATED)}
+                                                >
+                                                    Sort by creation date
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_CREATED &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
+                                                </MenuItem>
+                                                <MenuItem
+                                                    selected={sortType === SPACE_SORT_UPDATED}
+                                                    onClick={() => handleSortSelection(SPACE_SORT_UPDATED)}
+                                                >
+                                                    Sort by last changed
+                                                    {
+                                                        /* istanbul ignore next */
+                                                        sortType === SPACE_SORT_UPDATED &&
+                                                            (sortDirection === SPACE_SORT_DIRECTION_ASC ? (
+                                                                <NorthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ) : (
+                                                                <SouthIcon
+                                                                    fontSize="small"
+                                                                    style={{ marginLeft: '0.4rem' }}
+                                                                />
+                                                            ))
+                                                    }
+                                                </MenuItem>
+                                            </Menu>
+                                            <div>Spaces:</div>
+                                        </div>
+                                    </StyledStickyTableCell>
+                                    {sortedFacilityTypeGroups?.map(group =>
+                                        group?.facility_type_children?.map(facilityType => {
+                                            const currentlyEditing =
+                                                currentEditColumn === facilityType.facility_type_id;
+                                            const isDisabled =
+                                                currentEditColumn !== facilityType.facility_type_id &&
+                                                currentEditColumn !== null;
+                                            return (
+                                                <StyledHeadingFacilityTableCell
+                                                    component="th"
+                                                    key={`facilitytype-${facilityType?.facility_type_id}`}
+                                                    sx={{
+                                                        backgroundColor: getColumnBackgroundColor(
+                                                            facilityType?.overall_order,
+                                                        ),
+                                                        borderLeft: borderColour,
+                                                    }}
+                                                >
+                                                    {currentlyEditing && (
+                                                        <StyledSecondaryButton
+                                                            key={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-cancel-${facilityType.facility_type_id}`}
+                                                            onClick={clearColumnEditable}
+                                                            style={{ padding: '0.5rem .75rem' }}
+                                                        >
+                                                            Cancel
+                                                        </StyledSecondaryButton>
+                                                    )}
+                                                    <div>{facilityType?.facility_type_name}</div>
+                                                    {!currentlyEditing && (
+                                                        <IconButton
+                                                            color="primary"
+                                                            key={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-edit-${facilityType.facility_type_id}`}
+                                                            onClick={setColumnEditable}
+                                                            aria-label={`Fast edit which spaces can have ${facilityType?.facility_type_name}`}
+                                                            disabled={isDisabled}
+                                                        >
+                                                            <EditIcon style={{ width: '1rem' }} />
+                                                        </IconButton>
+                                                    )}
+                                                    {currentlyEditing && (
+                                                        <StyledPrimaryButton
+                                                            key={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            id={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            data-testid={`facility-type-column-save-${facilityType.facility_type_id}`}
+                                                            onClick={saveChangedFilterTypes}
+                                                            style={{ padding: '0.5rem .75rem', marginTop: '0.5rem' }}
+                                                        >
+                                                            Save
+                                                        </StyledPrimaryButton>
+                                                    )}
+                                                </StyledHeadingFacilityTableCell>
+                                            );
+                                        }),
+                                    )}
+                                </StyledHeaderTableRow>
+                            </StyledTableHead>
+                            <TableBody>
+                                {displayedRows?.length > 0 &&
+                                    sortedSpaces
+                                        ?.filter(space =>
+                                            displayedRows?.find(u => u?.spaceId === space?.space_id && !!u?.showSpace),
+                                        )
+                                        ?.map(bookableSpace => {
+                                            // Determine if there are current and/or upcoming outages
+                                            const outages = bookableSpace?.space_outages || [];
+                                            /* istanbul ignore next */
+                                            const hasCurrentOutage = outages.some(
+                                                o => getSpaceOutageStatus(o) === 'Current',
+                                            );
+                                            /* istanbul ignore next */
+                                            const hasUpcomingOutage = outages.some(
+                                                o => getSpaceOutageStatus(o) === 'Upcoming',
+                                            );
+
+                                            return (
+                                                <StyledTableRow
+                                                    key={`space-${bookableSpace?.space_id}`}
+                                                    id={`space-${bookableSpace?.space_id}`}
+                                                    data-testid={`space-${bookableSpace?.space_id}`}
+                                                >
+                                                    <StyledStickyTableCell
+                                                        component="th"
+                                                        scope="col"
+                                                        style={{ paddingBlock: '0.5rem' }}
+                                                    >
+                                                        <div>
+                                                            {
+                                                                /* istanbul ignore next */
+                                                                hasCurrentOutage && (
+                                                                    <HighlightOffIcon
+                                                                        style={{
+                                                                            width: '1rem',
+                                                                            marginRight: '0.35rem',
+                                                                            color: '#d32f2f',
+                                                                            verticalAlign: 'text-bottom',
+                                                                        }}
+                                                                        titleAccess="This Space is currently unavailable"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-outage-current-icon`}
+                                                                    />
+                                                                )
+                                                            }
+                                                            {
+                                                                /* istanbul ignore next */
+                                                                hasUpcomingOutage && (
+                                                                    <ErrorOutlineIcon
+                                                                        style={{
+                                                                            width: '1rem',
+                                                                            marginRight: '0.35rem',
+                                                                            color: '#ed6c02',
+                                                                            verticalAlign: 'text-bottom',
+                                                                        }}
+                                                                        titleAccess="This Space has upcoming scheduled unavailability"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-outage-upcoming-icon`}
+                                                                    />
+                                                                )
+                                                            }
+                                                            {!!bookableSpace?.space_draftmode && (
+                                                                <WarningAmberIcon
+                                                                    style={{
+                                                                        width: '1rem',
+                                                                        marginRight: '0.35rem',
+                                                                        color: '#ed6c02',
+                                                                        verticalAlign: 'text-bottom',
+                                                                    }}
+                                                                    titleAccess="This Space is currently in draft mode"
+                                                                    data-testid={`space-${bookableSpace?.space_id}-draftmode-icon`}
+                                                                />
+                                                            )}
+                                                            <div
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: '0.5rem',
+                                                                }}
+                                                            >
+                                                                <span
+                                                                    data-testid={`space-${bookableSpace?.space_id}-name`}
+                                                                >
+                                                                    {bookableSpace?.space_name}
+                                                                </span>
+                                                                {isSpaceDeleted(bookableSpace) && (
+                                                                    <Chip
+                                                                        label="Deleted"
+                                                                        size="small"
+                                                                        color="error"
+                                                                        variant="outlined"
+                                                                        data-testid={`space-${bookableSpace?.space_id}-deleted-chip`}
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                            <IconButton
+                                                                color="primary"
+                                                                data-testid={`edit-space-${bookableSpace?.space_id}-button`}
+                                                                data-spaceuuid={bookableSpace?.space_uuid}
+                                                                onClick={openEditSpacePage}
+                                                                aria-label={`Edit ${bookableSpace?.space_name}`}
+                                                            >
+                                                                <EditIcon style={{ width: '1rem' }} />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                color="error"
+                                                                data-testid={`delete-space-${bookableSpace?.space_id}-button`}
+                                                                onClick={() =>
+                                                                    openDeleteConfirmation({
+                                                                        spaceId: bookableSpace?.space_id,
+                                                                        spaceUuid: bookableSpace?.space_uuid,
+                                                                        spaceName: bookableSpace?.space_name,
+                                                                    })
+                                                                }
+                                                                aria-label={`Delete ${bookableSpace?.space_name}`}
+                                                            >
+                                                                <DeleteOutlineIcon style={{ width: '1rem' }} />
+                                                            </IconButton>
+                                                        </div>
+                                                        <div className="spaceDescription">
+                                                            {bookableSpace?.space_type_details?.space_type_name}
+                                                            <IconButton
+                                                                id={expandButtonElementId(bookableSpace?.space_id)}
+                                                                data-testid={`space-${bookableSpace?.space_id}-expand-button`}
+                                                                onClick={() => expandSpace(bookableSpace?.space_id)}
+                                                                aria-label="Expand Space details"
+                                                                style={{ display: 'inline-flex' }}
+                                                            >
+                                                                <KeyboardArrowDownIcon />
+                                                            </IconButton>
+                                                            <IconButton
+                                                                id={collapseButtonElementId(bookableSpace?.space_id)}
+                                                                data-testid={`space-${bookableSpace?.space_id}-collapse-button`}
+                                                                onClick={() => collapseSpace(bookableSpace?.space_id)}
+                                                                aria-label="Collapse Space details"
+                                                                style={{ display: 'none' }}
+                                                            >
+                                                                <KeyboardArrowUpIcon />
+                                                            </IconButton>
+                                                        </div>
+
+                                                        <div
+                                                            id={spaceDescriptionElementsId(bookableSpace?.space_id)}
+                                                            data-testid={spaceDescriptionElementsId(
+                                                                bookableSpace?.space_id,
+                                                            )}
+                                                            style={{ display: 'none' }}
+                                                        >
+                                                            {getFriendlyLocationDescription(bookableSpace)}
+                                                        </div>
+                                                    </StyledStickyTableCell>
+                                                    <TableCell
+                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                        sx={{
+                                                            backgroundColor: getColumnBackgroundColor(bookableColumnId),
+                                                            textAlign: 'center',
+                                                            borderInline: borderColour,
+                                                        }}
+                                                        title={
+                                                            /* istanbul ignore next */
+                                                            isBookable(bookableSpace)
+                                                                ? 'Space is bookable'
+                                                                : 'Space IS NOT bookable'
+                                                        }
+                                                    >
+                                                        {
+                                                            /* istanbul ignore next */
+                                                            isBookable(bookableSpace) && (
+                                                                <GreenTick
+                                                                    title="Space is bookable"
+                                                                    dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-bookable`}
+                                                                />
+                                                            )
+                                                        }
+                                                    </TableCell>
+                                                    {sortedFacilityTypeGroups?.length > 0 &&
+                                                        sortedFacilityTypeGroups?.map(group => {
+                                                            return group?.facility_type_children?.map(facilityType => {
+                                                                const facilitySlug = slugifyName(
+                                                                    facilityType?.facility_type_name,
+                                                                );
+                                                                const currentlyEditing =
+                                                                    currentEditColumn === facilityType.facility_type_id;
+                                                                return (
+                                                                    <TableCell
+                                                                        key={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_id}`}
+                                                                        data-testid={`space-${bookableSpace?.space_id}-facilitytype-${facilityType.facility_type_id}`}
+                                                                        sx={{
+                                                                            backgroundColor: getColumnBackgroundColor(
+                                                                                facilityType?.overall_order,
+                                                                            ),
+                                                                            textAlign: 'center',
+                                                                            borderInline: borderColour,
+                                                                        }}
+                                                                        title={
+                                                                            /* istanbul ignore next */
+                                                                            hasFacility(facilityType, bookableSpace)
+                                                                                ? `Space has ${facilityType?.facility_type_name}`
+                                                                                : `Space DOES NOT have ${facilityType?.facility_type_name}`
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            /* istanbul ignore next */
+                                                                            currentlyEditing && (
+                                                                                <Checkbox
+                                                                                    checked={
+                                                                                        /* istanbul ignore next */
+                                                                                        checkedFacilityType[
+                                                                                            bookableSpace.space_id
+                                                                                        ]?.[
+                                                                                            facilityType
+                                                                                                .facility_type_id
+                                                                                        ] ?? false
+                                                                                    }
+                                                                                    id={`facility-type-column-editing-${bookableSpace?.space_id}-${facilityType.facility_type_id}`}
+                                                                                    onChange={e =>
+                                                                                        holdFacilityTypeChange(
+                                                                                            bookableSpace.space_id,
+                                                                                            facilityType.facility_type_id,
+                                                                                            e.target.checked,
+                                                                                        )
+                                                                                    }
+                                                                                    data-testid="toggle-space-description-checkbox"
+                                                                                />
+                                                                            )
+                                                                        }
+                                                                        {hasFacility(facilityType, bookableSpace) &&
+                                                                            !currentlyEditing && (
+                                                                                <GreenTick
+                                                                                    title={`Space has ${facilityType?.facility_type_name}`}
+                                                                                    dataTestId={`tick-${bookableSpace?.space_id}-facilitytype-${facilitySlug}`}
+                                                                                />
+                                                                            )}
+                                                                    </TableCell>
+                                                                );
+                                                            });
+                                                        })}
+                                                </StyledTableRow>
+                                            );
+                                        })}
+                            </TableBody>
+                        </Table>
+                    </StyledTableContainer>
+
+                    <StyledTablePagination
+                        data-testid="pagination-block"
+                        // dont use: { label: 'All', value: rows.length }
+                        // as it gives a dupe key error when the length happens to match a value
+                        // in the list. Nor do we want them loading vast numbers of records - they
+                        // can jump to the next page
+                        rowsPerPageOptions={[5, 10, 25, 100]}
+                        count={sortedSpaces?.filter(s => doesSpaceShow(s, selectedFilters))?.length}
+                        rowsPerPage={rowsPerPage}
+                        page={pageNum}
+                        SelectProps={{
+                            inputProps: {
+                                'aria-label': 'spaces per page',
+                                'data-testid': 'admin-spaces-list-paginator-select',
+                            },
+                            native: true,
+                        }}
+                        component="div"
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </StyledTableWrapperDiv>
+            </>
+        );
+    }
+
+    return (
+        <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage Spaces" currentPageSlug="dashboard">
+            <Grid container spacing={3} className="aaaaaaaaa">
+                {(() => {
+                    if (!!savingProgressShown) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <InlineLoader message="Saving" />
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <InlineLoader message="Loading" />
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <StyledStandardCard fullHeight>
+                                    <p>Something went wrong - please try again later.</p>
+                                </StyledStandardCard>
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else if (
+                        !bookableSpacesRoomList?.data?.locations ||
+                        bookableSpacesRoomList?.data?.locations?.length === 0
+                    ) {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                                <StyledStandardCard fullHeight>
+                                    <p>No spaces currently in system - please try again soon.</p>
+                                </StyledStandardCard>
+                            </StyledBookableSpaceGridItem>
+                        );
+                    } else {
+                        return (
+                            <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
+                                {displayListOfBookableSpaces()}
+                            </StyledBookableSpaceGridItem>
+                        );
+                    }
+                })()}
+            </Grid>
+            <ConfirmationBox
+                confirmationBoxId="spaces-manage-spaces-error"
+                onAction={hideConfirmationLocal}
+                onClose={hideConfirmationLocal}
+                hideCancelButton
+                isOpen={isConfirmationBoxOpen}
+                locale={confirmationLocale}
+            />
+            <Dialog open={!!deleteCandidate} onClose={closeDeleteConfirmation} data-testid="spaces-delete-dialog">
+                <DialogContent>
+                    <DialogContentText data-testid="spaces-delete-dialog-message">
+                        Do you wish to delete this space?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions data-testid="spaces-delete-dialog-actions">
+                    <Button onClick={closeDeleteConfirmation} data-testid="spaces-delete-cancel-button">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={confirmDeleteSpace}
+                        color="error"
+                        variant="contained"
+                        data-testid="spaces-delete-confirm-button"
+                    >
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </SpacesAdminPage>
+    );
+};
+
+BookableSpacesManageSpaces.propTypes = {
+    actions: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    bookableSpacesRoomListLoading: PropTypes.bool,
+    bookableSpacesRoomListError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
+    facilityTypeList: PropTypes.any,
+    facilityTypeListLoading: PropTypes.any,
+    facilityTypeListError: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
+};
+
+export default React.memo(BookableSpacesManageSpaces);

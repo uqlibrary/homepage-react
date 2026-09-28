@@ -78,7 +78,7 @@ const handlers = {
     [actions.TESTTAG_BUILDING_LIST_CLEAR_ERROR]: state => ({
         ...initialState,
         ...state,
-        roomListError: null,
+        buildingListError: null,
     }),
     [actions.TESTTAG_BUILDING_LIST_CLEAR]: state => ({
         ...initialState,

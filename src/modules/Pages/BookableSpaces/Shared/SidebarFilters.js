@@ -1,0 +1,1249 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import { InputLabel, useMediaQuery, useTheme } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import MuiInput from '@mui/material/Input';
+import { styled } from '@mui/material/styles';
+import Slider from '@mui/material/Slider';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CloseIcon from '@mui/icons-material/Close';
+import ReplayIcon from '@mui/icons-material/Replay';
+
+import { addClass, removeClass, StyledSkipLinkAnchor, standardText, StyledPrimaryButton } from 'helpers/general';
+
+import {
+    FILTER_BOOKABLE_TYPE_ID,
+    FILTER_CAPACITY_TYPE_ID,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
+    getActiveSelectedFacilityTypes,
+    getFlatFacilityTypeList,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
+import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
+
+const StyledSlider = styled(Slider)(() => ({
+    marginTop: '1rem', // space for tooltips to appear in
+    overflow: 'visible',
+    '& .MuiSlider-track': {
+        marginLeft: '0.2rem', // don't let the range bar peek out to the left
+    },
+    '& [data-index="0"]': {
+        marginLeft: '0.7rem', // shift the minimum dot a little to the right so it's fully visible at the minimum value
+    },
+    '& [data-index="1"]': {
+        marginLeft: '-0.6rem !important', // shift the maximum dot a little to the left so it's all visible
+    },
+}));
+const StyledSliderInput = styled(MuiInput)(() => ({
+    width: '42px',
+    '&.rightSlider input': {
+        textAlign: 'right',
+    },
+}));
+
+const StyledInputListItem = styled('li')(({ theme }) => ({
+    listStyle: 'none',
+    paddingLeft: 0,
+    marginLeft: '-9px',
+    display: 'flex',
+    alignItems: 'center',
+    '& p': {
+        margin: '0 0 0 1rem',
+    },
+    '&.hasRightSlider': {
+        display: 'block',
+    },
+    '& label': {
+        ...standardText(theme),
+        textDecoration: 'underline',
+        display: 'inline',
+        '&:hover, :focus': {
+            '& > span:nth-of-type(2)': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+                lineHeight: 1.2,
+            },
+        },
+        '& span:last-of-type': {
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+        },
+    },
+    '& span:not(.fortestfocus)': {
+        cursor: 'pointer',
+    },
+    '& .selectedFilterType': {
+        paddingBlock: '0.5rem',
+    },
+    '& .selectedFilterTypeLabel': {
+        display: 'inline-flex',
+        alignItems: 'center',
+    },
+}));
+const StyledSidebarDiv = styled('div')(({ theme }) => ({
+    position: 'relative',
+    height: '100%',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+
+    paddingTop: '0.5rem',
+    paddingRight: 0,
+    marginRight: 0,
+    marginLeft: 0,
+    flexBasis: '10%',
+    maxWidth: '16.6667%',
+
+    [theme.breakpoints.down('md')]: {
+        '&.mobileHidden': {
+            display: 'none',
+        },
+    },
+
+    '&.journeyFilterSidebar': {
+        width: '100%',
+        flexBasis: '100%',
+        maxWidth: '100%',
+        minWidth: 0,
+    },
+    '&::-webkit-scrollbar': {
+        width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1',
+        borderRadius: '4px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        background: '#c1c1c1',
+        borderRadius: '4px',
+        '&:hover': {
+            background: '#a8a8a8',
+        },
+    },
+    // Firefox scrollbar styling
+    '& > button': {
+        margin: '0 0.5rem 0.5rem 0',
+        display: 'inline-flex',
+        alignItems: 'center',
+        textTransform: 'none',
+        textDecoration: 'underline',
+        padding: '0.1rem 0.25rem 0.1rem 0',
+        lineHeight: 'normal',
+        '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+        },
+        '& span': {
+            marginLeft: '0.25rem',
+            '&:hover, &:focus': {
+                backgroundColor: '#51247a',
+                color: '#fff',
+            },
+        },
+    },
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    flexGrow: 0,
+}));
+const StyledSidebarSubDiv = styled('div')(() => ({
+    '& .hiddenFilters': {
+        display: 'none',
+    },
+}));
+const StyledFacilityGroup = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    paddingBlock: '16px',
+    '& h3': {
+        marginTop: 0,
+    },
+    '& ul': {
+        marginBottom: 0,
+    },
+}));
+const StyledFavouriteFilterGroup = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    paddingBlock: '16px',
+    marginLeft: '-12px',
+    '& label': {
+        ...standardText(theme),
+        textDecoration: 'underline',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        cursor: 'pointer',
+        '&:hover, :focus': {
+            '& > span:nth-of-type(2)': {
+                backgroundColor: theme.palette.primary.main,
+                color: '#fff',
+                textDecoration: 'underline',
+                lineHeight: 1.2,
+            },
+        },
+    },
+    '& span:not(.fortestfocus)': {
+        cursor: 'pointer',
+    },
+}));
+const StyledFilterControlsDiv = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 0,
+    '& h3': {
+        fontWeight: 700,
+        fontSize: '1.17em',
+    },
+    '& .countSelectedCheckboxes': {
+        paddingLeft: '0.5rem',
+        fontSize: '0.75rem',
+        fontWeight: 400,
+        fontStyle: 'italic',
+    },
+}));
+const StyledGroupNoteParagraph = styled('p')(({ theme }) => ({
+    marginBlock: 0,
+    color: theme.palette.designSystem.bodyCopy,
+    fontSize: theme.palette.designSystem.bodySmallFontSize,
+    paddingBottom: '0.5rem',
+}));
+const StyledFilterSpaceList = styled('ul')(() => ({
+    marginTop: 0,
+    paddingLeft: 0,
+    paddingTop: 0,
+}));
+const StyledCampusWrapperDiv = styled('div')(({ theme }) => ({
+    borderBottom: theme.palette.designSystem.border,
+    '& h3': {
+        marginBottom: 0,
+    },
+    '& .sidebarSelector': {
+        '& > div': {
+            paddingBlock: '1rem',
+        },
+        '& fieldset': {
+            borderWidth: 0,
+        },
+    },
+}));
+const StyledCartoucheList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    display: 'block',
+    margin: '0 0 0.5rem 0',
+    padding: 0,
+    '& li': {
+        listStyle: 'none',
+        display: 'inline',
+        margin: 0,
+        padding: 0,
+        '& button': {
+            margin: '0 0.5rem 0.5rem 0',
+            display: 'inline-flex',
+            alignItems: 'center',
+            borderRadius: '12px',
+            border: `1px solid ${theme.palette.primary.main}`,
+            textTransform: 'none !important',
+            padding: '0.1rem 0.25rem 0.1rem 0.5rem',
+            '&.unselectedFilter span': {
+                textDecoration: 'line-through',
+            },
+            '&:hover, :focus': {
+                backgroundColor: '#fff',
+                '& span': {
+                    textDecoration: 'underline',
+                },
+                '&.unselectedFilter span': {
+                    textDecoration: 'underline line-through',
+                },
+            },
+            '& svg': {
+                width: '0.7em',
+                height: '0.7em',
+            },
+        },
+    },
+}));
+const StyledCapacityLabelTypography = styled(Typography)(() => ({
+    fontSize: '1.17em',
+    margin: '0.75rem 0 0 1rem',
+    lineHeight: 1.3,
+}));
+
+export const SidebarFilters = ({
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
+    selectedFacilityTypes,
+    setSelectedFacilityTypes,
+    filteredFacilityTypeList,
+    suppliedClassName,
+    minimumSpaceCapacity,
+    maximumSpaceCapacity,
+    capacityFilterValue,
+    setCapacityFilterValue,
+    selectedCampus,
+    handleCampusSelection,
+    campusList,
+    activeFilterCount,
+    librariesForCampus,
+    selectedLibrary,
+    handleLibrarySelection,
+    onResetAllFilters,
+    showBottomActionButtons = false,
+    hasJourneyMapFilterState = false,
+    showFavouriteSpacesOnly = false,
+    setShowFavouriteSpacesOnly = /* istanbul ignore next */ () => {},
+    isLoggedIn = false,
+    hasFavouriteSpaces = false,
+}) => {
+    const [facilityGroupOpenState, setFacilityGroupOpenState] = React.useState([]);
+    const lastAutoExpandedGroupKeyRef = React.useRef('');
+    const [defaultCampus, setDefaultCampus] = React.useState(1);
+
+    function sortedUsedGroups() {
+        if (
+            !filteredFacilityTypeList?.data?.facility_type_groups ||
+            filteredFacilityTypeList?.data?.facility_type_groups?.length === 0
+        ) {
+            return [];
+        }
+        const usedFilterList = [...filteredFacilityTypeList?.data?.facility_type_groups];
+
+        return usedFilterList?.sort((a, b) => a?.facility_type_group_order - b?.facility_type_group_order);
+    }
+
+    React.useEffect(() => {
+        if (
+            facilityTypeListError !== false ||
+            facilityTypeListLoading !== false ||
+            !facilityTypeList?.data?.facility_type_groups?.length ||
+            facilityGroupOpenState?.length > 0
+        ) {
+            return;
+        }
+
+        const expandednessList = [];
+        sortedUsedGroups()?.forEach(group => {
+            expandednessList.push({
+                groupId: group?.facility_type_group_id,
+                isGroupExpanded: group?.facility_type_group_loads_open,
+            });
+        });
+
+        setFacilityGroupOpenState(expandednessList);
+    }, [
+        facilityTypeList,
+        facilityTypeListError,
+        facilityTypeListLoading,
+        facilityGroupOpenState?.length,
+        filteredFacilityTypeList,
+    ]);
+
+    React.useEffect(() => {
+        const hasLiveJourneyFilterState =
+            typeof window !== 'undefined' &&
+            !!window.sessionStorage &&
+            !!window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (hasLiveJourneyFilterState) {
+            return;
+        }
+
+        if (
+            !hasJourneyMapFilterState &&
+            facilityTypeListError === false &&
+            facilityTypeListLoading === false &&
+            facilityTypeList?.data?.facility_type_groups?.length > 0 &&
+            selectedFacilityTypes?.filter(ft => ft.selected === true)?.length === 0
+        ) {
+            const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+            const newFilters = flatFacilityTypeList?.map(facilityType => {
+                return {
+                    facility_type_group_id: facilityType?.facility_type_group_id,
+                    facility_type_id: facilityType?.facility_type_id,
+                    selected: false,
+                    unselected: false,
+                    facility_special_action: facilityType?.facility_special_action,
+                };
+            });
+            setSelectedFacilityTypes(newFilters);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        if (campusList?.length > 0) {
+            setDefaultCampus(campusList.at(0).campus_id);
+        }
+    }, [campusList]);
+
+    React.useEffect(() => {
+        const shouldAutoExpandSelectedGroups =
+            hasJourneyMapFilterState || Boolean(suppliedClassName?.includes('journey'));
+
+        if (!shouldAutoExpandSelectedGroups) {
+            lastAutoExpandedGroupKeyRef.current = '';
+            return;
+        }
+
+        if (facilityGroupOpenState?.length === 0) {
+            return;
+        }
+
+        const selectedGroupIds = new Set(
+            (selectedFacilityTypes || /* istanbul ignore next */ [])
+                .filter(filter => !!filter?.selected)
+                .map(filter => Number(filter?.facility_type_group_id))
+                .filter(groupId => Number.isFinite(groupId)),
+        );
+
+        if (selectedGroupIds.size === 0) {
+            lastAutoExpandedGroupKeyRef.current = '';
+            return;
+        }
+        const selectedGroupKey = Array.from(selectedGroupIds)
+            .sort((a, b) => a - b)
+            .join(',');
+
+        if (lastAutoExpandedGroupKeyRef.current === selectedGroupKey) {
+            return;
+        }
+
+        let hasChanges = false;
+        const nextExpandedness = facilityGroupOpenState.map(groupState => {
+            const groupId = Number(groupState?.groupId);
+            const shouldExpand = selectedGroupIds.has(groupId);
+            if (!shouldExpand || !!groupState?.isGroupExpanded) {
+                return groupState;
+            }
+
+            hasChanges = true;
+            return {
+                ...groupState,
+                isGroupExpanded: true,
+            };
+        });
+
+        lastAutoExpandedGroupKeyRef.current = selectedGroupKey;
+
+        if (hasChanges) {
+            setFacilityGroupOpenState(nextExpandedness);
+        }
+    }, [hasJourneyMapFilterState, suppliedClassName, facilityGroupOpenState, selectedFacilityTypes]);
+
+    const updateFacilityGroupOpenState = (filterGroupId, isGroupExpandedInput) => {
+        const newExpandedness = facilityGroupOpenState?.filter(g => {
+            return g?.groupId !== filterGroupId;
+        });
+        newExpandedness?.push({
+            groupId: filterGroupId,
+            isGroupExpanded: isGroupExpandedInput,
+        });
+        setFacilityGroupOpenState(newExpandedness);
+    };
+
+    const isSameFacilityTypeId = React.useCallback((leftId, rightId) => {
+        const leftNumber = Number(leftId);
+        const rightNumber = Number(rightId);
+        if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) {
+            return leftNumber === rightNumber;
+        }
+
+        return String(leftId) === String(rightId);
+    }, []);
+
+    // TODO remove isUnselected, remove unselected
+    const setFilters = (facilityTypeId, isSelected, isUnselected, facilitySpecialAction) => {
+        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+            const existingFilters = prevSelectedFacilityTypes || /* istanbul ignore next */ [];
+
+            // Look up from the current selection first; fall back to filteredFacilityTypeList for types
+            // that were added to the UI after the initial state was set (e.g. after campus change)
+            const resetFilter =
+                existingFilters.find(ftf => isSameFacilityTypeId(ftf?.facility_type_id, facilityTypeId)) ||
+                getFlatFacilityTypeList(filteredFacilityTypeList)?.find(f =>
+                    isSameFacilityTypeId(f?.facility_type_id, facilityTypeId),
+                );
+            const newFilters = existingFilters.filter(ftf => {
+                return !isSameFacilityTypeId(ftf?.facility_type_id, facilityTypeId);
+            });
+            /* istanbul ignore else */
+            if (!!resetFilter) {
+                newFilters.push({
+                    facility_type_group_id: resetFilter?.facility_type_group_id,
+                    facility_type_id: facilityTypeId,
+                    selected: isSelected,
+                    unselected: isUnselected,
+                    facility_special_action: facilitySpecialAction,
+                });
+            }
+            return newFilters;
+        });
+    };
+
+    // hide listitems that are checked
+    const showHideActiveFilterListItems = (facilityTypeId, isChecked) => {
+        const listItemId = `facility-type-listitem-${facilityTypeId}`;
+        const listItemElement = !!listItemId && document.getElementById(listItemId);
+        if (!!listItemElement) {
+            !!isChecked
+                ? addClass(listItemElement, 'checkedCheckbox')
+                : removeClass(listItemElement, 'checkedCheckbox');
+        }
+    };
+
+    const scrollToTopOfContent = () => {
+        // const topOfPage = document.getElementById('topofcontent');
+        // !!topOfPage && typeof topOfPage.scrollIntoView === 'function' && topOfPage.scrollIntoView();
+
+        const topOfSidebar = document.getElementById('topOfSidebar');
+        !!topOfSidebar &&
+            typeof topOfSidebar?.scrollIntoView === 'function' &&
+            topOfSidebar?.scrollIntoView({
+                behavior: 'smooth',
+            });
+        !!topOfSidebar && topOfSidebar?.focus();
+    };
+
+    const clearPersistedCapacityFilterValue = () => {
+        /* istanbul ignore next */
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            /* istanbul ignore next */
+            return;
+        }
+
+        try {
+            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!rawState) {
+                return;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
+                return;
+            }
+
+            delete parsedState.capacityFilterValue;
+            if (Object.keys(parsedState).length === 0) {
+                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                return;
+            }
+
+            window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
+        } catch {
+            // Ignore malformed session state.
+        }
+    };
+
+    const clearJourneyIntentId = () => {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+
+        try {
+            const rawJourneyState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
+            const parsedJourneyState = rawJourneyState ? JSON.parse(rawJourneyState) : {};
+            window.sessionStorage.setItem(
+                'bookableSpacesJourneyViewState',
+                JSON.stringify({
+                    ...parsedJourneyState,
+                    intentId: null,
+                }),
+            );
+        } catch {
+            // Ignore malformed session state.
+        }
+
+        clearPersistedCapacityFilterValue();
+    };
+
+    const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
+        clearJourneyIntentId();
+        showHideActiveFilterListItems(facilityTypeId, false);
+
+        setFilters(facilityTypeId, false, false, facilitySpecialAction);
+
+        scrollToTopOfContent();
+    };
+
+    const resolveFacilityType = (facilityTypeId, facilitySpecialAction) => {
+        const selectedMatch = selectedFacilityTypes?.find(
+            filter =>
+                isSameFacilityTypeId(filter?.facility_type_id, facilityTypeId) ||
+                (!!facilitySpecialAction && filter?.facility_special_action === facilitySpecialAction),
+        );
+        if (selectedMatch) {
+            return selectedMatch;
+        }
+
+        return getFlatFacilityTypeList(filteredFacilityTypeList)?.find(
+            filter =>
+                isSameFacilityTypeId(filter?.facility_type_id, facilityTypeId) ||
+                /* istanbul ignore next */ (!!facilitySpecialAction &&
+                    /* istanbul ignore next */ filter?.facility_special_action === facilitySpecialAction),
+        );
+    };
+
+    const handleFilterSelection = (isChecked, facilityType) => {
+        clearJourneyIntentId();
+        const resolvedFacilityType =
+            facilityType ||
+            /* istanbul ignore next */ resolveFacilityType(
+                facilityType?.facility_type_id,
+                facilityType?.facility_special_action,
+            );
+        const facilityTypeId = resolvedFacilityType?.facility_type_id;
+        const facilitySpecialAction = resolvedFacilityType?.facility_special_action;
+
+        const isCapacityFilterSelection =
+            Number(facilityTypeId) === FILTER_CAPACITY_TYPE_ID ||
+            facilitySpecialAction === FILTER_SPACE_CAPACITY_ACTION_NAME;
+
+        if (!isCapacityFilterSelection && isChecked) {
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+            clearPersistedCapacityFilterValue();
+        }
+
+        showHideActiveFilterListItems(facilityTypeId, isChecked);
+        setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
+        // scrollToTopOfContent();
+    };
+
+    const handleCapacityFilterChange = (e, newValue, id = null) => {
+        clearJourneyIntentId();
+
+        const previousMin = Number(capacityFilterValue?.[0]);
+        const previousMax = Number(capacityFilterValue?.[1]);
+
+        const normaliseCapacityValue = (rawValue, fallbackValue) => {
+            if (rawValue === '' || rawValue === null || rawValue === undefined) {
+                return fallbackValue;
+            }
+            /* istanbul ignore if */
+            if (typeof rawValue === 'string' && /* istanbul ignore next */ rawValue.trim() === '') {
+                return fallbackValue;
+            }
+            const parsedValue = Number(rawValue);
+            return Number.isFinite(parsedValue) ? parsedValue : /* istanbul ignore next */ fallbackValue;
+        };
+
+        const safeValue = Array.isArray(newValue)
+            ? newValue.map((value, index) => {
+                  const fallbackValue = index === 0 ? previousMin : previousMax;
+                  return normaliseCapacityValue(value, fallbackValue);
+              })
+            : /* istanbul ignore next */ normaliseCapacityValue(newValue, previousMin);
+
+        const sanitizedValue =
+            safeValue?.length >= 2
+                ? [
+                      Math.min(
+                          Math.max(Number(safeValue[0]), Number(minimumSpaceCapacity)),
+                          Number(maximumSpaceCapacity),
+                      ),
+                      Math.max(
+                          Math.min(Number(safeValue[1]), Number(maximumSpaceCapacity)),
+                          Number(minimumSpaceCapacity),
+                      ),
+                  ]
+                : /* istanbul ignore next */ safeValue;
+
+        const normalizedValue =
+            Array.isArray(sanitizedValue) && sanitizedValue.length === 2
+                ? [Math.min(sanitizedValue[0], sanitizedValue[1]), Math.max(sanitizedValue[0], sanitizedValue[1])]
+                : /* istanbul ignore next */ sanitizedValue;
+
+        setCapacityFilterValue(normalizedValue);
+
+        const idInput = id ?? e?.target?.id;
+        const parts = idInput?.split('-');
+        const facilityTypeId =
+            !!parts && parts.length === 3 ? parseInt(parts.pop(), 10) : /* istanbul ignore next */ -999;
+
+        const capacityFilterType = resolveFacilityType(facilityTypeId, FILTER_SPACE_CAPACITY_ACTION_NAME);
+        const isCapacityDefaultValues =
+            Number(normalizedValue?.[0]) === Number(minimumSpaceCapacity) &&
+            Number(normalizedValue?.[1]) === Number(maximumSpaceCapacity);
+        if (isCapacityDefaultValues) {
+            clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
+        } else {
+            handleFilterSelection(true, capacityFilterType);
+        }
+    };
+    const handleCapacityMinInputChange = e => {
+        const nextMinimum = e?.target?.value === '' ? '' : Number(e?.target?.value);
+        handleCapacityFilterChange(e, [nextMinimum, capacityFilterValue[1]]);
+    };
+    const handleCapacityMinInputBlur = e => {
+        const value = e?.target?.value;
+        if (value < 0) {
+            handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
+        } else if (value > maximumSpaceCapacity) {
+            handleCapacityFilterChange(e, [capacityFilterValue[0], maximumSpaceCapacity]);
+        }
+    };
+    const handleCapacityMaxInputChange = e => {
+        const nextMaximum = e?.target?.value === '' ? '' : Number(e?.target?.value);
+        handleCapacityFilterChange(e, [capacityFilterValue[0], nextMaximum]);
+    };
+    const handleCapacityMaxInputBlur = e => {
+        const value = e.target.value;
+        if (value < 0) {
+            handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
+        }
+        if (value > maximumSpaceCapacity) {
+            handleCapacityFilterChange(e, [capacityFilterValue[0], maximumSpaceCapacity]);
+        }
+    };
+
+    const toggleFilterGroup = filterGroupId => {
+        clearJourneyIntentId();
+        const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
+        // reverse the panel show/ hide
+        updateFacilityGroupOpenState(filterGroupId, !filterGroupPanelVisible);
+    };
+
+    const deSelectSelected = e => {
+        clearJourneyIntentId();
+        const button = e?.target?.closest('button');
+        const facilityTypeId = parseInt(button?.id?.replace('button-deselect-selected-', ''), 10);
+
+        const selectedFacilityType = selectedFacilityTypes?.find(ft =>
+            isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId),
+        );
+        const shouldClearCapacityFilter =
+            selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
+            isSameFacilityTypeId(facilityTypeId, FILTER_CAPACITY_TYPE_ID);
+        if (shouldClearCapacityFilter) {
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        }
+        showHideActiveFilterListItems(facilityTypeId, false);
+        if (shouldClearCapacityFilter) {
+            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
+        }
+
+        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+            const existingFilters = prevSelectedFacilityTypes || /* istanbul ignore next */ [];
+            return existingFilters.map(ft => {
+                const isMatchingFilter = isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId);
+                const isSiblingFilter =
+                    shouldClearCapacityFilter && isSameFacilityTypeId(ft?.facility_type_id, FILTER_CAPACITY_TYPE_ID);
+                if (!isMatchingFilter && !isSiblingFilter) {
+                    return ft;
+                }
+                return {
+                    ...ft,
+                    selected: false,
+                    unselected: false,
+                };
+            });
+        });
+    };
+    const deSelectAll = () => {
+        clearJourneyIntentId();
+        if (typeof onResetAllFilters === 'function') {
+            clearPersistedCapacityFilterValue();
+            onResetAllFilters();
+            return;
+        }
+        clearPersistedCapacityFilterValue();
+
+        // reset the facility types to all false - the render will clear the buttons and checkboxes for us!
+        const newFacilityTypes = selectedFacilityTypes?.map(ft => {
+            return {
+                facility_type_id: ft?.facility_type_id,
+                selected: false,
+                unselected: false,
+                facility_special_action: ft?.facility_special_action,
+                facility_type: ft?.facility_type,
+            };
+        });
+        setSelectedFacilityTypes(newFacilityTypes);
+        setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        setShowFavouriteSpacesOnly(false);
+
+        // Fall back to existing handlers when no explicit reset callback is provided.
+        handleLibrarySelection?.({ target: { value: 0 } });
+        handleCampusSelection?.({ target: { value: 0 } });
+    };
+    const handleResetFiltersButtonClick = () => {
+        deSelectAll();
+    };
+    const ValueLabelComponent = ({ children, value }) => {
+        return (
+            <Tooltip enterTouchDelay={0} placement="top" title={value}>
+                {children}
+            </Tooltip>
+        );
+    };
+
+    ValueLabelComponent.propTypes = {
+        children: PropTypes.node,
+        value: PropTypes.node,
+    };
+    const writeCapacitySlider = facilityType => {
+        return (
+            <>
+                <StyledCapacityLabelTypography component={'h4'} variant={'h6'}>
+                    Space capacity
+                </StyledCapacityLabelTypography>
+                <InputLabel
+                    title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
+                    htmlFor={`filtertype-${facilityType?.facility_type_id}`}
+                    id={`filtertype-${facilityType?.facility_type_id}-label`}
+                    className="selectedFilterTypeLabel"
+                    style={{ marginLeft: '1rem', textDecoration: 'none' }}
+                >
+                    <StyledSliderInput
+                        className="rightSlider"
+                        value={capacityFilterValue[0]}
+                        size="small"
+                        onChange={handleCapacityMinInputChange}
+                        onBlur={handleCapacityMinInputBlur}
+                        inputProps={{
+                            id: `capacitySlider-inputRight-${facilityType?.facility_type_id}`,
+                            'data-testid': 'capacitySlider-inputRight',
+                            step: 1,
+                            min: minimumSpaceCapacity,
+                            max: capacityFilterValue[1] - 1,
+                            type: 'number',
+                            'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
+                        }}
+                        sx={{ marginRight: '0.5rem' }}
+                    />
+                    <StyledSlider
+                        getAriaLabel={() => 'Space for number of people'} // word choice needs work
+                        value={capacityFilterValue}
+                        onChange={
+                            /* istanbul ignore next */ (event, newValue) =>
+                                /* istanbul ignore next */
+                                handleCapacityFilterChange(
+                                    event,
+                                    newValue,
+                                    `capacitySlider-slider-${facilityType?.facility_type_id}`,
+                                )
+                        }
+                        valueLabelDisplay="on"
+                        // getAriaValueText={`${capacityFilterValue} people`}
+                        sx={{ width: 200 }}
+                        min={minimumSpaceCapacity}
+                        max={maximumSpaceCapacity}
+                        step={1}
+                        components={{
+                            ValueLabel: ValueLabelComponent,
+                        }}
+                    />
+                    <StyledSliderInput
+                        value={capacityFilterValue[1]}
+                        size="small"
+                        onChange={handleCapacityMaxInputChange}
+                        onBlur={handleCapacityMaxInputBlur}
+                        inputProps={{
+                            id: `capacitySlider-inputLeft-${facilityType?.facility_type_id}`,
+                            'data-testid': 'capacitySlider-inputLeft',
+                            step: 1,
+                            min: capacityFilterValue[0] + 1,
+                            max: maximumSpaceCapacity,
+                            type: 'number',
+                            'aria-labelledby': `filtertype-${facilityType?.facility_type_id}-label`,
+                        }}
+                        sx={{ marginLeft: '0.5rem' }}
+                    />
+                </InputLabel>
+            </>
+        );
+    };
+
+    const isFacilityTypeSelected = React.useCallback(
+        facilityTypeId => {
+            return (
+                selectedFacilityTypes?.find(f1 => isSameFacilityTypeId(f1?.facility_type_id, facilityTypeId))
+                    ?.selected || false
+            );
+        },
+        [isSameFacilityTypeId, selectedFacilityTypes],
+    );
+
+    const getStyledInputListItem = facilityType => {
+        const isCapacityFilter = facilityType?.facility_type_id === FILTER_CAPACITY_TYPE_ID;
+        return (
+            <StyledInputListItem
+                key={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                id={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                data-testid={`facility-type-listitem-${facilityType?.facility_type_id}`}
+                className={isCapacityFilter ? 'hasRightSlider' : undefined}
+            >
+                {isCapacityFilter && writeCapacitySlider(facilityType)}
+                {!isCapacityFilter && (
+                    <>
+                        <InputLabel
+                            title={`Filter in Spaces with ${facilityType?.facility_type_name}`}
+                            htmlFor={`filtertype-${facilityType?.facility_type_id}`}
+                            className="selectedFilterTypeLabel"
+                        >
+                            <Checkbox
+                                onChange={e => handleFilterSelection(e?.target?.checked, facilityType)}
+                                data-testid={`filtertype-${facilityType?.facility_type_id}`}
+                                id={`filtertype-${facilityType?.facility_type_id}`}
+                                className="selectedFilterType"
+                                checked={isFacilityTypeSelected(facilityType?.facility_type_id)}
+                            />
+                            <span>{facilityType?.facility_type_name}</span>
+                        </InputLabel>
+                    </>
+                )}
+            </StyledInputListItem>
+        );
+    };
+    const showFilterGroupHeading = (group, isGroupExpanded, numberChecked, filterGroupId, groupLength) => {
+        return (
+            <StyledFilterControlsDiv>
+                <button
+                    type="button"
+                    className="group-heading"
+                    onClick={() => toggleFilterGroup(filterGroupId)}
+                    aria-expanded={!!isGroupExpanded}
+                    aria-controls={`filter-group-list-${filterGroupId}`}
+                    style={{
+                        cursor: 'pointer',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        textAlign: 'left',
+                        font: 'inherit',
+                        color: 'inherit',
+                    }}
+                >
+                    <Typography component={'h3'} variant={'h6'}>
+                        {group?.facility_type_group_name}{' '}
+                        {!isGroupExpanded && numberChecked > 0 && (
+                            <span
+                                className="countSelectedCheckboxes"
+                                data-testid={`facility-type-group-${filterGroupId}-expanded-count`}
+                            >
+                                ({numberChecked} of {groupLength})
+                            </span>
+                        )}
+                    </Typography>
+                </button>
+                <IconButton
+                    id={`facility-type-group-${filterGroupId}`}
+                    data-testid={`facility-type-group-${filterGroupId}`}
+                    onClick={() => toggleFilterGroup(filterGroupId)}
+                    aria-label={
+                        !!isGroupExpanded
+                            ? `Hide ${group?.facility_type_group_name} filter options`
+                            : `Show ${group?.facility_type_group_name} filter options`
+                    }
+                    aria-haspopup="true"
+                    aria-expanded={!!isGroupExpanded ? 'true' : 'false'}
+                    aria-controls={`filter-group-list-${filterGroupId}`}
+                >
+                    <KeyboardArrowUpIcon
+                        style={{ display: !!isGroupExpanded ? 'block' : 'none' }}
+                        className="expandedGroup"
+                        data-testid={`facility-type-group-${filterGroupId}-open`}
+                    />
+                    <KeyboardArrowDownIcon
+                        style={{ display: !!isGroupExpanded ? 'none' : 'block' }}
+                        className="collapsedGroup"
+                        data-testid={`facility-type-group-${filterGroupId}-collapsed`}
+                    />
+                </IconButton>
+            </StyledFilterControlsDiv>
+        );
+    };
+    const showCartoucheList = flatFacilityTypeList => {
+        const activeSelectedFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes);
+        const activeCapacityFilter =
+            Array.isArray(capacityFilterValue) &&
+            capacityFilterValue.length === 2 &&
+            (capacityFilterValue[0] !== minimumSpaceCapacity || capacityFilterValue[1] !== maximumSpaceCapacity);
+        const hasSelectedCapacityFilter = activeSelectedFacilityTypes?.some(
+            filter =>
+                Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
+                filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME,
+        );
+        const cartouches = [];
+
+        activeSelectedFacilityTypes?.forEach(f => {
+            const facilityTypeRecord = flatFacilityTypeList?.find(
+                flat => flat?.facility_type_id === f?.facility_type_id,
+            );
+            cartouches.push(
+                <li key={`cartouche-select-${f?.facility_type_id}`}>
+                    <Button
+                        id={`button-deselect-selected-${f?.facility_type_id}`}
+                        data-testid={`button-deselect-selected-${f?.facility_type_id}`}
+                        onClick={deSelectSelected}
+                        className="selectedFilter"
+                        title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
+                    >
+                        <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                    </Button>
+                </li>,
+            );
+        });
+
+        if (activeCapacityFilter && !hasSelectedCapacityFilter) {
+            cartouches.push(
+                <li key="cartouche-select-capacity">
+                    <Button
+                        id="button-deselect-selected-9003"
+                        data-testid="button-deselect-selected-capacity"
+                        onClick={deSelectSelected}
+                        className="selectedFilter"
+                        title="Space capacity selected - click to deselect"
+                    >
+                        <span>Space capacity</span> <CloseIcon />
+                    </Button>
+                </li>,
+            );
+        }
+
+        return <>{cartouches}</>;
+    };
+
+    const flatFacilityTypeList = getFlatFacilityTypeList(filteredFacilityTypeList);
+    const checkFiltersList = getActiveSelectedFacilityTypes(selectedFacilityTypes);
+    const hasSelectedFacilityFilters = checkFiltersList?.length > 0;
+    const hasActiveCapacityFilter =
+        Array.isArray(capacityFilterValue) &&
+        capacityFilterValue.length === 2 &&
+        (capacityFilterValue[0] !== minimumSpaceCapacity || capacityFilterValue[1] !== maximumSpaceCapacity);
+    const hasActiveCampusFilter = Number(selectedCampus) !== 0;
+    const hasActiveLibraryFilter = Number(selectedLibrary) !== 0;
+    const hasActiveFavouriteFilter = Boolean(showFavouriteSpacesOnly);
+    const hasActiveFilters =
+        hasSelectedFacilityFilters ||
+        hasActiveCapacityFilter ||
+        hasActiveCampusFilter ||
+        hasActiveLibraryFilter ||
+        hasActiveFavouriteFilter;
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')) || false;
+
+    const renderFilterActionButtons = ({ isBottom = false } = {}) => {
+        if (isBottom && !showBottomActionButtons) return null;
+        if (!hasActiveFilters) return null;
+        if (suppliedClassName?.includes('journey') && !isMobileView) return null;
+
+        return null;
+    };
+
+    const isJourneyView = suppliedClassName?.includes('journey');
+    const selectedCampusValue =
+        selectedCampus === 0
+            ? 0
+            : campusList?.find(c => c.campus_id === selectedCampus)?.campus_id || defaultCampus || 1;
+
+    const shouldHideOnMobile = !String(suppliedClassName || '').includes('popupFilterList');
+
+    return (
+        <StyledSidebarDiv
+            id="filterSidebar"
+            className={`filterSideBar ${suppliedClassName} ${shouldHideOnMobile ? 'mobileHidden' : ''}`}
+        >
+            <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
+                {!isJourneyView && (
+                    <StyledSkipLinkAnchor href="#space-wrapper" data-testid="skip-to-spaces-list">
+                        Skip to list of Spaces
+                    </StyledSkipLinkAnchor>
+                )}
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        columnGap: '1rem',
+                        marginBottom: '0.5rem',
+                    }}
+                >
+                    <Typography component={'h2'} variant={'h6'} id="topOfSidebar" data-testid="topOfSidebar">
+                        Filter spaces
+                    </Typography>
+                    <Button
+                        type="button"
+                        data-testid="reset-filters-button"
+                        onMouseDown={event => event.preventDefault()}
+                        onClick={event => {
+                            event.currentTarget.blur();
+                            handleResetFiltersButtonClick();
+                        }}
+                        variant="text"
+                        disableRipple
+                        disableFocusRipple
+                        sx={{
+                            ml: 'auto',
+                            mr: '5px',
+                            px: 0,
+                            py: 0,
+                            minWidth: 0,
+                            lineHeight: 1,
+                            borderRadius: 0,
+                            border: 'none',
+                            boxShadow: 'none',
+                            textTransform: 'none',
+                            textDecoration: 'underline',
+                            whiteSpace: 'nowrap',
+                            cursor: 'pointer',
+                            color: theme.palette.primary.main,
+                            transition: 'background-color 0.2s ease, color 0.2s ease',
+                            [theme.breakpoints.down('md')]: {
+                                mr: '30px',
+                                ml: '0.25rem',
+                            },
+                            '&:hover': {
+                                backgroundColor: theme.palette.primary.main,
+                                color: '#fff',
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                                py: '1px',
+                            },
+                            '&:focus, &:focus-visible, &:active': {
+                                backgroundColor: 'transparent',
+                                color: theme.palette.primary.main,
+                                textDecoration: 'underline',
+                                boxShadow: 'none',
+                                outline: 'none',
+                            },
+                        }}
+                    >
+                        Reset filters
+                    </Button>
+                </div>
+                {!!hasActiveFilters && (
+                    <>
+                        <Typography
+                            component={'h3'}
+                            variant={'subtitle1'}
+                            sx={{ fontSize: '1rem', lineHeight: 1.3, fontWeight: 500, marginBottom: '0.5rem' }}
+                            data-testid="space-filter-count"
+                        >
+                            Active filters: <span>{activeFilterCount}</span>
+                        </Typography>
+                        {!!(checkFiltersList?.length || hasActiveCapacityFilter) && (
+                            <StyledCartoucheList id={'button-deselect-list'} data-testid={'button-deselect-list'}>
+                                {showCartoucheList(flatFacilityTypeList)}
+                            </StyledCartoucheList>
+                        )}
+                        {renderFilterActionButtons()}
+                    </>
+                )}
+                {campusList?.length > 0 && (
+                    <StyledCampusWrapperDiv sx={{ borderTop: '1px solid rgba(0, 0, 0, 0.12)' }}>
+                        <ChooseCampus
+                            selectedCampusValue={selectedCampusValue}
+                            campusList={campusList}
+                            handleCampusSelection={handleCampusSelection}
+                        />
+                        <ChooseLibrary
+                            selectedLibrary={selectedLibrary}
+                            librariesForCampus={librariesForCampus}
+                            handleLibrarySelection={handleLibrarySelection}
+                        />
+                    </StyledCampusWrapperDiv>
+                )}
+                {isLoggedIn && hasFavouriteSpaces && (
+                    <StyledFavouriteFilterGroup>
+                        <InputLabel
+                            title="Favourites"
+                            htmlFor="filter-show-favourite-spaces-only"
+                            className="selectedFilterTypeLabel"
+                            style={{ marginLeft: '0.25rem' }}
+                        >
+                            <Checkbox
+                                checked={Boolean(showFavouriteSpacesOnly)}
+                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
+                                data-testid="filter-show-favourite-spaces-only"
+                                id="filter-show-favourite-spaces-only"
+                                className="selectedFilterType"
+                                inputProps={{ 'aria-label': 'your favourites' }}
+                            />
+                            <span>Your favourites</span>
+                        </InputLabel>
+                    </StyledFavouriteFilterGroup>
+                )}
+                {sortedUsedGroups()?.map(group => {
+                    const filterGroupId = group?.facility_type_group_id;
+                    const isGroupExpanded = !!facilityGroupOpenState?.find(o => o?.groupId === filterGroupId)
+                        ?.isGroupExpanded;
+                    const groupLength =
+                        group?.facility_type_children?.filter(
+                            child => child?.facility_type_id !== FILTER_CAPACITY_TYPE_ID,
+                        )?.length || 0;
+                    const numberChecked = (selectedFacilityTypes || /* istanbul ignore next */ []).filter(
+                        ftf =>
+                            ftf?.facility_type_group_id === filterGroupId &&
+                            (ftf?.selected || ftf?.unselected) &&
+                            Number(ftf?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID,
+                    ).length;
+                    const hasCapacityFilter = group?.facility_type_children?.some(
+                        child => Number(child?.facility_type_id) === FILTER_CAPACITY_TYPE_ID,
+                    );
+                    return (
+                        <StyledFacilityGroup
+                            key={`facility-group-${filterGroupId}`}
+                            data-testid={`filter-group-block-${filterGroupId}`}
+                            className={hasCapacityFilter ? 'hasCapacityFilter' : undefined}
+                        >
+                            {showFilterGroupHeading(group, isGroupExpanded, numberChecked, filterGroupId, groupLength)}
+                            {!!group?.facility_type_group_help && (
+                                <StyledGroupNoteParagraph>{group?.facility_type_group_help}</StyledGroupNoteParagraph>
+                            )}
+                            {!!isGroupExpanded && (
+                                <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
+                                    {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
+                                        group?.facility_type_children?.map(facilityType =>
+                                            getStyledInputListItem(facilityType),
+                                        )
+                                    ) : (
+                                        <li className="no-items">No filters available</li>
+                                    )}
+                                </StyledFilterSpaceList>
+                            )}
+                        </StyledFacilityGroup>
+                    );
+                })}
+                {renderFilterActionButtons({ isBottom: true })}
+            </StyledSidebarSubDiv>
+        </StyledSidebarDiv>
+    );
+};
+
+SidebarFilters.propTypes = {
+    facilityTypeList: PropTypes.any,
+    facilityTypeListLoading: PropTypes.any,
+    facilityTypeListError: PropTypes.any,
+    filteredFacilityTypeList: PropTypes.any,
+    selectedFacilityTypes: PropTypes.array,
+    setSelectedFacilityTypes: PropTypes.func,
+    minimumSpaceCapacity: PropTypes.number,
+    maximumSpaceCapacity: PropTypes.number,
+    capacityFilterValue: PropTypes.array,
+    setCapacityFilterValue: PropTypes.func,
+    selectedCampus: PropTypes.any,
+    handleCampusSelection: PropTypes.func,
+    campusList: PropTypes.any,
+    suppliedClassName: PropTypes.string,
+    activeFilterCount: PropTypes.number,
+    librariesForCampus: PropTypes.any,
+    selectedLibrary: PropTypes.any,
+    handleLibrarySelection: PropTypes.func,
+    onApplyAllFilters: PropTypes.func,
+    onResetAllFilters: PropTypes.func,
+    showBottomActionButtons: PropTypes.bool,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
+};
+
+export default React.memo(SidebarFilters);

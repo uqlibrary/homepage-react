@@ -10,6 +10,8 @@
         "paths": {
             "@uq/pw/*": ["playwright/*"]
         },
-        "include": ["playwright.config.ts", "playwright/**/*.spec.ts"]
+        "include": ["playwright.config.ts", "playwright/**/*.spec.ts"],
+        "exclude": ["chrome/**/**"],
+        "jsx": "react"
     },
 }

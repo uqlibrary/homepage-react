@@ -1,0 +1,387 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
+
+import TuneIcon from '@mui/icons-material/Tune';
+
+import { StyledSkipLinkAnchor, StyledSecondaryButton } from 'helpers/general';
+
+import BookingLink from 'modules/Pages/BookableSpaces/Shared/BookingLink';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
+import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
+import SpacesPagination from 'modules/Pages/BookableSpaces/Shared/SpacesPagination';
+import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
+
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+
+import {
+    StyledButtonWrapperStack,
+    StyledFilterShowHideButton,
+    StyledListItemStack,
+    StyledJourneyPanelSection,
+    StyledResultsSidebarPanelDiv,
+    StyledResultsSplitLayoutDiv,
+    StyledSelectorWrapperDiv,
+} from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
+import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
+import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
+
+export const clampJourneyPage = (page, totalPages) => Math.max(1, Math.min(page, totalPages));
+
+export const getJourneyResultSummary = (spacesLength, totalSpaceCount) => {
+    if (typeof totalSpaceCount === 'number') {
+        return `${spacesLength} of ${totalSpaceCount}`;
+    }
+    return String(spacesLength);
+};
+
+export const getJourneySpaceDetailId = space => String(space?.space_uuid || space?.space_id || '');
+
+export const getJourneyDetailUrl = space =>
+    serialiseJourneyUrl({
+        view: 'details',
+        spaceId: space?.space_uuid || space?.space_id || /* istanbul ignore next */ null,
+    });
+
+export const toggleJourneySidebarFilter = sidebarId => {
+    const sidebarBlock = document.getElementById(sidebarId);
+    if (!sidebarBlock) {
+        return false;
+    }
+
+    const shouldShow = sidebarBlock.classList.contains('mobileHidden');
+    if (shouldShow) {
+        sidebarBlock.classList.remove('mobileHidden');
+        return true;
+    }
+
+    sidebarBlock.classList.add('mobileHidden');
+    return false;
+};
+
+export const handleJourneySidebarToggle = () => toggleJourneySidebarFilter('filterSidebar');
+
+export const applyJourneySidebarFilters = ({ isDesktopResultsLayout, setShowAdvancedFilters }) => {
+    if (!isDesktopResultsLayout) {
+        setShowAdvancedFilters(false);
+    }
+};
+
+export const JourneyResultsView = ({
+    actions,
+    intentSpaceLocations,
+    totalSpaceCount,
+    onResetAllFilters,
+    goToLegacyBrowse,
+    selectedFacilityTypes,
+    setSelectedFacilityTypes,
+    filteredFacilityTypeList,
+    facilityTypeList,
+    facilityTypeListLoading,
+    facilityTypeListError,
+    minimumSpaceCapacity,
+    maximumSpaceCapacity,
+    capacityFilterValue,
+    setCapacityFilterValue,
+    campusList,
+    selectedCampus,
+    handleCampusSelection,
+    activeFilterCount,
+    librariesForCampus,
+    selectedLibrary,
+    handleLibrarySelection,
+    isDesktopResultsLayout,
+    setShowAdvancedFilters,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    spacesFavouritesList,
+    showFavouriteSpacesOnly,
+    setShowFavouriteSpacesOnly,
+    isLoggedIn,
+    hasFavouriteSpaces,
+    hasJourneyMapFilterState,
+}) => {
+    const theme = useTheme();
+
+    const spaces = React.useMemo(
+        () => (Array.isArray(intentSpaceLocations) ? intentSpaceLocations : /* istanbul ignore next */ []),
+        [intentSpaceLocations],
+    );
+    const [page, setPage] = React.useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.max(1, Math.ceil(spaces.length / itemsPerPage));
+    const visibleSpaces = React.useMemo(() => {
+        const start = (page - 1) * itemsPerPage;
+        return spaces.slice(start, start + itemsPerPage);
+    }, [page, spaces]);
+
+    React.useEffect(() => {
+        setPage(prevPage => clampJourneyPage(prevPage, totalPages));
+    }, [totalPages]);
+
+    return (
+        <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
+            <StyledFilterShowHideButton
+                onClick={handleJourneySidebarToggle}
+                data-testid="spaces-filter-show-hide-button"
+            >
+                <TuneIcon />
+            </StyledFilterShowHideButton>
+            <StyledResultsSplitLayoutDiv>
+                <Box>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography component="h1" variant="h5">
+                            <span style={{ whiteSpace: 'nowrap' }}>Search results</span>
+                        </Typography>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', marginRight: '1rem' }}>
+                        <Typography component={'h2'} data-testid="spaces-results-summary">
+                            Filtered:{' '}
+                            <span style={{ whiteSpace: 'nowrap' }}>
+                                {getJourneyResultSummary(spaces.length, totalSpaceCount)}
+                            </span>{' '}
+                            spaces
+                        </Typography>
+                        {campusList?.length > 0 && (
+                            <>
+                                <StyledSelectorWrapperDiv>
+                                    <ChooseCampus
+                                        selectedCampusValue={selectedCampus}
+                                        campusList={campusList}
+                                        handleCampusSelection={handleCampusSelection}
+                                        campusLabel="Campus:"
+                                        testId="mobile-campus"
+                                    />
+                                </StyledSelectorWrapperDiv>
+                                <StyledSelectorWrapperDiv>
+                                    <ChooseLibrary
+                                        selectedLibrary={selectedLibrary}
+                                        librariesForCampus={librariesForCampus}
+                                        handleLibrarySelection={handleLibrarySelection}
+                                        libraryLabel="Library:"
+                                    />
+                                </StyledSelectorWrapperDiv>
+                            </>
+                        )}
+                    </div>
+                    <StyledSkipLinkAnchor href="#topOfSidebar" data-testid="skip-to-filter-list">
+                        Skip to filters
+                    </StyledSkipLinkAnchor>
+                    <StyledButtonWrapperStack direction="row" spacing={1}>
+                        <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
+                    </StyledButtonWrapperStack>
+                    {spaces.length > 0 && (
+                        <Stack spacing={4} sx={{ mt: 1.5 }}>
+                            {visibleSpaces.map(space => {
+                                const detailId = getJourneySpaceDetailId(space);
+                                const detailUrl = getJourneyDetailUrl(space);
+                                const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
+                                return (
+                                    <StyledListItemStack
+                                        key={detailId || /* istanbul ignore next */ space?.space_id}
+                                        spacing={1}
+                                    >
+                                        <Button
+                                            component="a"
+                                            className="cardBody"
+                                            href={detailUrl}
+                                            data-testid={`spaces-result-list-item-${space?.space_id}`}
+                                        >
+                                            <Box sx={{ position: 'relative' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    {isLoggedIn && <span className="spaceHolderForFavouriteStar" />}
+
+                                                    <Typography
+                                                        component={'h3'}
+                                                        variant={'h6'}
+                                                        data-testid={`spaces-${space?.space_id}-name`}
+                                                    >
+                                                        {space?.space_type_details?.space_type_name}{' '}
+                                                        {space?.space_name || 'Unnamed space'}
+                                                    </Typography>
+                                                </div>
+                                                <Typography
+                                                    sx={{ color: theme.palette.designSystem.bodyCopy, mb: 0.5 }}
+                                                >
+                                                    {space?.space_library_name}
+                                                </Typography>
+                                                <Box sx={{ mt: 0.75, mb: 1 }}>
+                                                    {visibleOutage ? (
+                                                        <SpacesOutageNotice
+                                                            bookableSpace={space}
+                                                            visibleOutage={visibleOutage}
+                                                            hideReason
+                                                        />
+                                                    ) : (
+                                                        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                                                            <SpaceOpenStatusChip
+                                                                space={space}
+                                                                weeklyHours={weeklyHours}
+                                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                                weeklyHoursError={weeklyHoursError}
+                                                            />
+                                                        </Stack>
+                                                    )}
+                                                </Box>
+                                                {!!space?.space_type_details?.space_type_description && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: theme.palette.designSystem.bodyCopy,
+                                                            mb: space?.space_description ? 0.75 : 0,
+                                                        }}
+                                                    >
+                                                        {space.space_type_details.space_type_description}
+                                                    </Typography>
+                                                )}
+                                                {!!space?.space_description && (
+                                                    <Typography
+                                                        variant="body2"
+                                                        sx={{
+                                                            color: theme.palette.designSystem.bodyCopy,
+                                                            fontStyle: 'italic',
+                                                        }}
+                                                    >
+                                                        {String(space.space_description)
+                                                            .replace(/<[^>]*>/g, ' ')
+                                                            .trim()}
+                                                    </Typography>
+                                                )}
+                                            </Box>
+                                        </Button>
+                                        {isLoggedIn && (
+                                            <SpacesFavouriteIcon
+                                                actions={actions}
+                                                bookableSpace={space}
+                                                isFavourite={spacesFavouritesList?.some(
+                                                    fav => fav.space_id === space?.space_id,
+                                                )}
+                                                // onFavouriteToggle={() => onFavouriteToggle?.(space)}
+                                                iconPosition="topLeft"
+                                            />
+                                        )}
+                                        {!!space?.space_external_book_url && (
+                                            <Box className="bookingLink">
+                                                <BookingLink bookableSpace={space} hideNoBookingRequired />
+                                            </Box>
+                                        )}
+                                    </StyledListItemStack>
+                                );
+                            })}
+                        </Stack>
+                    )}
+                    {spaces.length > 0 && totalPages > 1 && (
+                        <SpacesPagination
+                            page={page}
+                            count={totalPages}
+                            onPageChange={setPage}
+                            totalItems={spaces.length}
+                            itemsPerPage={itemsPerPage}
+                        />
+                    )}
+                    {spaces.length === 0 && (
+                        <Box
+                            sx={{
+                                mt: 1.5,
+                                p: 2,
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                border: '1px dashed #c8bed6',
+                                borderRadius: '12px',
+                                backgroundColor: '#faf7ff',
+                            }}
+                        >
+                            <Typography sx={{ fontWeight: 700, color: '#1f1230' }}>
+                                No results match your criteria
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', mt: 0.75 }}>
+                                Try clearing some filters or selecting a different campus to widen your search.
+                            </Typography>
+                        </Box>
+                    )}
+                </Box>
+
+                <StyledResultsSidebarPanelDiv className="aside">
+                    <SidebarFilters
+                        facilityTypeList={facilityTypeList}
+                        facilityTypeListLoading={facilityTypeListLoading}
+                        facilityTypeListError={facilityTypeListError}
+                        selectedFacilityTypes={selectedFacilityTypes}
+                        setSelectedFacilityTypes={setSelectedFacilityTypes}
+                        filteredFacilityTypeList={filteredFacilityTypeList}
+                        suppliedClassName="journeyFilterSidebar"
+                        minimumSpaceCapacity={minimumSpaceCapacity}
+                        maximumSpaceCapacity={maximumSpaceCapacity}
+                        capacityFilterValue={capacityFilterValue}
+                        setCapacityFilterValue={setCapacityFilterValue}
+                        campusList={campusList}
+                        selectedCampus={selectedCampus}
+                        handleCampusSelection={handleCampusSelection}
+                        activeFilterCount={activeFilterCount}
+                        librariesForCampus={librariesForCampus}
+                        selectedLibrary={selectedLibrary}
+                        handleLibrarySelection={handleLibrarySelection}
+                        onApplyAllFilters={
+                            /* istanbul ignore next */ () =>
+                                /* istanbul ignore next */
+                                applyJourneySidebarFilters({
+                                    isDesktopResultsLayout,
+                                    setShowAdvancedFilters,
+                                })
+                        }
+                        onResetAllFilters={onResetAllFilters}
+                        showBottomActionButtons
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                        isLoggedIn={isLoggedIn}
+                        hasFavouriteSpaces={hasFavouriteSpaces}
+                        hasJourneyMapFilterState={hasJourneyMapFilterState}
+                    />
+                </StyledResultsSidebarPanelDiv>
+            </StyledResultsSplitLayoutDiv>
+        </StyledJourneyPanelSection>
+    );
+};
+
+JourneyResultsView.propTypes = {
+    actions: PropTypes.any,
+    intentSpaceLocations: PropTypes.array,
+    totalSpaceCount: PropTypes.number,
+    onResetAllFilters: PropTypes.func,
+    goToLegacyBrowse: PropTypes.func,
+    selectedFacilityTypes: PropTypes.array,
+    setSelectedFacilityTypes: PropTypes.func,
+    filteredFacilityTypeList: PropTypes.object,
+    facilityTypeList: PropTypes.object,
+    facilityTypeListLoading: PropTypes.bool,
+    facilityTypeListError: PropTypes.any,
+    minimumSpaceCapacity: PropTypes.number,
+    maximumSpaceCapacity: PropTypes.number,
+    capacityFilterValue: PropTypes.array,
+    setCapacityFilterValue: PropTypes.func,
+    campusList: PropTypes.array,
+    selectedCampus: PropTypes.number,
+    handleCampusSelection: PropTypes.func,
+    activeFilterCount: PropTypes.number,
+    librariesForCampus: PropTypes.array,
+    selectedLibrary: PropTypes.number,
+    handleLibrarySelection: PropTypes.func,
+    shouldShowAdvancedFilters: PropTypes.bool,
+    isDesktopResultsLayout: PropTypes.bool,
+    setShowAdvancedFilters: PropTypes.func,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
+    spacesFavouritesList: PropTypes.any,
+    showFavouriteSpacesOnly: PropTypes.bool,
+    setShowFavouriteSpacesOnly: PropTypes.func,
+    isLoggedIn: PropTypes.bool,
+    hasFavouriteSpaces: PropTypes.bool,
+    hasJourneyMapFilterState: PropTypes.bool,
+};
+
+export default JourneyResultsView;

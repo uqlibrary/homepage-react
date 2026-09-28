@@ -9,7 +9,6 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
-import { isDlorAdminUser } from 'helpers/access';
 
 export const DLOTeamEdit = ({
     actions,

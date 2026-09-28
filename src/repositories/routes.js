@@ -330,6 +330,73 @@ export const LOANS_API = () => ({
     options: { params: { ts: getMinuteCachebuster() } },
 });
 
+// Spaces APIs
+export const SPACES_ALL_API = ({ includeDrafts } = {}) => ({
+    apiUrl: 'bookable_spaces/spaces/all',
+    options: {
+        params: {
+            ...(includeDrafts === true ? { include_drafts: true } : {}),
+            ts: `${new Date().getTime()}`,
+        },
+    },
+});
+export const SPACES_ADMIN_ALL_API = ({ includeDrafts, includeDeleted } = {}) => ({
+    apiUrl: 'bookable_spaces/admin/spaces/all',
+    options: {
+        params: {
+            ...(includeDrafts === true ? { include_drafts: true } : {}),
+            ...(includeDeleted === true ? { include_deleted: true } : {}),
+            ts: `${new Date().getTime()}`,
+        },
+    },
+});
+export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
+export const SPACES_ADMIN_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/admin/space/${uuid}` });
+export const SPACES_ADMIN_NOTES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/admin/space/${spaceId}/notes` });
+export const SPACES_OUTAGES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/space/${spaceId}/outages` });
+export const SPACES_OUTAGE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_outage/${id}` });
+export const SPACES_FLOOR_OUTAGES_API = ({ floorId }) => ({ apiUrl: `bookable_spaces/floor/${floorId}/outages` });
+export const SPACES_LIBRARY_OUTAGES_API = ({ libraryId }) => ({
+    apiUrl: `bookable_spaces/library/${libraryId}/outages`,
+});
+export const SPACES_CAMPUS_OUTAGES_API = ({ campusId }) => ({ apiUrl: `bookable_spaces/campus/${campusId}/outages` });
+
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
+export const SPACES_FACILITY_TYPE_ALL_API = () => ({ apiUrl: 'bookable_spaces/facility_types/all' });
+
+export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_groups' });
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API = ({ id }) => ({
+    apiUrl: `bookable_spaces/facility_groups/${id}`,
+});
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API = () => ({
+    apiUrl: 'bookable_spaces/facility_groups',
+});
+
+export const SPACES_FACILITY_TYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types' });
+export const SPACES_FACILITY_TYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_types/${id}` });
+
+// locations: type = campus, building, floor or space; id = unique record id
+// ie:
+// bookable_spaces/campus || bookable_spaces/campus/999
+// bookable_spaces/building || bookable_spaces/building/999
+// bookable_spaces/floor || bookable_spaces/floor/999
+// bookable_spaces/space || bookable_spaces/space/999
+export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
+export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
+
+export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/campus/all' });
+export const SPACES_ARCHIBUS_TREE_API = () => ({ apiUrl: 'bookable_spaces/archibus/tree' });
+export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/space_type' });
+export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_FAVOURITES_API = () => ({ apiUrl: 'bookable_spaces/favourites' });
+export const SPACES_BULK_FACILITIES_API = ({ id }) => ({ apiUrl: `bookable_spaces/bulkFacilityTypes/${id}` });
 /** MEMBERSHIP **/
 // The membership form and landing chooser are built from this response: account_types, titles, hospital.* and
 // reciprocal.*

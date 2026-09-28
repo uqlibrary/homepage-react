@@ -228,8 +228,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
 
                 showHideLocationPanel();
 
-                const bookitLink = document.getElementById('bookit-link');
-                !!bookitLink && bookitLink.focus();
+                const bookingLink = document.getElementById('bookit-link');
+                !!bookingLink && bookingLink.focus();
             }
         };
 
@@ -265,6 +265,20 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         !!siteHeader && siteHeader.removeAttribute('secondLevelUrl');
     }, []);
 
+    const getSpacesUrl = () => {
+        let url =
+            window.location.hostname === 'homepage-development.library.uq.edu.au'
+                ? /* istanbul ignore next */ window.location.href + 'spaces'
+                : '/spaces';
+        /* istanbul ignore else */
+        if (window.location.hostname === 'localhost') {
+            const username = new URLSearchParams(window.location.search)?.get('user');
+            if (!!username) {
+                url += '?user=' + username;
+            }
+        }
+        return url;
+    };
     // display as locations then booking link but code as booking then locations,
     // so they don't tab to the booking link after clicking the locations open
     return (
@@ -287,12 +301,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
                             Locations and hours
                         </span>
                     </StyledLocationOpenerButton>
-                    <StyledBookingLink
-                        href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb"
-                        data-testid="homepage-hours-bookit-link"
-                        id="bookit-link"
-                    >
-                        <span>Book a room</span>
+                    <StyledBookingLink href={getSpacesUrl()} data-testid="homepage-hours-bookit-link" id="bookit-link">
+                        <span>Find library study spaces</span>
                     </StyledBookingLink>
                 </StyledButtonAreaDiv>
                 <StyledLocationBox
