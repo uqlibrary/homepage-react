@@ -33,8 +33,43 @@ const StyledMapWrapperDiv = styled('div')(() => ({
         transformOrigin: 'bottom center',
     },
     '& .mapboxgl-popup-content': {
+        width: '301px',
+        maxWidth: 'calc(100vw - 2rem)',
+        boxSizing: 'border-box',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+        padding: '10px 16px 10px 10px',
+    },
+    '& .mapboxgl-popup-close-button': {
+        top: '0',
+        right: '0',
+        width: '2.5rem',
+        height: '2.5rem',
+        padding: '0.375rem',
+        lineHeight: 1,
+        fontSize: '0',
+        color: '#3a3a3a',
+        borderRadius: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: 'none',
+        outline: 'none',
+        boxShadow: 'none',
+    },
+    '& .mapboxgl-popup-close-button svg': {
+        width: '1.5rem',
+        height: '1.5rem',
+        display: 'block',
+        strokeWidth: 2.2,
+    },
+    '& .mapboxgl-popup-close-button:hover, & .mapboxgl-popup-close-button:focus-visible': {
+        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+        outline: 'none',
+        boxShadow: 'none',
+    },
+    '& .mapboxgl-popup-content > *:first-of-type': {
+        marginRight: '0.5rem',
     },
 }));
 
@@ -57,9 +92,9 @@ const StyledResetMapButton = styled('button')(() => ({
 }));
 
 const StyledPopupContent = styled('div')(() => ({
-    padding: '2px 4px',
-    fontSize: '0.85rem',
-    lineHeight: 1.4,
+    padding: '2px 16px 2px 4px',
+    fontSize: '1.0625rem',
+    lineHeight: 1.45,
 }));
 
 const StyledPopupTitleLink = styled(Link)(({ theme }) => ({
@@ -75,13 +110,19 @@ const StyledPopupTitleLink = styled(Link)(({ theme }) => ({
     },
 }));
 const StyledPopupRoomName = styled('span')(() => ({
-    whiteSpace: 'nowrap',
+    whiteSpace: 'normal',
+}));
+
+const StyledPopupRoomNumber = styled('span')(() => ({
+    display: 'inline',
+    wordBreak: 'break-word',
+    whiteSpace: 'normal',
 }));
 
 const StyledFavouriteNote = styled('em')(() => ({
     display: 'block',
     marginTop: '0.5rem',
-    fontSize: '0.8rem',
+    fontSize: '1rem',
     color: '#666',
 }));
 
@@ -92,6 +133,11 @@ const StyledPopupBookingDiv = styled('div')(() => ({
 export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     const spaceTypeName = space?.space_type_details?.space_type_name ?? null;
+    const trailingRoomNumberMatch = String(space?.space_name || '').match(
+        /^(.*?)(?:\s+)([A-Za-z0-9-]*\d[A-Za-z0-9-]*)$/,
+    );
+    const roomNamePrefix = trailingRoomNumberMatch?.[1]?.trimEnd() || '';
+    const roomNameNumber = trailingRoomNumberMatch?.[2] || '';
     /* istanbul ignore next */
     /* istanbul ignore next */
     const detailUrl = serialiseJourneyUrl({
@@ -103,7 +149,13 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
         <StyledPopupContent data-testid={`space-${space?.space_id}-map-popup`}>
             <StyledPopupTitleLink to={detailUrl} reloadDocument>
                 {!!spaceTypeName && <span>{spaceTypeName}</span>}
-                {!!space?.space_name && <StyledPopupRoomName> {space.space_name}</StyledPopupRoomName>}
+                {!!space?.space_name && (
+                    <>
+                        {!!roomNamePrefix && <StyledPopupRoomName>{roomNamePrefix}</StyledPopupRoomName>}
+                        {!!roomNameNumber && <StyledPopupRoomNumber> {roomNameNumber}</StyledPopupRoomNumber>}
+                        {!roomNameNumber && <StyledPopupRoomName> {space.space_name}</StyledPopupRoomName>}
+                    </>
+                )}
             </StyledPopupTitleLink>
 
             {!!space?.space_building_name && (
@@ -162,6 +214,30 @@ const BookableSpacesMap = React.forwardRef(
         /* istanbul ignore next */
         const zoomLevelForCampus = _campusName => {
             return _campusName === CAMPUS_ST_LUCIA ? ZOOM_CAMPUS_MANY_BUILDINGS : ZOOM_CAMPUS_ONE_BUILDING;
+        };
+
+        const setPopupCloseButtonIcon = popupInstance => {
+            const closeButton =
+                popupInstance?._closeButton ||
+                popupInstance?.getElement?.()?.querySelector('.mapboxgl-popup-close-button');
+            if (!closeButton) {
+                return;
+            }
+
+            closeButton.innerHTML = `
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                        d="M6 6L18 18M18 6L6 18"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            `;
+            closeButton.setAttribute('aria-label', 'Close');
+            closeButton.style.fontSize = '0';
         };
 
         const clearActivePopup = () => {
@@ -279,12 +355,14 @@ const BookableSpacesMap = React.forwardRef(
                     closeButton: true,
                     closeOnClick: false,
                     offset: [0, -40],
-                    maxWidth: '240px',
+                    maxWidth: '301px',
+                    width: 301,
                 })
                     .setLngLat([space.space_longitude, space.space_latitude])
                     .setDOMContent(container)
                     .addTo(mazeMapInstanceRef.current);
 
+                setPopupCloseButtonIcon(popupInstance);
                 activePopupRef.current = popupInstance;
                 /* istanbul ignore next */
                 popupInstance.on('close', () => {
