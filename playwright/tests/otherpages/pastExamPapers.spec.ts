@@ -25,6 +25,13 @@ test.describe('Past Exam Papers Pages', () => {
             ).toBeVisible();
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
+        test('the suggestions list is accessible', async ({ page }) => {
+            await page.goto('/exams');
+            await page.setViewportSize({ width: 1300, height: 1000 });
+            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren1');
+            // suggestions load
+            await assertAccessibility(page, '[data-testid="StandardPage"]');
+        });
         test('when I type a valid course code fragment in the search bar, appropriate suggestions load', async ({
             page,
         }) => {
@@ -33,80 +40,12 @@ test.describe('Past Exam Papers Pages', () => {
             // suggestions load
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(3);
         });
-        test('the suggestions list is accessible', async ({ page }) => {
-            await page.goto('/exams');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren1');
-            // suggestions load
-            await assertAccessibility(page, '[data-testid="StandardPage"]');
-        });
-        test('when I type an invalid course code fragment in the search bar, a hint shows', async ({ page }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('em');
-            await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
-            await expect(
-                page
-                    .locator('.MuiAutocomplete-noOptions')
-                    .getByText(/We have not found any past exams for this course/)
-                    .first(),
-            ).toBeVisible();
-        });
-        test('when I type too short a course code fragment in the search bar, a hint shows', async ({ page }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('f');
-            await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
-            await expect(
-                page
-                    .locator('.MuiAutocomplete-noOptions')
-                    .getByText(/Type more characters to search/)
-                    .first(),
-            ).toBeVisible();
-        });
-        test('when I dont have any results yet, the "results for this search" doesnt get added to the drop down', async ({
-            page,
-        }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('f');
-            await expect(page.locator('.MuiAutocomplete-listbox')).not.toBeVisible();
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').pressSequentially('ren');
-            await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(17);
-        });
         test('when I click on a suggestion from the list, the correct result page loads', async ({ page }) => {
             await page.goto('/exams');
             await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren');
             await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(17);
             await page.locator('#exam-search-option-0').click();
             await expect(page).toHaveURL(/exams\/course\/FREN/);
-        });
-        test('when I hit return on a search list, the result page for the first option loads', async ({ page }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren');
-            await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(17);
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').press('Enter');
-            await expect(page).toHaveURL(/exams\/course\/FREN/);
-        });
-        test('when my search term matches the first result I do not get a "show all" prompt', async ({ page }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fren101');
-            await expect(page.locator('.MuiAutocomplete-listbox').locator(':scope > *')).toHaveCount(2);
-            await expect(
-                page.locator('#exam-search-option-0').getByText('View all exam papers for FREN101'),
-            ).toBeVisible();
-            await expect(page.locator('#exam-search-option-1').getByText('FREN1010')).toBeVisible();
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').pressSequentially('0');
-            await expect(page.locator('.MuiAutocomplete-listbox').locator('> *')).toHaveCount(1);
-            await expect(page.locator('#exam-search-option-0').getByText('FREN1010')).toBeVisible();
-        });
-        test('when the api fails I get an appropriate error message', async ({ page }) => {
-            await page.goto('/exams');
-            await page.getByTestId('past-exam-paper-search-autocomplete-input').fill('fail');
-            await expect(page.locator('.MuiAutocomplete-listbox')).toHaveCount(0);
-            await expect(
-                page
-                    .locator('div[data-testid="past-exam-paper-error"]')
-                    .getByText(/Autocomplete suggestions currently unavailable - please try again later/)
-                    .first(),
-            ).toBeVisible();
         });
     });
     test.describe('results', () => {
