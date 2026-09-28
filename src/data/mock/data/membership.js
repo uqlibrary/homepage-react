@@ -283,9 +283,10 @@ const namedApplications = [
         home_address_state: 'QLD',
         home_address_postcode: '4101',
         home_address_country: 'Australia',
-        // An issued account, so it carries the expiry and barcode an admin corrects in place.
+        // An issued account, so it carries the expiry, barcode and account username (uid) an admin sees.
         expires_on: '31-12-2026',
         barcode: '2406700012345',
+        uid: 'uqjsmith',
     },
     {
         id: '00000000-0000-0000-0000-000000000103',
