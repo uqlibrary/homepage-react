@@ -330,6 +330,13 @@ export const DlorForm = ({
             ) {
                 firstPanelErrorCount++;
             }
+            if (
+                currentValues?.team_admin_username_new === undefined ||
+                !currentValues?.team_admin_username_new ||
+                currentValues?.team_admin_username_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
             (currentValues?.team_email_new === undefined ||
                 !currentValues?.team_email_new ||
                 currentValues?.team_email_new?.length < 1 ||
@@ -337,6 +344,7 @@ export const DlorForm = ({
                 firstPanelErrorCount++;
         } else if (mode === 'edit') {
             currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            currentValues?.team_admin_username_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
             (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
                 firstPanelErrorCount++;
         }
@@ -642,6 +650,25 @@ export const DlorForm = ({
                             />
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_new">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username-new"
+                                required
+                                value={formValues?.team_admin_username_new || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_new')}
+                                type="text"
+                                error={!formValues?.team_admin_username_new}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_new && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                             <Input
                                 id="team_email_new"
@@ -679,6 +706,25 @@ export const DlorForm = ({
                                 value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
                                 onChange={handleChange('team_manager_edit')}
                             />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_edit">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username_edit"
+                                required
+                                value={formValues?.team_admin_username_edit || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_edit')}
+                                type="text"
+                                error={!formValues?.team_admin_username_edit}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_edit && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
@@ -1731,16 +1777,19 @@ export const DlorForm = ({
             valuesToSend.team_name = valuesToSend.team_name_new;
             valuesToSend.team_manager = valuesToSend.team_manager_new;
             valuesToSend.team_email = valuesToSend.team_email_new;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_new;
         } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
             // they can only change manager and email for the original team;
             // if they entered this then changed teams, undo
             delete valuesToSend.team_name;
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
+            delete valuesToSend.team_admin_username;
         } else {
             valuesToSend.team_name = valuesToSend.team_name_edit;
             valuesToSend.team_manager = valuesToSend.team_manager_edit;
             valuesToSend.team_email = valuesToSend.team_email_edit;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_edit;
         }
 
         delete valuesToSend.team_name_new;
@@ -1749,6 +1798,8 @@ export const DlorForm = ({
         delete valuesToSend.team_name_edit;
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
+        delete valuesToSend.team_admin_username_new;
+        delete valuesToSend.team_admin_username_edit;
 
         // valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
@@ -1794,7 +1845,7 @@ export const DlorForm = ({
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
                 : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
-
+        console.log('VALUES TO SEND ARE', valuesToSend);
         return saveDlorPromise.then(() => {
             // Save admin notes after DLO is created or updated
             if (
