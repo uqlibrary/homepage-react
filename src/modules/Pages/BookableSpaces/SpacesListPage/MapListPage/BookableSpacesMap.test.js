@@ -225,7 +225,10 @@ describe('BookableSpacesMap', () => {
             setLngLat() {
                 return this;
             }
-            addTo() {
+            addTo(mapInstance) {
+                if (mapInstance && Array.isArray(mapInstance.__markers)) {
+                    mapInstance.__markers.push(this);
+                }
                 document.body.appendChild(this.element);
                 return this;
             }
@@ -249,6 +252,7 @@ describe('BookableSpacesMap', () => {
                     this.resize = jest.fn();
                     this.setZLevel = jest.fn();
                     this.flyTo = jest.fn();
+                    this.__markers = [];
                 }
                 on(eventName, callback) {
                     this.listeners[eventName] = callback;
@@ -258,6 +262,8 @@ describe('BookableSpacesMap', () => {
                 }
                 remove() {
                     this.wasRemoved = true;
+                    this.__markers.forEach(marker => marker.remove());
+                    this.__markers = [];
                 }
             },
             MazeMarker: MockMarker,
@@ -541,7 +547,7 @@ describe('BookableSpacesMap', () => {
         });
 
         const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
-        await waitFor(() => expect(markerEls()).toHaveLength(3));
+        await waitFor(() => expect(markerEls()).toHaveLength(2));
 
         act(() => {
             markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
