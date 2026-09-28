@@ -246,6 +246,7 @@ export const MembershipApplicationDialog = ({
                     </DetailRow>
                     <DetailRow label={strings.details.expiry}>{record?.expires_on}</DetailRow>
                     <DetailRow label={strings.details.barcode}>{record?.barcode}</DetailRow>
+                    {!!record?.uid && <DetailRow label={strings.details.uid}>{record.uid}</DetailRow>}
                     {hasPayment && (
                         <>
                             <DetailRow label={strings.details.payment}>{paymentSummary(record)}</DetailRow>
