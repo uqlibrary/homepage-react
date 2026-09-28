@@ -50,7 +50,7 @@ const dimensionBox = {
 
 export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
     // files is set up as an array, even though we only handle a single file here
-    const [files, setFiles2] = useState(
+    const [files, setFiles] = useState(
         !!currentImage
             ? [
                   {
@@ -60,10 +60,6 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
               ]
             : [],
     );
-    const setFiles = incomingFIles => {
-        console.log('setFiles', incomingFIles);
-        setFiles2(incomingFIles);
-    };
     const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
 
@@ -89,8 +85,8 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
+        multiple: false,
         onDrop: acceptedFiles => {
-            console.log('onDrop', acceptedFiles);
             setFiles(
                 acceptedFiles?.map(file =>
                     Object.assign(file, {
