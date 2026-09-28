@@ -6,7 +6,10 @@ import { loadDrupalArticles } from 'data/actions/drupalArticlesActions';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 
-import { Box, Button, Grid, useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
