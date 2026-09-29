@@ -196,6 +196,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         jest.spyOn(button, 'getBoundingClientRect').mockReturnValue({ top: 400, left: -16 });
         jest.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ top: 200, left: 0 });
 
+        expect(button).toHaveAccessibleName('Show filters');
+        expect(button).toHaveAttribute('title', 'Show filters');
+        fireEvent.click(button);
+        expect(button).toHaveAccessibleName('Hide filters');
+        expect(button).toHaveAttribute('title', 'Hide filters');
+        fireEvent.click(button);
+        expect(button).toHaveAccessibleName('Show filters');
+
         expect(button).not.toHaveStyle({ position: 'absolute' });
         footerTop = window.innerHeight - 10;
         fireEvent.scroll(window);
