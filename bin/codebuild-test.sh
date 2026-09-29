@@ -32,7 +32,6 @@ export TZ='Australia/Brisbane'
 
 # enable CC for these branches
 if [[ $CI_BRANCH == "feature-marcelopm-1" ]]; then
-	TEST_COVERAGE=1
     CODE_COVERAGE_REQUIRED=1
 fi
 
