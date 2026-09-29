@@ -44,7 +44,6 @@ export const pathConfig = {
         membership: '/admin/membership',
         membershipsettings: '/admin/membership/settings',
     },
-    bookExamBooth: '/book-exam-booth',
     membership: '/membership',
     membershipForm: type => `/membership/form/${type}`,
     membershipReceived: id => `/membership/received/${id}`,

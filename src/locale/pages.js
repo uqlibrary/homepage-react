@@ -69,9 +69,6 @@ export default {
         paymentReceipt: {
             title: 'Payment receipt',
         },
-        bookExamBooth: {
-            title: 'Book an exam booth in the UQ Centre',
-        },
         membership: {
             title: 'UQ Library Membership',
         },

@@ -110,11 +110,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.paymentReceipt.title,
         },
         {
-            path: pathConfig.bookExamBooth,
-            element: <components.BookExamBooth />,
-            pageTitle: locale.pages.bookExamBooth.title,
-        },
-        {
             path: pathConfig.membership,
             element: <components.MembershipLanding />,
             exact: true,
@@ -544,7 +539,6 @@ export const breadcrumbs = {
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
     bookablespacesadmin: { pathname: '/spaces', title: 'Spaces management' },
     testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
-    bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
     dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
