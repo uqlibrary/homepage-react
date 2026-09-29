@@ -164,6 +164,83 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(setShowAdvancedFilters).toHaveBeenCalledTimes(1);
     });
 
+    it('scrolls to the list filters only when opening them', () => {
+        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"><h2 id="topOfSidebar">Filter spaces</h2></div>';
+        const heading = document.getElementById('topOfSidebar');
+        heading.scrollIntoView.mockClear();
+
+        expect(handleJourneySidebarToggle()).toBe(true);
+        expect(heading.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+
+        expect(handleJourneySidebarToggle()).toBe(false);
+        expect(heading.scrollIntoView).toHaveBeenCalledTimes(1);
+    });
+
+    it('anchors the list filter toggle when the footer enters and restores it when the footer leaves', () => {
+        const footer = document.createElement('div');
+        footer.id = 'full-footer-block';
+        document.body.appendChild(footer);
+        let footerTop = window.innerHeight + 100;
+        jest.spyOn(footer, 'getBoundingClientRect').mockImplementation(() => ({
+            top: footerTop,
+            bottom: footerTop + 200,
+        }));
+
+        const { unmount } = rtlRender(
+            <WithRouter>
+                <JourneyResultsView {...defaultProps} intentSpaceLocations={[baseSpace]} />
+            </WithRouter>,
+        );
+        const button = screen.getByTestId('spaces-filter-show-hide-button');
+        const panel = screen.getByTestId('bookable-spaces-journey-results-view');
+        jest.spyOn(button, 'getBoundingClientRect').mockReturnValue({ top: 400, left: -16 });
+        jest.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ top: 200, left: 0 });
+
+        expect(button).not.toHaveStyle({ position: 'absolute' });
+        footerTop = window.innerHeight - 10;
+        fireEvent.scroll(window);
+        expect(button).toHaveStyle({ position: 'absolute', top: '200px', left: '-16px' });
+
+        footerTop = window.innerHeight - 40;
+        fireEvent.scroll(window);
+        expect(button).toHaveStyle({ position: 'absolute', top: '200px' });
+
+        footerTop = window.innerHeight + 100;
+        fireEvent.scroll(window);
+        expect(button).not.toHaveStyle({ position: 'absolute' });
+
+        button.getBoundingClientRect.mockReturnValue(null);
+        footerTop = window.innerHeight - 10;
+        fireEvent.scroll(window);
+        expect(button).not.toHaveStyle({ position: 'absolute' });
+
+        document.querySelectorAll('#full-footer-block').forEach(node => node.remove());
+        expect(document.getElementById('full-footer-block')).toBeNull();
+        fireEvent.scroll(window);
+        expect(button).not.toHaveStyle({ position: 'absolute' });
+        unmount();
+    });
+
+    it('shows a type description without adding body-description spacing when the body is absent', () => {
+        rtlRender(
+            <WithRouter>
+                <JourneyResultsView
+                    {...defaultProps}
+                    intentSpaceLocations={[
+                        {
+                            ...baseSpace,
+                            space_description: '',
+                            space_type_details: { space_type_name: 'Silent study', space_type_description: 'Quiet zone' },
+                        },
+                    ]}
+                />
+            </WithRouter>,
+        );
+
+        expect(screen.getByText('Quiet zone')).toBeInTheDocument();
+        expect(screen.queryByText(baseSpace.space_description)).not.toBeInTheDocument();
+    });
+
     it('covers the remaining default, fallback, and invalid-value intent filter branches', () => {
         const quietIntent = { id: 'quiet', matchers: [/quiet/i, /low noise/i] };
         const facilityTypeList = {
