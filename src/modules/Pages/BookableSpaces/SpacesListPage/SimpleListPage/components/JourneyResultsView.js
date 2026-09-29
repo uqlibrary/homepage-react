@@ -118,6 +118,7 @@ export const JourneyResultsView = ({
         [intentSpaceLocations],
     );
     const [page, setPage] = React.useState(1);
+    const [filtersOpen, setFiltersOpen] = React.useState(false);
     const [shouldStickFilterToggle, setShouldStickFilterToggle] = React.useState(true);
     const [filterToggleFlowStyle, setFilterToggleFlowStyle] = React.useState(null);
     const filterToggleRef = React.useRef(null);
@@ -183,8 +184,12 @@ export const JourneyResultsView = ({
         >
             <StyledFilterShowHideButton
                 ref={filterToggleRef}
-                onClick={handleJourneySidebarToggle}
+                onClick={() => setFiltersOpen(handleJourneySidebarToggle())}
                 data-testid="spaces-filter-show-hide-button"
+                title={filtersOpen ? 'Hide filters' : 'Show filters'}
+                aria-label={filtersOpen ? 'Hide filters' : 'Show filters'}
+                aria-expanded={filtersOpen}
+                aria-controls="filterSidebar"
                 style={shouldStickFilterToggle ? undefined : filterToggleFlowStyle}
             >
                 <TuneIcon />
