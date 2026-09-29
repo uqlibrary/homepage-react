@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import TuneIcon from '@mui/icons-material/Tune';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
 import { breadcrumbs } from 'config/routes';
@@ -25,6 +26,7 @@ import { addClass, removeClass, standardText } from 'helpers/general';
 import { useAccountContext } from 'context';
 
 import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
+import { StyledFilterShowHideButton } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
@@ -71,6 +73,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     },
 }));
 const StyledBookableSpacesListWrapperDiv = styled('div')(({ theme }) => ({
+    position: 'relative',
     backgroundColor: 'rgb(243, 243, 244)',
     marginBottom: '-50px',
 
@@ -276,6 +279,11 @@ export const BookableSpacesList = ({
     }, []);
     const [showFilterSelectorPopup, setShowFilterSelectorPopup] = useState(!isMobileView);
     const [showSpacesSelectorPopup, setShowSpacesSelectorPopup] = useState(isDesktopView);
+    const [shouldStickFilterToggle, setShouldStickFilterToggle] = useState(true);
+    const [filterToggleFlowStyle, setFilterToggleFlowStyle] = useState(null);
+    const filterToggleRef = useRef(null);
+    const spacesWrapperRef = useRef(null);
+    const footerIsVisibleRef = useRef(false);
     const BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY = 'bookableSpacesSelectedSpaceId';
     const [expandedSpaceId, setExpandedSpaceId] = useState(() => {
         // Browser compatibility block - likely not used.
@@ -800,8 +808,8 @@ export const BookableSpacesList = ({
             const nextPersistedState = rawState
                 ? JSON.parse(rawState)
                 : {
-                      ...(Number(selectedCampus) !== 0 ? /* istanbul ignore next */ { selectedCampus } : {}),
-                      ...(Number(selectedLibrary) !== 0 ? /* istanbul ignore next */ { selectedLibrary } : {}),
+                        ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                        ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
                   };
             /* istanbul ignore else */
             if (nextPersistedState && typeof nextPersistedState === 'object') {
@@ -1410,6 +1418,48 @@ export const BookableSpacesList = ({
         showFavouriteSpacesOnly,
     ]);
 
+    React.useEffect(() => {
+        const scrollContainer = document.getElementById('content-container');
+        const updateFilterTogglePosition = () => {
+            const footerNode = document.getElementById('full-footer-block');
+            if (!footerNode) {
+                footerIsVisibleRef.current = false;
+                setShouldStickFilterToggle(true);
+                return;
+            }
+
+            const footerRect = footerNode.getBoundingClientRect();
+            const footerIsVisible = footerRect.bottom > 0 && footerRect.top < window.innerHeight;
+            if (footerIsVisible && !footerIsVisibleRef.current) {
+                const toggleRect = filterToggleRef.current?.getBoundingClientRect();
+                const wrapperRect = spacesWrapperRef.current?.getBoundingClientRect();
+                if (toggleRect && wrapperRect) {
+                    setFilterToggleFlowStyle({
+                        position: 'absolute',
+                        top: `${toggleRect.top - wrapperRect.top}px`,
+                        left: `${toggleRect.left - wrapperRect.left}px`,
+                        transform: 'none',
+                    });
+                }
+            } else if (!footerIsVisible && footerIsVisibleRef.current) {
+                setFilterToggleFlowStyle(null);
+            }
+            footerIsVisibleRef.current = footerIsVisible;
+            setShouldStickFilterToggle(!footerIsVisible);
+        };
+
+        updateFilterTogglePosition();
+        window.addEventListener('scroll', updateFilterTogglePosition, { passive: true });
+        scrollContainer?.addEventListener('scroll', updateFilterTogglePosition, { passive: true });
+        window.addEventListener('resize', updateFilterTogglePosition);
+
+        return () => {
+            window.removeEventListener('scroll', updateFilterTogglePosition);
+            scrollContainer?.removeEventListener('scroll', updateFilterTogglePosition);
+            window.removeEventListener('resize', updateFilterTogglePosition);
+        };
+    }, [bookableSpacesRoomListLoading, isMobileView]);
+
     const toggleFilterPopupVisibility = () => {
         setShowFilterSelectorPopup(!showFilterSelectorPopup);
     };
@@ -1675,7 +1725,7 @@ export const BookableSpacesList = ({
     }, [bookableSpacesRoomList?.data?.locations]);
 
     return (
-        <StyledBookableSpacesListWrapperDiv>
+        <StyledBookableSpacesListWrapperDiv ref={spacesWrapperRef}>
             {(() => {
                 if (!!bookableSpacesRoomListLoading || !!facilityTypeListLoading || !!weeklyHoursLoading) {
                     return (
@@ -1743,25 +1793,69 @@ export const BookableSpacesList = ({
                     );
                 } else {
                     return (
-                        <StyledLayoutWrapper data-testid="library-spaces">
-                            <div>
-                                <StyledSidebarTab
+                        <>
+                            {isMobileView && (
+                                <StyledFilterShowHideButton
+                                    ref={filterToggleRef}
                                     id="toggleFilterButton"
-                                    data-testid="spaces-open-filter-button"
+                                    data-testid="spaces-filter-show-hide-button"
                                     onClick={() => toggleFilterPopupVisibility()}
                                     title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
                                     aria-expanded={showFilterSelectorPopup}
                                     aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
-                                    className="filterTab"
-                                    style={{ left: showFilterSelectorPopup ? 'min(20rem, 50%)' : '0' }}
+                                    style={
+                                        shouldStickFilterToggle
+                                            ? {
+                                                  top: '50vh',
+                                                  transform: 'translateY(-50%)',
+                                                  left: showFilterSelectorPopup
+                                                      ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
+                                                      : '-1rem',
+                                              }
+                                            : {
+                                                  ...filterToggleFlowStyle,
+                                                  left: showFilterSelectorPopup
+                                                      ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
+                                                      : '-1rem',
+                                              }
+                                    }
                                 >
-                                    {showFilterSelectorPopup ? (
-                                        <ChevronLeftIcon fontSize="small" />
-                                    ) : (
-                                        <ChevronRightIcon fontSize="small" />
+                                    <TuneIcon />
+                                    {activeFilterCount > 0 && (
+                                        <span
+                                            style={{
+                                                fontSize: '0.6rem',
+                                                fontWeight: 700,
+                                                lineHeight: 1,
+                                                marginLeft: '0.35rem',
+                                            }}
+                                        >
+                                            {activeFilterCount}
+                                        </span>
                                     )}
-                                    {activeFilterCount > 0 && <span className="tab-count">{activeFilterCount}</span>}
-                                </StyledSidebarTab>
+                                </StyledFilterShowHideButton>
+                            )}
+                            <StyledLayoutWrapper data-testid="library-spaces">
+                            <div>
+                                {!isMobileView && (
+                                    <StyledSidebarTab
+                                        id="toggleFilterButton"
+                                        data-testid="spaces-open-filter-button"
+                                        onClick={() => toggleFilterPopupVisibility()}
+                                        title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                        aria-expanded={showFilterSelectorPopup}
+                                        aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                        className="filterTab"
+                                        style={{ left: showFilterSelectorPopup ? 'min(20rem, 50%)' : '0' }}
+                                    >
+                                        {showFilterSelectorPopup ? (
+                                            <ChevronLeftIcon fontSize="small" />
+                                        ) : (
+                                            <ChevronRightIcon fontSize="small" />
+                                        )}
+                                        {activeFilterCount > 0 && <span className="tab-count">{activeFilterCount}</span>}
+                                    </StyledSidebarTab>
+                                )}
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
@@ -1896,7 +1990,8 @@ export const BookableSpacesList = ({
                                     }}
                                 />
                             </div>
-                        </StyledLayoutWrapper>
+                            </StyledLayoutWrapper>
+                        </>
                     );
                 }
             })()}
