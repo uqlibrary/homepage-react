@@ -1068,9 +1068,11 @@ describe('BookableSpacesList campus selection', () => {
 
         const filterToggleButton = screen.getByTestId('spaces-filter-show-hide-button');
         expect(filterToggleButton).toHaveAttribute('title', 'Hide filters');
+        expect(filterToggleButton).toHaveAccessibleName('Hide filters');
         expect(filterToggleButton.style.left).toContain('calc(');
         fireEvent.click(filterToggleButton);
         expect(filterToggleButton).toHaveAttribute('title', 'Show filters');
+        expect(filterToggleButton).toHaveAccessibleName('Show filters');
         expect(filterToggleButton).toHaveStyle({ left: '-1rem' });
 
         const spacesListToggleButton = screen.getByTestId('spaces-open-spaces-list-button');
