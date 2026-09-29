@@ -62,7 +62,13 @@ export const toggleJourneySidebarFilter = sidebarId => {
     return false;
 };
 
-export const handleJourneySidebarToggle = () => toggleJourneySidebarFilter('filterSidebar');
+export const handleJourneySidebarToggle = () => {
+    const shouldShow = toggleJourneySidebarFilter('filterSidebar');
+    if (shouldShow) {
+        document.getElementById('topOfSidebar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    return shouldShow;
+};
 
 export const applyJourneySidebarFilters = ({ isDesktopResultsLayout, setShowAdvancedFilters }) => {
     if (!isDesktopResultsLayout) {
@@ -112,6 +118,11 @@ export const JourneyResultsView = ({
         [intentSpaceLocations],
     );
     const [page, setPage] = React.useState(1);
+    const [shouldStickFilterToggle, setShouldStickFilterToggle] = React.useState(true);
+    const [filterToggleFlowStyle, setFilterToggleFlowStyle] = React.useState(null);
+    const filterToggleRef = React.useRef(null);
+    const journeyPanelRef = React.useRef(null);
+    const footerIsVisibleRef = React.useRef(false);
     const itemsPerPage = 10;
     const totalPages = Math.max(1, Math.ceil(spaces.length / itemsPerPage));
     const visibleSpaces = React.useMemo(() => {
@@ -123,11 +134,58 @@ export const JourneyResultsView = ({
         setPage(prevPage => clampJourneyPage(prevPage, totalPages));
     }, [totalPages]);
 
+    React.useEffect(() => {
+        const scrollContainer = document.getElementById('content-container');
+
+        const updateFilterTogglePosition = () => {
+            const footerNode = document.getElementById('full-footer-block');
+            if (!footerNode) {
+                setShouldStickFilterToggle(true);
+                return;
+            }
+
+            const footerRect = footerNode.getBoundingClientRect();
+            const footerIsVisible = footerRect.bottom > 0 && footerRect.top < window.innerHeight;
+            if (footerIsVisible && !footerIsVisibleRef.current) {
+                const toggleRect = filterToggleRef.current?.getBoundingClientRect();
+                const panelRect = journeyPanelRef.current?.getBoundingClientRect();
+                if (toggleRect && panelRect) {
+                    setFilterToggleFlowStyle({
+                        position: 'absolute',
+                        top: `${toggleRect.top - panelRect.top}px`,
+                        left: `${toggleRect.left - panelRect.left}px`,
+                    });
+                }
+            } else if (!footerIsVisible && footerIsVisibleRef.current) {
+                setFilterToggleFlowStyle(null);
+            }
+            footerIsVisibleRef.current = footerIsVisible;
+            setShouldStickFilterToggle(!footerIsVisible);
+        };
+
+        updateFilterTogglePosition();
+        window.addEventListener('scroll', updateFilterTogglePosition, { passive: true });
+        scrollContainer?.addEventListener('scroll', updateFilterTogglePosition, { passive: true });
+        window.addEventListener('resize', updateFilterTogglePosition);
+
+        return () => {
+            window.removeEventListener('scroll', updateFilterTogglePosition);
+            scrollContainer?.removeEventListener('scroll', updateFilterTogglePosition);
+            window.removeEventListener('resize', updateFilterTogglePosition);
+        };
+    }, []);
+
     return (
-        <StyledJourneyPanelSection data-testid="bookable-spaces-journey-results-view" hasTopSpacing>
+        <StyledJourneyPanelSection
+            ref={journeyPanelRef}
+            data-testid="bookable-spaces-journey-results-view"
+            hasTopSpacing
+        >
             <StyledFilterShowHideButton
+                ref={filterToggleRef}
                 onClick={handleJourneySidebarToggle}
                 data-testid="spaces-filter-show-hide-button"
+                style={shouldStickFilterToggle ? undefined : filterToggleFlowStyle}
             >
                 <TuneIcon />
             </StyledFilterShowHideButton>
