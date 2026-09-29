@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import EditIcon from '@mui/icons-material/Edit';

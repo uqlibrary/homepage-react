@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { useParams } from 'react-router';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';

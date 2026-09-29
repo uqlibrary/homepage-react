@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 import { useAccountContext } from 'context';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';

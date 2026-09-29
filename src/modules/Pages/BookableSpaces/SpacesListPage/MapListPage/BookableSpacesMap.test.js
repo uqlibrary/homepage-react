@@ -142,6 +142,26 @@ describe('BookableSpacesMapPopupContent', () => {
         expect(screen.getByTestId('space-103-outage-reason')).toHaveTextContent('Replacing carpet');
     });
 
+    it('wraps the trailing room number in a dedicated span so it can wrap independently', () => {
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMapPopupContent
+                    space={{
+                        space_id: 105,
+                        space_name: 'An unallocated space type 341',
+                        space_type_details: { space_type_name: 'Study room' },
+                        space_outages: [],
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const roomNumber = screen.getByText('341');
+        expect(roomNumber.tagName).toBe('SPAN');
+        expect(roomNumber.closest('a')).toBeInTheDocument();
+        expect(screen.getByText('An unallocated space type')).toBeInTheDocument();
+    });
+
     it('renders popup content without type and library details when absent', () => {
         rtlRender(
             <WithRouter>
@@ -205,7 +225,10 @@ describe('BookableSpacesMap', () => {
             setLngLat() {
                 return this;
             }
-            addTo() {
+            addTo(mapInstance) {
+                if (mapInstance && Array.isArray(mapInstance.__markers)) {
+                    mapInstance.__markers.push(this);
+                }
                 document.body.appendChild(this.element);
                 return this;
             }
@@ -229,6 +252,7 @@ describe('BookableSpacesMap', () => {
                     this.resize = jest.fn();
                     this.setZLevel = jest.fn();
                     this.flyTo = jest.fn();
+                    this.__markers = [];
                 }
                 on(eventName, callback) {
                     this.listeners[eventName] = callback;
@@ -238,6 +262,8 @@ describe('BookableSpacesMap', () => {
                 }
                 remove() {
                     this.wasRemoved = true;
+                    this.__markers.forEach(marker => marker.remove());
+                    this.__markers = [];
                 }
             },
             MazeMarker: MockMarker,
@@ -319,6 +345,161 @@ describe('BookableSpacesMap', () => {
         expect(onMarkerClick).toHaveBeenCalled();
         expect(latestPopupInstance).not.toBeNull();
         expect(latestPopupInstance.options.closeOnClick).toBe(false);
+        expect(latestPopupInstance.options.maxWidth).toBe('301px');
+    });
+
+    it('adds the SVG close icon when a popup close button exists', async () => {
+        window.Mazemap.Popup = class MockPopupWithCloseButton {
+            constructor(options = {}) {
+                latestPopupInstance = this;
+                this.listeners = {};
+                this.options = options;
+                this.container = document.createElement('div');
+                this._closeButton = document.createElement('button');
+                this._closeButton.className = 'mapboxgl-popup-close-button';
+                this.remove = jest.fn();
+            }
+            setLngLat() {
+                return this;
+            }
+            setDOMContent(container) {
+                this.container = container;
+                return this;
+            }
+            addTo() {
+                return this;
+            }
+            on(eventName, callback) {
+                this.listeners[eventName] = callback;
+                return this;
+            }
+            getElement() {
+                const element = document.createElement('div');
+                element.appendChild(this._closeButton);
+                return element;
+            }
+        };
+
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[
+                        {
+                            space_id: 150,
+                            space_name: 'Close icon room',
+                            space_latitude: '-27.47',
+                            space_longitude: '153.0',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        },
+                    ]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
+        await waitFor(() => expect(markerEls()).toHaveLength(1));
+
+        act(() => {
+            markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+
+        expect(latestPopupInstance._closeButton.innerHTML).toContain('<svg');
+        expect(latestPopupInstance._closeButton.getAttribute('aria-label')).toBe('Close');
+        expect(latestPopupInstance._closeButton.style.fontSize).toBe('0px');
+    });
+
+    it('skips the icon helper when the popup has no close button element', async () => {
+        window.Mazemap.Popup = class MockPopupWithoutCloseButton {
+            constructor(options = {}) {
+                latestPopupInstance = this;
+                this.listeners = {};
+                this.options = options;
+                this.container = document.createElement('div');
+                this._closeButton = null;
+                this.remove = jest.fn();
+            }
+            setLngLat() {
+                return this;
+            }
+            setDOMContent(container) {
+                this.container = container;
+                return this;
+            }
+            addTo() {
+                return this;
+            }
+            on(eventName, callback) {
+                this.listeners[eventName] = callback;
+                return this;
+            }
+            getElement() {
+                return document.createElement('div');
+            }
+        };
+
+        rtlRender(
+            <WithRouter>
+                <BookableSpacesMap
+                    sortedSpaceLocations={[
+                        {
+                            space_id: 151,
+                            space_name: 'No close button room',
+                            space_latitude: '-27.47',
+                            space_longitude: '153.0',
+                            space_campus_name: 'St Lucia',
+                            space_zlevel: 1,
+                        },
+                    ]}
+                    spacesFavouritesList={[]}
+                    onMarkerClick={jest.fn()}
+                    centreLatLong={{
+                        space_latitude: -27.47,
+                        space_longitude: 153.0,
+                        space_campus_name: 'St Lucia',
+                        space_zlevel: 1,
+                    }}
+                />
+            </WithRouter>,
+        );
+
+        const scriptElement = document.querySelector('script[src*="mazemap.min.js"]');
+        act(() => {
+            scriptElement.onload();
+        });
+
+        await waitFor(() => expect(latestMockMapInstance).not.toBeNull());
+        act(() => {
+            latestMockMapInstance.listeners.load();
+        });
+
+        const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
+        await waitFor(() => expect(markerEls()).toHaveLength(1));
+
+        expect(() => {
+            act(() => {
+                markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            });
+        }).not.toThrow();
+        expect(latestPopupInstance._closeButton).toBeNull();
     });
 
     it('keeps the selected marker active when the map moves', async () => {
@@ -366,7 +547,7 @@ describe('BookableSpacesMap', () => {
         });
 
         const markerEls = () => Array.from(document.querySelectorAll('[role="img"]'));
-        await waitFor(() => expect(markerEls()).toHaveLength(3));
+        await waitFor(() => expect(markerEls()).toHaveLength(2));
 
         act(() => {
             markerEls()[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));

@@ -45,13 +45,19 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
             await expect(page.getByTestId('team-members-title')).toBeVisible();
             // Edit first user
             await page.getByTestId('team-member-edit-0').click();
-            await page.locator('input[value="uqstaff"]').fill('uqstaffedit');
-            await page.locator('input[value="uqstaff@uq.edu.au"]').fill('uqstaffedit@uq.edu.au');
+            const editRow = page.getByTestId('team-member-save-0').locator('xpath=ancestor::tr[1]');
+            const editUsernameInput = editRow.getByRole('textbox').nth(0);
+            const editEmailInput = editRow.getByRole('textbox').nth(1);
+            await editUsernameInput.fill('uqstaffedit');
+            await editEmailInput.fill('uqstaffedit@uq.edu.au');
             await page.getByTestId('team-member-save-0').click();
             // Test Cancel button
             await page.getByTestId('team-member-edit-0').click();
-            await page.locator('input[value="uqstaff"]').fill('uqstaffedit');
-            await page.locator('input[value="uqstaff@uq.edu.au"]').fill('uqstaffedit@uq.edu.au');
+            const cancelRow = page.getByTestId('team-member-cancel-0').locator('xpath=ancestor::tr[1]');
+            const cancelUsernameInput = cancelRow.getByRole('textbox').nth(0);
+            const cancelEmailInput = cancelRow.getByRole('textbox').nth(1);
+            await cancelUsernameInput.fill('uqstaffedit');
+            await cancelEmailInput.fill('uqstaffedit@uq.edu.au');
             await page.getByTestId('team-member-cancel-0').click();
             await expect(page.getByTestId('team-member-cancel-0')).not.toBeVisible();
         });

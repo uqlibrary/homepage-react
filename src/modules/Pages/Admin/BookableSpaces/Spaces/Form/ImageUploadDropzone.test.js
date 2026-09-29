@@ -77,8 +77,14 @@ describe('ImageUploadDropzone', () => {
             },
         });
 
-        await Promise.resolve();
-        expect(onAddFile).toHaveBeenCalledWith([file]);
+        await waitFor(() => {
+            expect(onAddFile).toHaveBeenCalledTimes(1);
+        });
+
+        const [uploadedFiles] = onAddFile.mock.calls[0];
+        expect(uploadedFiles).toHaveLength(1);
+        expect(uploadedFiles[0].name).toBe('sample.png');
+        expect(uploadedFiles[0].type).toBe('image/png');
     });
 
     it('loads size metadata for a freshly uploaded file and the preview warning', async () => {

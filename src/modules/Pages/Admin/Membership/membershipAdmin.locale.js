@@ -163,6 +163,9 @@ export default {
                 confirmed: 'Confirmed',
                 expiry: 'Expiry',
                 barcode: 'Barcode',
+                // The account username the membership is issued against, shown read-only. The legacy record
+                // view surfaced it (in its dump of every field), so an admin can tie a record to its account.
+                uid: 'UID',
                 // The payment the legacy record view left out: whether it went through, for how much, and its
                 // receipt, so an admin need not open the gateway to see it.
                 payment: 'Payment',
