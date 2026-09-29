@@ -74,6 +74,7 @@ import FileSelector from './File/Selector';
 import FileList from './File/List';
 import useFile from './File/useFile';
 import FileDialogs from './File/Dialogs';
+import { Alert } from '../../../../SharedComponents/Toolbox/Alert';
 
 const fuseOptions = {
     includeScore: true,
@@ -1119,6 +1120,16 @@ export const DlorForm = ({
 
     const stepPanelContentLinks = (
         <>
+            {fileToBeUploaded && (
+                <Grid item xs={12}>
+                    <Alert
+                        type="warning"
+                        alertId="dlor-form-new-object-file-warning"
+                        canHide={false}
+                        message="Please expect a delay before newly uploaded files are fully processed."
+                    />
+                </Grid>
+            )}
             <Grid item xs={12}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">File Uploader</InputLabel>
@@ -1907,7 +1918,9 @@ export const DlorForm = ({
     const locale = {
         successMessage: {
             confirmationTitle: confirmationTitle,
-            confirmationMessage: '',
+            confirmationMessage: dlorObjectFileUploaded
+                ? 'Please expect a delay before newly uploaded files are fully processed'
+                : '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
