@@ -105,6 +105,17 @@ const StyledBookableSpaceGridItem = styled(Grid)({
     marginTop: '12px',
 });
 
+const StyledMapFilterToggle = styled(StyledFilterShowHideButton)(({ theme }) => ({
+    '&&': {
+        display: 'inline-flex',
+        position: 'fixed',
+        zIndex: 998,
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: '#fff',
+        borderRadius: '0 20px 20px 0',
+    },
+}));
+
 const StyledLayoutWrapper = styled('div')(() => ({
     position: 'relative',
     height: '99vh',
@@ -169,10 +180,6 @@ const StyledSidebarTab = styled('button')(({ theme }) => ({
         fontSize: '0.6rem',
         fontWeight: 'bold',
         lineHeight: 1,
-    },
-    '&.filterTab': {
-        borderRadius: '0 6px 6px 0',
-        borderLeft: 'none',
     },
     '&.spacesTab': {
         borderRadius: '6px 0 0 6px',
@@ -1794,8 +1801,7 @@ export const BookableSpacesList = ({
                 } else {
                     return (
                         <>
-                            {isMobileView && (
-                                <StyledFilterShowHideButton
+                            <StyledMapFilterToggle
                                     ref={filterToggleRef}
                                     id="toggleFilterButton"
                                     data-testid="spaces-filter-show-hide-button"
@@ -1833,29 +1839,9 @@ export const BookableSpacesList = ({
                                             {activeFilterCount}
                                         </span>
                                     )}
-                                </StyledFilterShowHideButton>
-                            )}
+                            </StyledMapFilterToggle>
                             <StyledLayoutWrapper data-testid="library-spaces">
                             <div>
-                                {!isMobileView && (
-                                    <StyledSidebarTab
-                                        id="toggleFilterButton"
-                                        data-testid="spaces-open-filter-button"
-                                        onClick={() => toggleFilterPopupVisibility()}
-                                        title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
-                                        aria-expanded={showFilterSelectorPopup}
-                                        aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
-                                        className="filterTab"
-                                        style={{ left: showFilterSelectorPopup ? 'min(20rem, 50%)' : '0' }}
-                                    >
-                                        {showFilterSelectorPopup ? (
-                                            <ChevronLeftIcon fontSize="small" />
-                                        ) : (
-                                            <ChevronRightIcon fontSize="small" />
-                                        )}
-                                        {activeFilterCount > 0 && <span className="tab-count">{activeFilterCount}</span>}
-                                    </StyledSidebarTab>
-                                )}
                                 <SidebarFilters
                                     facilityTypeList={facilityTypeList}
                                     facilityTypeListLoading={facilityTypeListLoading}
