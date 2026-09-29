@@ -461,6 +461,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                                 .getByText('Changes have been saved'),
                         ).toBeVisible();
                         await expect(
+                            page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                        ).toBeVisible();
+                        await expect(
                             page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
                         ).toBeVisible();
                         await expect(
@@ -538,6 +541,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                                 .getByText('Changes have been saved'),
                         ).toBeVisible();
                         await expect(
+                            page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                        ).not.toBeVisible();
+                        await expect(
                             page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
                         ).toBeVisible();
                         await expect(
@@ -606,6 +612,9 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                             page
                                 .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
                                 .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByText('Please expect a delay before newly uploaded files are fully processed'),
                         ).toBeVisible();
                         await expect(
                             page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
@@ -1205,6 +1214,10 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     await runTest(page, 'responseStatus[presigned]=500');
                     await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
                     await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                    // should not display message about file upload
+                    await expect(
+                        page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                    ).not.toBeVisible();
                 });
 
                 test('S3 failure', async ({ page }) => {
@@ -1214,12 +1227,20 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     );
                     await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
                     await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                    // should not display message about file upload
+                    await expect(
+                        page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                    ).not.toBeVisible();
                 });
 
                 test('delete a file', async ({ page }) => {
                     await runTest(page, 'responseStatus[dlorObjectFileDestroy]=500');
                     await expect(page.getByText(`Deleting removed file ${oldFilename}`)).toBeVisible();
                     await expect(page.getByText(`Error while deleting file ${oldFilename}`)).toBeVisible();
+                    // should not display message about file upload
+                    await expect(
+                        page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                    ).not.toBeVisible();
                 });
             });
 

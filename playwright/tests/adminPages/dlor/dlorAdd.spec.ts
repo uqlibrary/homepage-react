@@ -469,18 +469,24 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     // invalid file
                     await assertHasLinkFileTabError(page);
                     await selectFileForUpload(page, notAllowedFile);
+                    await expect(page.getByTestId('dlor-form-new-object-file-warning')).not.toBeVisible();
                     await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
                     await assertHasLinkFileTabError(page);
                     // valid file
                     await selectFileForUpload(page, image);
-                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
                     await assertMissingLinkFileTabError(page);
+                    await expect(page.getByTestId('dlor-form-new-object-file-warning')).toBeVisible();
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
                     // clear
                     await page.getByTestId('dlor-object-file-list-clear').click();
                     await assertHasLinkFileTabError(page);
+                    await expect(page.getByTestId('dlor-form-new-object-file-warning')).not.toBeVisible();
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).not.toBeVisible();
                     // re-add
                     await selectFileForUpload(page, image);
                     await assertMissingLinkFileTabError(page);
+                    await expect(page.getByTestId('dlor-form-new-object-file-warning')).toBeVisible();
+                    await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(`${image.name} 1 KB`);
 
                     // go to the fourth panel, Filtering
                     await page.getByTestId('dlor-form-next-button').click();
@@ -514,6 +520,9 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     ).toBeVisible();
                     await expect(
                         page.getByTestId('cancel-dlor-save-outcome').getByText('Add another Object'),
+                    ).toBeVisible();
+                    await expect(
+                        page.getByText('Please expect a delay before newly uploaded files are fully processed'),
                     ).toBeVisible();
 
                     return {
@@ -1407,6 +1416,10 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     await expect(page.getByText(`Uploading file ${image.name}`)).toBeVisible();
                     // assert error message
                     await expect(page.getByText(`Error while uploading file ${image.name}`)).toBeVisible();
+                    // should not display message about file upload
+                    await expect(
+                        page.getByText('Please expect a delay before newly uploaded files are fully processed'),
+                    ).not.toBeVisible();
                 };
 
                 test('pre-signed url failure', async ({ page, context }) => {
