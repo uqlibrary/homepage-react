@@ -12,10 +12,15 @@ function setup(testProps = {}) {
 }
 
 describe('BusynessBar', () => {
-    it('renders the occupancy progress and its accessible label', () => {
-        const { getByRole } = setup();
+    it.each([
+        [25, 'Not busy'],
+        [50, 'Moderately busy'],
+        [75, 'Quite busy'],
+        [76, 'Very busy'],
+    ])('renders %s percent occupancy with the %s aria-label', (busyness, ariaLabel) => {
+        const { getByRole } = setup({ busyness });
 
-        expect(getByRole('progressbar', { name: 'Not busy' })).toHaveAttribute('aria-valuenow', '25');
+        expect(getByRole('progressbar', { name: ariaLabel })).toHaveAttribute('aria-valuenow', String(busyness));
     });
 
     it('omits occupancy for AskUs', () => {
