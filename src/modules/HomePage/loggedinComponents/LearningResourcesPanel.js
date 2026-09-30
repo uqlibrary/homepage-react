@@ -52,6 +52,10 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
     },
 }));
 
+const LEARNING_RESOURCE_ID = 'homepage-learningresource';
+export const hasClasses = account =>
+    isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
+
 export const getUrlForLearningResourceSpecificTab = (
     item,
     pageLocation,
@@ -98,11 +102,8 @@ export const LearningResourcesPanel = ({ account }) => {
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
 
-    const learningResourceId = 'homepage-learningresource';
-
     let displayedClasses = [];
-    const hasClasses = account =>
-        isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
+
     if (hasClasses(account)) {
         displayedClasses = account.current_classes;
     } else if (isLibraryStaff(account)) {
@@ -150,7 +151,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid item xs id={`${learningResourceId}-autocomplete2-label`}>
+                    <Grid item xs id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>
@@ -158,7 +159,7 @@ export const LearningResourcesPanel = ({ account }) => {
         >
             <SubjectSearchDropdown
                 displayType="compact"
-                elementId={learningResourceId}
+                elementId={LEARNING_RESOURCE_ID}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
 
