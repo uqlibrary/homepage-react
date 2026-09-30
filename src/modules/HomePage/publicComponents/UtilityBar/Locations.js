@@ -6,17 +6,13 @@ import ContentLoader from 'react-content-loader';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
-import LinearProgress from '@mui/material/LinearProgress';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
-import {
-    ASKUS_SPRINGSHARE_ID,
-    FRYER_SPRINGSHARE_ID,
-    GATTON_SPRINGSHARE_ID,
-    locale as locationLocale,
-    WHITTY_SPRINGSHARE_ID,
-} from 'config/locale';
+import { getVemcountPercentage, ariaLabelForLocation } from './helpers';
+import BusynessBar from './partials/BusynessBar';
+
+import { ASKUS_SPRINGSHARE_ID, locale as locationLocale, WHITTY_SPRINGSHARE_ID } from 'config/locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
 
@@ -243,71 +239,6 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING = 'Missing';
-const getTextForBusyness = (location, busyLookup) => {
-    if (
-        location.lid === ASKUS_SPRINGSHARE_ID ||
-        !location?.busyness ||
-        location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING ||
-        !location?.isCurrentlyOpen
-    ) {
-        return null;
-    }
-    let busyinessIndex = 4; // Very busy
-    if (location.busyness <= 25) {
-        busyinessIndex = 1; // 'Not busy';
-    } else if (location.busyness <= 50) {
-        busyinessIndex = 2; // 'Moderate';
-    } else if (location.busyness <= 75) {
-        busyinessIndex = 3; // 'Busy';
-    }
-    return busyLookup.hasOwnProperty(busyinessIndex) ? busyLookup[busyinessIndex] : /* istanbul ignore next */ null;
-};
-export const ariaLabelForLocation = location => {
-    let libraryName = `the ${location?.displayName} Library`;
-    const nameLookupTable = {
-        [ASKUS_SPRINGSHARE_ID]: 'AskUs chat assistance',
-        [FRYER_SPRINGSHARE_ID]: 'Fryer Library',
-        [GATTON_SPRINGSHARE_ID]: 'the JK Murray Library',
-    };
-    if (nameLookupTable.hasOwnProperty(location?.lid)) {
-        libraryName = nameLookupTable[location.lid];
-    }
-
-    let openingHours = location?.openingHours;
-    if (openingHours === 'See location') {
-        return `Click through to the location page for ${libraryName} hours and busy level.`;
-    }
-
-    openingHours = openingHours?.trim().replace(' - ', ' to ');
-    openingHours = openingHours?.toLowerCase();
-
-    let locationType = 'study space';
-    if (location?.lid === ASKUS_SPRINGSHARE_ID) {
-        locationType = 'operating hours today';
-    }
-
-    const libraryNameTemp = String(libraryName);
-    const firstChar = libraryNameTemp?.charAt(0);
-    const otherChar = libraryNameTemp?.slice(1);
-    const capitaliseLibraryName =
-        libraryNameTemp.length > 0 ? firstChar.toUpperCase() + otherChar : /* istanbul ignore next */ '';
-    let response = `${capitaliseLibraryName} ${locationType} is open ${openingHours}.`;
-
-    const busynessLabels = {
-        1: 'not busy',
-        2: 'moderately busy',
-        3: 'quite busy',
-        4: 'very busy',
-    };
-    const business = getTextForBusyness(location, busynessLabels);
-    if (!!business) {
-        response += ` This space is currently ${business}.`;
-    }
-
-    return response;
-};
-
 const Locations = ({
     libHours,
     libHoursLoading,
@@ -353,40 +284,6 @@ const Locations = ({
             libHours.locations.map(location => {
                 location.abbr = locationLocale.locationAbbreviations[location.lid];
 
-                function vemcountPercentByLocation(vemcountZoneId) {
-                    const vemcountWrapper = vemcount?.data?.locationList?.filter(v => v.id === vemcountZoneId);
-                    // const dateLoaded = vemcount?.data?.dateLoaded; // for use later
-                    const vemcountData = vemcountWrapper.length > 0 ? vemcountWrapper[0] : null;
-                    if (vemcountZoneId !== null && vemcountWrapper?.length === 0) {
-                        return VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
-                    }
-                    return (vemcountData?.headCount / vemcountData?.capacity) * 100;
-                }
-
-                function getVemcountPercentage(vemcountZoneId) {
-                    if (vemcountZoneId === null) {
-                        return null;
-                    }
-                    const minimumDisplayedPercentage = 5;
-                    const maxmumDisplayedPercentage = 100;
-
-                    const vemcountBusynessPercent = vemcountPercentByLocation(vemcountZoneId);
-                    let calculatedBusyness;
-                    if (vemcountBusynessPercent === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
-                        calculatedBusyness = vemcountBusynessPercent;
-                    } else if (!!isNaN(vemcountBusynessPercent)) {
-                        calculatedBusyness = VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING;
-                    } else if (vemcountBusynessPercent < minimumDisplayedPercentage) {
-                        // don't let the bar go below what shows as a small curve on the left
-                        calculatedBusyness = minimumDisplayedPercentage;
-                    } else if (vemcountBusynessPercent > maxmumDisplayedPercentage) {
-                        calculatedBusyness = maxmumDisplayedPercentage;
-                    } else {
-                        calculatedBusyness = Math.floor(vemcountBusynessPercent);
-                    }
-
-                    return calculatedBusyness;
-                }
                 return {
                     lid: location?.lid,
                     displayName: location?.display_name,
@@ -396,7 +293,7 @@ const Locations = ({
                     vemcountZoneId: location?.vemcount_zone_id,
                     isCurrentlyOpen: location?.currently_open,
                     campus: location?.campus_name,
-                    busyness: getVemcountPercentage(location?.vemcount_zone_id) || null,
+                    busyness: getVemcountPercentage(location?.vemcount_zone_id, vemcount.data.locationList) || null,
                 };
             })) ||
         [];
@@ -413,38 +310,6 @@ const Locations = ({
             // Otherwise, sort alphabetically by name
             return a.displayName.localeCompare(b.displayName);
         });
-
-    function getBusynessBar(location) {
-        if (location?.lid === ASKUS_SPRINGSHARE_ID) {
-            return null;
-        }
-        if (location?.lid === FRYER_SPRINGSHARE_ID) {
-            return <div className="occupancyText has-ellipsis">By appointment</div>;
-        }
-        if (!location?.isCurrentlyOpen) {
-            return <div className="occupancyText has-ellipsis">Closed</div>;
-        }
-        /* istanbul ignore next */
-        if (location.busyness === null) {
-            return null;
-        }
-        if (location.busyness === VEMCOUNT_LOCATION_DATA_EXPECTED_BUT_MISSING) {
-            return <div className="occupancyText has-ellipsis has-exclamation-icon">Data not available</div>;
-        }
-        return (
-            <LinearProgress
-                className="occupancyBar"
-                variant="determinate"
-                value={location.busyness}
-                aria-label={getTextForBusyness(location, {
-                    1: 'Not busy',
-                    2: 'Moderately busy',
-                    3: 'Quite busy',
-                    4: 'Very busy',
-                })}
-            />
-        );
-    }
 
     return (
         <StyledStandardCard noPadding noHeader standardCardId="locations-panel">
@@ -542,7 +407,9 @@ const Locations = ({
                                                     aria-labelledby={`header-busy library-name-${location.abbr}`}
                                                     aria-hidden="true"
                                                 >
-                                                    <div className={'occupancyWrapper'}>{getBusynessBar(location)}</div>
+                                                    <div className={'occupancyWrapper'}>
+                                                        <BusynessBar location={location} />
+                                                    </div>
                                                 </Grid>
                                             </Grid>
                                         );
