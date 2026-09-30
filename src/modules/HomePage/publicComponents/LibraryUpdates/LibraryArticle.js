@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { PropTypes } from 'prop-types';
 
 import { styled } from '@mui/material/styles';
@@ -9,13 +8,9 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
-
-const fallBackImage = require('../../../../../public/images/article_placeholder.jpg');
-
-const loadFallbackImage = image => {
-    image.src = fallBackImage;
-};
+import { useMediaQuery, useTheme } from '@mui/material';
+import RenderImage from './partials/RenderImage';
+import RenderTextblock from './partials/RenderTextblock';
 
 const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
@@ -113,129 +108,6 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     };
 });
 
-const RenderImage = (articleindex, article, theme, isSm) => {
-    return (
-        <Box
-            sx={{
-                width: {
-                    xs: articleindex === 0 ? '100%' : '120px',
-                    sm: articleindex === 0 ? '50%' : '100%',
-                    md: articleindex === 0 ? '50%' : '100%',
-                    lg: articleindex === 0 ? '50%' : '100%',
-                    xl: articleindex === 0 ? '50%' : '100%',
-                },
-            }}
-        >
-            <div
-                style={{
-                    width: '100%',
-                    position: 'relative',
-                    paddingBottom: isSm && articleindex !== 0 ? '91.534%' : '66.667%',
-                    marginBottom: isSm && articleindex !== 0 ? '32px' : null,
-                }}
-            >
-                <img
-                    src={article.image ?? fallBackImage}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        height: '100%',
-                        width: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                    }}
-                    alt={article.title}
-                    onError={() => loadFallbackImage(event.target)}
-                />
-            </div>
-        </Box>
-        // </Grid>
-    );
-};
-
-const RenderTextblock = (articleindex, article, theme, isSm) => {
-    return (
-        <Box
-            sx={{
-                width: {
-                    xs: articleindex === 0 ? '100%' : 'calc(100% - 120px)',
-                    sm: articleindex === 0 ? '50%' : '100%',
-                    md: articleindex === 0 ? '50%' : '100%',
-                    lg: articleindex === 0 ? '50%' : '100%',
-                    xl: articleindex === 0 ? '50%' : '100%',
-                },
-                paddingBottom: {
-                    xs: articleindex !== 0 ? '0px' : '24px',
-                    sm: articleindex === 0 ? '0px' : '24px',
-                    md: articleindex === 0 ? '0px' : '24px',
-                    lg: articleindex === 0 ? '0px' : '24px',
-                    xl: articleindex === 0 ? '0px' : '24px',
-                },
-            }}
-            className="ArticleContainer"
-        >
-            <div className="ArticleTextContainer">
-                <Typography
-                    component={'p'}
-                    className={'ArticleCategory'}
-                    sx={{
-                        marginTop: isSm || articleindex === 0 ? '0' : '24px',
-                        marginBottom: '0',
-                        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-                        color: '#666 !important',
-                    }}
-                >
-                    {article.categories[0]}
-                </Typography>
-                <Typography
-                    component={'h3'}
-                    className={'ArticleTitle'}
-                    sx={{
-                        lineHeight: '1.2',
-                        marginTop: '0',
-                        letterSpacing: '0.01',
-                        fontSize: isSm ? '22px' : '24px',
-                        fontWeight: 500,
-                        marginRight: isSm ? '16px' : '0px',
-                        height: {
-                            sx: 'auto',
-                            sm: articleindex === 0 ? 'auto' : '116px',
-                            md: articleindex === 0 ? 'auto' : '116px',
-                            lg: articleindex === 0 ? 'auto' : '116px',
-                            xl: articleindex === 0 ? 'auto' : '116px',
-                        },
-                        overflow: 'hidden',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 4,
-                        WebkitBoxOrient: 'vertical',
-                        textOverflow: 'ellipsis',
-                        // marginBottom: '24px',
-                    }}
-                    data-testid={`article-${articleindex + 1}-title`}
-                >
-                    {article.title}
-                </Typography>
-                {!!article.description && article.description.trim() !== '' && (
-                    <Typography
-                        component={'p'}
-                        sx={{
-                            marginTop: '0.5em',
-                            fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-                            fontWeight: '400 !important',
-                            letterSpacing: '.01rem !important',
-                            textDecoration: 'none !important',
-                        }}
-                        className={'ArticleDescription'}
-                    >
-                        {articleindex === 0 && article.description}
-                    </Typography>
-                )}
-            </div>
-        </Box>
-    );
-};
-
 const LibraryArticle = ({ article, articleindex }) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -258,12 +130,16 @@ const LibraryArticle = ({ article, articleindex }) => {
                     data-analyticsid={`spotlights-link-${articleindex}`}
                 >
                     <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
-                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
-                            ? RenderTextblock(articleindex, article, theme, isSm)
-                            : RenderImage(articleindex, article, theme, isSm)}
-                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm)
-                            ? RenderImage(articleindex, article, theme, isSm)
-                            : RenderTextblock(articleindex, article, theme, isSm)}
+                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm) ? (
+                            <RenderTextblock articleindex={articleindex} article={article} isSm={isSm} />
+                        ) : (
+                            <RenderImage articleindex={articleindex} article={article} isSm={isSm} />
+                        )}
+                        {(articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm) ? (
+                            <RenderImage articleindex={articleindex} article={article} isSm={isSm} />
+                        ) : (
+                            <RenderTextblock articleindex={articleindex} article={article} isSm={isSm} />
+                        )}
                     </Grid>
                 </Link>
             </StandardCard>
