@@ -1,6 +1,6 @@
 import React from 'react';
 import mediaQuery from 'css-mediaquery';
-import { rtlRender, WithRouter, preview, within } from 'test-utils';
+import { rtlRender, WithRouter, within } from 'test-utils';
 
 import LibraryArticle from './LibraryArticle';
 
