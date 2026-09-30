@@ -6,13 +6,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-import { getCampusByCode } from 'helpers/general';
-import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
-import { isLibraryStaff, isLoggedInUser } from 'helpers/access';
+import { isLibraryStaff } from 'helpers/access';
+import { hasClasses, getUrlForLearningResourceSpecificTab } from './helpers';
 
 const StyledHeadingGridItem = styled('div')(() => ({
     marginLeft: '8px',
@@ -53,24 +52,6 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
 }));
 
 const LEARNING_RESOURCE_ID = 'homepage-learningresource';
-export const hasClasses = account =>
-    isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
-
-export const getUrlForLearningResourceSpecificTab = (
-    item,
-    pageLocation,
-    includeFullPath = false,
-    isAccurateCampus = false,
-) => {
-    const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
-    const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-    const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
-    const url =
-        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s1111111
-            : `${prefix}?${learningResourceParams}`;
-    return url;
-};
 
 export const LearningResourcesPanel = ({ account }) => {
     const MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES = 5;
@@ -83,7 +64,7 @@ export const LearningResourcesPanel = ({ account }) => {
         searchUrl => {
             searchUrl !== '' && navigate(searchUrl);
         },
-        [pageLocation],
+        [navigate],
     );
     React.useEffect(() => {
         loadSearchResult(searchUrl);

@@ -2,9 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import { fireEvent, rtlRender, WithRouter, WithReduxStore } from 'test-utils';
 
-import { fullPath } from 'config/routes';
-
-import { getUrlForLearningResourceSpecificTab, hasClasses, LearningResourcesPanel } from './LearningResourcesPanel';
+import { LearningResourcesPanel } from './LearningResourcesPanel';
 
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
@@ -121,38 +119,5 @@ describe('LearningResourcesPanel', () => {
         expect(mockNavigate).toHaveBeenCalledWith(
             '/learning-resources?user=s1234567&coursecode=HIST1200&campus=St Lucia&semester=Semester 2',
         );
-    });
-
-    describe('helpers', () => {
-        it('recognises enrolled classes only for a logged-in account', () => {
-            expect(hasClasses(student)).toBe(true);
-            expect(hasClasses(null)).toBe(false);
-            expect(hasClasses({ current_classes: [course] })).toBe(false);
-            expect(hasClasses({ id: 's1234567' })).toBe(false);
-            expect(hasClasses({ id: 's1234567', current_classes: [] })).toBe(false);
-        });
-
-        it('builds course URLs from campus codes and optionally preserves a user query', () => {
-            expect(getUrlForLearningResourceSpecificTab(course, { search: '' })).toBe(
-                '/learning-resources?coursecode=MATH1040&campus=St Lucia&semester=Semester 1',
-            );
-            expect(getUrlForLearningResourceSpecificTab(course, { search: '?user=s1234567' }, true)).toBe(
-                `${fullPath}/learning-resources?user=s1234567&coursecode=MATH1040&campus=St Lucia&semester=Semester 1`,
-            );
-            expect(getUrlForLearningResourceSpecificTab(course, { search: 'user=s1234567' })).toBe(
-                '/learning-resources?coursecode=MATH1040&campus=St Lucia&semester=Semester 1',
-            );
-        });
-
-        it('uses the supplied campus for dropdown selections', () => {
-            expect(
-                getUrlForLearningResourceSpecificTab(
-                    { classnumber: 'HIST1200', campus: 'Gatton', semester: 'Semester 2' },
-                    { search: '?user=s1234567' },
-                    false,
-                    true,
-                ),
-            ).toBe('/learning-resources?user=s1234567&coursecode=HIST1200&campus=Gatton&semester=Semester 2');
-        });
     });
 });

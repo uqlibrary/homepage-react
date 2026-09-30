@@ -32,4 +32,6 @@
     "statusBar.debuggingForeground": "#e7e7e7"
   },
   "peacock.color": "#007fff",
+  "jestrunner.jestCommand": "npm run test --",
+
 }
