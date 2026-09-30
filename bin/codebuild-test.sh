@@ -34,6 +34,30 @@ printf "CI_BRANCH = \"$CI_BRANCH\"\n"
 
 export TZ='Australia/Brisbane'
 
+# @@@ chery-picked from chore-e2e-test-hardening-AD-1314/f0c460f5115393b7124787801ac1a44ead6a99db @@@
+#
+# Put the write-heavy test scratch on tmpfs (RAM) so it does not hit the slow CI disk: coverage/ (the
+# istanbul partials, write-once structures and merged report) and TMPDIR (playwright transform cache,
+# chromium temp, node compile cache). Requires the runner to allow a tmpfs mount (privileged /
+# CAP_SYS_ADMIN); if it cannot, we log and fall back to disk, never fatal. tmpfs is capped (not
+# reserved), so it only uses RAM for the data actually written.
+setup_ram_scratch() {
+    mkdir -p coverage
+    if mount -t tmpfs -o size=2g tmpfs "$(pwd)/coverage" 2>/dev/null; then
+        printf "RAM scratch: coverage/ on tmpfs\n"
+    else
+        printf "RAM scratch: coverage/ staying on disk (tmpfs mount unavailable, safe fallback)\n"
+    fi
+    mkdir -p /ramtmp
+    if mount -t tmpfs -o size=2g,mode=1777 tmpfs /ramtmp 2>/dev/null; then
+        export TMPDIR=/ramtmp
+        printf "RAM scratch: TMPDIR=%s on tmpfs\n" "$TMPDIR"
+    else
+        printf "RAM scratch: TMPDIR staying on disk (tmpfs mount unavailable, safe fallback)\n"
+    fi
+}
+setup_ram_scratch
+
 # Run CC check only (this occurs after test pipelines have finished and output test coverage artifacts)
 if [[ $TEST_COVERAGE == 1 ]]; then
     source bin/codebuild-coverage.sh
