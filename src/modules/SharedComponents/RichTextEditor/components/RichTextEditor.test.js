@@ -5,13 +5,16 @@ import RichTextEditor from './RichTextEditor';
 jest.mock('mui-tiptap', () => {
     const react = require('react');
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate }) => {
+        RichTextEditor: ({ renderControls, children, onUpdate, sx }) => {
             react.useEffect(() => {
                 onUpdate?.({ editor: { getHTML: () => '<p>edited</p>' } });
             }, [onUpdate]);
             return react.createElement(
                 'div',
-                { 'data-testid': 'mock-rich-text-editor' },
+                {
+                    'data-testid': 'mock-rich-text-editor',
+                    'data-editor-overflow': sx['& .MuiTiptap-RichTextField-content']['& .ProseMirror'].overflowY,
+                },
                 renderControls?.(),
                 typeof children === 'function' ? children() : children,
             );
@@ -31,6 +34,7 @@ describe('RichTextEditor', () => {
         const { getByTestId } = setup({ onChange });
 
         expect(getByTestId('mock-rich-text-editor')).toBeInTheDocument();
+        expect(getByTestId('mock-rich-text-editor')).toHaveAttribute('data-editor-overflow', 'auto');
         expect(getByTestId('mock-rich-text-toolbar')).toBeInTheDocument();
         expect(getByTestId('mock-link-bubble-menu')).toBeInTheDocument();
         expect(onChange).toHaveBeenCalledWith('<p>edited</p>');
