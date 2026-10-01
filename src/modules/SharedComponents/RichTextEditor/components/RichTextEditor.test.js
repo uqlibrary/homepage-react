@@ -9,6 +9,9 @@ jest.mock('mui-tiptap', () => {
 
     return {
         RichTextEditor: ({ renderControls, children, onUpdate, sx }) => {
+            const editorOverflow =
+                sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
+
             react.useEffect(() => {
                 onUpdate?.({ editor: { getHTML: () => mockEditorHtml } });
             }, [onUpdate]);
@@ -23,7 +26,7 @@ jest.mock('mui-tiptap', () => {
                 'div',
                 {
                     'data-testid': 'mock-rich-text-editor',
-                    'data-editor-overflow': sx['& .MuiTiptap-RichTextField-content']['& .ProseMirror'].overflowY,
+                    'data-editor-overflow': editorOverflow,
                 },
                 renderControls?.(),
                 typeof children === 'function' ? children() : children,
