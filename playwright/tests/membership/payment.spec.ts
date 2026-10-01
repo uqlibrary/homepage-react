@@ -43,9 +43,9 @@ test.describe('Membership payment confirmation', () => {
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillCommunityForm(page);
-        // The mock build gates a new application behind a stand-in CAPTCHA; solve it to reveal the submit button.
-        await page.getByTestId('mock-captcha-solve').click();
+        // The mock build gates a new application behind a stand-in CAPTCHA, drawn after Apply; solving it submits.
         await page.getByTestId('membership-form-submit').click();
+        await page.getByTestId('mock-captcha-solve').click();
 
         // The form takes the paying applicant to the gateway, which returns them here, where the payment is
         // recorded and confirmed.

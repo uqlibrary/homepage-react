@@ -56,7 +56,7 @@ export default {
             after: ' page useful.',
         },
         captcha: {
-            instruction: 'Please complete the check below to confirm you are not a robot, then apply.',
+            instruction: 'Please complete the check below to confirm you are not a robot and submit your application.',
             error: 'The verification check could not be loaded. Please refresh the page and try again.',
             expired: 'Your verification expired. Please complete the check again and re-submit your application.',
         },

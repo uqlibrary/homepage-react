@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 
@@ -53,13 +53,16 @@ export const MembershipForm = ({
     const current = findAccountType(membershipFormData, type);
 
     // A new application is protected by an AWS WAF CAPTCHA where one is configured; a renewal, which authenticates
-    // on the id and code from its emailed link, is not. When required, the puzzle must be solved before the submit
-    // button is shown, and the solved token is sent with the application. The reset signal redraws a fresh puzzle
-    // after a WAF rejection (see onSubmit), so the applicant can verify again instead of hitting a dead end.
+    // on the id and code from its emailed link, is not. The puzzle is shown only once the applicant chooses to
+    // apply - and only after the form validates - rather than on load, so it cannot time out while the form is
+    // being filled in. Solving it then submits the application (see the resubmit effect below). The reset signal
+    // redraws a fresh puzzle after a WAF rejection (see onSubmit) so the applicant can verify again.
     const captchaRequired = !isRenewing && isMembershipCaptchaConfigured();
+    const [captchaVisible, setCaptchaVisible] = useState(false);
     const [captchaSolved, setCaptchaSolved] = useState(false);
     const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
     const handleCaptchaSolved = useCallback(() => setCaptchaSolved(true), []);
+    const formRef = useRef(null);
 
     // Attachments live beside the form rather than in it: they are uploaded as they are chosen, not validated
     // as a field, and the form only needs the stored result at submit time.
@@ -114,11 +117,28 @@ export const MembershipForm = ({
         }
     }, [current, membershipFormData, membershipFormDataLoading, navigate]);
 
+    // Once the puzzle (revealed by the first apply press) reports solved, submit the application programmatically.
+    // Re-running the form's own submit reuses the validated path - validation and error handling are unchanged -
+    // but this time the CAPTCHA is solved, so it goes through to the API with a fresh token.
+    useEffect(() => {
+        if (captchaRequired && captchaVisible && captchaSolved) {
+            formRef.current.requestSubmit();
+        }
+    }, [captchaRequired, captchaVisible, captchaSolved]);
+
     const onSubmit = safelyHandleSubmit(async values => {
         // Applying now would drop documents the applicant chose but has not uploaded. safelyHandleSubmit turns
         // this into the form's server-error slot, which the summary below reports.
         if (hasPendingUploads) {
             throw new Error(locale.upload.pendingUploads);
+        }
+
+        // On a new application the puzzle is shown only now - the form has validated and the applicant has chosen
+        // to apply - not on load, where it could time out while the form was filled in. The first apply reveals
+        // the puzzle and stops here; solving it re-submits the application (see the resubmit effect above).
+        if (captchaRequired && !captchaSolved) {
+            setCaptchaVisible(true);
+            return;
         }
 
         const request = transformRequest(
@@ -208,7 +228,7 @@ export const MembershipForm = ({
                  * submit on the first empty required field with a transient bubble a screen reader does not
                  * announce, and our own error reporting never runs.
                  */}
-                <form onSubmit={onSubmit} noValidate data-testid="membership-form-element">
+                <form ref={formRef} onSubmit={onSubmit} noValidate data-testid="membership-form-element">
                     <Typography variant="body2" sx={{ marginBottom: 1 }}>
                         {form.mandatoryNote}
                     </Typography>
@@ -278,30 +298,25 @@ export const MembershipForm = ({
                         )}
                     </Box>
 
-                    {/* The anti-bot puzzle sits directly above the submit button, so solving it and the button
-                        appearing read as one step. It is only asked for on a new application. */}
-                    {captchaRequired && (
+                    {/* The anti-bot puzzle appears here only after the first apply press on a valid new
+                        application (see onSubmit); solving it submits. It is never asked for on a renewal. */}
+                    {captchaRequired && captchaVisible && (
                         <MembershipCaptcha onSolved={handleCaptchaSolved} resetSignal={captchaResetSignal} />
                     )}
 
-                    {/* Until the puzzle is solved there is no button to press, rather than one that refuses:
-                        the applicant is not told to fix a form they cannot yet submit. Once solved - or where no
-                        CAPTCHA is asked for - the button behaves as before. */}
-                    {(!captchaRequired || captchaSolved) && (
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            sx={{ marginTop: 2 }}
-                            id="membership-form-submit"
-                            data-testid="membership-form-submit"
-                            // Left enabled while the form is incomplete on purpose: a disabled button gives no reason
-                            // and no way forward. Submitting an incomplete form reports what is missing.
-                            disabled={!!membershipSaving}
-                        >
-                            {submitLabel}
-                        </Button>
-                    )}
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        sx={{ marginTop: 2 }}
+                        id="membership-form-submit"
+                        data-testid="membership-form-submit"
+                        // Left enabled while the form is incomplete on purpose: a disabled button gives no reason
+                        // and no way forward. Submitting an incomplete form reports what is missing.
+                        disabled={!!membershipSaving}
+                    >
+                        {submitLabel}
+                    </Button>
                 </form>
             </div>
         </StandardPage>

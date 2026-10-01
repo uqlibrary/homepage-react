@@ -388,27 +388,43 @@ describe('MembershipForm', () => {
             getMembershipCaptchaToken.mockResolvedValue('waf-token-123');
         });
 
-        it('holds back the submit button until the puzzle is solved', async () => {
-            setup();
+        it('shows the puzzle only after a valid application is applied for, not on load', async () => {
+            const { actions } = setup();
 
-            expect(screen.getByTestId('mock-captcha-solve')).toBeInTheDocument();
-            expect(screen.queryByTestId('membership-form-submit')).not.toBeInTheDocument();
-
-            await userEvent.click(screen.getByTestId('mock-captcha-solve'));
-
+            // The submit button is there from the start; the puzzle is not drawn until the applicant applies.
             expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            // The puzzle now appears, and nothing is submitted until it is solved.
+            expect(await screen.findByTestId('mock-captcha-solve')).toBeInTheDocument();
+            expect(actions.submitMembership).not.toHaveBeenCalled();
         });
 
-        it('sends the solved CAPTCHA token with the application', async () => {
+        it('does not draw the puzzle when the applied-for form is invalid', async () => {
+            setup();
+
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() =>
+                expect(screen.getByTestId('membership-form-error-summary')).toHaveTextContent(form.invalidSummary),
+            );
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+        });
+
+        it('submits with the solved token and continues to the received page', async () => {
             const { actions } = setup();
 
             await fillInCommunityForm();
-            await userEvent.click(screen.getByTestId('mock-captcha-solve'));
             await userEvent.click(screen.getByTestId('membership-form-submit'));
+            await userEvent.click(await screen.findByTestId('mock-captcha-solve'));
 
             await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
             expect(getMembershipCaptchaToken).toHaveBeenCalledTimes(1);
             expect(actions.submitMembership.mock.calls[0][1]).toBe('waf-token-123');
+            await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
         });
 
         it('does not ask a renewal to solve a puzzle', () => {
@@ -417,8 +433,9 @@ describe('MembershipForm', () => {
                 '/membership/form/community/abc-009/the-code',
             );
 
-            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+            // A renewal is exempt: the submit button is present and no puzzle is ever drawn.
             expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
         });
 
         it('draws a fresh puzzle and asks for re-verification when the WAF rejects the token', async () => {
@@ -428,15 +445,14 @@ describe('MembershipForm', () => {
             });
 
             await fillInCommunityForm();
-            await userEvent.click(screen.getByTestId('mock-captcha-solve'));
             await userEvent.click(screen.getByTestId('membership-form-submit'));
+            await userEvent.click(await screen.findByTestId('mock-captcha-solve'));
 
             await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
             await waitFor(() =>
                 expect(screen.getByTestId('membership-form-server-error')).toHaveTextContent(form.captcha.expired),
             );
-            // The submit button is withdrawn until the applicant verifies again, and nothing navigates away.
-            expect(screen.queryByTestId('membership-form-submit')).not.toBeInTheDocument();
+            // The puzzle stays available to solve again, and nothing navigates away.
             expect(screen.getByTestId('mock-captcha-solve')).toBeInTheDocument();
             expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining('/received'));
         });

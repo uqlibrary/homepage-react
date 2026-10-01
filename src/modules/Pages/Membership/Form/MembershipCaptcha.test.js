@@ -15,6 +15,7 @@ describe('MembershipCaptcha', () => {
     afterEach(() => {
         delete window.AwsWafCaptcha;
         delete window.AwsWafIntegration;
+        delete window.awsWafCookieDomainList;
         document.querySelectorAll(SCRIPT_SELECTOR).forEach(script => script.remove());
     });
 
@@ -34,6 +35,8 @@ describe('MembershipCaptcha', () => {
             expect(lastRenderConfig()).toEqual(expect.objectContaining({ dynamicWidth: true }));
             expect(screen.getByTestId('membership-captcha')).toHaveTextContent(captcha.instruction);
             expect(screen.queryByTestId('membership-captcha-error')).not.toBeInTheDocument();
+            // The token is scoped to the shared apex so it is valid on both the homepage and API hosts.
+            expect(window.awsWafCookieDomainList).toEqual(['library.uq.edu.au']);
         });
 
         it('tells the form when the puzzle is solved', () => {

@@ -11,7 +11,8 @@ const selectOption = async (page, id: string, value: string) => {
 };
 
 // The mock build serves a stand-in CAPTCHA (public/mock-aws-waf/jsapi.js) whose one button stands in for the
-// puzzle. A new application hides its submit button until this is pressed, so a submit is preceded by solving it.
+// puzzle. On a new application the puzzle is drawn only after Apply is pressed on a valid form; pressing this
+// stand-in button then submits the application. Playwright auto-waits for it, so it is called straight after Apply.
 const solveCaptcha = async page => {
     await page.getByTestId('mock-captcha-solve').click();
 };
@@ -32,16 +33,20 @@ const fillCommunityForm = async page => {
 };
 
 test.describe('Membership application form (community)', () => {
-    test('holds back the submit button on a new application until the CAPTCHA is solved', async ({ page }) => {
+    test('draws the CAPTCHA only after a valid new application is applied for', async ({ page }) => {
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
-        // The puzzle sits at the foot of the form; until it is solved there is no submit button to press.
-        await expect(page.getByTestId('membership-captcha')).toBeVisible();
-        await expect(page.getByTestId('membership-form-submit')).toHaveCount(0);
-
-        await solveCaptcha(page);
+        // The submit button is there from the start; the puzzle is not drawn on load (so it cannot time out
+        // while the form is filled in).
         await expect(page.getByTestId('membership-form-submit')).toBeVisible();
+        await expect(page.getByTestId('membership-captcha')).toHaveCount(0);
+
+        await fillCommunityForm(page);
+        await page.getByTestId('membership-form-submit').click();
+
+        // Only now, once the form is valid and applied for, does the puzzle appear.
+        await expect(page.getByTestId('membership-captcha')).toBeVisible();
     });
 
     test('a community applicant can fill and submit the form and is taken to pay', async ({ page }) => {
@@ -49,11 +54,11 @@ test.describe('Membership application form (community)', () => {
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillCommunityForm(page);
-        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
+        await solveCaptcha(page);
 
-        // Community is a paying type, so a successful submit takes the applicant on to the payment gateway,
-        // carrying the new application's reference with it.
+        // Community is a paying type, so solving the puzzle submits and takes the applicant on to the payment
+        // gateway, carrying the new application's reference with it.
         await expect(page).toHaveURL(/\/membership\/paymentconfirmation\?.*UQ_LIB_ID=[^&]*123/);
     });
 
@@ -61,10 +66,11 @@ test.describe('Membership application form (community)', () => {
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
-        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
         await expect(page.getByTestId('membership-form-error-summary')).not.toBeEmpty();
+        // An invalid form is never shown the puzzle - it fails validation first.
+        await expect(page.getByTestId('membership-captcha')).toHaveCount(0);
         await expect(page).toHaveURL(/\/membership\/form\/community/);
     });
 
@@ -110,8 +116,8 @@ test.describe('Membership application form (type-specific rendering)', () => {
         await expect(page.getByTestId('membership-form-postcode-help')).toHaveCount(0);
 
         await fillBaseIdentity(page);
-        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
+        await solveCaptcha(page);
 
         // Fryer does not pay, so a successful submit lands on the received page telling them what happens next.
         await expect(page).toHaveURL(/\/membership\/received\//);
@@ -194,17 +200,19 @@ test.describe('Membership terms & consent', () => {
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillAlumniForm(page);
-        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
-        // Everything else is filled, so the unticked box is what holds the application back.
+        // Everything else is filled, so the unticked box is what holds the application back - and because the
+        // form is invalid, the puzzle is never reached.
         await expect(page.getByTestId('accept_mandatory_terms-error')).toBeVisible();
+        await expect(page.getByTestId('membership-captcha')).toHaveCount(0);
         await expect(page).toHaveURL(/\/membership\/form\/alumni/);
 
         await page.getByTestId('accept_mandatory_terms-input').check();
         await page.getByTestId('membership-form-submit').click();
+        await solveCaptcha(page);
 
-        // Alumni does not pay, so a successful submit lands on the received page with the entitlements
+        // Alumni does not pay, so solving the puzzle submits and lands on the received page with the entitlements
         // acknowledgement it shows to alumni applicants.
         await expect(page).toHaveURL(/\/membership\/received\//);
         await expect(page.getByTestId('membership-received')).toBeVisible();

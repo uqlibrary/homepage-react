@@ -5,7 +5,7 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { AWS_WAF_CAPTCHA_API_KEY, AWS_WAF_CAPTCHA_INTEGRATION_URL } from 'config/general';
+import { AWS_WAF_CAPTCHA_API_KEY, AWS_WAF_CAPTCHA_INTEGRATION_URL, AWS_WAF_CAPTCHA_TOKEN_DOMAIN } from 'config/general';
 import locale from '../membership.locale';
 
 const { captcha } = locale.form;
@@ -39,6 +39,12 @@ export const MembershipCaptcha = ({ onSolved, resetSignal }) => {
 
     useEffect(() => {
         const container = containerRef.current;
+
+        // Scope the token to the shared apex so it is valid both here (the homepage host, where the puzzle runs)
+        // and on the API host the application is posted to. Without this the SDK mints a token for the protected
+        // resource's host only, which cannot be acquired from this page - the puzzle solves but the token step
+        // fails. This must be set before the SDK script runs, since it fetches a token in the background on load.
+        window.awsWafCookieDomainList = [AWS_WAF_CAPTCHA_TOKEN_DOMAIN];
 
         const render = () => {
             setHasError(false);
