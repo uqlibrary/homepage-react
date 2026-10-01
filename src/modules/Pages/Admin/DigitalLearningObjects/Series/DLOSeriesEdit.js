@@ -457,6 +457,7 @@ export const DLOSeriesEdit = ({
                                                         <RichTextEditor
                                                             id="object_description"
                                                             testId="object-description"
+                                                            ariaLabel="Description of Series"
                                                             value={formValues?.series_description || ''}
                                                             onChange={htmlData => {
                                                                 handleEditorChange('series_description', htmlData);

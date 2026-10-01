@@ -799,6 +799,7 @@ export const DlorForm = ({
                                 <RichTextEditor
                                     id="object_admin_notes"
                                     testId="object-admin-notes"
+                                    ariaLabel="Admin notes"
                                     value={formValues?.object_admin_notes || ''}
                                     onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
@@ -950,6 +951,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="object_description"
                         testId="object-description"
+                        ariaLabel="Description of Object"
                         value={formValues?.object_description || ''}
                         onChange={htmlData => {
                             handleEditorChange('object_description', htmlData);
@@ -1340,6 +1342,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="download_instructions"
                         testId="download_instructions"
+                        ariaLabel="Instructions"
                         value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
@@ -1643,6 +1646,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="notificationText"
                         testId="notificationText"
+                        ariaLabel="Notification text"
                         value={formValues?.notificationText || ''}
                         onChange={htmlData => {
                             handleEditorChange('notificationText', htmlData);
