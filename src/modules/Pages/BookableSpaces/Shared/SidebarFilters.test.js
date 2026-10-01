@@ -3,7 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import { SidebarFilters } from './SidebarFilters';
+import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
 describe('SidebarFilters campus selector', () => {
     const theme = createTheme({
@@ -802,32 +803,34 @@ describe('SidebarFilters campus selector', () => {
             configurable: true,
         });
 
-        renderWithTheme({
-            ...baseProps,
-            activeFilterCount: 1,
-            facilityTypeList: facilityList,
-            filteredFacilityTypeList: facilityList,
-            selectedFacilityTypes: [
-                {
-                    facility_type_group_id: 1,
-                    facility_type_id: 9003,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: 'capacity',
-                },
-            ],
-            setSelectedFacilityTypes,
-            setCapacityFilterValue,
-            capacityFilterValue: [12, 24],
-        });
+        try {
+            renderWithTheme({
+                ...baseProps,
+                activeFilterCount: 1,
+                facilityTypeList: facilityList,
+                filteredFacilityTypeList: facilityList,
+                selectedFacilityTypes: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_id: 9003,
+                        selected: true,
+                        unselected: false,
+                        facility_special_action: 'capacity',
+                    },
+                ],
+                setSelectedFacilityTypes,
+                setCapacityFilterValue,
+                capacityFilterValue: [12, 24],
+            });
 
-        expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
-        fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
-
-        Object.defineProperty(window, 'sessionStorage', {
-            value: originalSessionStorage,
-            configurable: true,
-        });
+            expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
+            fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
+        } finally {
+            Object.defineProperty(window, 'sessionStorage', {
+                value: originalSessionStorage,
+                configurable: true,
+            });
+        }
     });
 
     it('handles whitespace capacity input and string-based IDs during deselection', () => {
@@ -971,6 +974,48 @@ describe('SidebarFilters campus selector', () => {
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
         expect(handleCampusSelection).toHaveBeenCalledWith({ target: { value: 0 } });
         expect(handleLibrarySelection).toHaveBeenCalledWith({ target: { value: 0 } });
+    });
+
+    it('ignores empty persisted filter state when no journey state exists', () => {
+        const fakeStorage = {
+            getItem: jest.fn().mockReturnValue(null),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.getItem).toHaveBeenCalledWith(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+    });
+
+    it('ignores persisted journey state that does not include a capacity value', () => {
+        const storage = {
+            selectedCampus: 1,
+            selectedLibrary: 2,
+        };
+        const fakeStorage = {
+            getItem: jest.fn().mockImplementation(() => JSON.stringify(storage)),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.setItem).not.toHaveBeenCalled();
+        expect(fakeStorage.removeItem).not.toHaveBeenCalled();
+    });
+
+    it('removes the saved capacity filter when it is the only persisted state entry', () => {
+        const fakeStorage = {
+            getItem: jest.fn().mockReturnValue(JSON.stringify({ capacityFilterValue: [4, 12] })),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.removeItem).toHaveBeenCalledWith(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        expect(fakeStorage.setItem).not.toHaveBeenCalled();
     });
 
     it('exercises max capacity blur on value exceeding maximum', () => {
