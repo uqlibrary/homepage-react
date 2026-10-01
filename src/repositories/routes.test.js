@@ -390,3 +390,78 @@ describe('Backend routes method', () => {
         });
     });
 });
+
+describe('membership routes', () => {
+    const MockDate = require('mockdate');
+    const frozenTimestamp = '1577836800000';
+
+    beforeEach(() => {
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+    });
+
+    afterEach(() => {
+        MockDate.reset();
+    });
+
+    it('should construct url for MEMBERSHIP_FORM_DATA_API', () => {
+        expect(routes.MEMBERSHIP_FORM_DATA_API()).toEqual({ apiUrl: 'membership' });
+    });
+
+    it('should construct url for MEMBERSHIP_CREATE_API', () => {
+        expect(routes.MEMBERSHIP_CREATE_API()).toEqual({ apiUrl: 'membership' });
+    });
+
+    it('should construct url for MEMBERSHIP_CHECK_RENEWING_API', () => {
+        expect(routes.MEMBERSHIP_CHECK_RENEWING_API()).toEqual({
+            apiUrl: 'membership/check/renewing',
+            options: { params: { ts: frozenTimestamp } },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API defaults to page 1, the default page size and newest-first', () => {
+        expect(routes.MEMBERSHIPS_LIST_API()).toEqual({
+            apiUrl: 'memberships',
+            options: { params: { ts: frozenTimestamp, page: 1, per_page: 20, 'orderBy[submitted_on]': 'DESC' } },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API carries the search, type, status, sort and page', () => {
+        expect(
+            routes.MEMBERSHIPS_LIST_API({
+                name: 'smith',
+                type: 'community',
+                status: 'renewing',
+                sort: 'oldest',
+                page: 3,
+                perPage: 25,
+            }),
+        ).toEqual({
+            apiUrl: 'memberships',
+            options: {
+                params: {
+                    ts: frozenTimestamp,
+                    page: 3,
+                    per_page: 25,
+                    'orderBy[submitted_on]': 'ASC',
+                    'filter[name]': 'smith',
+                    'filter[type]': 'community',
+                    'filter[status]': 'renewing',
+                },
+            },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API leaves the status filter off when it is "all"', () => {
+        const params = routes.MEMBERSHIPS_LIST_API({ status: 'all' }).options.params;
+
+        expect(params['filter[status]']).toBeUndefined();
+        expect(params['orderBy[submitted_on]']).toBe('DESC');
+    });
+
+    it('MEMBERSHIP_FILE_URL_API addresses a stored document by its key, encoded', () => {
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'abc-123.pdf' })).toEqual({
+            apiUrl: 'file/membership/abc-123.pdf',
+        });
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'a b/c.pdf' }).apiUrl).toBe('file/membership/a%20b%2Fc.pdf');
+    });
+});

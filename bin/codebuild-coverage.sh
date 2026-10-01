@@ -21,7 +21,6 @@ npm install -g nyc
 mkdir -p coverage/all
 cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/coverage-final.json" coverage/all/playwright-1.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/coverage-final.json" coverage/all/playwright-2.json
-cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/playwright/coverage-final.json" coverage/all/playwright-3.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/all/jest.json
 
 # Combine reports into single json file

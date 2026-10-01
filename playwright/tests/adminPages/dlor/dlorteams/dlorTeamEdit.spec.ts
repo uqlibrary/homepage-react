@@ -29,6 +29,9 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await expect(page.locator('[data-testid="admin-dlor-team-form-team-manager"] input')).toHaveValue(
                 'Jane Green',
             );
+            await expect(page.locator('[data-testid="admin-dlor-team-form-team-admin-username"] input')).toHaveValue(
+                'uqstaff',
+            );
             await expect(page.locator('[data-testid="admin-dlor-team-form-team-email"] input')).toHaveValue(
                 'train@library.uq.edu',
             );
@@ -128,12 +131,14 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
         test('saves correctly', async ({ page, context }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
             // Modify the input fields
             await teamNameInput.fill('Lib train Library Corporate Services changed');
             await teamManagerInput.fill('Jane Green changed');
+            await teamAdminUsernameInput.fill('uqstaff2');
             await teamEmailInput.fill('train@library.uq.edu.au');
 
             // Click the save button
@@ -149,6 +154,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             const expectedValues = {
                 team_name: 'Lib train Library Corporate Services changed',
                 team_manager: 'Jane Green changed',
+                team_admin_username: 'uqstaff2',
                 team_email: 'train@library.uq.edu.au',
             };
 

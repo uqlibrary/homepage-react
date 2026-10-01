@@ -2,49 +2,47 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
+import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import Hero from '../Hero';
+import Hero from '../SharedComponents/Hero';
+import { StyledAudioPlayer, StyledAccordionGrid, StyledAccordion, StyledAccordionDetails } from '../SharedComponents';
+import WelcomeAudio from '../../../../../../public/audio/artTrail/welcome.mp3';
 
-const WelcomePage = () => {
+const WelcomePage = ({ mediaStopSignal, handleMediaEvent, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
             <Hero
                 title="Indigenous art and Library discovery trail"
-                subtitle="A self-guided trail to explore Aboriginal and Torres Strait Islander artworks in the University of Queensland Library."
+                subtitle="A self-guided exploration of Aboriginal and Torres Strait Islander artworks and stories in the University of Queensland Library. "
             />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
-                <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
+            <StyledAccordionGrid container direction="column" data-testid="pageContent">
+                <Grid>
+                    <StyledAudioPlayer
+                        title="Listen to this page"
+                        src={WelcomeAudio}
+                        stopSignal={mediaStopSignal}
+                        data-testid="audioPlayer"
+                        onPlay={() => handleMediaEvent('play')}
+                        onStop={() => handleMediaEvent('stop')}
+                        onReset={() => handleMediaEvent('reset')}
+                        onComplete={() => handleMediaEvent('complete')}
+                    />
+                </Grid>
+                <Grid container>
                     <Grid xs>
-                        <Typography variant="h3" sx={{ fontSize: { xs: '1.5rem', sm: '2.5rem' }, fontWeight: 500 }}>
-                            Welcome
-                        </Typography>
-                        <Typography variant="body1" component="div">
+                        <Box>
                             <p>
                                 Welcome to the Indigenous Art and Library Discovery Trail at The University of
                                 Queensland Library.
                             </p>
-                            <p>Tap “Start the Trail” below to begin.</p>
-                        </Typography>
+                            <p>When you're ready, tap Start the Trail to begin. </p>
+                        </Box>
                     </Grid>
                 </Grid>
                 <Grid>
-                    <Accordion
-                        sx={{
-                            mb: 'var(--art-trail-spacing)',
-                            '&.Mui-expanded:last-of-type': { mb: 'var(--art-trail-spacing)' },
-                        }}
-                    >
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="transcript-content"
@@ -52,21 +50,42 @@ const WelcomePage = () => {
                         >
                             Audio transcript
                         </AccordionSummary>
-                        <AccordionDetails>
-                            Placeholder content for additional information, related items, or a hand-off into the next
-                            trail stop. Placeholder content for additional information, related items, or a hand-off
-                            into the next trail stop. Placeholder content for additional information, related items, or
-                            a hand-off into the next trail stop.
-                        </AccordionDetails>
-                    </Accordion>
+                        <StyledAccordionDetails>
+                            <p>
+                                This self-guided trail invites you to explore Indigenous artworks across the library,
+                                and discover some of the Aboriginal and Torres Strait Islander stories held and cared
+                                for within the library.
+                            </p>
+                            <p>
+                                Together, these works highlight Aboriginal and Torres Strait Islander voices and
+                                celebrate enduring connections to Country, community and culture.
+                            </p>
+                            <p>
+                                Your journey begins on level 1 of Duhig Tower. As you move through the trail, we invite
+                                you to take your time, look closely, and reflect on the stories shared here.
+                            </p>
+                            <p>
+                                Before you begin, the University of Queensland would like to acknowledge the Traditional
+                                Owners and their custodianship of the lands on which we meet. We pay our respects to
+                                their Ancestors and their descendants, who continue cultural and spiritual connections
+                                to Country. We recognise their valuable contributions to Australian and global society.
+                            </p>
+                        </StyledAccordionDetails>
+                    </StyledAccordion>
                 </Grid>
-            </Grid>
+                <Box sx={{ mb: 2 }}>
+                    Brisbane River pattern from <em>A Guidance Through Time</em> by Quandamooka artists Casey Coolwell
+                    and Kyra Mancktelow.
+                </Box>
+            </StyledAccordionGrid>
         </Grid>
     );
 };
 
 WelcomePage.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    mediaStopSignal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    handleMediaEvent: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default WelcomePage;

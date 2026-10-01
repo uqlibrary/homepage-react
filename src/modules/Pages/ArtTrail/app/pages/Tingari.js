@@ -2,60 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import ArtworkImage from '../assets/images/artwork/Tjupurrula_2014_40_WEB.jpg';
+import ArtworkImage from '../../../../../../public/images/artTrail/artwork/Tjupurrula_2014_40_WEB.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Tingari.jpg';
 
-import Hero from '../Hero';
-
-const StyledAccordion = styled(Accordion)(() => ({
-    marginBottom: 'var(--art-trail-spacing)',
-    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
-}));
-
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    '& p': {
-        fontSize: 'var(--art-trail-font-size)',
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
-        '&:first-of-type': {
-            marginTop: 0,
-        },
-        '&:last-of-type': {
-            marginBottom: 0,
-        },
-    },
-}));
-
-const StyledImage = styled('img')({
-    maxWidth: '100%',
-    height: 'auto',
-    position: 'relative',
-});
-
-const StyledUl = styled('ul')(({ theme }) => ({
-    paddingInlineStart: '1.25rem',
-    '& li:not(:last-of-type)': {
-        marginBottom: theme.spacing(1),
-    },
-}));
-
-const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
-    fontSize: '1.125rem',
-    fontWeight: theme.typography.fontWeightMedium,
-    fontFamily: 'var(--art-trail-font-family)',
-    lineHeight: '1.6',
-}));
+import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
+import {
+    DisclosureSection,
+    StyledHeading,
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledTrailImage,
+    StyledUl,
+    StyledImage,
+} from '../SharedComponents';
 
 const ArtDrawerContent = () => {
     return (
@@ -64,7 +31,7 @@ const ArtDrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Johnny Yungut Tjupurrula </StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Box component="p" sx={{ color: 'text.secondary' }}>
                     <em>Tingari ceremonies at Wilkinkarra</em> 2003
                     <br />
                     synthetic polymer paint on linen
@@ -77,7 +44,7 @@ const ArtDrawerContent = () => {
                     Reproduced courtesy of the artist © licensed by Aboriginal Artists Agency Ltd.
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -86,106 +53,65 @@ const LocationDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <StyledDrawerHeader variant="h3">View the artwork</StyledDrawerHeader>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Where: Level 1,{' '}
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    Level 1,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
-                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                        Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Tingari ceremonies at Wilkinkarra' 2003, Johnny Yungut Tjupurrula" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Hero id="artwork-tingari-ceremonies" sx={{ pb: 0 }} />
+            <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={ArtworkImage} alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork." />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(ArtDrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+                        <StyledTrailImage
+                            src={ArtworkImage}
+                            alt="'Tingari ceremonies at Wilkinkarra' 2003 artwork."
+                            intrinsicWidth={709}
+                            intrinsicHeight={841}
+                        />
+
+                        <InformationButton
+                            title="Tingari ceremonies at Wilkinkarra"
+                            onClick={() => openInformationDrawer(ArtDrawerContent, 'Tingari ceremonies at Wilkinkarra')}
+                        />
+                        <LocationButton
+                            title="Tingari ceremonies at Wilkinkarra"
+                            onClick={() =>
+                                openLocationDrawer(LocationDrawerContent, 'Tingari ceremonies at Wilkinkarra')
+                            }
+                        />
                     </Box>
                 </Grid>
-                <Grid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="reflect-content"
-                            id="reflect-header"
-                        >
-                            Reflect
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="reflect-content">
-                            <Typography component={'p'}>
-                                Take a moment to look at the painterly marks made by the artist in these artworks.
-                            </Typography>
-                            <StyledUl>
-                                <li>What feelings do the colours of each painting convey to you?</li>
-                                <li>
-                                    How might the different colour palettes be telling different parts of the story the
-                                    artist is conveying?
-                                </li>
-                            </StyledUl>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
+                    <DisclosureSection
+                        forceExpanded
+                        heading={
+                            <StyledHeading variant="h6" component="h2">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component="p">
                                 This work considers migration and movements across long expanses of Country which are
                                 significant for Tingari Dreaming Stories. Note the intricate lines, patterns, and
                                 colour, which the artist has used to create the illusion of movement.
-                            </Typography>
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                    <StyledAccordion>
+                            </Box>
+                        }
+                    />
+
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -194,12 +120,12 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 The artist was born c. 1930 near Tjungimanta, Kiwirrkurra in the Northern Territory.
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -208,18 +134,22 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
-                                Learn more about <strong>Kiwirrkurra.</strong>
-                            </Typography>
-                            <iframe
-                                title="Indigenous art trail - Kiwirrkurra"
-                                src="https://uq.h5p.com/content/1292938712625855909/embed"
-                                aria-label="Indigenous art trail - Kiwirrkurra - Tingari ceremonies at Wilkinkarra 2003"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
+                                Learn more about{' '}
+                                <a
+                                    href="https://www.ngaanyatjarra.org.au/communities/kiwirrkurra/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Kiwirrkurra
+                                </a>
+                                .
+                            </Box>
+
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the south west region of Northern Territory highlighted, showing the location of Kiwirrkurra."
+                                loading="lazy"
                             />
                             <StyledUl>
                                 <li>
@@ -238,14 +168,16 @@ const Page = ({ openDrawer }) => {
                             </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                </Grid>
+                </StyledAccordionGrid>
             </Grid>
         </Grid>
     );
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;

@@ -9,6 +9,7 @@ import {
     isStaff,
     isUQOnlyUser,
     isAlertsAdminUser,
+    isMembershipAdminUser,
     isDlorAdminUser,
     isDlorOwner,
     isADlorTeamMember,
@@ -65,6 +66,38 @@ describe('access', () => {
                 user_group: 'LIBRARYSTAFFB',
             }),
         ).toEqual(false);
+    });
+
+    // The same group the API gates these endpoints on - see the lib_libapi_MembershipAdmins route group in
+    // packages/uqlibrary/membership/routes.php.
+    it('membership admin pages are limited to appropriate users', () => {
+        expect(isMembershipAdminUser({})).toEqual(false);
+        expect(
+            isMembershipAdminUser({
+                id: 'uqstaff',
+                groups: [
+                    'CN=lib_libapi_MembershipAdmins,OU=lib-libapi-groups,OU=LIB-groups,OU=University of Queensland Library,OU=Deputy Vice-Chancellor (Academic),OU=Vice-Chancellor,DC=uq,DC=edu,DC=au',
+                ],
+                user_group: 'LIBRARYSTAFFB',
+            }),
+        ).toEqual(true);
+        // Library staff are not membership admins by virtue of being library staff.
+        expect(
+            isMembershipAdminUser({
+                id: 'uqstaffnonpriv',
+                groups: ['DC=uq', 'DC=edu', 'DC=au'],
+                user_group: 'LIBRARYSTAFFB',
+            }),
+        ).toEqual(false);
+        // Admin of one area is not admin of another.
+        expect(
+            isMembershipAdminUser({
+                id: 'uqstaff',
+                groups: ['CN=lib_libapi_SpotlightAdmins,OU=lib-libapi-groups,DC=uq,DC=edu,DC=au'],
+                user_group: 'LIBRARYSTAFFB',
+            }),
+        ).toEqual(false);
+        expect(isMembershipAdminUser(null)).toEqual(false);
     });
 
     it('should identify TestTag users correctly', () => {

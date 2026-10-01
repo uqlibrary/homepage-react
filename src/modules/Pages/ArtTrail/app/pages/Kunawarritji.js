@@ -2,68 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-import Artwork1Image from '../assets/images/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
-import Artwork2Image from '../assets/images/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
-import DesertImage from '../assets/images/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
+import Artwork1Image from '../../../../../../public/images/artTrail/artwork/2018.27_Kunawarritji-1-landscape-2.jpg';
+import Artwork2Image from '../../../../../../public/images/artTrail/artwork/2018.28_Kunawarritji-2-landscape-2.jpg';
+import DesertImage from '../../../../../../public/images/artTrail/Desert-near-old-Canning-Stock-Route_C_-tolly65_stock.adobe.com-2.jpg';
+import MapImage from '../../../../../../public/images/artTrail/maps/Kunawarritji.jpg';
 
-import Hero from '../Hero';
-
-const StyledAccordion = styled(Accordion)(() => ({
-    marginBottom: 'var(--art-trail-spacing)',
-    '&.Mui-expanded:last-of-type': { marginBottom: 'var(--art-trail-spacing)' },
-}));
-
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    '& p': {
-        fontSize: 'var(--art-trail-font-size)',
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        lineHeight: 1.5,
-        '&:first-of-type': {
-            marginTop: 0,
-        },
-        '&:last-of-type': {
-            marginBottom: 0,
-        },
-    },
-}));
-
-const StyledImage = styled('img')({
-    maxWidth: '100%',
-    height: 'auto',
-    position: 'relative',
-});
-
-const StyledImageCaption = styled('figcaption')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary,
-}));
-
-const StyledUl = styled('ul')(({ theme }) => ({
-    paddingInlineStart: '1.25rem',
-    '& li:not(:last-of-type)': {
-        marginBottom: theme.spacing(1),
-    },
-}));
-
-const StyledDrawerHeader = styled(Typography)(({ theme }) => ({
-    fontSize: '1.125rem',
-    fontWeight: theme.typography.fontWeightMedium,
-    fontFamily: 'var(--art-trail-font-family)',
-    lineHeight: '1.6',
-}));
+import Hero from '../SharedComponents/Hero';
+import InformationButton from '../SharedComponents/InformationButton';
+import LocationButton from '../SharedComponents/LocationButton';
+import {
+    DisclosureSection,
+    StyledHeading,
+    StyledAccordion,
+    StyledAccordionDetails,
+    StyledAccordionGrid,
+    StyledDrawerHeader,
+    StyledTrailImage,
+    StyledImage,
+    StyledImageCaption,
+    StyledUl,
+} from '../SharedComponents';
 
 const Art1DrawerContent = () => {
     return (
@@ -72,8 +34,8 @@ const Art1DrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Nora Wompi Nungurrayi</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    <em>Kunawarritji 1</em> 1997
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    <em>Kunawarritji 1</em> 2012
                     <br />
                     synthetic polymer paint on Belgian linen
                     <br />
@@ -84,7 +46,7 @@ const Art1DrawerContent = () => {
                     Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -96,8 +58,8 @@ const Art2DrawerContent = () => {
                 <StyledDrawerHeader variant="h3">Nora Wompi Nungurrayi</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    <em>Kunawarritji 2</em> 1997
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    <em>Kunawarritji 2</em> 2012
                     <br />
                     synthetic polymer paint on Belgian linen
                     <br />
@@ -108,7 +70,7 @@ const Art2DrawerContent = () => {
                     Reproduced courtesy of the artist's estate and Suzanne O'Connell Gallery, Brisbane
                     <br />
                     Photo: Carl Warner.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
@@ -117,126 +79,111 @@ const LocationDrawerContent = () => {
     return (
         <Grid container direction="column" rowSpacing={1.5}>
             <Grid>
-                <Typography variant="h3">View the artwork</Typography>
+                <StyledDrawerHeader variant="h3">Artwork location</StyledDrawerHeader>
             </Grid>
             <Grid>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Where: Level 1,{' '}
+                <Box component="p" sx={{ color: 'text.secondary' }}>
+                    Level 2,{' '}
                     <a href="https://web.library.uq.edu.au/visit/duhig-tower" target="_blank" rel="noopener noreferrer">
-                        Duhig Tower (TBC: THIS MIGHT LINK TO MAP TAB)
+                        Duhig Tower
                     </a>{' '}
                     (Building 2), St Lucia campus.
-                </Typography>
+                </Box>
             </Grid>
         </Grid>
     );
 };
 
-const Page = ({ openDrawer }) => {
+const Page = ({ openInformationDrawer, openLocationDrawer, handleAccordionChange }) => {
     return (
         <Grid container direction="column" rowSpacing={2.5}>
-            <Hero title="'Kunawarritji 1' and 'Kunawarritji 2' 2012, Nora Wompi Nungurrayi" />
-            <Grid
-                container
-                direction="column"
-                pl={'var(--art-trail-spacing)'}
-                pr={'var(--art-trail-spacing)'}
-                data-testid="pageContent"
-            >
+            <Hero id="artwork-nora-wompi-nungurrayi" sx={{ pb: 0 }} />
+            <Grid container direction="column" data-testid="pageContent" pt={0}>
                 <Grid>
                     <Box position="relative">
-                        <StyledImage src={Artwork1Image} alt="Kunawarritji 1 artwork." />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(Art1DrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+                        <StyledTrailImage
+                            src={Artwork1Image}
+                            alt="Kunawarritji 1 artwork."
+                            intrinsicWidth={4671}
+                            intrinsicHeight={3096}
+                        />
+
+                        <InformationButton
+                            title="Kunawarritji 1"
+                            onClick={() => openInformationDrawer(Art1DrawerContent, 'Kunawarritji 1')}
+                        />
+                        <LocationButton
+                            title="Kunawarritji 1"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Kunawarritji 1')}
+                        />
                     </Box>
                     <Box position="relative">
-                        <StyledImage src={Artwork2Image} alt="Kunawarritji 2 artwork." />
-                        <IconButton
-                            size="large"
-                            aria-label="More information about this artwork"
-                            onClick={() => openDrawer(Art2DrawerContent)}
-                            sx={{ position: 'absolute', top: 0, right: 0 }}
-                        >
-                            <InfoOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="Location information about this artwork"
-                            onClick={() => openDrawer(LocationDrawerContent)}
-                            sx={{ position: 'absolute', bottom: 0, right: 0 }}
-                        >
-                            <LocationOnOutlinedIcon
-                                fontSize="large"
-                                sx={{
-                                    color: '#fff',
-                                    fontSize: '2.5rem',
-                                    filter: 'drop-shadow(2px 2px 1px rgba(0,0,0,0.5))',
-                                }}
-                            />
-                        </IconButton>
+                        <StyledImage
+                            src={Artwork2Image}
+                            alt="Kunawarritji 2 artwork."
+                            intrinsicWidth={3042}
+                            intrinsicHeight={2043}
+                        />
+
+                        <InformationButton
+                            title="Kunawarritji 2"
+                            onClick={() => openInformationDrawer(Art2DrawerContent, 'Kunawarritji 2')}
+                        />
+                        <LocationButton
+                            title="Kunawarritji 2"
+                            onClick={() => openLocationDrawer(LocationDrawerContent, 'Kunawarritji 2')}
+                        />
                     </Box>
                 </Grid>
-                <Grid>
-                    <StyledAccordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="about-the-artwork-content"
-                            id="about-the-artwork-header"
-                        >
-                            About the artwork
-                        </AccordionSummary>
-                        <StyledAccordionDetails id="about-the-artwork-content">
-                            <Typography component={'p'}>
+                <StyledAccordionGrid onChange={handleAccordionChange}>
+                    <DisclosureSection
+                        heading={
+                            <StyledHeading variant="h6" component="h2">
+                                About the artwork
+                            </StyledHeading>
+                        }
+                        summary={
+                            <Box component="p">
                                 These two paintings depict a place central to the artist's life and community,
                                 Kunawarritji (meaning 'water spring'). What makes these paintings so striking for an
                                 artist of this region is the defined colour palette which utilises soft yellows, pinks,
                                 whites, and blues. These colours overlap and bleed into each other creating fluid
                                 intersections of place.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                        }
+                        details={
+                            <Box component="p">
                                 You can see the expressive brushstrokes within each of these works. While both artworks
                                 depict the same place, there is a unique feel to each painting, communicated through
                                 colour, shape and texture. If you look closely at each artwork, you can see the depth of
                                 the underlaid paint, the ochre tones showing through the lighter layers.
-                            </Typography>
+                            </Box>
+                        }
+                        onExpand={handleAccordionChange}
+                    />
+
+                    <StyledAccordion onChange={handleAccordionChange}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="reflect-content"
+                            id="reflect-header"
+                        >
+                            Reflect
+                        </AccordionSummary>
+                        <StyledAccordionDetails id="reflect-content">
+                            <Box component="p">
+                                Take a moment to look at the painterly marks made by the artist in these artworks.
+                            </Box>
+                            <StyledUl>
+                                <li>What feelings do the colours of each painting convey to you?</li>
+                                <li>
+                                    How might the different colour palettes be telling different parts of the story the
+                                    artist is conveying?
+                                </li>
+                            </StyledUl>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="about-the-artists-content"
@@ -245,28 +192,28 @@ const Page = ({ openDrawer }) => {
                             About the artist
                         </AccordionSummary>
                         <StyledAccordionDetails id="about-the-artists-content">
-                            <Typography component={'p'}>
+                            <Box component="p">
                                 The artist, from the Kukatja language group and Nungurrayi communities, was born c. 1935
                                 near Well 33 in the Kunawarritji Community based along the Canning Stock Route in
                                 mid-Western Australia.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Many of the paintings created by this artist connect with nature and place, and this is
                                 because she spent many years of her life moving between Kunawarritji, Balgo, Kiwirrkurra
                                 and Punmu. More than a prolific artist, she was a senior respected elder and cultural
                                 leader who cared for Country and whose obligations drew her to these different places
                                 across her lifetime. The artist passed away in 2017 and it is a privilege to be able to
                                 show her continuing artistic legacy to you today.
-                            </Typography>
-                            <Typography component={'p'}>
+                            </Box>
+                            <Box component="p">
                                 Find out{' '}
                                 <a href="https://martumili.com.au/node/73" target="_blank" rel="noopener noreferrer">
                                     more about the artist.
                                 </a>
-                            </Typography>
+                            </Box>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                    <StyledAccordion>
+                    <StyledAccordion onChange={handleAccordionChange}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="connection-to-country-content"
@@ -275,19 +222,21 @@ const Page = ({ openDrawer }) => {
                             Connection to Country
                         </AccordionSummary>
                         <StyledAccordionDetails id="connection-to-country-content">
-                            <Typography component={'p'} sx={{ pb: 1 }}>
-                                This artwork was inspired by the artist’s home at Kunawarritji, part of Martu Country in
-                                Western Australia.
-                            </Typography>
-                            <iframe
-                                title="Indigenous art trail - Martu Country"
-                                src="https://uq.h5p.com/content/1292938729180054199/embed"
-                                aria-label="Indigenous art trail - Martu Country - Kunawarritji"
-                                width="1090"
-                                frameBorder="0"
-                                allowFullScreen
-                                allow="autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *"
-                                style={{ width: '100%', height: 'auto', aspectRatio: '1090/1033' }}
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
+                                This artwork was inspired by the artist's home at Kunawarritji, part of{' '}
+                                <a
+                                    href="https://aiatsis.gov.au/explore/map-indigenous-australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Martu Country
+                                </a>{' '}
+                                in Western Australia.
+                            </Box>
+                            <StyledImage
+                                src={MapImage}
+                                alt="Stylised map of Australia with the north west of Western Australia highlighted, showing the location of Martu Country."
+                                loading="lazy"
                             />
                             <StyledUl>
                                 <li>
@@ -296,28 +245,30 @@ const Page = ({ openDrawer }) => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        Why Martu country is special{' '}
+                                        Why Martu Country is special{' '}
                                     </a>
                                     <br /> Read about Martu lands - from Kanyirninpa Jukurrpa.
                                 </li>
                             </StyledUl>
-                            <Typography component={'p'} sx={{ pb: 1 }}>
+                            <Box component="p" sx={{ paddingBottom: '1rem' }}>
                                 Kunawarritji is part of Martu Country on what was the old Canning Stock Route.
-                            </Typography>
+                            </Box>
                             <StyledImage src={DesertImage} alt="Thorny devil in the desert." loading="lazy" />
                             <StyledImageCaption>
-                                Desert near old Canning Stock Route @tolly65 – stock.adobe.com
+                                Desert near old Canning Stock Route @tolly65 - stock.adobe.com
                             </StyledImageCaption>
                         </StyledAccordionDetails>
                     </StyledAccordion>
-                </Grid>
+                </StyledAccordionGrid>
             </Grid>
         </Grid>
     );
 };
 
 Page.propTypes = {
-    openDrawer: PropTypes.func.isRequired,
+    openInformationDrawer: PropTypes.func.isRequired,
+    openLocationDrawer: PropTypes.func.isRequired,
+    handleAccordionChange: PropTypes.func.isRequired,
 };
 
 export default Page;
