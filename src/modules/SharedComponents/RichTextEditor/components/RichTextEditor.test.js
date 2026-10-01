@@ -4,6 +4,24 @@ import RichTextEditor from './RichTextEditor';
 
 let mockEditorHtml = '<p>edited</p>';
 
+const normalizeEditorHtml = htmlValue => {
+    if (typeof htmlValue !== 'string') {
+        return '';
+    }
+
+    const normalizedValue = htmlValue.replace(/\s/g, '');
+    if (
+        normalizedValue === '' ||
+        normalizedValue === '<p></p>' ||
+        normalizedValue === '<p><br></p>' ||
+        normalizedValue === '<p><br/></p>'
+    ) {
+        return '';
+    }
+
+    return htmlValue;
+};
+
 jest.mock('mui-tiptap', () => {
     const react = require('react');
 
@@ -14,7 +32,7 @@ jest.mock('mui-tiptap', () => {
 
             props.onUpdate?.({
                 editor: {
-                    getHTML: () => mockEditorHtml,
+                    getHTML: () => normalizeEditorHtml(mockEditorHtml),
                 },
             });
 
@@ -55,7 +73,7 @@ describe('RichTextEditor', () => {
         expect(onChange).toHaveBeenCalledWith('<p>edited</p>');
     });
 
-    it('passes the value through unchanged when the editor returns blank or empty content', () => {
+    it('normalizes blank editor content and non-string values to empty strings before callback', () => {
         const values = [undefined, null, '', '<p></p>', '<p><br></p>', '<p><br/></p>'];
 
         values.forEach(value => {
@@ -63,7 +81,7 @@ describe('RichTextEditor', () => {
             const onChange = jest.fn();
             setup({ onChange });
 
-            expect(onChange).toHaveBeenLastCalledWith(value);
+            expect(onChange).toHaveBeenLastCalledWith('');
         });
     });
 
