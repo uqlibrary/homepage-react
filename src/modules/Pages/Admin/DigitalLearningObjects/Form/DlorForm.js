@@ -801,7 +801,7 @@ export const DlorForm = ({
                                 <RichTextEditor
                                     id="object_admin_notes"
                                     testId="object-admin-notes"
-                                    ariaLabel="Admin Notes"
+                                    ariaLabel="Admin notes"
                                     value={formValues?.object_admin_notes || ''}
                                     onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
@@ -1668,6 +1668,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="notificationText"
                         testId="notificationText"
+                        ariaLabel="Notification text"
                         value={formValues?.notificationText || ''}
                         onChange={htmlData => {
                             handleEditorChange('notificationText', htmlData);
