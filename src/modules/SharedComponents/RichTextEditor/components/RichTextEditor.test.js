@@ -5,16 +5,31 @@ import RichTextEditor from './RichTextEditor';
 jest.mock('mui-tiptap', () => {
     const react = require('react');
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate, sx }) => {
+        RichTextEditor: ({
+            renderControls,
+            children,
+            onUpdate,
+            sx,
+            id,
+            dataTestId,
+            editorProps,
+        }) => {
             const editorOverflow =
                 sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
+            const attributes = {
+                ...(editorProps?.attributes || {}),
+                ...(id ? { id } : {}),
+                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
+            };
 
             react.useEffect(() => {
                 onUpdate?.({ editor: { getHTML: () => '<p>edited</p>' } });
             }, [onUpdate]);
+
             return react.createElement(
                 'div',
                 {
+                    ...attributes,
                     'data-testid': 'mock-rich-text-editor',
                     'data-editor-overflow': editorOverflow,
                 },
