@@ -31,7 +31,7 @@ const editorStyles = {
     },
 };
 
-const normalizeEditorHtml = htmlValue => {
+export const normalizeEditorHtml = htmlValue => {
     if (typeof htmlValue !== 'string') {
         return '';
     }
