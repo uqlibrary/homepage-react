@@ -4,6 +4,7 @@ import {
     canSeeLearningResourcesPage,
     isAlertsAdminUser,
     isDlorAdminUser,
+    isSpacesAdminUser,
     isMembershipAdminUser,
     isTestTagUser,
 } from 'helpers/access';
@@ -52,6 +53,13 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/spaces',
+    '/spaces/detail',
+    '/admin/spaces',
+    '/admin/spacetypes',
+    '/admin/spaces/manage/locations',
+    '/admin/spaces/add',
+    '/admin/spaces/manage/facilitytypes',
     '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
@@ -69,6 +77,7 @@ export const flattedPathConfig = [
     '/digital-learning-hub/submit',
     '/digital-learning-hub/edit',
     '/exams/course',
+    '/admin/spaces/edit',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
@@ -77,6 +86,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const dlorId = ':dlorId';
     const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
+    const spaceUuid = ':spaceUuid';
 
     // A standalone section with its own look and feel — App renders it without the shared chrome.
     const publicStandalonePages = [
@@ -190,6 +200,41 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.dlorOwnObjectEdit(dlorId),
             element: <components.DLOOwnEdit />,
             pageTitle: 'Edit details of your object',
+        },
+        {
+            path: pathConfig.bookablespaces,
+            element: <components.BookableSpacesLandingPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/results',
+            element: <components.BookableSpacesSimpleListPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/mapresults',
+            element: <components.BookableSpacesMapPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        // {
+        //     path: '/spaces/detail/:spaceId',
+        //     element: <components.BookableSpacesDetailPage />,
+        //     exact: true,
+        //     pageTitle: 'Library spaces',
+        // },
+        {
+            path: pathConfig.bookablespacesDetail(spaceUuid),
+            element: <components.BookableSpacesDetailPage />,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/details/:spaceId',
+            element: <components.BookableSpacesDetailPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
         },
         {
             path: pathConfig.artTrailLanding,
@@ -428,6 +473,46 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const bookableSpacesAdminPages = [
+        {
+            path: pathConfig.admin.bookableSpacesDashboard,
+            element: <components.BookableSpacesManageSpaces />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpaceTypesDashboard,
+            element: <components.BookableSpacesManageSpaceTypes />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespacetypes.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageLocations,
+            element: <components.BookableSpacesManageLocations />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageFacilityTypes,
+            element: <components.BookableSpacesManageFacilities />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesAdd,
+            // element: <components.BookableSpacesAddSpace />,
+            element: <components.BookableSpacesAddSpace />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesEdit(spaceUuid),
+            element: <components.BookableSpacesEditSpace />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+    ];
+
     return [
         ...publicStandalonePages,
         ...publicPages,
@@ -439,6 +524,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
         ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
+        ...(account && isSpacesAdminUser(account) ? bookableSpacesAdminPages : []),
         {
             path: '*',
             element: <components.NotFound />,
@@ -451,11 +537,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 export const breadcrumbs = {
     alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+    bookablespacesadmin: { pathname: '/spaces', title: 'Spaces management' },
     testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
     dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
+    bookablespaces: { pathname: '/spaces', title: 'Spaces' },
     membership: { pathname: '/membership', title: 'Membership' },
     membershipadmin: { pathname: '/admin/membership', title: 'Membership admin' },
     membershipadminsettings: { pathname: '/admin/membership/settings', title: 'Membership expiry settings' },

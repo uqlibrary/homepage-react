@@ -1,0 +1,166 @@
+export default {
+    data: [
+        {
+            "campus_id": 1,
+            "campus_number": "01",
+            "campus_name": "St Lucia",
+            "campus_latitude": "-27.49718",
+            "campus_longitude": "153.01214",
+            "libraries": [
+                {
+                    "library_id": 1,
+                    "library_name": "Walter Harrison Law Library",
+                    "building_name": "Forgan Smith Building",
+                    "building_number": "0001",
+                    "ground_floor_id": null,
+                    "library_about_page_default": "https://web.library.uq.edu.au/visit/walter-harrison-law-library",
+                    "library_springshare_id": 4801,
+                    "floors": [
+                        {
+                            "floor_id": 1,
+                            "floor_name": "2",
+                        },
+                        {
+                            "floor_id": 2,
+                            "floor_name": "3A",
+                        },
+                    ]
+                },
+                {
+                    "library_id": 46,
+                    "library_name": "imaginary Liveris Library",
+                    "building_name": "Andrew N. Liveris",
+                    "building_number": "0046",
+                    "ground_floor_id": 4,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
+                    "floors": [
+                        {
+                            "floor_id": 72,
+                            "floor_name": "1",
+                        },
+                    ]
+                },
+                {
+                    "library_id": 2,
+                    "library_name": "Central Library",
+                    "building_name": "Duhig Tower",
+                    "building_number": "0002",
+                    "ground_floor_id": 4,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/duhig-tower',
+                    "library_springshare_id": 10457,
+                    "floors": [
+                        {
+                            "floor_id": 4,
+                            "floor_name": "1",
+                        },
+                        {
+                            "floor_id": 5,
+                            "floor_name": "2",
+                        },
+                    ]
+                }, {
+                    "library_id": 3,
+                    "library_name": "Architecture and Music Library",
+                    "building_number": "51",
+                    "building_name": "Zelman Cowen Building",
+                    "building_ground_floor_id": null,
+                    "library_about_page_default": "https:\/\/web.library.uq.edu.au\/visit\/architecture-and-music-library",
+                    "library_springshare_id": 10451,
+                    "floors": [
+                        {
+                            "floor_id": 3,
+                            "floor_name": "Level 3"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "campus_id": 2,
+            "campus_number": "29",
+            "campus_name": "Gatton",
+            "campus_latitude": "-27.55383",
+            "campus_longitude": "152.33584",
+            "libraries": [
+                {
+                    "library_id": 8,
+                    "library_name": "J.K. Murray Library",
+                    "building_name": null,
+                    "building_number": "8102",
+                    "ground_floor_id": 29,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/jk-murray-library-uq-gatton',
+                    "library_springshare_id": 8867,
+                    "floors": [
+                        {
+                            "floor_id": 29,
+                            "floor_name": "1",
+                        },
+                        {
+                            "floor_id": 30,
+                            "floor_name": "2",
+                        }
+                    ]
+                },
+                {
+                    "library_id": 9,
+                    "library_name": null,
+                    "building_name": "Library Warehouse",
+                    "building_number": "8248",
+                    "ground_floor_id": null,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
+                    "floors": [
+                        {
+                            "floor_id": 31,
+                            "floor_name": "1",
+                        },
+                        {
+                            "floor_id": 32,
+                            "floor_name": "2",
+                        },
+                    ]
+                }, {
+                    "library_id": 98,
+                    "library_name": "Incompletely entered library",
+                    "building_name": null,
+                    "building_number": "371",
+                    "ground_floor_id": null,
+                    "library_about_page_default": null,
+                    "library_springshare_id": null,
+                    "floors": []
+                }
+            ]
+        },
+        {
+            "campus_id": 3,
+            "campus_number": "45",
+            "campus_name": "Dutton Park",
+            "campus_latitude": "-27.49979",
+            "campus_longitude": "153.03066",
+            "libraries": [
+                {
+                    "library_id": 10,
+                    "library_name": "Dutton Park Health Sciences",
+                    "building_name": "Pharmacy Australia Centre of Excellence",
+                    "building_number": "870",
+                    "ground_floor_id": 29,
+                    "library_about_page_default": 'https://web.library.uq.edu.au/visit/dutton-park-health-sciences-library',
+                    "library_springshare_id": 3970,
+                    "floors": [
+                        {
+                            "floor_id": 65,
+                            "floor_name": "6",
+                        }
+                    ]
+                },
+            ]
+        },
+        {
+            "campus_id": 999,
+            "campus_number": "99",
+            "campus_name": "Newsite",
+            "libraries": []
+        },
+    ]
+};
