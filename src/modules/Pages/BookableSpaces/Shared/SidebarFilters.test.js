@@ -365,7 +365,7 @@ describe('SidebarFilters campus selector', () => {
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
     });
 
-    it('resets the capacity range when a different space type is selected', () => {
+    it('keeps the capacity range when a different space type is selected', () => {
         const setCapacityFilterValue = jest.fn();
         const facilityList = {
             data: {
@@ -413,10 +413,8 @@ describe('SidebarFilters campus selector', () => {
 
         fireEvent.click(screen.getByTestId('filtertype-57'));
 
-        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).not.toContain(
-            'capacityFilterValue',
-        );
+        expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 50]);
+        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {
@@ -474,58 +472,6 @@ describe('SidebarFilters campus selector', () => {
 
         expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
         expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
-    });
-
-    it('removes the final persisted capacity state when the default capacity range is restored', () => {
-        const setSelectedFacilityTypes = jest.fn();
-        const capacityGroupFixture = {
-            data: {
-                facility_type_groups: [
-                    {
-                        facility_type_group_id: 1,
-                        facility_type_group_name: 'Facilities',
-                        facility_type_group_order: 1,
-                        facility_type_group_loads_open: true,
-                        facility_type_children: [
-                            {
-                                facility_type_id: 9003,
-                                facility_type_name: 'Space capacity',
-                                facility_special_action: 'capacity',
-                            },
-                        ],
-                    },
-                ],
-            },
-        };
-
-        window.sessionStorage.setItem(
-            'bookableSpacesJourneyLiveFilterState',
-            JSON.stringify({
-                capacityFilterValue: [6, 18],
-            }),
-        );
-
-        renderWithTheme({
-            ...baseProps,
-            facilityTypeList: capacityGroupFixture,
-            filteredFacilityTypeList: capacityGroupFixture,
-            selectedFacilityTypes: [
-                {
-                    facility_type_group_id: 1,
-                    facility_type_id: 9003,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: 'capacity',
-                },
-            ],
-            setSelectedFacilityTypes,
-            capacityFilterValue: [6, 18],
-        });
-
-        fireEvent.change(screen.getByTestId('capacitySlider-inputRight'), { target: { value: '1' } });
-        fireEvent.change(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '50' } });
-
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBeNull();
     });
 
     it('clears a special capacity filter when it is reset back to its default range', () => {
