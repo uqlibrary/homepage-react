@@ -5,6 +5,8 @@ import {
     getVemcountPercentage,
     getTextForBusyness,
     ariaLabelForLocation,
+    setLocationPanelAsClosed,
+    setLocationPanelAsOpen,
 } from './helpers';
 
 const busyLookup = {
@@ -108,5 +110,39 @@ describe('ariaLabelForLocation', () => {
         expect(ariaLabelForLocation({ ...location, isCurrentlyOpen: false })).toBe(
             'The Architecture and Music Library study space is open 8am to 6pm.',
         );
+    });
+});
+
+describe('location panel state', () => {
+    afterEach(() => {
+        document.body.innerHTML = '';
+    });
+
+    it('toggles panel accessibility and opener classes', () => {
+        document.body.innerHTML = `
+            <div id="locations-wrapper" class="locations-wrapper-open"></div>
+            <button id="location-dialog-controller" class="panel-open"></button>
+        `;
+        const locationsPanel = document.getElementById('locations-wrapper');
+        const openerButton = document.getElementById('location-dialog-controller');
+
+        setLocationPanelAsClosed();
+
+        expect(locationsPanel).toHaveAttribute('inert', 'true');
+        expect(locationsPanel).not.toHaveClass('locations-wrapper-open');
+        expect(openerButton).not.toHaveClass('panel-open');
+        expect(openerButton).toHaveClass('panel-closed');
+
+        setLocationPanelAsOpen();
+
+        expect(locationsPanel).not.toHaveAttribute('inert');
+        expect(locationsPanel).toHaveClass('locations-wrapper-open');
+        expect(openerButton).toHaveClass('panel-open');
+        expect(openerButton).not.toHaveClass('panel-closed');
+    });
+
+    it('does not throw when panel elements are absent', () => {
+        expect(() => setLocationPanelAsClosed()).not.toThrow();
+        expect(() => setLocationPanelAsOpen()).not.toThrow();
     });
 });

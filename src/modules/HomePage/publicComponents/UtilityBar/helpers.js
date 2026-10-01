@@ -1,4 +1,5 @@
 import { ASKUS_SPRINGSHARE_ID, FRYER_SPRINGSHARE_ID, GATTON_SPRINGSHARE_ID } from 'config/locale';
+import { addClass, removeClass } from 'helpers/general';
 
 const nameLookupTable = {
     [ASKUS_SPRINGSHARE_ID]: 'AskUs chat assistance',
@@ -99,4 +100,23 @@ export const ariaLabelForLocation = location => {
     }
 
     return response;
+};
+
+export const setLocationPanelAsClosed = () => {
+    const locationsPanel = document.getElementById('locations-wrapper');
+    !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
+    !!locationsPanel && removeClass(locationsPanel, 'locations-wrapper-open');
+    const openerButton = document.getElementById('location-dialog-controller');
+    !!openerButton && removeClass(openerButton, 'panel-open');
+    !!openerButton && addClass(openerButton, 'panel-closed');
+};
+
+export const setLocationPanelAsOpen = () => {
+    const locationsPanel = document.getElementById('locations-wrapper');
+    !!locationsPanel && locationsPanel.removeAttribute('inert');
+    !!locationsPanel && addClass(locationsPanel, 'locations-wrapper-open');
+    // change icon
+    const openerButton = document.getElementById('location-dialog-controller');
+    !!openerButton && addClass(openerButton, 'panel-open');
+    !!openerButton && removeClass(openerButton, 'panel-closed');
 };

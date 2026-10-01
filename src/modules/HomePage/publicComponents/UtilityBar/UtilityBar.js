@@ -7,7 +7,8 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
-import { addClass, isEscapeKeyPressed, lazyRetry, removeClass } from 'helpers/general';
+import { isEscapeKeyPressed, lazyRetry, addClass, removeClass } from 'helpers/general';
+// import { setLocationPanelAsClosed, setLocationPanelAsOpen } from './helpers';
 
 const Locations = lazy(() => lazyRetry(() => import('./Locations')));
 
@@ -136,29 +137,29 @@ const StyledLocationBox = styled(Box)(() => ({
     marginLeft: 0,
 }));
 
+export const setLocationPanelAsClosed = () => {
+    const locationsPanel = document.getElementById('locations-wrapper');
+    !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
+    !!locationsPanel && removeClass(locationsPanel, 'locations-wrapper-open');
+    const openerButton = document.getElementById('location-dialog-controller');
+    !!openerButton && removeClass(openerButton, 'panel-open');
+    !!openerButton && addClass(openerButton, 'panel-closed');
+};
+
+export const setLocationPanelAsOpen = () => {
+    const locationsPanel = document.getElementById('locations-wrapper');
+    !!locationsPanel && locationsPanel.removeAttribute('inert');
+    !!locationsPanel && addClass(locationsPanel, 'locations-wrapper-open');
+    // change icon
+    const openerButton = document.getElementById('location-dialog-controller');
+    !!openerButton && addClass(openerButton, 'panel-open');
+    !!openerButton && removeClass(openerButton, 'panel-closed');
+};
+
 export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount, vemcountLoading, vemcountError }) => {
     // handle the location opener
     const [locationOpen, setLocationOpen] = React.useState(null);
     const locationsRef = React.useRef(null);
-
-    function setLocationPanelAsClosed() {
-        const locationsPanel = document.getElementById('locations-wrapper');
-        !!locationsPanel && locationsPanel.setAttribute('inert', 'true');
-        !!locationsPanel && removeClass(locationsPanel, 'locations-wrapper-open');
-        const openerButton = document.getElementById('location-dialog-controller');
-        !!openerButton && removeClass(openerButton, 'panel-open');
-        !!openerButton && addClass(openerButton, 'panel-closed');
-    }
-
-    function setLocationPanelAsOpen() {
-        const locationsPanel = document.getElementById('locations-wrapper');
-        !!locationsPanel && locationsPanel.removeAttribute('inert');
-        !!locationsPanel && addClass(locationsPanel, 'locations-wrapper-open');
-        // change icon
-        const openerButton = document.getElementById('location-dialog-controller');
-        !!openerButton && addClass(openerButton, 'panel-open');
-        !!openerButton && removeClass(openerButton, 'panel-closed');
-    }
 
     const showHideLocationPanel = () => {
         const hasOpened = !locationOpen;
@@ -172,8 +173,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
         }
     };
 
-    /* istanbul ignore next */
     const handleLocationButtonKeyDown = e => {
+        /* istanbul ignore else */
         if (e?.key !== 'Enter') {
             return;
         }
@@ -204,6 +205,7 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
     useEffect(() => {
         const closeOnClickOutsideDialog = e => {
             // Don't include the label that opens or closes the hours - because it already has one - don't fire twice.
+            /* istanbul ignore else */
             if (
                 locationOpen &&
                 locationsRef.current &&
@@ -221,8 +223,8 @@ export const UtilityBar = ({ libHours, libHoursLoading, libHoursError, vemcount,
             }
         };
 
-        /* istanbul ignore next */
         const handleLastLinkKeyDown = e => {
+            /* istanbul ignore else */
             if (e?.key === 'Tab') {
                 e.preventDefault();
 
