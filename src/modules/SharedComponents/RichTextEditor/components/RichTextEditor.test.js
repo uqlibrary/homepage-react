@@ -67,7 +67,7 @@ describe('RichTextEditor', () => {
         });
     });
 
-    it('omits the id and data-testid attributes when neither prop is supplied', () => {
+    it('omits the id and data-testid attributes when neither prop is supplied.', () => {
         mockEditorHtml = '<p>hi</p>';
         const { getByRole } = setup();
 
