@@ -1,4 +1,5 @@
 import * as actions from './actionTypes';
+import { AWS_WAF_TOKEN_HEADER } from 'config/general';
 import { destroy, get, post } from 'repositories/generic';
 import {
     MEMBERSHIPS_LIST_API,
@@ -100,14 +101,21 @@ export function checkIsRenewing() {
 /**
  * Submit a new membership application. Resolves with the saved record — the received page is reached with its
  * id — and, on failure, rejects with the error so the form can surface the API's field messages.
+ *
+ * Where the CAPTCHA is in force the solved AWS WAF token is passed in and sent as a header the API's WAF rule
+ * checks; without one the request goes out unchanged, so an environment with no CAPTCHA is unaffected.
  */
-export function submitMembership(membership) {
+export function submitMembership(membership, wafToken) {
     return async dispatch => {
         dispatch({ type: actions.MEMBERSHIP_SAVING });
         try {
             // The API answers a create with 201, for which the shared axios interceptor resolves the whole
             // response rather than its body — so the saved record is on `.data`.
-            const response = await post(MEMBERSHIP_CREATE_API(), flattenAttachments(membership));
+            const response = await post(
+                MEMBERSHIP_CREATE_API(),
+                flattenAttachments(membership),
+                wafToken ? { headers: { [AWS_WAF_TOKEN_HEADER]: wafToken } } : {},
+            );
             const saved = response.data;
             dispatch({ type: actions.MEMBERSHIP_SAVED, payload: saved });
             return saved;

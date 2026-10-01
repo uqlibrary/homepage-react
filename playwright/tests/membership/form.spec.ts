@@ -10,6 +10,12 @@ const selectOption = async (page, id: string, value: string) => {
     await page.getByTestId(`${id}-option-${value}`).click();
 };
 
+// The mock build serves a stand-in CAPTCHA (public/mock-aws-waf/jsapi.js) whose one button stands in for the
+// puzzle. A new application hides its submit button until this is pressed, so a submit is preceded by solving it.
+const solveCaptcha = async page => {
+    await page.getByTestId('mock-captcha-solve').click();
+};
+
 const fillCommunityForm = async page => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
@@ -26,11 +32,24 @@ const fillCommunityForm = async page => {
 };
 
 test.describe('Membership application form (community)', () => {
+    test('holds back the submit button on a new application until the CAPTCHA is solved', async ({ page }) => {
+        await page.goto('/membership/form/community?user=public');
+        await expect(page.getByTestId('membership-form')).toBeVisible();
+
+        // The puzzle sits at the foot of the form; until it is solved there is no submit button to press.
+        await expect(page.getByTestId('membership-captcha')).toBeVisible();
+        await expect(page.getByTestId('membership-form-submit')).toHaveCount(0);
+
+        await solveCaptcha(page);
+        await expect(page.getByTestId('membership-form-submit')).toBeVisible();
+    });
+
     test('a community applicant can fill and submit the form and is taken to pay', async ({ page }) => {
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillCommunityForm(page);
+        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
         // Community is a paying type, so a successful submit takes the applicant on to the payment gateway,
@@ -42,6 +61,7 @@ test.describe('Membership application form (community)', () => {
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
+        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
         await expect(page.getByTestId('membership-form-error-summary')).not.toBeEmpty();
@@ -90,6 +110,7 @@ test.describe('Membership application form (type-specific rendering)', () => {
         await expect(page.getByTestId('membership-form-postcode-help')).toHaveCount(0);
 
         await fillBaseIdentity(page);
+        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
         // Fryer does not pay, so a successful submit lands on the received page telling them what happens next.
@@ -173,6 +194,7 @@ test.describe('Membership terms & consent', () => {
         await expect(page.getByTestId('membership-form')).toBeVisible();
 
         await fillAlumniForm(page);
+        await solveCaptcha(page);
         await page.getByTestId('membership-form-submit').click();
 
         // Everything else is filled, so the unticked box is what holds the application back.

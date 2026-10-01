@@ -11,5 +11,11 @@ export const APP_URL = process.env.APP_URL || STAGING_URL;
 export const AUTH_URL_LOGIN = process.env.AUTH_LOGIN_URL || 'https://auth.library.uq.edu.au/login';
 export const AUTH_URL_LOGOUT = process.env.AUTH_LOGOUT_URL || 'https://auth.library.uq.edu.au/logout';
 
+// AWS WAF CAPTCHA on the public membership application form.
+export const AWS_WAF_CAPTCHA_INTEGRATION_URL = process.env.AWS_WAF_CAPTCHA_INTEGRATION_URL || '';
+export const AWS_WAF_CAPTCHA_API_KEY = process.env.AWS_WAF_CAPTCHA_API_KEY || '';
+export const AWS_WAF_TOKEN_HEADER = 'x-aws-waf-token';
+export const isMembershipCaptchaConfigured = () => !!AWS_WAF_CAPTCHA_INTEGRATION_URL && !!AWS_WAF_CAPTCHA_API_KEY;
+
 // note: we have to use the SAME session storage key as reusable
 export const STORAGE_ACCOUNT_KEYNAME = 'userAccount';

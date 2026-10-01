@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 
@@ -12,12 +12,14 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { useForm } from 'modules/SharedComponents/Toolbox/ReactHookForm';
 import { pathConfig } from 'config/pathConfig';
 import { breadcrumbs } from 'config/routes';
+import { isMembershipCaptchaConfigured } from 'config/general';
 
 import { MEMBERSHIP_TYPES } from '../membershipFieldRules';
 import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { isRenewal, transformRequest, transformResponse } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
+import { MembershipCaptcha, getMembershipCaptchaToken } from './MembershipCaptcha';
 import MembershipFileUpload from './MembershipFileUpload';
 import MembershipFormSections from './MembershipFormSections';
 import MembershipTerms from './MembershipTerms';
@@ -49,6 +51,15 @@ export const MembershipForm = ({
     const type = membership?.type ?? typeParam;
     const isRenewing = isRenewal(membership);
     const current = findAccountType(membershipFormData, type);
+
+    // A new application is protected by an AWS WAF CAPTCHA where one is configured; a renewal, which authenticates
+    // on the id and code from its emailed link, is not. When required, the puzzle must be solved before the submit
+    // button is shown, and the solved token is sent with the application. The reset signal redraws a fresh puzzle
+    // after a WAF rejection (see onSubmit), so the applicant can verify again instead of hitting a dead end.
+    const captchaRequired = !isRenewing && isMembershipCaptchaConfigured();
+    const [captchaSolved, setCaptchaSolved] = useState(false);
+    const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+    const handleCaptchaSolved = useCallback(() => setCaptchaSolved(true), []);
 
     // Attachments live beside the form rather than in it: they are uploaded as they are chosen, not validated
     // as a field, and the form only needs the stored result at submit time.
@@ -116,12 +127,23 @@ export const MembershipForm = ({
         );
 
         try {
-            // A renewal authenticates on the id and code from the link, so they travel with the body.
+            // A renewal authenticates on the id and code from the link, so they travel with the body. A new
+            // application carries the AWS WAF token from the solved puzzle, read fresh here so it has not expired.
+            const wafToken = captchaRequired ? await getMembershipCaptchaToken() : undefined;
             const saved = isRenewing
                 ? await actions.renewMembership({ ...request, id, code })
-                : await actions.submitMembership(request);
+                : await actions.submitMembership(request, wafToken);
             navigate(pathConfig.membershipReceived(saved.id));
         } catch (error) {
+            // The WAF CAPTCHA action answers a request with no valid, unexpired token with HTTP 405. That happens
+            // when the token minted at puzzle-solve has aged past the CAPTCHA immunity window while the form was
+            // filled in. Draw a fresh puzzle and ask the applicant to verify again, rather than reporting a
+            // dead-end error they cannot act on.
+            if (error?.response?.status === 405) {
+                setCaptchaSolved(false);
+                setCaptchaResetSignal(signal => signal + 1);
+                throw new Error(form.captcha.expired);
+            }
             // The API reports field-level problems keyed by field name, so they go back onto the fields.
             setServerFieldErrors(error?.errors);
             throw error;
@@ -256,19 +278,30 @@ export const MembershipForm = ({
                         )}
                     </Box>
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        sx={{ marginTop: 2 }}
-                        id="membership-form-submit"
-                        data-testid="membership-form-submit"
-                        // Left enabled while the form is incomplete on purpose: a disabled button gives no reason
-                        // and no way forward. Submitting an incomplete form reports what is missing.
-                        disabled={!!membershipSaving}
-                    >
-                        {submitLabel}
-                    </Button>
+                    {/* The anti-bot puzzle sits directly above the submit button, so solving it and the button
+                        appearing read as one step. It is only asked for on a new application. */}
+                    {captchaRequired && (
+                        <MembershipCaptcha onSolved={handleCaptchaSolved} resetSignal={captchaResetSignal} />
+                    )}
+
+                    {/* Until the puzzle is solved there is no button to press, rather than one that refuses:
+                        the applicant is not told to fix a form they cannot yet submit. Once solved - or where no
+                        CAPTCHA is asked for - the button behaves as before. */}
+                    {(!captchaRequired || captchaSolved) && (
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            sx={{ marginTop: 2 }}
+                            id="membership-form-submit"
+                            data-testid="membership-form-submit"
+                            // Left enabled while the form is incomplete on purpose: a disabled button gives no reason
+                            // and no way forward. Submitting an incomplete form reports what is missing.
+                            disabled={!!membershipSaving}
+                        >
+                            {submitLabel}
+                        </Button>
+                    )}
                 </form>
             </div>
         </StandardPage>
