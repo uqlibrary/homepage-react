@@ -2,39 +2,34 @@ import React from 'react';
 import { rtlRender } from 'test-utils';
 import RichTextEditor from './RichTextEditor';
 
+let mockEditorHtml = '<p>edited</p>';
+
 jest.mock('mui-tiptap', () => {
     const react = require('react');
-    return {
-        RichTextEditor: ({
-            renderControls,
-            children,
-            onUpdate,
-            sx,
-            id,
-            dataTestId,
-            editorProps,
-        }) => {
-            const editorOverflow =
-                sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
-            const attributes = {
-                ...(editorProps?.attributes || {}),
-                ...(id ? { id } : {}),
-                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
-            };
 
-            react.useEffect(() => {
-                onUpdate?.({ editor: { getHTML: () => '<p>edited</p>' } });
-            }, [onUpdate]);
+    return {
+        RichTextEditor: props => {
+            const editorAttributes = props.editorProps?.attributes || {};
+            const dataTestId = editorAttributes['data-testid'];
+
+            props.onUpdate?.({
+                editor: {
+                    getHTML: () => mockEditorHtml,
+                },
+            });
 
             return react.createElement(
                 'div',
                 {
-                    ...attributes,
-                    'data-testid': 'mock-rich-text-editor',
-                    'data-editor-overflow': editorOverflow,
+                    ...(props.id ? { id: props.id } : {}),
+                    ...(dataTestId ? { 'data-testid': dataTestId } : {}),
+                    role: 'textbox',
+                    'aria-multiline': 'true',
+                    'data-editor-overflow':
+                        props.sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto',
                 },
-                renderControls?.(),
-                typeof children === 'function' ? children() : children,
+                props.renderControls?.(),
+                typeof props.children === 'function' ? props.children() : props.children,
             );
         },
         LinkBubbleMenu: () => react.createElement('div', { 'data-testid': 'mock-link-bubble-menu' }),
@@ -48,25 +43,50 @@ const setup = (props = {}) => rtlRender(<RichTextEditor onChange={jest.fn()} {..
 
 describe('RichTextEditor', () => {
     it('renders and forwards editor updates through onChange', () => {
+        mockEditorHtml = '<p>edited</p>';
         const onChange = jest.fn();
-        const { getByTestId } = setup({ onChange });
+        const { getByRole, getByTestId } = setup({ onChange });
+        const textbox = getByRole('textbox');
 
-        expect(getByTestId('mock-rich-text-editor')).toBeInTheDocument();
-        expect(getByTestId('mock-rich-text-editor')).toHaveAttribute('data-editor-overflow', 'auto');
+        expect(textbox).toBeInTheDocument();
+        expect(textbox).toHaveAttribute('data-editor-overflow', 'auto');
         expect(getByTestId('mock-rich-text-toolbar')).toBeInTheDocument();
         expect(getByTestId('mock-link-bubble-menu')).toBeInTheDocument();
         expect(onChange).toHaveBeenCalledWith('<p>edited</p>');
     });
 
-    it('omits the id and data-testid attributes when neither prop is supplied', () => {
-        const { getByTestId } = setup();
+    it('passes the value through unchanged when the editor returns blank or empty content', () => {
+        const values = [undefined, null, '', '<p></p>', '<p><br></p>', '<p><br/></p>'];
 
-        expect(getByTestId('mock-rich-text-editor')).toBeInTheDocument();
+        values.forEach(value => {
+            mockEditorHtml = value;
+            const onChange = jest.fn();
+            setup({ onChange });
+
+            expect(onChange).toHaveBeenLastCalledWith(value);
+        });
+    });
+
+    it('omits the id and data-testid attributes when neither prop is supplied', () => {
+        mockEditorHtml = '<p>hi</p>';
+        const { getByRole } = setup();
+
+        expect(getByRole('textbox')).toBeInTheDocument();
+        expect(getByRole('textbox')).not.toHaveAttribute('id');
+        expect(getByRole('textbox')).not.toHaveAttribute('data-testid');
     });
 
     it('passes through the id and testId attributes when supplied', () => {
-        const { getByTestId } = setup({ id: 'notes-editor', testId: 'notes-editor', value: '<p>hi</p>' });
+        mockEditorHtml = '<p>hello</p>';
+        const onChange = jest.fn();
+        const { getByRole } = setup({
+            id: 'notes-editor',
+            testId: 'notes-editor',
+            onChange,
+        });
 
-        expect(getByTestId('mock-rich-text-editor')).toBeInTheDocument();
+        expect(getByRole('textbox')).toHaveAttribute('id', 'notes-editor');
+        expect(getByRole('textbox')).toHaveAttribute('data-testid', 'notes-editor');
+        expect(onChange).toHaveBeenCalledWith('<p>hello</p>');
     });
 });
