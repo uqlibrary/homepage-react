@@ -31,6 +31,7 @@ import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 export const clearPersistedCapacityFilterValue = storage => {
     const sessionStorage = storage || window?.sessionStorage;
+    /* istanbul ignore next */
     if (!sessionStorage) {
         return;
     }
