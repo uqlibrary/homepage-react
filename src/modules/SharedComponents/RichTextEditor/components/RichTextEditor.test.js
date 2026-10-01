@@ -1,6 +1,6 @@
 import React from 'react';
 import { rtlRender } from 'test-utils';
-import RichTextEditor from './RichTextEditor';
+import RichTextEditor, { normalizeEditorHtml } from './RichTextEditor';
 
 let mockEditorHtml = '<p>edited</p>';
 
@@ -108,5 +108,15 @@ describe('RichTextEditor', () => {
         expect(getByRole('textbox')).toHaveAttribute('data-testid', 'notes-editor');
         expect(getByRole('textbox')).toHaveAttribute('aria-label', 'Notes editor');
         expect(onChange).toHaveBeenCalledWith('<p>hello</p>');
+    });
+
+    it('normalizes real editor HTML using the component helper', () => {
+        expect(normalizeEditorHtml(undefined)).toBe('');
+        expect(normalizeEditorHtml(null)).toBe('');
+        expect(normalizeEditorHtml('<p>hello</p>')).toBe('<p>hello</p>');
+        expect(normalizeEditorHtml('<p></p>')).toBe('');
+        expect(normalizeEditorHtml('<p><br></p>')).toBe('');
+        expect(normalizeEditorHtml('<p><br/></p>')).toBe('');
+        expect(normalizeEditorHtml('  <p>hello</p>  ')).toBe('  <p>hello</p>  ');
     });
 });
