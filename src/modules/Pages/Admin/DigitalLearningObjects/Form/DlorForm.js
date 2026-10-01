@@ -30,7 +30,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
-import { scrollToTopOfPage } from 'helpers/general';
+import { isValidUrl, scrollToTopOfPage, slugifyName } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -43,7 +43,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import {
@@ -51,7 +50,6 @@ import {
     isValidEmail,
     splitStringToArrayOnPipe,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
@@ -188,7 +186,6 @@ export const DlorForm = ({
         actions.requestNewKeyword(requestedKeywordValues).then(() => {
             setRequestedKeywordValues({});
             setIsRequestKeywordOpened(false);
-            console.log('Keyword request sent successfully');
         });
     };
 
@@ -283,7 +280,6 @@ export const DlorForm = ({
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
@@ -393,7 +389,6 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        console.log('currentValues', currentValues);
         currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
@@ -446,7 +441,6 @@ export const DlorForm = ({
     };
 
     const handleDateChange = newValue => {
-        console.log('Date Changed here');
         const formattedDate = moment(newValue).format('YYYY-MM-DD');
         const newValues = { ...formValues, object_review_date_next: formattedDate };
         setFormValues(newValues);
@@ -799,6 +793,7 @@ export const DlorForm = ({
                                 <RichTextEditor
                                     id="object_admin_notes"
                                     testId="object-admin-notes"
+                                    ariaLabel="Admin Notes"
                                     value={formValues?.object_admin_notes || ''}
                                     onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
@@ -950,6 +945,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="object_description"
                         testId="object-description"
+                        ariaLabel="Description of Object *"
                         value={formValues?.object_description || ''}
                         onChange={htmlData => {
                             handleEditorChange('object_description', htmlData);
@@ -1340,6 +1336,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="download_instructions"
                         testId="download_instructions"
+                        ariaLabel="Instructions"
                         value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
@@ -1504,7 +1501,6 @@ export const DlorForm = ({
                                         requested_keyword: e.target.value,
                                         requested_object_uuid: dlorItem?.object_public_uuid,
                                     });
-                                    // console.log('requestedKeywordValues', requestedKeywordValues);
                                 }}
                                 error={
                                     !!requestedKeywordValues?.requested_keyword &&
@@ -1771,7 +1767,6 @@ export const DlorForm = ({
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
-        console.log(valuesToSend);
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
@@ -1892,7 +1887,7 @@ export const DlorForm = ({
         scrollToTopOfPage();
     };
 
-    const navigateToListPage = isAdmin => {
+    const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);

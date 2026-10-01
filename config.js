@@ -14,7 +14,6 @@ const deployment = {
         environment: 'development',
         basePath: '',
         publicPath: '',
-        // reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents-development/[BRANCH_NAME]/uq-lib-reusable.min.js', // dev
         reusablejs: 'https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js',
         removeConsoleLog: false,
         hashRouter: true,

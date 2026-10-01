@@ -1,4 +1,4 @@
-import { BrowserContext, Page, Locator, expect } from '@uq/pw/test';
+import { BrowserContext, Page, Locator, expect, test } from '@uq/pw/test';
 
 /**
  * Helper to set input value.
@@ -104,6 +104,45 @@ export async function removeVpnNeededToast(page: Page) {
 export async function mockReusable(page: Page) {
     await mockXHRResponse(page, 'https://assets.library.uq.edu.au/reusable-webcomponents/**');
 }
+
+// this function sets up a cookie which will record the data that would be sent to the server
+// this will let us confirm that what we _expected_ is what actually would go to the server
+// CYPRESS_DATA_SAVED is set in the application code, gating it with a "if localhost"
+export const setTestDataCookie = async (context: BrowserContext, page: Page) => {
+    await context.addCookies([
+        {
+            name: 'CYPRESS_TEST_DATA',
+            value: 'active',
+            url: 'http://localhost:2020',
+        },
+    ]);
+
+    const cookie = await page.context().cookies();
+    expect(cookie.some(c => c.name === 'CYPRESS_TEST_DATA' && c.value === 'active')).toBeTruthy();
+};
+
+export const assertExpectedDataSentToServer = async (page: Page, expectedValues: object) => {
+    const cookies = await page.context().cookies();
+    // failed? Did you remember to both:
+    // - put `await setTestDataCookie(context, page);` at the top of the test, and
+    // - set CYPRESS_TEST_DATA to hold the sent values when the api save action is invoked?
+    expect(cookies.some(c => c.name === 'CYPRESS_DATA_SAVED')).toBeTruthy();
+
+    // Check the data we pretended to send to the server matches what we expect.
+    // Acts as check of what we send to api
+    const cookieValue = await page.evaluate(() => {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('CYPRESS_DATA_SAVED='))
+            ?.split('=')[1];
+    });
+    expect(cookieValue).toBeDefined();
+    const decodedValue = !!cookieValue && decodeURIComponent(cookieValue);
+    const sentValues = !!decodedValue && JSON.parse(decodedValue);
+    // console.log('sentValues=', sentValues);
+    // console.log('expectedValues=', expectedValues);
+    expect(sentValues).toEqual(expectedValues);
+};
 
 export const assertEnabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeEnabled();
 export const assertDisabled = async (page: Page, selector: string) => expect(page.locator(selector)).toBeDisabled();
