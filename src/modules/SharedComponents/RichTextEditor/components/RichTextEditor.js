@@ -31,7 +31,20 @@ const editorStyles = {
     },
 };
 
-const RichTextEditor = ({ id, value, onChange, testId }) => {
+const normalizeEditorHtml = htmlValue => {
+    if (typeof htmlValue !== 'string') {
+        return '';
+    }
+
+    const normalizedValue = htmlValue.replace(/\s/g, '');
+    if (normalizedValue === '<p></p>' || normalizedValue === '<p><br></p>' || normalizedValue === '<p><br/></p>') {
+        return '';
+    }
+
+    return htmlValue;
+};
+
+const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
     return (
         <MuiRichTextEditor
             id={id}
@@ -41,13 +54,16 @@ const RichTextEditor = ({ id, value, onChange, testId }) => {
             extensions={createExtensions()}
             renderControls={() => <RichTextToolbar />}
             onUpdate={({ editor }) => {
-                onChange(editor.getHTML());
+                onChange(normalizeEditorHtml(editor.getHTML()));
             }}
             sx={editorStyles}
             editorProps={{
                 attributes: {
                     ...(id ? { id } : {}),
                     ...(testId ? { 'data-testid': testId } : {}),
+                    role: 'textbox',
+                    'aria-multiline': 'true',
+                    ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
                 },
             }}
         >
@@ -65,6 +81,7 @@ RichTextEditor.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     testId: PropTypes.string,
+    ariaLabel: PropTypes.string,
 };
 
 export default RichTextEditor;
