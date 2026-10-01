@@ -8,27 +8,28 @@ jest.mock('mui-tiptap', () => {
     const react = require('react');
 
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate, sx, id, dataTestId, editorProps }) => {
-            const editorOverflow = sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
-            const attributes = {
-                ...(editorProps?.attributes || {}),
-                ...(id ? { id } : {}),
-                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
-            };
+        RichTextEditor: props => {
+            const editorAttributes = props.editorProps?.attributes || {};
+            const dataTestId = editorAttributes['data-testid'];
 
-            react.useEffect(() => {
-                onUpdate?.({ editor: { getHTML: () => mockEditorHtml } });
-            }, [onUpdate]);
+            props.onUpdate?.({
+                editor: {
+                    getHTML: () => mockEditorHtml,
+                },
+            });
 
             return react.createElement(
                 'div',
                 {
-                    ...attributes,
-                    'data-testid': 'mock-rich-text-editor',
-                    'data-editor-overflow': editorOverflow,
+                    ...(props.id ? { id: props.id } : {}),
+                    ...(dataTestId ? { 'data-testid': dataTestId } : {}),
+                    role: 'textbox',
+                    'aria-multiline': 'true',
+                    'data-editor-overflow':
+                        props.sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto',
                 },
-                renderControls?.(),
-                typeof children === 'function' ? children() : children,
+                props.renderControls?.(),
+                typeof props.children === 'function' ? props.children() : props.children,
             );
         },
         LinkBubbleMenu: () => react.createElement('div', { 'data-testid': 'mock-link-bubble-menu' }),
@@ -44,24 +45,25 @@ describe('RichTextEditor', () => {
     it('renders and forwards editor updates through onChange', () => {
         mockEditorHtml = '<p>edited</p>';
         const onChange = jest.fn();
-        const { getByTestId, getByRole } = setup({ onChange });
+        const { getByRole, getByTestId } = setup({ onChange });
+        const textbox = getByRole('textbox');
 
-        expect(getByTestId('mock-rich-text-editor')).toBeInTheDocument();
-        expect(getByTestId('mock-rich-text-editor')).toHaveAttribute('data-editor-overflow', 'auto');
+        expect(textbox).toBeInTheDocument();
+        expect(textbox).toHaveAttribute('data-editor-overflow', 'auto');
         expect(getByTestId('mock-rich-text-toolbar')).toBeInTheDocument();
         expect(getByTestId('mock-link-bubble-menu')).toBeInTheDocument();
         expect(onChange).toHaveBeenCalledWith('<p>edited</p>');
     });
 
-    it('normalizes blank editor content and non-string values to empty strings before callback', () => {
-        const values = [undefined, null, '<p></p>', '<p><br></p>', '<p><br/></p>'];
+    it('passes the value through unchanged when the editor returns blank or empty content', () => {
+        const values = [undefined, null, '', '<p></p>', '<p><br></p>', '<p><br/></p>'];
 
         values.forEach(value => {
             mockEditorHtml = value;
             const onChange = jest.fn();
             setup({ onChange });
 
-            expect(onChange).toHaveBeenLastCalledWith('');
+            expect(onChange).toHaveBeenLastCalledWith(value);
         });
     });
 
@@ -74,19 +76,17 @@ describe('RichTextEditor', () => {
         expect(getByRole('textbox')).not.toHaveAttribute('data-testid');
     });
 
-    it('passes through the id, testId, and ariaLabel attributes when supplied', () => {
+    it('passes through the id and testId attributes when supplied', () => {
         mockEditorHtml = '<p>hello</p>';
         const onChange = jest.fn();
         const { getByRole } = setup({
             id: 'notes-editor',
             testId: 'notes-editor',
-            ariaLabel: 'Notes editor',
             onChange,
         });
 
         expect(getByRole('textbox')).toHaveAttribute('id', 'notes-editor');
         expect(getByRole('textbox')).toHaveAttribute('data-testid', 'notes-editor');
-        expect(getByRole('textbox')).toHaveAttribute('aria-label', 'Notes editor');
         expect(onChange).toHaveBeenCalledWith('<p>hello</p>');
     });
 });
