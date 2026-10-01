@@ -559,12 +559,11 @@ export const SidebarFilters = ({
         } catch {
             // Ignore malformed session state.
         }
-
-        clearPersistedCapacityFilterValue();
     };
 
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
         clearJourneyIntentId();
+        clearPersistedCapacityFilterValue();
         showHideActiveFilterListItems(facilityTypeId, false);
 
         setFilters(facilityTypeId, false, false, facilitySpecialAction);
@@ -604,11 +603,6 @@ export const SidebarFilters = ({
         const isCapacityFilterSelection =
             Number(facilityTypeId) === FILTER_CAPACITY_TYPE_ID ||
             facilitySpecialAction === FILTER_SPACE_CAPACITY_ACTION_NAME;
-
-        if (!isCapacityFilterSelection && isChecked) {
-            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
-            clearPersistedCapacityFilterValue();
-        }
 
         showHideActiveFilterListItems(facilityTypeId, isChecked);
         setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
@@ -671,6 +665,7 @@ export const SidebarFilters = ({
             Number(normalizedValue?.[0]) === Number(minimumSpaceCapacity) &&
             Number(normalizedValue?.[1]) === Number(maximumSpaceCapacity);
         if (isCapacityDefaultValues) {
+            clearPersistedCapacityFilterValue();
             clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
             handleFilterSelection(true, capacityFilterType);
