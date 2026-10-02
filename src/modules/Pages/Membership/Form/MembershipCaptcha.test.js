@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 
 import locale from '../membership.locale';
-import { MembershipCaptcha, getMembershipCaptchaToken } from './MembershipCaptcha';
+import { MembershipCaptcha } from './MembershipCaptcha';
 
 const { captcha } = locale.form;
 
@@ -39,13 +39,13 @@ describe('MembershipCaptcha', () => {
             expect(window.awsWafCookieDomainList).toEqual(['library.uq.edu.au']);
         });
 
-        it('tells the form when the puzzle is solved', () => {
+        it('hands the form the solved token so it carries the CAPTCHA proof', () => {
             const onSolved = jest.fn();
             render(<MembershipCaptcha onSolved={onSolved} />);
 
-            act(() => lastRenderConfig().onSuccess('a-token'));
+            act(() => lastRenderConfig().onSuccess('a-captcha-token'));
 
-            expect(onSolved).toHaveBeenCalledTimes(1);
+            expect(onSolved).toHaveBeenCalledWith('a-captcha-token');
             expect(screen.queryByTestId('membership-captcha-error')).not.toBeInTheDocument();
         });
 
@@ -87,18 +87,6 @@ describe('MembershipCaptcha', () => {
             act(() => document.querySelector(SCRIPT_SELECTOR).onerror());
 
             expect(screen.getByTestId('membership-captcha-error')).toHaveTextContent(captcha.error);
-        });
-    });
-
-    describe('getMembershipCaptchaToken', () => {
-        it('reads the current token from the integration when it is present', async () => {
-            window.AwsWafIntegration = { getToken: jest.fn().mockResolvedValue('fresh-token') };
-
-            await expect(getMembershipCaptchaToken()).resolves.toBe('fresh-token');
-        });
-
-        it('resolves undefined when the integration has not loaded', async () => {
-            await expect(getMembershipCaptchaToken()).resolves.toBeUndefined();
         });
     });
 });

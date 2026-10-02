@@ -8,7 +8,6 @@ import { mui1theme } from 'config';
 import locale from '../membership.locale';
 import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { isMembershipCaptchaConfigured } from 'config/general';
-import { getMembershipCaptchaToken } from './MembershipCaptcha';
 import MembershipForm from './MembershipForm';
 
 const { form } = locale;
@@ -32,19 +31,16 @@ jest.mock('config/general', () => ({
 }));
 
 // The real puzzle loads AWS's script and is covered in MembershipCaptcha.test.js; here it stands in as a solve
-// button so the form's gating and the token it sends can be driven.
+// button that hands back a token, so the form's gating and the token it sends can be driven. Solving passes the
+// token up through onSolved exactly as the real component does.
 jest.mock('./MembershipCaptcha', () => {
     const MockCaptcha = ({ onSolved }) => (
-        <button type="button" data-testid="mock-captcha-solve" onClick={onSolved}>
+        <button type="button" data-testid="mock-captcha-solve" onClick={() => onSolved('waf-token-123')}>
             solve
         </button>
     );
     MockCaptcha.propTypes = { onSolved: require('prop-types').func };
-    return {
-        __esModule: true,
-        MembershipCaptcha: MockCaptcha,
-        getMembershipCaptchaToken: jest.fn(() => Promise.resolve('waf-token-123')),
-    };
+    return { __esModule: true, MembershipCaptcha: MockCaptcha };
 });
 
 // The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
@@ -384,8 +380,6 @@ describe('MembershipForm', () => {
     describe('CAPTCHA protection', () => {
         beforeEach(() => {
             isMembershipCaptchaConfigured.mockReturnValue(true);
-            getMembershipCaptchaToken.mockClear();
-            getMembershipCaptchaToken.mockResolvedValue('waf-token-123');
         });
 
         it('shows the puzzle only after a valid application is applied for, not on load', async () => {
@@ -422,7 +416,7 @@ describe('MembershipForm', () => {
             await userEvent.click(await screen.findByTestId('mock-captcha-solve'));
 
             await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
-            expect(getMembershipCaptchaToken).toHaveBeenCalledTimes(1);
+            // The exact token the puzzle handed back (via onSolved) is what's sent, not a re-read value.
             expect(actions.submitMembership.mock.calls[0][1]).toBe('waf-token-123');
             await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
         });

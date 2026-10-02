@@ -19,7 +19,7 @@ import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { isRenewal, transformRequest, transformResponse } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
-import { MembershipCaptcha, getMembershipCaptchaToken } from './MembershipCaptcha';
+import { MembershipCaptcha } from './MembershipCaptcha';
 import MembershipFileUpload from './MembershipFileUpload';
 import MembershipFormSections from './MembershipFormSections';
 import MembershipTerms from './MembershipTerms';
@@ -61,7 +61,13 @@ export const MembershipForm = ({
     const [captchaVisible, setCaptchaVisible] = useState(false);
     const [captchaSolved, setCaptchaSolved] = useState(false);
     const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
-    const handleCaptchaSolved = useCallback(() => setCaptchaSolved(true), []);
+    // The exact token AWS hands back when the puzzle is solved - this is the one carrying the CAPTCHA proof the
+    // API's WAF rule checks, so it is sent as-is rather than re-read later (which can yield a challenge-only token).
+    const captchaTokenRef = useRef(null);
+    const handleCaptchaSolved = useCallback(wafToken => {
+        captchaTokenRef.current = wafToken;
+        setCaptchaSolved(true);
+    }, []);
     const formRef = useRef(null);
 
     // Attachments live beside the form rather than in it: they are uploaded as they are chosen, not validated
@@ -148,8 +154,8 @@ export const MembershipForm = ({
 
         try {
             // A renewal authenticates on the id and code from the link, so they travel with the body. A new
-            // application carries the AWS WAF token from the solved puzzle, read fresh here so it has not expired.
-            const wafToken = captchaRequired ? await getMembershipCaptchaToken() : undefined;
+            // application carries the AWS WAF token the solved puzzle handed back - the one with the CAPTCHA proof.
+            const wafToken = captchaRequired ? captchaTokenRef.current : undefined;
             const saved = isRenewing
                 ? await actions.renewMembership({ ...request, id, code })
                 : await actions.submitMembership(request, wafToken);
@@ -160,6 +166,7 @@ export const MembershipForm = ({
             // filled in. Draw a fresh puzzle and ask the applicant to verify again, rather than reporting a
             // dead-end error they cannot act on.
             if (error?.response?.status === 405) {
+                captchaTokenRef.current = null;
                 setCaptchaSolved(false);
                 setCaptchaResetSignal(signal => signal + 1);
                 throw new Error(form.captcha.expired);
