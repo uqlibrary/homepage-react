@@ -32,7 +32,10 @@ export const StyledJourneyPanelSection = styled('section', {
     [theme.breakpoints.down('md')]: {
         paddingTop: '1.5rem',
         maxWidth: '100%',
-        marginLeft: '1rem',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+        boxSizing: 'border-box',
+        margin: 0,
     },
 }));
 
