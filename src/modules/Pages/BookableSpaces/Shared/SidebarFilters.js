@@ -1049,6 +1049,7 @@ export const SidebarFilters = ({
         <StyledSidebarDiv
             id="filterSidebar"
             className={`filterSideBar ${suppliedClassName} ${shouldHideOnMobile ? 'mobileHidden' : ''}`}
+            style={{ paddingLeft: '10px' }}
         >
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 {!isJourneyView && (
