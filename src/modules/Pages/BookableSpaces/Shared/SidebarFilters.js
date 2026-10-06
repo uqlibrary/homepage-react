@@ -29,6 +29,36 @@ import {
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
+export const clearPersistedCapacityFilterValue = storage => {
+    const sessionStorage = storage || window?.sessionStorage;
+    /* istanbul ignore next */
+    if (!sessionStorage) {
+        return;
+    }
+
+    try {
+        const rawState = sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        if (!rawState) {
+            return;
+        }
+
+        const parsedState = JSON.parse(rawState);
+        if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
+            return;
+        }
+
+        delete parsedState.capacityFilterValue;
+        if (Object.keys(parsedState).length === 0) {
+            sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            return;
+        }
+
+        sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
+    } catch {
+        // Ignore malformed session state.
+    }
+};
+
 const StyledSlider = styled(Slider)(() => ({
     marginTop: '1rem', // space for tooltips to appear in
     overflow: 'visible',
@@ -511,36 +541,6 @@ export const SidebarFilters = ({
         !!topOfSidebar && topOfSidebar?.focus();
     };
 
-    const clearPersistedCapacityFilterValue = () => {
-        /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
-            /* istanbul ignore next */
-            return;
-        }
-
-        try {
-            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-            if (!rawState) {
-                return;
-            }
-
-            const parsedState = JSON.parse(rawState);
-            if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
-                return;
-            }
-
-            delete parsedState.capacityFilterValue;
-            if (Object.keys(parsedState).length === 0) {
-                window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-                return;
-            }
-
-            window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
-        } catch {
-            // Ignore malformed session state.
-        }
-    };
-
     const clearJourneyIntentId = () => {
         if (typeof window === 'undefined' || !window.sessionStorage) {
             return;
@@ -559,12 +559,11 @@ export const SidebarFilters = ({
         } catch {
             // Ignore malformed session state.
         }
-
-        clearPersistedCapacityFilterValue();
     };
 
     const clearSpecialFilter = (facilityTypeId, facilitySpecialAction) => {
         clearJourneyIntentId();
+        clearPersistedCapacityFilterValue();
         showHideActiveFilterListItems(facilityTypeId, false);
 
         setFilters(facilityTypeId, false, false, facilitySpecialAction);
@@ -604,11 +603,6 @@ export const SidebarFilters = ({
         const isCapacityFilterSelection =
             Number(facilityTypeId) === FILTER_CAPACITY_TYPE_ID ||
             facilitySpecialAction === FILTER_SPACE_CAPACITY_ACTION_NAME;
-
-        if (!isCapacityFilterSelection && isChecked) {
-            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
-            clearPersistedCapacityFilterValue();
-        }
 
         showHideActiveFilterListItems(facilityTypeId, isChecked);
         setFilters(facilityTypeId, !!isChecked, false, facilitySpecialAction);
@@ -671,6 +665,7 @@ export const SidebarFilters = ({
             Number(normalizedValue?.[0]) === Number(minimumSpaceCapacity) &&
             Number(normalizedValue?.[1]) === Number(maximumSpaceCapacity);
         if (isCapacityDefaultValues) {
+            clearPersistedCapacityFilterValue();
             clearSpecialFilter(facilityTypeId, capacityFilterType?.facility_special_action);
         } else {
             handleFilterSelection(true, capacityFilterType);
@@ -1049,6 +1044,7 @@ export const SidebarFilters = ({
         <StyledSidebarDiv
             id="filterSidebar"
             className={`filterSideBar ${suppliedClassName} ${shouldHideOnMobile ? 'mobileHidden' : ''}`}
+            style={{ paddingLeft: '10px' }}
         >
             <StyledSidebarSubDiv data-testid="sidebarCheckboxes">
                 {!isJourneyView && (
