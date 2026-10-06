@@ -145,7 +145,7 @@ describe('UtilityBar', () => {
         const { getByRole } = setup();
         const controller = getByRole('button', { name: 'Show/hide Locations and hours panel' });
         const lastLocationLink = getByRole('link', { name: 'See all hours' });
-        const bookRoomLink = getByRole('link', { name: 'Book a room' });
+        const bookRoomLink = getByRole('link', { name: 'Find library study spaces' });
 
         fireEvent.click(controller);
         fireEvent.keyDown(lastLocationLink, { key: 'Tab' });
