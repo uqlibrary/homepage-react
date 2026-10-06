@@ -815,8 +815,8 @@ export const BookableSpacesList = ({
             const nextPersistedState = rawState
                 ? JSON.parse(rawState)
                 : {
-                        ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
-                        ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
+                      ...(Number(selectedCampus) !== 0 ? { selectedCampus } : {}),
+                      ...(Number(selectedLibrary) !== 0 ? { selectedLibrary } : {}),
                   };
             /* istanbul ignore else */
             if (nextPersistedState && typeof nextPersistedState === 'object') {
@@ -1802,180 +1802,188 @@ export const BookableSpacesList = ({
                     return (
                         <>
                             <StyledMapFilterToggle
-                                    ref={filterToggleRef}
-                                    id="toggleFilterButton"
-                                    data-testid="spaces-filter-show-hide-button"
-                                    onClick={() => toggleFilterPopupVisibility()}
-                                    title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
-                                    aria-expanded={showFilterSelectorPopup}
-                                    aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
-                                    style={
-                                        shouldStickFilterToggle
-                                            ? {
-                                                  top: '50vh',
-                                                  transform: 'translateY(-50%)',
-                                                  left: showFilterSelectorPopup
-                                                      ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
-                                                      : '-1rem',
-                                              }
-                                            : {
-                                                  ...filterToggleFlowStyle,
-                                                  left: showFilterSelectorPopup
-                                                      ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
-                                                      : '-1rem',
-                                              }
-                                    }
-                                >
-                                    <TuneIcon />
-                                    {activeFilterCount > 0 && (
-                                        <span
-                                            style={{
-                                                fontSize: '0.6rem',
-                                                fontWeight: 700,
-                                                lineHeight: 1,
-                                                marginLeft: '0.35rem',
-                                            }}
-                                        >
-                                            {activeFilterCount}
-                                        </span>
-                                    )}
-                            </StyledMapFilterToggle>
-                            <StyledLayoutWrapper data-testid="library-spaces">
-                            <div>
-                                <SidebarFilters
-                                    facilityTypeList={facilityTypeList}
-                                    facilityTypeListLoading={facilityTypeListLoading}
-                                    facilityTypeListError={facilityTypeListError}
-                                    selectedFacilityTypes={selectedFacilityTypes}
-                                    setSelectedFacilityTypes={setSelectedFacilityTypes}
-                                    filteredFacilityTypeList={filteredFacilityTypeList}
-                                    suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
-                                    minimumSpaceCapacity={minimumSpaceCapacity}
-                                    maximumSpaceCapacity={maximumSpaceCapacity}
-                                    capacityFilterValue={capacityFilterValue}
-                                    setCapacityFilterValue={setCapacityFilterValue}
-                                    campusList={campusList}
-                                    selectedCampus={correctedCampusId(selectedCampus)}
-                                    handleCampusSelection={handleCampusSelection}
-                                    activeFilterCount={activeFilterCount}
-                                    librariesForCampus={librariesForCampus}
-                                    selectedLibrary={selectedLibrary}
-                                    handleLibrarySelection={handleLibrarySelection}
-                                    onResetAllFilters={resetAllSpaceFilters}
-                                    hasJourneyMapFilterState={false}
-                                    showFavouriteSpacesOnly={showFavouriteSpacesOnly}
-                                    setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
-                                    isLoggedIn={isLoggedIn}
-                                    hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
-                                />
-                            </div>
-                            {isDesktopView && (
-                                <>
-                                    <StyledSidebarTab
-                                        id="toggleSpacesListButton"
-                                        data-testid="spaces-open-spaces-list-button"
-                                        onClick={() => toggleSpacesListPopupVisibility()}
-                                        title={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
-                                        aria-expanded={showSpacesSelectorPopup}
-                                        aria-label={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
-                                        className="spacesTab"
-                                        style={{ right: showSpacesSelectorPopup ? '20.5rem' : '0' }}
-                                    >
-                                        {showSpacesSelectorPopup ? (
-                                            <ChevronRightIcon fontSize="small" />
-                                        ) : (
-                                            <ChevronLeftIcon fontSize="small" />
-                                        )}
-                                        {sortedSpaceLocations?.length > 0 &&
-                                            sortedSpaceLocations?.length <
-                                                bookableSpacesRoomList?.data?.locations?.length && (
-                                                <span className="tab-count">{sortedSpaceLocations.length}</span>
-                                            )}
-                                    </StyledSidebarTab>
-                                    <div
-                                        className={
-                                            showSpacesSelectorPopup
-                                                ? 'spacesListHolder spacesList' // only controls placement of +/- on map
-                                                : 'spacesListHolder hide'
-                                        }
-                                    >
-                                        <SidebarSpacesList
-                                            actions={actions}
-                                            filteredSpaceLocations={sortedSpaceLocations}
-                                            totalSpaceCount={
-                                                bookableSpacesRoomList?.data?.locations?.length ||
-                                                /* istanbul ignore next */ 0
-                                            }
-                                            activeFilterCount={activeFilterCount}
-                                            weeklyHours={weeklyHours}
-                                            weeklyHoursLoading={weeklyHoursLoading}
-                                            weeklyHoursError={weeklyHoursError}
-                                            StyledStandardCard={StyledStandardCard}
-                                            showAllData={!isMobileView}
-                                            suppliedClassName={showSpacesSelectorPopup ? 'popupSpacesSidebar' : 'hide'}
-                                            spacesFavouritesList={spacesFavouritesList}
-                                            isLoggedIn={isLoggedIn}
-                                            onSpaceSelect={handleSpaceSelect}
-                                            onSpaceToggle={handleSpaceToggle}
-                                            expandedSpaceId={expandedSpaceId}
-                                        />
-                                    </div>
-                                </>
-                            )}
-
-                            <div id="mapWrapper" className="mapHolder" style={{ height: '100%', position: 'relative' }}>
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 12,
-                                        left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        zIndex: 1000,
-                                        display: 'flex',
-                                        gap: 1,
-                                        flexWrap: 'wrap',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Button
-                                        data-testid="spaces-advanced-go-to-journey"
-                                        variant="contained"
-                                        startIcon={<TravelExploreIcon />}
-                                        onClick={goToJourney}
-                                        sx={{
-                                            textTransform: 'none',
-                                            backgroundColor: '#51247a',
-                                            color: '#fff',
-                                            fontWeight: 600,
-                                            border: '2px solid rgba(255, 255, 255, 0.85)',
-                                            boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
-                                            '&:hover': {
-                                                backgroundColor: '#3c1a5b',
-                                                borderColor: '#fff',
-                                            },
+                                ref={filterToggleRef}
+                                id="toggleFilterButton"
+                                data-testid="spaces-filter-show-hide-button"
+                                onClick={() => toggleFilterPopupVisibility()}
+                                title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                aria-expanded={showFilterSelectorPopup}
+                                aria-label={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
+                                style={
+                                    shouldStickFilterToggle
+                                        ? {
+                                              top: '50vh',
+                                              transform: 'translateY(-50%)',
+                                              left: showFilterSelectorPopup
+                                                  ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
+                                                  : '-1rem',
+                                          }
+                                        : {
+                                              ...filterToggleFlowStyle,
+                                              left: showFilterSelectorPopup
+                                                  ? 'calc(2rem + min(20rem, (100% - 4rem) / 2))'
+                                                  : '-1rem',
+                                          }
+                                }
+                            >
+                                <TuneIcon />
+                                {activeFilterCount > 0 && (
+                                    <span
+                                        style={{
+                                            fontSize: '0.6rem',
+                                            fontWeight: 700,
+                                            lineHeight: 1,
+                                            marginLeft: '0.35rem',
                                         }}
                                     >
-                                        {mapViewToggleLabel}
-                                    </Button>
-                                </Box>
-                                <BookableSpacesMap
-                                    ref={mapRef}
-                                    sortedSpaceLocations={sortedSpaceLocations}
-                                    spacesFavouritesList={spacesFavouritesList}
-                                    onMarkerClick={handleMarkerClick}
-                                    centreLatLong={activeMapCentre}
-                                    onMapReady={setIsMapReady}
-                                    onMapCenterChange={nextCenter => {
-                                        if (
-                                            nextCenter &&
-                                            Number.isFinite(nextCenter.space_latitude) &&
-                                            Number.isFinite(nextCenter.space_longitude)
-                                        ) {
-                                            setLiveMapCentre(nextCenter);
-                                        }
-                                    }}
-                                />
-                            </div>
+                                        {activeFilterCount}
+                                    </span>
+                                )}
+                            </StyledMapFilterToggle>
+                            <StyledLayoutWrapper data-testid="library-spaces">
+                                <div>
+                                    <SidebarFilters
+                                        facilityTypeList={facilityTypeList}
+                                        facilityTypeListLoading={facilityTypeListLoading}
+                                        facilityTypeListError={facilityTypeListError}
+                                        selectedFacilityTypes={selectedFacilityTypes}
+                                        setSelectedFacilityTypes={setSelectedFacilityTypes}
+                                        filteredFacilityTypeList={filteredFacilityTypeList}
+                                        suppliedClassName={showFilterSelectorPopup ? 'popupFilterList' : 'hide'}
+                                        minimumSpaceCapacity={minimumSpaceCapacity}
+                                        maximumSpaceCapacity={maximumSpaceCapacity}
+                                        capacityFilterValue={capacityFilterValue}
+                                        setCapacityFilterValue={setCapacityFilterValue}
+                                        campusList={campusList}
+                                        selectedCampus={correctedCampusId(selectedCampus)}
+                                        handleCampusSelection={handleCampusSelection}
+                                        activeFilterCount={activeFilterCount}
+                                        librariesForCampus={librariesForCampus}
+                                        selectedLibrary={selectedLibrary}
+                                        handleLibrarySelection={handleLibrarySelection}
+                                        onResetAllFilters={resetAllSpaceFilters}
+                                        hasJourneyMapFilterState={false}
+                                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                                        isLoggedIn={isLoggedIn}
+                                        hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
+                                    />
+                                </div>
+                                {isDesktopView && (
+                                    <>
+                                        <StyledSidebarTab
+                                            id="toggleSpacesListButton"
+                                            data-testid="spaces-open-spaces-list-button"
+                                            onClick={() => toggleSpacesListPopupVisibility()}
+                                            title={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
+                                            aria-expanded={showSpacesSelectorPopup}
+                                            aria-label={
+                                                showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'
+                                            }
+                                            className="spacesTab"
+                                            style={{ right: showSpacesSelectorPopup ? '20.5rem' : '0' }}
+                                        >
+                                            {showSpacesSelectorPopup ? (
+                                                <ChevronRightIcon fontSize="small" />
+                                            ) : (
+                                                <ChevronLeftIcon fontSize="small" />
+                                            )}
+                                            {sortedSpaceLocations?.length > 0 &&
+                                                sortedSpaceLocations?.length <
+                                                    bookableSpacesRoomList?.data?.locations?.length && (
+                                                    <span className="tab-count">{sortedSpaceLocations.length}</span>
+                                                )}
+                                        </StyledSidebarTab>
+                                        <div
+                                            className={
+                                                showSpacesSelectorPopup
+                                                    ? 'spacesListHolder spacesList' // only controls placement of +/- on map
+                                                    : 'spacesListHolder hide'
+                                            }
+                                        >
+                                            <SidebarSpacesList
+                                                actions={actions}
+                                                filteredSpaceLocations={sortedSpaceLocations}
+                                                totalSpaceCount={
+                                                    bookableSpacesRoomList?.data?.locations?.length ||
+                                                    /* istanbul ignore next */ 0
+                                                }
+                                                activeFilterCount={activeFilterCount}
+                                                weeklyHours={weeklyHours}
+                                                weeklyHoursLoading={weeklyHoursLoading}
+                                                weeklyHoursError={weeklyHoursError}
+                                                StyledStandardCard={StyledStandardCard}
+                                                showAllData={!isMobileView}
+                                                suppliedClassName={
+                                                    showSpacesSelectorPopup ? 'popupSpacesSidebar' : 'hide'
+                                                }
+                                                spacesFavouritesList={spacesFavouritesList}
+                                                isLoggedIn={isLoggedIn}
+                                                onSpaceSelect={handleSpaceSelect}
+                                                onSpaceToggle={handleSpaceToggle}
+                                                expandedSpaceId={expandedSpaceId}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                <div
+                                    id="mapWrapper"
+                                    className="mapHolder"
+                                    style={{ height: '100%', position: 'relative' }}
+                                >
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 12,
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            zIndex: 1000,
+                                            display: 'flex',
+                                            gap: 1,
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Button
+                                            data-testid="spaces-advanced-go-to-journey"
+                                            variant="contained"
+                                            startIcon={<TravelExploreIcon />}
+                                            onClick={goToJourney}
+                                            sx={{
+                                                textTransform: 'none',
+                                                backgroundColor: '#51247a',
+                                                color: '#fff',
+                                                fontWeight: 600,
+                                                border: '2px solid rgba(255, 255, 255, 0.85)',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
+                                                '&:hover': {
+                                                    backgroundColor: '#3c1a5b',
+                                                    borderColor: '#fff',
+                                                },
+                                            }}
+                                        >
+                                            {mapViewToggleLabel}
+                                        </Button>
+                                    </Box>
+                                    <BookableSpacesMap
+                                        ref={mapRef}
+                                        sortedSpaceLocations={sortedSpaceLocations}
+                                        spacesFavouritesList={spacesFavouritesList}
+                                        onMarkerClick={handleMarkerClick}
+                                        centreLatLong={activeMapCentre}
+                                        onMapReady={setIsMapReady}
+                                        onMapCenterChange={nextCenter => {
+                                            if (
+                                                nextCenter &&
+                                                Number.isFinite(nextCenter.space_latitude) &&
+                                                Number.isFinite(nextCenter.space_longitude)
+                                            ) {
+                                                setLiveMapCentre(nextCenter);
+                                            }
+                                        }}
+                                    />
+                                </div>
                             </StyledLayoutWrapper>
                         </>
                     );

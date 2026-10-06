@@ -82,7 +82,8 @@ export const DLOTeamForm = ({
             setFormValues({
                 team_name: formDefaults?.team_name,
                 team_manager: formDefaults?.team_manager,
-                team_admin_username: formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
+                team_admin_username:
+                    formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
                 team_email: formDefaults?.team_email,
             });
         }
@@ -314,7 +315,9 @@ export const DLOTeamForm = ({
                                         </Grid>
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="team_admin_username">Team admin username *</InputLabel>
+                                                <InputLabel htmlFor="team_admin_username">
+                                                    Team admin username *
+                                                </InputLabel>
                                                 <Input
                                                     id="team_admin_username"
                                                     data-testid="admin-dlor-team-form-team-admin-username"

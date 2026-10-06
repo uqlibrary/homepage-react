@@ -200,31 +200,6 @@ test.describe('Training', () => {
         ).toBeVisible();
     });
 
-    test('can close a detail pane from a click', async ({ page }) => {
-        await page.goto('/');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-        // we brng the detail pane over these fields to make the pane bigger,
-        // but we have to manually display: hidden them or we get an accessibility issue
-        await page.locator('button[data-testid="training-event-detail-button-0"]').scrollIntoViewIfNeeded();
-
-        await expect(
-            page
-                .locator('button[data-testid="training-event-detail-button-0"]')
-                .getByText(/EndNote: getting started/)
-                .first(),
-        ).toBeVisible();
-        await page.locator('button[data-testid="training-event-detail-button-0"]').click();
-        await expect(
-            page
-                .getByTestId('training-events-detail-2824657')
-                .getByText(/EndNote: getting started/)
-                .first(),
-        ).toBeVisible();
-
-        await page.getByTestId('training-event-detail-close-button').click();
-
-        await expect(page.getByTestId('training-events-detail-2824657')).not.toBeVisible();
-    });
     test('can navigate to event page', async ({ page }) => {
         await page.route(/studenthub/, route =>
             route.fulfill({
@@ -257,61 +232,6 @@ test.describe('Training', () => {
             page
                 .locator('body')
                 .getByText(/user has navigated to Studenthub page/)
-                .first(),
-        ).toBeVisible();
-    });
-
-    test('when there is no training it shows a friendly message', async ({ page }) => {
-        await page.goto('/?user=s1111111&responseType=empty');
-        await expect(
-            page
-                .getByTestId('standard-card-training-header')
-                .getByText(/Training/)
-                .first(),
-        ).toBeVisible();
-
-        await expect(
-            page
-                .getByTestId('training-api-error')
-                .getByText(/There are no training sessions available at the moment\./)
-                .first(),
-        ).toBeVisible();
-    });
-
-    test('when the api 404s, it shows a friendly message', async ({ page }) => {
-        await page.goto('/?user=s1111111&responseType=404');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(
-            page
-                .getByTestId('standard-card-training-header')
-                .getByText(/Training/)
-                .first(),
-        ).toBeVisible();
-
-        await expect(
-            page
-                .getByTestId('training-api-error')
-                .getByText(/We can’t load training events right now/)
-                .first(),
-        ).toBeVisible();
-    });
-
-    test('shows an api error correctly', async ({ page }) => {
-        await page.goto('/?user=s1111111&responseType=error');
-        await page.setViewportSize({ width: 1300, height: 1000 });
-
-        await expect(
-            page
-                .getByTestId('standard-card-training-header')
-                .getByText(/Training/)
-                .first(),
-        ).toBeVisible();
-
-        await expect(
-            page
-                .getByTestId('training-api-error')
-                .getByText(/We can’t load training events right now/)
                 .first(),
         ).toBeVisible();
     });

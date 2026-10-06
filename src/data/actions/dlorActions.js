@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import * as actions from './actionTypes';
 import { destroy, get, post, put } from 'repositories/generic';
 import {

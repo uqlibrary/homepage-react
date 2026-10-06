@@ -165,7 +165,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('scrolls to the list filters only when opening them', () => {
-        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"><h2 id="topOfSidebar">Filter spaces</h2></div>';
+        document.body.innerHTML =
+            '<div id="filterSidebar" class="mobileHidden"><h2 id="topOfSidebar">Filter spaces</h2></div>';
         const heading = document.getElementById('topOfSidebar');
         heading.scrollIntoView.mockClear();
 
@@ -238,7 +239,10 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                         {
                             ...baseSpace,
                             space_description: '',
-                            space_type_details: { space_type_name: 'Silent study', space_type_description: 'Quiet zone' },
+                            space_type_details: {
+                                space_type_name: 'Silent study',
+                                space_type_description: 'Quiet zone',
+                            },
                         },
                     ]}
                 />

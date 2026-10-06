@@ -38,7 +38,8 @@ export const DLOTeamEdit = ({
 
     const formDefaultsWithUsername = {
         ...dlorTeam?.data,
-        team_admin_username: dlorTeam?.data?.team_admin_username || dlorTeam?.data?.team_members?.[0]?.team_admin_username || '',
+        team_admin_username:
+            dlorTeam?.data?.team_admin_username || dlorTeam?.data?.team_members?.[0]?.team_admin_username || '',
     };
 
     return (

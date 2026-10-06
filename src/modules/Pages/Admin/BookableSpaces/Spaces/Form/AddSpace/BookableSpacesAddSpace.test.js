@@ -166,46 +166,26 @@ describe('BookableSpacesAddSpace', () => {
 
     describe('Loading state', () => {
         it('displays loading message when campus list is loading', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    campusListLoading={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} campusListLoading />);
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
             expect(screen.getByText('Loading')).toBeInTheDocument();
         });
 
         it('displays loading message when spaces room list is loading', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    bookableSpacesRoomListLoading={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} bookableSpacesRoomListLoading />);
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
         });
 
         it('displays loading message when facility type list is loading', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    facilityTypeListLoading={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} facilityTypeListLoading />);
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
         });
 
         it('displays loading message when weekly hours is loading', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    weeklyHoursLoading={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} weeklyHoursLoading />);
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
         });
@@ -213,48 +193,28 @@ describe('BookableSpacesAddSpace', () => {
 
     describe('Error states', () => {
         it('displays error when campus list has error', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    campusListError={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} campusListError />);
 
             expect(screen.getByTestId('load-space-form-error')).toBeInTheDocument();
             expect(screen.getByText('Campus-building data had a problem.')).toBeInTheDocument();
         });
 
         it('displays error when spaces room list has error', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    bookableSpacesRoomListError={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} bookableSpacesRoomListError />);
 
             expect(screen.getByTestId('load-space-form-error')).toBeInTheDocument();
             expect(screen.getByText('Space types list had a problem.')).toBeInTheDocument();
         });
 
         it('displays error when facility type list has error', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    facilityTypeListError={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} facilityTypeListError />);
 
             expect(screen.getByTestId('load-space-form-error')).toBeInTheDocument();
             expect(screen.getByText('Facility type details had a problem.')).toBeInTheDocument();
         });
 
         it('displays error when weekly hours has error', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    weeklyHoursError={true}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} weeklyHoursError />);
 
             expect(screen.getByTestId('load-space-form-error')).toBeInTheDocument();
             expect(screen.getByText('Opening hours details had a problem.')).toBeInTheDocument();
@@ -264,11 +224,11 @@ describe('BookableSpacesAddSpace', () => {
             rtlRender(
                 <BookableSpacesAddSpace
                     {...defaultProps}
-                    campusListError={true}
-                    bookableSpacesRoomListError={true}
-                    facilityTypeListError={true}
-                    weeklyHoursError={true}
-                />
+                    campusListError
+                    bookableSpacesRoomListError
+                    facilityTypeListError
+                    weeklyHoursError
+                />,
             );
 
             expect(screen.getByTestId('load-space-form-error')).toBeInTheDocument();
@@ -284,7 +244,7 @@ describe('BookableSpacesAddSpace', () => {
                     campusList={[]}
                     campusListLoading={false}
                     campusListError={false}
-                />
+                />,
             );
 
             expect(screen.getByTestId('add-space-no-locations')).toBeInTheDocument();
@@ -302,7 +262,7 @@ describe('BookableSpacesAddSpace', () => {
                     }}
                     bookableSpacesRoomListLoading={false}
                     bookableSpacesRoomListError={false}
-                />
+                />,
             );
 
             expect(screen.getByTestId('add-space-no-locations')).toBeInTheDocument();
@@ -319,19 +279,14 @@ describe('BookableSpacesAddSpace', () => {
                     }}
                     bookableSpacesRoomListLoading={false}
                     bookableSpacesRoomListError={false}
-                />
+                />,
             );
 
             expect(screen.getByTestId('add-space-no-locations')).toBeInTheDocument();
         });
 
         it('renders link to create campus locations', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    campusList={[]}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} campusList={[]} />);
 
             const link = screen.getByRole('link');
             expect(link).toBeInTheDocument();
@@ -373,7 +328,7 @@ describe('BookableSpacesAddSpace', () => {
                             locations: [mostRecentSpace],
                         },
                     }}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -399,12 +354,7 @@ describe('BookableSpacesAddSpace', () => {
                 { campus_id: 0, campus_name: 'Invalid' },
             ];
 
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    campusList={campusList}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} campusList={campusList} />);
 
             expect(screen.getByTestId('edit-space-form')).toBeInTheDocument();
         });
@@ -464,7 +414,9 @@ describe('BookableSpacesAddSpace', () => {
         it('calls addBreadcrumbsToSiteHeader on mount', () => {
             rtlRender(<BookableSpacesAddSpace {...defaultProps} />);
 
-            expect(require('modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers').addBreadcrumbsToSiteHeader).toHaveBeenCalledWith([
+            expect(
+                require('modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers').addBreadcrumbsToSiteHeader,
+            ).toHaveBeenCalledWith([
                 '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Add a Space</span></li>',
             ]);
         });
@@ -476,7 +428,7 @@ describe('BookableSpacesAddSpace', () => {
                     campusListLoading={null}
                     campusListError={null}
                     campusList={null}
-                />
+                />,
             );
 
             expect(baseActions.loadBookableSpaceCampusChildren).toHaveBeenCalled();
@@ -499,7 +451,7 @@ describe('BookableSpacesAddSpace', () => {
                     campusListLoading={false}
                     campusListError={false}
                     campusList={[]}
-                />
+                />,
             );
 
             expect(localActions.loadBookableSpaceCampusChildren).not.toHaveBeenCalled();
@@ -513,7 +465,7 @@ describe('BookableSpacesAddSpace', () => {
                     bookableSpacesArchibusTree={null}
                     bookableSpacesArchibusTreeLoading={null}
                     bookableSpacesArchibusTreeError={null}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -527,7 +479,7 @@ describe('BookableSpacesAddSpace', () => {
                     {...defaultProps}
                     bookableSpacesArchibusTreeLoading={false}
                     bookableSpacesArchibusTreeError={false}
-                />
+                />,
             );
 
             expect(baseActions.loadBookableSpacesArchibusTree).not.toHaveBeenCalled();
@@ -540,7 +492,7 @@ describe('BookableSpacesAddSpace', () => {
                     bookableSpacesArchibusTreeLoading={false}
                     bookableSpacesArchibusTreeError={false}
                     bookableSpacesArchibusTree={{ tree: [] }}
-                />
+                />,
             );
 
             jest.clearAllMocks();
@@ -551,7 +503,7 @@ describe('BookableSpacesAddSpace', () => {
                     bookableSpacesArchibusTreeLoading={false}
                     bookableSpacesArchibusTreeError={false}
                     bookableSpacesArchibusTree={{ tree: ['updated'] }}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -570,13 +522,7 @@ describe('BookableSpacesAddSpace', () => {
         });
 
         it('does not initialize springshare list when weekly hours not loaded', () => {
-            rtlRender(
-                <BookableSpacesAddSpace
-                    {...defaultProps}
-                    weeklyHoursLoading={true}
-                    weeklyHours={null}
-                />
-            );
+            rtlRender(<BookableSpacesAddSpace {...defaultProps} weeklyHoursLoading weeklyHours={null} />);
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
         });
@@ -594,7 +540,7 @@ describe('BookableSpacesAddSpace', () => {
                     campusList={campusListWithDuplicates}
                     campusListLoading={false}
                     campusListError={false}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -623,7 +569,7 @@ describe('BookableSpacesAddSpace', () => {
                         { campus_id: 1, campus_name: 'St Lucia' },
                         { campus_id: 2, campus_name: 'Gatton' },
                     ]}
-                />
+                />,
             );
 
             expect(screen.getByTestId('edit-space-form')).toBeInTheDocument();
@@ -633,7 +579,7 @@ describe('BookableSpacesAddSpace', () => {
             rtlRender(<BookableSpacesAddSpace {...defaultProps} />);
 
             expect(
-                require('modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers').safeCampusIndex
+                require('modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers').safeCampusIndex,
             ).toHaveBeenCalled();
         });
     });
@@ -658,8 +604,8 @@ describe('BookableSpacesAddSpace', () => {
                             ],
                         },
                     }}
-                    bookableSpacesRoomListLoading={true}
-                />
+                    bookableSpacesRoomListLoading
+                />,
             );
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
@@ -685,8 +631,8 @@ describe('BookableSpacesAddSpace', () => {
                             ],
                         },
                     }}
-                    bookableSpacesRoomListLoading={true}
-                />
+                    bookableSpacesRoomListLoading
+                />,
             );
 
             expect(screen.getByTestId('inline-loader')).toBeInTheDocument();
@@ -723,7 +669,7 @@ describe('BookableSpacesAddSpace', () => {
                             locations: spaces,
                         },
                     }}
-                />
+                />,
             );
 
             // Should use space 2 (the one with coordinates)
@@ -768,7 +714,7 @@ describe('BookableSpacesAddSpace', () => {
                             locations: spaces,
                         },
                     }}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -812,7 +758,7 @@ describe('BookableSpacesAddSpace', () => {
                             locations: spaces,
                         },
                     }}
-                />
+                />,
             );
 
             await waitFor(() => {
@@ -843,7 +789,7 @@ describe('BookableSpacesAddSpace', () => {
                             locations: [space],
                         },
                     }}
-                />
+                />,
             );
 
             await waitFor(() => {

@@ -205,25 +205,38 @@ describe('BookableSpacesManageLocations', () => {
         renderLocations({ campusList: invalidCampus });
 
         fireEvent.click(screen.getByTestId('edit-campus-0-button'));
-        await waitFor(() => expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'));
+        await waitFor(() =>
+            expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'),
+        );
         fireEvent.click(screen.getByTestId('confirmation-close'));
 
         cleanup();
         const invalidLibrary = [{ ...campusList[0], libraries: [{ ...campusList[0].libraries[0], library_id: 0 }] }];
         renderLocations({ campusList: invalidLibrary });
         fireEvent.click(screen.getByTestId('edit-library-0-button'));
-        await waitFor(() => expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'));
+        await waitFor(() =>
+            expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'),
+        );
         fireEvent.click(screen.getByTestId('confirmation-close'));
 
         cleanup();
-        const invalidFloor = [{
-            ...campusList[0],
-            libraries: [{ ...campusList[0].libraries[0], floors: [{ ...campusList[0].libraries[0].floors[0], floor_id: 5 }] }],
-        }];
+        const invalidFloor = [
+            {
+                ...campusList[0],
+                libraries: [
+                    {
+                        ...campusList[0].libraries[0],
+                        floors: [{ ...campusList[0].libraries[0].floors[0], floor_id: 5 }],
+                    },
+                ],
+            },
+        ];
         renderLocations({ campusList: invalidFloor });
         invalidFloor[0].libraries[0].floors = [];
         fireEvent.click(screen.getByTestId('edit-floor-5-button'));
-        await waitFor(() => expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'));
+        await waitFor(() =>
+            expect(screen.getByTestId('confirmation-box')).toHaveTextContent('Sorry, something went wrong'),
+        );
     });
 
     it('opens campus, library, and floor forms and cancels the dialog', () => {
@@ -303,10 +316,12 @@ describe('BookableSpacesManageLocations', () => {
         document.getElementById('buildingName').value = 'New Building';
         document.getElementById('buildingNumber').value = '8';
         fireEvent.click(screen.getByTestId('dialog-save-button'));
-        await waitFor(() => expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
-            expect.objectContaining({ library_name: 'New Library' }),
-            'library',
-        ));
+        await waitFor(() =>
+            expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
+                expect.objectContaining({ library_name: 'New Library' }),
+                'library',
+            ),
+        );
 
         cleanup();
         renderLocations({ actions });
@@ -316,14 +331,18 @@ describe('BookableSpacesManageLocations', () => {
         expect(document.getElementById('warningtext')).toHaveTextContent('Please enter floor name');
         document.getElementById('displayedFloorId').value = '3';
         fireEvent.click(screen.getByTestId('dialog-save-button'));
-        await waitFor(() => expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
-            expect.objectContaining({ floor_name: '3' }),
-            'floor',
-        ));
+        await waitFor(() =>
+            expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
+                expect.objectContaining({ floor_name: '3' }),
+                'floor',
+            ),
+        );
     });
 
     it('handles delete confirmation and deletion failure', async () => {
-        const actions = buildActions({ deleteBookableSpaceLocation: jest.fn(() => Promise.reject(new Error('failed'))) });
+        const actions = buildActions({
+            deleteBookableSpaceLocation: jest.fn(() => Promise.reject(new Error('failed'))),
+        });
         renderLocations({ actions });
         fireEvent.click(screen.getByTestId('edit-campus-1-button'));
         fireEvent.click(screen.getByTestId('dialog-delete-button'));
@@ -343,11 +362,13 @@ describe('BookableSpacesManageLocations', () => {
         document.getElementById('buildingName').value = 'Building Updated';
         document.getElementById('buildingNumber').value = '11';
         fireEvent.click(screen.getByTestId('dialog-save-button'));
-        await waitFor(() => expect(actions.updateBookableSpaceLocation).toHaveBeenCalledWith(
-            expect.objectContaining({ library_name: 'Central Updated' }),
-            'library',
-            '2',
-        ));
+        await waitFor(() =>
+            expect(actions.updateBookableSpaceLocation).toHaveBeenCalledWith(
+                expect.objectContaining({ library_name: 'Central Updated' }),
+                'library',
+                '2',
+            ),
+        );
 
         cleanup();
         renderLocations({ actions });
@@ -357,15 +378,15 @@ describe('BookableSpacesManageLocations', () => {
         document.getElementById('isGroundFloor').checked = true;
         fireEvent.click(screen.getByTestId('dialog-save-button'));
 
-        await waitFor(() => expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
-            { floor_name: '9', floor_library_id: '2' },
-            'floor',
-        ));
-        await waitFor(() => expect(actions.updateBookableSpaceLocation).toHaveBeenCalledWith(
-            { ground_floor_id: 9 },
-            'library',
-            '2',
-        ));
+        await waitFor(() =>
+            expect(actions.addBookableSpaceLocation).toHaveBeenCalledWith(
+                { floor_name: '9', floor_library_id: '2' },
+                'floor',
+            ),
+        );
+        await waitFor(() =>
+            expect(actions.updateBookableSpaceLocation).toHaveBeenCalledWith({ ground_floor_id: 9 }, 'library', '2'),
+        );
         expect(displayToastMessage).toHaveBeenCalledWith('Level added');
     });
 

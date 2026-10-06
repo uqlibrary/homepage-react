@@ -171,7 +171,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return false;
     };
 
-    // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
@@ -295,7 +294,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         examList: PropTypes.any,
     };
 
-    // eslint-disable-next-line react/prop-types
     const DesktopTableCells = ({ examList, examData, courseCode }) => {
         const renderSingleExam = (exam, semesterIndex, examIndex) => {
             return (
