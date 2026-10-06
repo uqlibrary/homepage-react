@@ -66,7 +66,9 @@ describe('Training', () => {
     it.each([[], null])('shows the empty state for missing events (%p)', trainingEvents => {
         const { getByTestId, getByRole, container, rerender } = setup({ trainingEvents });
 
-        expect(getByTestId('training-api-error')).toHaveTextContent('There are no training sessions available');
+        expect(getByTestId('training-api-error')).toHaveTextContent(
+            'There are no training sessions available at the moment',
+        );
         expect(getByRole('link', { name: 'Training and workshops' })).toHaveAttribute(
             'href',
             'https://dev-library-uq.pantheonsite.io/study-and-learning-support/training-and-workshops',

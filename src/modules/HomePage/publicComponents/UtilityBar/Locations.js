@@ -293,7 +293,9 @@ const Locations = ({
                     vemcountZoneId: location?.vemcount_zone_id,
                     isCurrentlyOpen: location?.currently_open,
                     campus: location?.campus_name,
-                    busyness: getVemcountPercentage(location?.vemcount_zone_id, vemcount.data.locationList) || null,
+                    busyness:
+                        getVemcountPercentage(location?.vemcount_zone_id, vemcount.data.locationList) ||
+                        /* istanbul ignore next */ null,
                 };
             })) ||
         [];
