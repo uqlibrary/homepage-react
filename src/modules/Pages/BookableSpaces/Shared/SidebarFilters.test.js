@@ -3,7 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import { SidebarFilters } from './SidebarFilters';
+import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
 describe('SidebarFilters campus selector', () => {
     const theme = createTheme({
@@ -365,7 +366,7 @@ describe('SidebarFilters campus selector', () => {
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
     });
 
-    it('resets the capacity range when a different space type is selected', () => {
+    it('keeps the capacity range when a different space type is selected', () => {
         const setCapacityFilterValue = jest.fn();
         const facilityList = {
             data: {
@@ -413,10 +414,8 @@ describe('SidebarFilters campus selector', () => {
 
         fireEvent.click(screen.getByTestId('filtertype-57'));
 
-        expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).not.toContain(
-            'capacityFilterValue',
-        );
+        expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 50]);
+        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {
@@ -474,58 +473,6 @@ describe('SidebarFilters campus selector', () => {
 
         expect(screen.getByTestId('facility-type-group-1-open')).toHaveStyle({ display: 'block' });
         expect(screen.getByTestId('facility-type-group-1-collapsed')).toHaveStyle({ display: 'none' });
-    });
-
-    it('removes the final persisted capacity state when the default capacity range is restored', () => {
-        const setSelectedFacilityTypes = jest.fn();
-        const capacityGroupFixture = {
-            data: {
-                facility_type_groups: [
-                    {
-                        facility_type_group_id: 1,
-                        facility_type_group_name: 'Facilities',
-                        facility_type_group_order: 1,
-                        facility_type_group_loads_open: true,
-                        facility_type_children: [
-                            {
-                                facility_type_id: 9003,
-                                facility_type_name: 'Space capacity',
-                                facility_special_action: 'capacity',
-                            },
-                        ],
-                    },
-                ],
-            },
-        };
-
-        window.sessionStorage.setItem(
-            'bookableSpacesJourneyLiveFilterState',
-            JSON.stringify({
-                capacityFilterValue: [6, 18],
-            }),
-        );
-
-        renderWithTheme({
-            ...baseProps,
-            facilityTypeList: capacityGroupFixture,
-            filteredFacilityTypeList: capacityGroupFixture,
-            selectedFacilityTypes: [
-                {
-                    facility_type_group_id: 1,
-                    facility_type_id: 9003,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: 'capacity',
-                },
-            ],
-            setSelectedFacilityTypes,
-            capacityFilterValue: [6, 18],
-        });
-
-        fireEvent.change(screen.getByTestId('capacitySlider-inputRight'), { target: { value: '1' } });
-        fireEvent.change(screen.getByTestId('capacitySlider-inputLeft'), { target: { value: '50' } });
-
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBeNull();
     });
 
     it('clears a special capacity filter when it is reset back to its default range', () => {
@@ -856,32 +803,34 @@ describe('SidebarFilters campus selector', () => {
             configurable: true,
         });
 
-        renderWithTheme({
-            ...baseProps,
-            activeFilterCount: 1,
-            facilityTypeList: facilityList,
-            filteredFacilityTypeList: facilityList,
-            selectedFacilityTypes: [
-                {
-                    facility_type_group_id: 1,
-                    facility_type_id: 9003,
-                    selected: true,
-                    unselected: false,
-                    facility_special_action: 'capacity',
-                },
-            ],
-            setSelectedFacilityTypes,
-            setCapacityFilterValue,
-            capacityFilterValue: [12, 24],
-        });
+        try {
+            renderWithTheme({
+                ...baseProps,
+                activeFilterCount: 1,
+                facilityTypeList: facilityList,
+                filteredFacilityTypeList: facilityList,
+                selectedFacilityTypes: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_id: 9003,
+                        selected: true,
+                        unselected: false,
+                        facility_special_action: 'capacity',
+                    },
+                ],
+                setSelectedFacilityTypes,
+                setCapacityFilterValue,
+                capacityFilterValue: [12, 24],
+            });
 
-        expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
-        fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
-
-        Object.defineProperty(window, 'sessionStorage', {
-            value: originalSessionStorage,
-            configurable: true,
-        });
+            expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
+            fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
+        } finally {
+            Object.defineProperty(window, 'sessionStorage', {
+                value: originalSessionStorage,
+                configurable: true,
+            });
+        }
     });
 
     it('handles whitespace capacity input and string-based IDs during deselection', () => {
@@ -1025,6 +974,48 @@ describe('SidebarFilters campus selector', () => {
         expect(setCapacityFilterValue).toHaveBeenCalledWith([1, 50]);
         expect(handleCampusSelection).toHaveBeenCalledWith({ target: { value: 0 } });
         expect(handleLibrarySelection).toHaveBeenCalledWith({ target: { value: 0 } });
+    });
+
+    it('ignores empty persisted filter state when no journey state exists', () => {
+        const fakeStorage = {
+            getItem: jest.fn().mockReturnValue(null),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.getItem).toHaveBeenCalledWith(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+    });
+
+    it('ignores persisted journey state that does not include a capacity value', () => {
+        const storage = {
+            selectedCampus: 1,
+            selectedLibrary: 2,
+        };
+        const fakeStorage = {
+            getItem: jest.fn().mockImplementation(() => JSON.stringify(storage)),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.setItem).not.toHaveBeenCalled();
+        expect(fakeStorage.removeItem).not.toHaveBeenCalled();
+    });
+
+    it('removes the saved capacity filter when it is the only persisted state entry', () => {
+        const fakeStorage = {
+            getItem: jest.fn().mockReturnValue(JSON.stringify({ capacityFilterValue: [4, 12] })),
+            setItem: jest.fn(),
+            removeItem: jest.fn(),
+        };
+
+        clearPersistedCapacityFilterValue(fakeStorage);
+
+        expect(fakeStorage.removeItem).toHaveBeenCalledWith(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        expect(fakeStorage.setItem).not.toHaveBeenCalled();
     });
 
     it('exercises max capacity blur on value exceeding maximum', () => {
