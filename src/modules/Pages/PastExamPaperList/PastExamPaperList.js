@@ -14,7 +14,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import useTheme from '@mui/material/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -171,7 +171,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return false;
     };
 
-    // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
@@ -251,6 +250,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </StyledSimpleViewWrapper>
         );
     };
+    SimpleLayout.propTypes = {
+        examList: PropTypes.any,
+        showMobileView: PropTypes.bool,
+        showFullDetails: PropTypes.bool,
+    };
 
     const DesktopTableHeader = ({ examList }) => {
         return (
@@ -286,8 +290,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </TableRow>
         );
     };
+    DesktopTableHeader.propTypes = {
+        examList: PropTypes.any,
+    };
 
-    // eslint-disable-next-line react/prop-types
     const DesktopTableCells = ({ examList, examData, courseCode }) => {
         const renderSingleExam = (exam, semesterIndex, examIndex) => {
             return (
@@ -356,8 +362,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </>
         );
     };
-
-    // eslint-disable-next-line react/prop-types
+    DesktopTableCells.propTypes = {
+        examList: PropTypes.any,
+        examData: PropTypes.any,
+        courseCode: PropTypes.any,
+    };
     const DesktopLayout = ({ examList }) => {
         // Process the data to create a mapping of course codes to their papers
         const { courseCodes, examData } = React.useMemo(() => {
@@ -425,6 +434,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 </Table>
             </TableContainer>
         );
+    };
+    DesktopLayout.propTypes = {
+        examList: PropTypes.any,
     };
 
     return (

@@ -33,16 +33,6 @@ export const DLOBulkSchedule = ({
     dlorList,
     dlorListLoading,
     dlorListError,
-    dlorFilterList,
-    dlorFilterListLoading,
-    dlorFilterListError,
-    account,
-    dlorFavouritesList,
-    dlorFavouritesLoading,
-    dlorFavouritesError,
-    dlorTeamList,
-    dlorTeamListLoading,
-    dlorTeamListError,
     dlorScheduleLoading,
     dlorScheduleError,
     dlorSchedule,
@@ -54,7 +44,6 @@ export const DLOBulkSchedule = ({
     };
     const [viewOnly, setViewOnly] = React.useState(false);
 
-    // eslint-disable-next-line react/prop-types
     const ScheduleTableSection = ({ title, schedules, onEdit, onView, onDelete, buttonTestIdPrefix }) => (
         <Accordion sx={{ marginTop: 2 }}>
             <AccordionSummary
@@ -151,6 +140,15 @@ export const DLOBulkSchedule = ({
             </AccordionDetails>
         </Accordion>
     );
+    ScheduleTableSection.propTypes = {
+        title: PropTypes.string,
+        schedules: PropTypes.any,
+        onEdit: PropTypes.func,
+        onView: PropTypes.func,
+        onDelete: PropTypes.func,
+        buttonTestIdPrefix: PropTypes.string,
+    };
+
     const [formValues, setFormValues] = React.useState(defaultFormValues);
     // Search state for dlorList filtering
     const [dlorSearch, setDlorSearch] = React.useState('');
@@ -226,13 +224,11 @@ export const DLOBulkSchedule = ({
     }, [dlorScheduleError, dlorScheduleLoading, dlorSchedule, actions]);
 
     const handleChange = prop => e => {
-        console.log('handleChange', prop, e);
         const theNewValue = e.target.value;
 
         const newValues = { ...formValues, schedule_status: true, [prop]: theNewValue };
 
         setFormValues(newValues);
-        console.log('formValues =>', newValues);
     };
 
     const handleDeleteSchedule = id => {
@@ -242,7 +238,6 @@ export const DLOBulkSchedule = ({
         actions
             .deleteDlorSchedule(id)
             .then(() => {
-                console.log('Schedule deleted successfully');
                 setFormMessage('Schedule deleted successfully');
                 setIsAlertOpen(true);
             })
@@ -410,7 +405,6 @@ export const DLOBulkSchedule = ({
 
         actionPromise
             .then(() => {
-                console.log('Schedule saved successfully');
                 setFormMessage('Schedule saved successfully');
                 setIsEditBoxOpened(false);
                 setFormValues(defaultFormValues);
@@ -937,16 +931,6 @@ DLOBulkSchedule.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
-    dlorFilterList: PropTypes.array,
-    dlorFilterListLoading: PropTypes.bool,
-    dlorFilterListError: PropTypes.any,
-    dlorFavouritesList: PropTypes.array,
-    dlorFavouritesLoading: PropTypes.bool,
-    dlorFavouritesError: PropTypes.any,
-    account: PropTypes.object,
-    dlorTeamList: PropTypes.array,
-    dlorTeamListLoading: PropTypes.bool,
-    dlorTeamListError: PropTypes.any,
     dlorScheduleLoading: PropTypes.bool,
     dlorScheduleError: PropTypes.any,
     dlorSchedule: PropTypes.array,

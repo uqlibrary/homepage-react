@@ -112,12 +112,11 @@ export function scrollToTopOfPage() {
 }
 
 // this is very basic, because thats all that seems required so far
-
 export const pluralise = (singularWord, count, pluralWordSpecial = null) => {
-    if (count > 1 && pluralWordSpecial !== null) {
+    if (count !== 1 && pluralWordSpecial !== null) {
         return pluralWordSpecial;
     }
-    if (count > 1) {
+    if (count !== 1) {
         return `${singularWord}s`;
     }
     return singularWord;
@@ -252,6 +251,50 @@ export const StyledTertiaryButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+export const slugifyName = text => {
+    return (
+        text
+            .toString() // Ensure the input is a string
+            .toLowerCase() // Convert the string to lowercase
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            // .replace(/-/g, '_') // Replace spaces with hyphens
+            .replace(/_/g, '-') // Replace spaces with hyphens
+            .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for hyphens
+            .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+            .replace(/^-+/, '') // Trim hyphens from the start of the text
+            .replace(/\//, '') // Trim slashes
+            .replace(/-+$/, '')
+    );
+};
+export const isValidUrl = testUrl => {
+    let url;
+
+    try {
+        url = new URL(testUrl);
+    } catch (_) {
+        /* istanbul ignore next */
+        return false;
+    }
+
+    return (
+        (url?.protocol === 'http:' || url?.protocol === 'https:') &&
+        !!url?.hostname &&
+        !!url?.hostname.includes('.') && // tld only domain names really don't happen, must be a dot!
+        url?.hostname.length >= '12.co'.length
+    );
+};
+
+// // generate a link to a page inside this app
+// // assumes calling app has set: import { useLocation } from 'react-router-dom'; const pageLocation = useLocation();
+// export const hrefToInternalPage = (path, pageLocation, includeFullPath = false) => {
+//     const prefix = `${includeFullPath ? fullPath : ''}`;
+//     const url =
+//         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+//             ? `${prefix}${path}${pageLocation.search}` // eg include ?user=s1111111
+//             : `${prefix}${path}`;
+//     console.log('url = ', url);
+//     return url;
+// };
 // gets the File Type of a url eg PDF, as uppercase
 export const standardisedExtension = url => {
     if (!url || !(typeof url === 'string' || url instanceof String)) {
@@ -260,3 +303,18 @@ export const standardisedExtension = url => {
     const dotPosition = url?.lastIndexOf('.');
     return dotPosition > -1 ? url.substring(dotPosition + 1).toUpperCase() : '';
 };
+
+export const StyledSkipLinkAnchor = styled('a')(({ theme }) => ({
+    position: 'absolute',
+    left: '-999px',
+    top: '-999px',
+    '&:focus': {
+        position: 'relative',
+        top: 'inherit',
+        left: 'inherit',
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        fontWeight: 500,
+        textDecoration: 'underline',
+    },
+}));
