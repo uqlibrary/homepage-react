@@ -6,7 +6,6 @@ import {
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
 } from 'repositories/routes';
-import { throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
     return dispatch => {

@@ -6,6 +6,7 @@ import {
     leftJoin,
     stripHtml,
     unescapeString,
+    isValidUrl,
     standardText,
     standardisedExtension,
 } from './general';
@@ -69,10 +70,10 @@ describe('general helpers', () => {
         expect(pluralise('record', 2)).toEqual('records');
         expect(pluralise('record', 947)).toEqual('records');
 
-        expect(pluralise('frog', 0)).toEqual('frog');
+        expect(pluralise('frog', 0)).toEqual('frogs');
         expect(pluralise('frog', 1)).toEqual('frog');
         expect(pluralise('frog', 4)).toEqual('frogs');
-        expect(pluralise('body', 0, 'bodies')).toEqual('body');
+        expect(pluralise('body', 0, 'bodies')).toEqual('bodies');
         expect(pluralise('body', 1, 'bodies')).toEqual('body');
         expect(pluralise('body', 8, 'bodies')).toEqual('bodies');
     });
@@ -108,6 +109,23 @@ describe('general helpers', () => {
         });
     });
 
+    it('should validate urls', () => {
+        expect(isValidUrl('http://example.com')).toEqual(true);
+        expect(isValidUrl('https://example.com')).toEqual(true);
+        expect(isValidUrl('https://example.com/image.jpg')).toEqual(true);
+        expect(isValidUrl('https://uq.edu.au')).toBe(true);
+
+        expect(isValidUrl('ftp://something.com')).toBe(false);
+        expect(isValidUrl('https://')).toEqual(false);
+        expect(isValidUrl('')).toEqual(false);
+        expect(isValidUrl('x')).toBe(false);
+        expect(isValidUrl(null)).toEqual(false);
+        expect(isValidUrl('https://google')).toEqual(false); // not dot - probably exists, but we are treating it as invalid, because nobody uses them, but a typo would be easy
+        expect(isValidUrl('https://s.h')).toEqual(false);
+        expect(isValidUrl('blahblahblah')).toEqual(false);
+        expect(isValidUrl('blah blah blah')).toEqual(false);
+        expect(isValidUrl('https://x.c')).toBe(false); // too short
+    });
     it('extracts extension', () => {
         expect(standardisedExtension('http://example.com/something.jpg')).toEqual('JPG');
         expect(standardisedExtension('.jpg')).toEqual('JPG'); // first char

@@ -51,6 +51,10 @@ const StyledGridListItem = styled(Grid)(({ theme }) => ({
         fontWeight: 400,
     },
 }));
+const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
+    border: '1px solid hsla(203, 50%, 30%, 0.15)',
+    borderRadius: theme.palette.designSystem.borderRadius,
+}));
 
 export const getUrlForLearningResourceSpecificTab = (
     item,
@@ -138,12 +142,8 @@ export const LearningResourcesPanel = ({ account }) => {
         ];
     }
     return (
-        <StandardCard
+        <StyledStandardCard
             subCard
-            style={{
-                border: '1px solid hsla(203, 50%, 30%, 0.15)',
-                borderRadius: '4px',
-            }}
             fullHeight
             primaryHeader
             noPadding
@@ -231,7 +231,7 @@ export const LearningResourcesPanel = ({ account }) => {
             ) : (
                 <div style={{ marginLeft: 24, marginTop: -10, fontWeight: 400 }}>{locale.homepagePanel.noCourses}</div>
             )}
-        </StandardCard>
+        </StyledStandardCard>
     );
 };
 

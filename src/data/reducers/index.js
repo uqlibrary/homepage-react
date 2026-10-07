@@ -1,4 +1,4 @@
-export { default as accountReducer } from './account';
+export { default as accountReducer } from './accountReducer';
 export { default as alertsReducer } from './alertsReducer';
 export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeReducer';
@@ -50,6 +50,11 @@ export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
+export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomListReducer';
+export { default as bookableSpacesFavouritesReducer } from './bookableSpacesFavouritesReducer';
+export { default as weeklyHoursReducer } from './weeklyHoursReducer';
+export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFacilityTypeReducer';
+export { default as bookableSpaceLocationReducer } from './bookableSpaceLocationReducer';
 export { default as dlorScheduleReducer } from './dlorScheduleReducer';
 export { default as dlorDashboardReducer } from './dlorDashboardReducer';
 export { default as membershipFormDataReducer } from './membershipFormDataReducer';

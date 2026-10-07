@@ -62,6 +62,19 @@ export const DLOVocabularyManage = lazy(() => lazyRetry(() => import('modules/Pa
 // seperate route for team managers
 export const DLOOwnTeamList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamListContainer')));
 export const DLOOwnTeamEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/Team/DLOTeamEditContainer')));
+
+export const BookableSpacesLandingPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/BookableSpacesLandingPage')));
+export const BookableSpacesSimpleListPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/BookableSpacesSimpleListPage')));
+export const BookableSpacesMapPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/BookableSpacesMapPage')));
+export const BookableSpacesDetailPage = lazy(() => lazyRetry(() => import('modules/Pages/BookableSpaces/SpacesDetailPage/BookableSpacesDetailPageContainer')));
+
+export const BookableSpacesManageSpaces = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/BookableSpacesManageSpacesContainer')));
+export const BookableSpacesAddSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/Form/AddSpace/BookableSpacesAddSpaceContainer')));
+export const BookableSpacesEditSpace = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Spaces/Form/EditSpace/BookableSpacesEditSpaceContainer')));
+export const BookableSpacesManageLocations = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Locations/BookableSpacesManageLocationsContainer')));
+export const BookableSpacesManageFacilities = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/Facilities/BookableSpacesManageFacilitiesContainer')));
+export const BookableSpacesManageSpaceTypes = lazy(() => lazyRetry(() => import('modules/Pages/Admin/BookableSpaces/SpaceTypes/BookableSpacesManageSpaceTypesContainer')));
+
 // Dashboard
 export const DLODashboard = lazy(() => lazyRetry(() => import('modules/Pages/DigitalLearningObjects/Dashboard/DashboardContainer')));
 export const DLOBulkSchedule = lazy(() => lazyRetry(() => import('modules/Pages/Admin/DigitalLearningObjects/BulkSchedule/DLOBulkScheduleContainer')));

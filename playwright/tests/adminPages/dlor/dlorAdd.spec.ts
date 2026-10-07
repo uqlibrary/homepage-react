@@ -15,7 +15,6 @@ import {
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 const REQUIRED_LENGTH_SUMMARY = 20;
-const REQUIRED_LENGTH_KEYWORDS = 4;
 
 test.describe('Add an object to the Digital Learning Hub', () => {
     const notAllowedFile = createFileMock('app.bin', 'application/octet-stream');
