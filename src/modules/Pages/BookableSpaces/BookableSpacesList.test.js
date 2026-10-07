@@ -10,6 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import moment from 'moment';
 
 import { BookableSpacesList, buildJourneyNavigationUrl } from 'modules/Pages/BookableSpaces/BookableSpacesList';
+import * as spacesHelpersModule from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const mockDispatch = jest.fn();
@@ -99,6 +100,11 @@ jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
 });
 
 describe('BookableSpacesList campus selection', () => {
+    beforeEach(() => {
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+    });
+
     const baseProps = {
         actions: {
             loadAllBookableSpacesRooms: jest.fn(),
@@ -195,7 +201,9 @@ describe('BookableSpacesList campus selection', () => {
         useCookiesModule.useCookies.mockReturnValue([{}, mockSetCookie, mockRemoveCookie]);
         mockMapReady = true;
         window.history.replaceState({}, '', '/spaces');
+        document.cookie = 'UQLspacesPreferredCampus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
         window.sessionStorage.clear();
+        window.localStorage.clear();
     });
 
     it('defaults to all campuses when no saved preference exists', async () => {
@@ -1232,6 +1240,31 @@ describe('BookableSpacesList campus selection', () => {
         expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
     });
 
+    it('covers the zero-campus-and-library fallback branch during reset when no persisted state exists', () => {
+        const readJourneyLiveFilterStateSpy = jest.spyOn(spacesHelpersModule, 'readJourneyLiveFilterState').mockReturnValue(null);
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        const sidebarProps = mockSidebarRender.mock.calls.at(-1)[0];
+        act(() => sidebarProps.handleCampusSelection({ target: { value: '0' } }));
+        act(() => sidebarProps.handleLibrarySelection({ target: { value: '0' } }));
+
+        const resetSidebarProps = mockSidebarRender.mock.calls.at(-1)[0];
+        expect(resetSidebarProps.selectedCampus).toBe(0);
+        expect(resetSidebarProps.selectedLibrary).toBe(0);
+
+        act(() => resetSidebarProps.onResetAllFilters());
+
+        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(readJourneyLiveFilterStateSpy).toHaveBeenCalled();
+
+        readJourneyLiveFilterStateSpy.mockRestore();
+    });
+
     it('matches a space when two selected filters belong to the same facility group', () => {
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -1260,6 +1293,25 @@ describe('BookableSpacesList campus selection', () => {
         expect(mockSidebarRender.mock.calls.at(-1)[0].selectedFacilityTypes).toEqual([]);
     });
 
+    it('hydrates saved filters from the shared browser storage when session storage is empty', async () => {
+        const persistedState = { selectedCampus: 2, selectedFacilityTypes: [{ facility_type_id: 11, selected: true }] };
+        window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedState));
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender.mock.calls.at(-1)[0].selectedCampus).toBe(2));
+        expect(mockSidebarRender.mock.calls.at(-1)[0].selectedFacilityTypes).toEqual(
+            expect.arrayContaining([expect.objectContaining({ facility_type_id: 11, selected: true })]),
+        );
+
+        window.localStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+    });
+
     it('excludes spaces with a current outage when the open-now filter is selected', () => {
         const space = {
             ...baseProps.bookableSpacesRoomList.data.locations[0],
@@ -1283,6 +1335,16 @@ describe('BookableSpacesList campus selection', () => {
             ]),
         );
         expect(mockSidebarListRender.mock.calls.at(-1)[0].filteredSpaceLocations).toEqual([]);
+    });
+
+    it('uses the journey experience by default when forceAdvanced is omitted', () => {
+        rtlRender(
+            <WithRouter route="/spaces/results" initialEntries={['/spaces/results']}>
+                <BookableSpacesList {...baseProps} forceAdvanced={undefined} />
+            </WithRouter>,
+        );
+
+        expect(mockJourneyRender).toHaveBeenCalled();
     });
 
     it('handles a missing favourites list on the journey results route', () => {

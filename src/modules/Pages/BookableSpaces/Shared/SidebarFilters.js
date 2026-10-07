@@ -21,41 +21,45 @@ import { addClass, removeClass, StyledSkipLinkAnchor, standardText, StyledPrimar
 import {
     FILTER_BOOKABLE_TYPE_ID,
     FILTER_CAPACITY_TYPE_ID,
-    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     FILTER_SPACE_CAPACITY_ACTION_NAME,
     getActiveSelectedFacilityTypes,
     getFlatFacilityTypeList,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
+    readJourneyLiveFilterState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 export const clearPersistedCapacityFilterValue = storage => {
-    const sessionStorage = storage || window?.sessionStorage;
+    const storageBackends = storage ? [storage] : [window?.sessionStorage, window?.localStorage].filter(Boolean);
     /* istanbul ignore next */
-    if (!sessionStorage) {
+    if (storageBackends.length === 0) {
         return;
     }
 
-    try {
-        const rawState = sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-        if (!rawState) {
-            return;
-        }
+    for (const storageTarget of storageBackends) {
+        try {
+            const rawState = storageTarget.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!rawState) {
+                continue;
+            }
 
-        const parsedState = JSON.parse(rawState);
-        if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
-            return;
-        }
+            const parsedState = JSON.parse(rawState);
+            if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
+                continue;
+            }
 
-        delete parsedState.capacityFilterValue;
-        if (Object.keys(parsedState).length === 0) {
-            sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
-            return;
-        }
+            delete parsedState.capacityFilterValue;
+            if (Object.keys(parsedState).length === 0) {
+                storageTarget.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+                return;
+            }
 
-        sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
-    } catch {
-        // Ignore malformed session state.
+            storageTarget.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(parsedState));
+            return;
+        } catch {
+            // Ignore malformed session state and continue checking the next backend.
+        }
     }
 };
 
@@ -378,9 +382,7 @@ export const SidebarFilters = ({
 
     React.useEffect(() => {
         const hasLiveJourneyFilterState =
-            typeof window !== 'undefined' &&
-            !!window.sessionStorage &&
-            !!window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            typeof window !== 'undefined' && !!readJourneyLiveFilterState();
         if (hasLiveJourneyFilterState) {
             return;
         }

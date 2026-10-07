@@ -15,14 +15,18 @@ import {
     isBookable,
     isInt,
     isSpaceCurrentlyOpen,
+    JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     normalizeFilterDisplayOn,
     parseJourneyStateFromUrl,
+    readJourneyLiveFilterState,
+    removeJourneyLiveFilterState,
     serialiseJourneyUrl,
     findSpaceById,
     getFlatFacilityTypeList,
     matchesCapacityFilter,
     normalizeCapacityFilterValue,
     spaceOpeningHours,
+    writeJourneyLiveFilterState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 describe('spaces helpers', () => {
@@ -1764,5 +1768,90 @@ describe('spaces helpers', () => {
             },
         );
         expect(closedNow).toBeDefined();
+    });
+
+    it('reads and writes the journey live filter state across storage backends', () => {
+        const originalSetItem = Storage.prototype.setItem;
+        const originalRemoveItem = Storage.prototype.removeItem;
+
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+        expect(readJourneyLiveFilterState()).toBeNull();
+        expect(readJourneyLiveFilterState(null)).toBeNull();
+        expect(readJourneyLiveFilterState(undefined)).toBeNull();
+        expect(() => writeJourneyLiveFilterState({ selectedCampus: 1 }, null)).not.toThrow();
+        expect(() => writeJourneyLiveFilterState(undefined)).not.toThrow();
+
+        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, 'not-json');
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 7 }));
+        expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 7 });
+
+        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify('plain-string'));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 11 }));
+        expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 11 });
+
+        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(null));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 12 }));
+        expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 12 });
+
+        writeJourneyLiveFilterState({ selectedLibrary: 3, selectedCampus: 8 });
+        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBe(
+            JSON.stringify({ selectedLibrary: 3, selectedCampus: 8 }),
+        );
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBe(
+            JSON.stringify({ selectedLibrary: 3, selectedCampus: 8 }),
+        );
+
+        const throwingSetItem = function (key, value) {
+            if (key === JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY) {
+                throw new Error('storage unavailable');
+            }
+            return originalSetItem.call(this, key, value);
+        };
+        Storage.prototype.setItem = throwingSetItem;
+        expect(() => writeJourneyLiveFilterState({ selectedCampus: 9 })).not.toThrow();
+        Storage.prototype.setItem = originalSetItem;
+
+        removeJourneyLiveFilterState();
+        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+
+        const throwingRemoveItem = function (key) {
+            if (key === JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY) {
+                throw new Error('remove unavailable');
+            }
+            return originalRemoveItem.call(this, key);
+        };
+        Storage.prototype.removeItem = throwingRemoveItem;
+        expect(() => writeJourneyLiveFilterState(null)).not.toThrow();
+        Storage.prototype.removeItem = originalRemoveItem;
+    });
+
+    it('covers the hidden-name and empty-name branches in friendly location descriptions', () => {
+        const sampleSpace = {
+            space_name: 'Quiet room',
+            space_campus_name: 'St Lucia',
+            space_building_name: 'Forgan Smith',
+            space_building_number: '1',
+            space_library_name: 'Library',
+            space_floor_name: '3',
+            space_precise: 'Near the window',
+        };
+
+        const renderedOutput = getFriendlyLocationDescription(sampleSpace, false, { space_name: true });
+        expect(renderedOutput).toBeTruthy();
+        expect(renderedOutput.props.children).toBeTruthy();
+
+        const noNameOutput = getFriendlyLocationDescription(
+            {
+                space_campus_name: 'St Lucia',
+                space_building_name: 'Forgan Smith',
+                space_building_number: '1',
+                space_library_name: 'Library',
+                space_floor_name: '3',
+            },
+            false,
+        );
+        expect(noNameOutput).toBeTruthy();
     });
 });

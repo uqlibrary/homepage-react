@@ -7,6 +7,12 @@ import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpa
 import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
 describe('SidebarFilters campus selector', () => {
+    beforeEach(() => {
+        document.cookie = 'UQLspacesPreferredCampus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+    });
+
     const theme = createTheme({
         palette: {
             primary: { main: '#51247a', light: '#7f5b97', dark: '#360f52' },
