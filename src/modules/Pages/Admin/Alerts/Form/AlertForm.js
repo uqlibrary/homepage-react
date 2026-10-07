@@ -26,6 +26,7 @@ import {
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
     systemList,
+    isValidUrl,
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
@@ -60,33 +61,6 @@ const StyledBox = styled(Grid)(() => ({
     marginTop: '1em',
     paddingBottom: '1em',
 }));
-
-export const isValidUrl = testurl => {
-    if (!testurl) {
-        return false;
-    }
-    if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
-        return false;
-    }
-    if (testurl.length < 'http://x.co'.length) {
-        // minimum possible url
-        return false;
-    }
-    // while technically an url doesn't need a TLD - in practice it does
-    if (!testurl.includes('.')) {
-        return false;
-    }
-    try {
-        const url = new URL(testurl);
-        if (url.hostname.length < 'x.co'.length) {
-            return false;
-        }
-    } catch (_) {
-        /* istanbul ignore next */
-        return false;
-    }
-    return true;
-};
 
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError }) => {
     const navigate = useNavigate();

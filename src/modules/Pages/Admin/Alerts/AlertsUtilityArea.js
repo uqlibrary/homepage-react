@@ -94,7 +94,7 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
             >
                 <Fade in={lightboxOpen}>
                     <div className={'paper'}>
-                        <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
+                        <h2>{helpContent?.title || 'TBA'}</h2>
                         <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                         <div>
                             <StyledPrimaryButton
