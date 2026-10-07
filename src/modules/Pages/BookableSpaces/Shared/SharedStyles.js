@@ -16,11 +16,14 @@ export const StyledIconWordWrapperDiv = styled('div')(({ theme }) => ({
         fontWeight: 700,
         lineHeight: '1.25rem',
     },
-    '& a': {
+    '& a, & a:visited, & a:link': {
         color: theme.palette.primary.main,
         fontWeight: 500,
         paddingBlock: '2px',
         textDecoration: 'underline',
+        '& span': {
+            color: theme.palette.primary.main,
+        },
         '&:hover, &:focus': {
             backgroundColor: 'transparent',
             '& span': {
