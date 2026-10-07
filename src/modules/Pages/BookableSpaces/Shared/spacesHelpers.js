@@ -324,6 +324,57 @@ export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
 export const JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyReturnFilterState';
 export const JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyLiveFilterState';
 
+const getJourneyStorageBackends = storageWindow => {
+    if (storageWindow === null || typeof storageWindow === 'undefined') {
+        return [];
+    }
+
+    return [storageWindow.sessionStorage, storageWindow.localStorage].filter(Boolean);
+};
+
+export const readJourneyLiveFilterState = storageWindow => {
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+
+    for (const storage of getJourneyStorageBackends(resolvedStorageWindow)) {
+        try {
+            const rawState = storage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            if (!rawState) {
+                continue;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            if (parsedState !== null && typeof parsedState === 'object') {
+                return parsedState;
+            }
+        } catch {
+            // Ignore malformed or non-JSON values and continue checking the next storage backend.
+        }
+    }
+
+    return null;
+};
+
+export const writeJourneyLiveFilterState = (nextState, storageWindow) => {
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+    const serialisedState = nextState === null || typeof nextState === 'undefined' ? null : JSON.stringify(nextState);
+
+    for (const storage of getJourneyStorageBackends(resolvedStorageWindow)) {
+        try {
+            if (serialisedState === null) {
+                storage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            } else {
+                storage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, serialisedState);
+            }
+        } catch {
+            // Ignore storage failures and continue.
+        }
+    }
+};
+
+export const removeJourneyLiveFilterState = () => {
+    writeJourneyLiveFilterState(null);
+};
+
 export const getJourneySearchParams = url => {
     // Preserve original behaviour in Jest tests (which expect params in
     // `window.location.search`) while preferring hash-based params in real

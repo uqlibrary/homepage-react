@@ -18,7 +18,13 @@ import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/Spac
 
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
-import { findSpaceById, JOURNEY_VIEWS } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import {
+    findSpaceById,
+    JOURNEY_VIEWS,
+    readJourneyLiveFilterState,
+    removeJourneyLiveFilterState,
+    writeJourneyLiveFilterState,
+} from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
@@ -418,17 +424,12 @@ const BookableSpacesWrapper = ({
         }
 
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined') {
             return;
         }
 
         try {
-            const rawState = window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState');
-            if (!rawState) {
-                return;
-            }
-
-            const parsedState = JSON.parse(rawState);
+            const parsedState = readJourneyLiveFilterState();
             /* istanbul ignore next */
             if (!parsedState || !Object.prototype.hasOwnProperty.call(parsedState, 'capacityFilterValue')) {
                 return;
@@ -437,11 +438,11 @@ const BookableSpacesWrapper = ({
             delete parsedState.capacityFilterValue;
             /* istanbul ignore next */
             if (Object.keys(parsedState).length === 0) {
-                window.sessionStorage.removeItem('bookableSpacesJourneyLiveFilterState');
+                removeJourneyLiveFilterState();
                 return;
             }
 
-            window.sessionStorage.setItem('bookableSpacesJourneyLiveFilterState', JSON.stringify(parsedState));
+            writeJourneyLiveFilterState(parsedState);
         } /* istanbul ignore catch */ catch {
             // Ignore malformed state and continue with the current flow.
         }
