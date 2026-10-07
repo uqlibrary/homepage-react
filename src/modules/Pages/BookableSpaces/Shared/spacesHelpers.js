@@ -323,13 +323,73 @@ export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
 export const JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyReturnFilterState';
 export const JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyLiveFilterState';
+export const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
 const getJourneyStorageBackends = storageWindow => {
     if (storageWindow === null || typeof storageWindow === 'undefined') {
         return [];
     }
 
-    return [storageWindow.sessionStorage, storageWindow.localStorage].filter(Boolean);
+    try {
+        return storageWindow.localStorage ? [storageWindow.localStorage] : [];
+    } catch {
+        return [];
+    }
+};
+
+const getJourneyViewStorageBackends = storageWindow => {
+    if (storageWindow === null || typeof storageWindow === 'undefined') {
+        return [];
+    }
+
+    try {
+        return storageWindow.localStorage ? [storageWindow.localStorage] : [];
+    } catch {
+        return [];
+    }
+};
+
+export const readJourneyViewState = storageWindow => {
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+
+    for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
+        try {
+            const rawState = storage.getItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
+            if (!rawState) {
+                continue;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            if (parsedState !== null && typeof parsedState === 'object') {
+                return parsedState;
+            }
+        } catch {
+            // Ignore malformed or non-JSON values and continue checking the next storage backend.
+        }
+    }
+
+    return null;
+};
+
+export const writeJourneyViewState = (nextState, storageWindow) => {
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+    const serialisedState = nextState === null || typeof nextState === 'undefined' ? null : JSON.stringify(nextState);
+
+    for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
+        try {
+            if (serialisedState === null) {
+                storage.removeItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
+            } else {
+                storage.setItem(JOURNEY_VIEW_STATE_STORAGE_KEY, serialisedState);
+            }
+        } catch {
+            // Ignore storage failures and continue.
+        }
+    }
+};
+
+export const removeJourneyViewState = () => {
+    writeJourneyViewState(null);
 };
 
 export const readJourneyLiveFilterState = storageWindow => {

@@ -7,10 +7,19 @@ import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpa
 import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
 describe('SidebarFilters campus selector', () => {
+    const originalWindowLocalStorage = window.localStorage;
+
     beforeEach(() => {
         document.cookie = 'UQLspacesPreferredCampus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-        window.sessionStorage.clear();
         window.localStorage.clear();
+        window.localStorage.clear();
+    });
+
+    afterEach(() => {
+        Object.defineProperty(window, 'localStorage', {
+            value: originalWindowLocalStorage,
+            configurable: true,
+        });
     });
 
     const theme = createTheme({
@@ -408,7 +417,7 @@ describe('SidebarFilters campus selector', () => {
             ],
         };
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyLiveFilterState',
             JSON.stringify({
                 capacityFilterValue: [4, 8],
@@ -421,7 +430,7 @@ describe('SidebarFilters campus selector', () => {
         fireEvent.click(screen.getByTestId('filtertype-57'));
 
         expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 50]);
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
+        expect(window.localStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {
@@ -631,8 +640,8 @@ describe('SidebarFilters campus selector', () => {
     });
 
     it('clears persisted journey capacity state and ignores malformed session JSON during reset', () => {
-        window.sessionStorage.setItem('bookableSpacesJourneyViewState', '{bad json');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem('bookableSpacesJourneyViewState', '{bad json');
+        window.localStorage.setItem(
             'bookableSpacesJourneyLiveFilterState',
             JSON.stringify({ capacityFilterValue: [8, 16], other: 'keep' }),
         );
@@ -648,30 +657,32 @@ describe('SidebarFilters campus selector', () => {
 
         fireEvent.click(screen.getByTestId('reset-filters-button'));
 
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBe(JSON.stringify({ other: 'keep' }));
+        expect(window.localStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBe(JSON.stringify({ other: 'keep' }));
     });
 
-    it('gracefully handles undefined sessionStorage while rendering a journey group', () => {
-        const originalSessionStorage = window.sessionStorage;
-        Object.defineProperty(window, 'sessionStorage', {
+    it('gracefully handles undefined localStorage while rendering a journey group', () => {
+        const originalLocalStorage = window.localStorage;
+        Object.defineProperty(window, 'localStorage', {
             value: undefined,
             configurable: true,
         });
 
-        renderWithTheme({
-            ...baseProps,
-            suppliedClassName: 'journeyFilterSidebar',
-            selectedFacilityTypes: [],
-            filteredFacilityTypeList: facilityGroupFixture,
-            facilityTypeList: facilityGroupFixture,
-        });
+        try {
+            renderWithTheme({
+                ...baseProps,
+                suppliedClassName: 'journeyFilterSidebar',
+                selectedFacilityTypes: [],
+                filteredFacilityTypeList: facilityGroupFixture,
+                facilityTypeList: facilityGroupFixture,
+            });
 
-        fireEvent.click(screen.getByTestId('facility-type-group-1'));
-
-        Object.defineProperty(window, 'sessionStorage', {
-            value: originalSessionStorage,
-            configurable: true,
-        });
+            fireEvent.click(screen.getByTestId('facility-type-group-1'));
+        } finally {
+            Object.defineProperty(window, 'localStorage', {
+                value: originalLocalStorage,
+                configurable: true,
+            });
+        }
     });
 
     it('scrolls to the sidebar and resets a default capacity range when the special filter is cleared', () => {
@@ -803,8 +814,8 @@ describe('SidebarFilters campus selector', () => {
 
         const setSelectedFacilityTypes = jest.fn();
         const setCapacityFilterValue = jest.fn();
-        const originalSessionStorage = window.sessionStorage;
-        Object.defineProperty(window, 'sessionStorage', {
+        const originalLocalStorage = window.localStorage;
+        Object.defineProperty(window, 'localStorage', {
             value: undefined,
             configurable: true,
         });
@@ -832,8 +843,8 @@ describe('SidebarFilters campus selector', () => {
             expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
             fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
         } finally {
-            Object.defineProperty(window, 'sessionStorage', {
-                value: originalSessionStorage,
+            Object.defineProperty(window, 'localStorage', {
+                value: originalLocalStorage,
                 configurable: true,
             });
         }

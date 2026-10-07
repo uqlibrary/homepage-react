@@ -26,12 +26,14 @@ import {
     getFlatFacilityTypeList,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     readJourneyLiveFilterState,
+    readJourneyViewState,
+    writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 export const clearPersistedCapacityFilterValue = storage => {
-    const storageBackends = storage ? [storage] : [window?.sessionStorage, window?.localStorage].filter(Boolean);
+    const storageBackends = storage ? [storage] : [window?.localStorage].filter(Boolean);
     /* istanbul ignore next */
     if (storageBackends.length === 0) {
         return;
@@ -544,22 +546,18 @@ export const SidebarFilters = ({
     };
 
     const clearJourneyIntentId = () => {
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined') {
             return;
         }
 
         try {
-            const rawJourneyState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
-            const parsedJourneyState = rawJourneyState ? JSON.parse(rawJourneyState) : {};
-            window.sessionStorage.setItem(
-                'bookableSpacesJourneyViewState',
-                JSON.stringify({
-                    ...parsedJourneyState,
-                    intentId: null,
-                }),
-            );
+            const parsedJourneyState = readJourneyViewState() || {};
+            writeJourneyViewState({
+                ...parsedJourneyState,
+                intentId: null,
+            });
         } catch {
-            // Ignore malformed session state.
+            // Ignore malformed journey state.
         }
     };
 

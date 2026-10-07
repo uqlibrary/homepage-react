@@ -22,12 +22,12 @@ import {
     findSpaceById,
     JOURNEY_VIEWS,
     readJourneyLiveFilterState,
+    readJourneyViewState,
     removeJourneyLiveFilterState,
     writeJourneyLiveFilterState,
+    writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
-
-const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
 // const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
 
@@ -366,7 +366,7 @@ const BookableSpacesWrapper = ({
     );
     const persistJourneyViewState = React.useCallback(nextState => {
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined') {
             return;
         }
 
@@ -375,7 +375,7 @@ const BookableSpacesWrapper = ({
             return;
         }
 
-        window.sessionStorage.setItem(JOURNEY_VIEW_STATE_STORAGE_KEY, JSON.stringify(nextState));
+        writeJourneyViewState(nextState);
     }, []);
     const favouriteSpaceIds = React.useMemo(
         () => new Set((spacesFavouritesList || []).map(favourite => String(favourite?.space_id))),
@@ -468,7 +468,7 @@ const BookableSpacesWrapper = ({
 
     React.useEffect(() => {
         /* istanbul ignore next */
-        if (hasHydratedJourneyViewStateRef.current || typeof window === 'undefined' || !window.sessionStorage) {
+        if (hasHydratedJourneyViewStateRef.current || typeof window === 'undefined') {
             return;
         }
 
@@ -479,14 +479,13 @@ const BookableSpacesWrapper = ({
             return;
         }
 
-        const rawState = window.sessionStorage.getItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
-        if (!rawState) {
+        const parsedState = readJourneyViewState();
+        if (!parsedState) {
             hasHydratedJourneyViewStateRef.current = true;
             return;
         }
 
         try {
-            const parsedState = JSON.parse(rawState);
             /* istanbul ignore next */
             if (parsedState?.intentId) {
                 latestIntentIdRef.current = parsedState.intentId;
@@ -532,7 +531,7 @@ const BookableSpacesWrapper = ({
 
     React.useEffect(() => {
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined') {
             return;
         }
 
@@ -610,12 +609,8 @@ const BookableSpacesWrapper = ({
     /* istanbul ignore next */
     const goToLegacyBrowse = () => {
         /* istanbul ignore next */
-        if (typeof window !== 'undefined' && window.sessionStorage) {
-            /* istanbul ignore next */
-            window.sessionStorage.setItem(
-                JOURNEY_VIEW_STATE_STORAGE_KEY,
-                JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
-            );
+        if (typeof window !== 'undefined') {
+            writeJourneyViewState({ view: 'results', intentId: null, spaceId: null });
         }
 
         /* istanbul ignore next */
@@ -672,8 +667,7 @@ const BookableSpacesWrapper = ({
         onResetAllFilters?.();
         resetCapacityFilterValue();
         /* istanbul ignore next */
-        /* istanbul ignore next */
-        if (typeof window !== 'undefined' && window.sessionStorage) {
+        if (typeof window !== 'undefined') {
             persistJourneyViewState({
                 view: view === 'landing' ? 'landing' : 'results',
                 intentId: null,
@@ -787,7 +781,7 @@ const BookableSpacesWrapper = ({
 
     React.useEffect(() => {
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined') {
             return;
         }
 
@@ -809,12 +803,11 @@ const BookableSpacesWrapper = ({
         }
 
         try {
-            const rawState = window.sessionStorage.getItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
-            if (!rawState) {
+            const parsedState = readJourneyViewState();
+            if (!parsedState) {
                 return;
             }
 
-            const parsedState = JSON.parse(rawState);
             /* istanbul ignore next */
             if (parsedState?.view === 'details' && isDetailsRoute) {
                 setView('details');
@@ -839,7 +832,7 @@ const BookableSpacesWrapper = ({
                 }
             }
         } catch {
-            // Ignore malformed session state.
+            // Ignore malformed journey state.
         }
     }, [location.hash, location.pathname, location.search, setShowFavouriteSpacesOnly, spacesForUrlLookup]);
 

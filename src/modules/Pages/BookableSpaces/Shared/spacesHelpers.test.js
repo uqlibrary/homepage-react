@@ -1774,7 +1774,7 @@ describe('spaces helpers', () => {
         const originalSetItem = Storage.prototype.setItem;
         const originalRemoveItem = Storage.prototype.removeItem;
 
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         window.localStorage.clear();
         expect(readJourneyLiveFilterState()).toBeNull();
         expect(readJourneyLiveFilterState(null)).toBeNull();
@@ -1782,20 +1782,20 @@ describe('spaces helpers', () => {
         expect(() => writeJourneyLiveFilterState({ selectedCampus: 1 }, null)).not.toThrow();
         expect(() => writeJourneyLiveFilterState(undefined)).not.toThrow();
 
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, 'not-json');
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, 'not-json');
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 7 }));
         expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 7 });
 
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify('plain-string'));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify('plain-string'));
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 11 }));
         expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 11 });
 
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(null));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(null));
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 12 }));
         expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 12 });
 
         writeJourneyLiveFilterState({ selectedLibrary: 3, selectedCampus: 8 });
-        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBe(
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBe(
             JSON.stringify({ selectedLibrary: 3, selectedCampus: 8 }),
         );
         expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBe(
@@ -1813,7 +1813,7 @@ describe('spaces helpers', () => {
         Storage.prototype.setItem = originalSetItem;
 
         removeJourneyLiveFilterState();
-        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
         expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
 
         const throwingRemoveItem = function (key) {
