@@ -44,6 +44,7 @@ import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesLi
 import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
+import * as spacesHelpers from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { parseJourneyStateFromUrl, serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 jest.mock('@mui/material', () => {
@@ -461,6 +462,34 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    it('skips hydrated journey state when both the route and storage are empty', () => {
+        const parseSpy = jest.spyOn(spacesHelpers, 'parseJourneyStateFromUrl').mockReturnValue(null);
+        const readSpy = jest.spyOn(spacesHelpers, 'readJourneyViewState').mockReturnValue(null);
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
+
+        expect(parseSpy).toHaveBeenCalled();
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+
+        parseSpy.mockRestore();
+        readSpy.mockRestore();
+    });
+
+    it('persists a right-click intent selection with cleared filters before navigating', () => {
+        renderJourney({
+            ...defaultProps,
+            initialView: 'landing',
+        });
+
+        fireEvent.contextMenu(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        expect(window.localStorage.getItem('bookableSpacesJourneyViewState')).toContain('"intentId":"quiet"');
+        expect(screen.getByTestId('spaces-journey-intent-card-quiet')).toBeInTheDocument();
+    });
 
     it('renders the journey panel with and without top spacing', () => {
         const { rerender } = rtlRender(

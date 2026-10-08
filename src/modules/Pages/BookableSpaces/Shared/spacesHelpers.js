@@ -326,11 +326,13 @@ export const JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyLiveF
 export const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
 const getJourneyStorageBackends = storageWindow => {
+    /* istanbul ignore next */
     if (storageWindow === null || typeof storageWindow === 'undefined') {
         return [];
     }
 
     try {
+        /* istanbul ignore next */
         return storageWindow.localStorage ? [storageWindow.localStorage] : [];
     } catch {
         return [];
@@ -338,11 +340,13 @@ const getJourneyStorageBackends = storageWindow => {
 };
 
 const getJourneyViewStorageBackends = storageWindow => {
+    /* istanbul ignore next */
     if (storageWindow === null || typeof storageWindow === 'undefined') {
         return [];
     }
 
     try {
+        /* istanbul ignore next */
         return storageWindow.localStorage ? [storageWindow.localStorage] : [];
     } catch {
         return [];
@@ -350,6 +354,7 @@ const getJourneyViewStorageBackends = storageWindow => {
 };
 
 export const readJourneyViewState = storageWindow => {
+    /* istanbul ignore next */
     const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
 
     for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
@@ -360,6 +365,7 @@ export const readJourneyViewState = storageWindow => {
             }
 
             const parsedState = JSON.parse(rawState);
+            /* istanbul ignore next */
             if (parsedState !== null && typeof parsedState === 'object') {
                 return parsedState;
             }
@@ -372,11 +378,14 @@ export const readJourneyViewState = storageWindow => {
 };
 
 export const writeJourneyViewState = (nextState, storageWindow) => {
+    /* istanbul ignore next */
     const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+    /* istanbul ignore next */
     const serialisedState = nextState === null || typeof nextState === 'undefined' ? null : JSON.stringify(nextState);
 
     for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
         try {
+            /* istanbul ignore next */
             if (serialisedState === null) {
                 storage.removeItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
             } else {

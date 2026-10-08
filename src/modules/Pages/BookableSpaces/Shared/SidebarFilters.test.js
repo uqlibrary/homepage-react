@@ -290,8 +290,46 @@ describe('SidebarFilters campus selector', () => {
         );
     });
 
-    it('keeps the active capacity bound when one side of the range is temporarily cleared while editing', () => {
+    it('skips journey intent clearing when the browser window is unavailable', () => {
         const setCapacityFilterValue = jest.fn();
+        const props = {
+            ...baseProps,
+            capacityFilterValue: [4, 8],
+            setCapacityFilterValue,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_children: [{ facility_type_id: 9003, facility_type_name: 'Space capacity' }],
+                        },
+                    ],
+                },
+            },
+        };
+
+        renderWithTheme(props);
+
+        const originalWindow = global.window;
+        global.window = undefined;
+
+        try {
+            expect(() => fireEvent.click(screen.getByTestId('button-deselect-selected-9003'))).not.toThrow();
+        } finally {
+            global.window = originalWindow;
+        }
+    });
+
+    it('keeps the active capacity bound when one side of the range is temporarily cleared while editing', () => {        const setCapacityFilterValue = jest.fn();
         const capacityGroupFixture = {
             data: {
                 facility_type_groups: [
