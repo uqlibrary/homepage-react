@@ -20,6 +20,14 @@ import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../alertsadmin.locale';
 import {
+    expandValues,
+    isInvalidEndDate,
+    isInvalidStartDate,
+    postAddCloneDetails,
+    postAddConfirmationDetails,
+} from './helpers';
+
+import {
     getBody,
     getTimeEndOfDayFormatted,
     getTimeNowFormatted,
@@ -32,8 +40,6 @@ import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 import { useNavigate } from 'react-router';
 import { breadcrumbs } from 'config/routes';
-
-const moment = require('moment');
 
 const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
     // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
@@ -94,20 +100,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setPreviewOpen(showThePreview);
     };
 
-    /* istanbul ignore next */
-    function isInvalidStartDate(startDate) {
-        return (startDate !== '' && startDate < defaults.startDateDefault) || !moment(startDate).isValid();
-    }
-
-    /* istanbul ignore next */
-    function isInvalidEndDate(endDate, startDate) {
-        return (startDate !== '' && endDate <= startDate) || !moment(endDate).isValid();
-    }
-
     const validateValues = currentValues => {
         const isValid =
             !alertLoading &&
-            !isInvalidStartDate(currentValues.startDate) &&
+            !isInvalidStartDate(currentValues.startDate, defaults) &&
             !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
@@ -203,33 +199,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         scrollToTopOfPage();
     };
 
-    function expandValues(expandableValues) {
-        // because otherwise we see 'false' when we clear the field
-        const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
-
-        const newLinkTitle = expandableValues.linkTitle || '';
-        const newLinkUrl = expandableValues.linkUrl || '';
-
-        const newBody = getBody(expandableValues);
-
-        const newStartDate = expandableValues.startDate || defaults.startDateDefault;
-        const newEndDate = expandableValues.endDate || defaults.endDateDefault;
-
-        return {
-            ...expandableValues,
-            ['alertTitle']: newAlertTitle,
-            ['body']: newBody,
-            ['linkTitle']: newLinkTitle,
-            ['linkUrl']: newLinkUrl,
-            ['startDate']: newStartDate,
-            ['endDate']: newEndDate,
-            ['systems']: expandableValues.systems || /* istanbul ignore next */ [],
-        };
-    }
-
     const saveAlerts = () => {
         setSuccessCount(0);
-        const expandedValues = expandValues(values);
+        const expandedValues = expandValues(values, defaults);
         setValues(expandedValues);
 
         const dateList = expandedValues.dateList;
@@ -284,7 +256,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
 
         showHidePreview(true);
-        setValues(expandValues(values));
+        setValues(expandValues(values, defaults));
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWebComponent = document.createElement('uq-alert');
@@ -369,7 +341,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const newValue = event.target.hasOwnProperty('checked') ? event.target.checked : event.target.value;
         setValues({ ...values, [prop]: newValue });
 
-        const newValues = expandValues({ ...values, [prop]: newValue });
+        const newValues = expandValues({ ...values, [prop]: newValue }, defaults);
         setValues(newValues);
 
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
@@ -431,28 +403,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     };
 
-    function postAddConfirmationDetails() {
-        // update the number of alerts saved if they saved multiple date-sets
-        return {
-            ...locale.form.add.addAlertConfirmation,
-            confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
-                'An alert has',
-                countSuccess > 1 ? /* istanbul ignore next */ `${countSuccess} alerts have` : 'An alert has',
-            ),
-        };
-    }
-
-    function postAddCloneDetails() {
-        // update the number of alerts saved if they saved multiple date-sets
-        return {
-            ...locale.form.clone.cloneAlertConfirmation,
-            confirmationTitle: locale.form.clone.cloneAlertConfirmation.confirmationTitle.replace(
-                'The alert has',
-                countSuccess > 1 ? `${countSuccess} alerts have` : 'The alert has',
-            ),
-        };
-    }
-
     return (
         <Fragment>
             <form>
@@ -487,7 +437,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={postAddConfirmationDetails()}
+                        locale={postAddConfirmationDetails(locale.form.add.addAlertConfirmation, countSuccess)}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
@@ -496,7 +446,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
                         isOpen={isOpen}
-                        locale={postAddCloneDetails()}
+                        locale={postAddCloneDetails(locale.form.clone.cloneAlertConfirmation, countSuccess)}
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}
@@ -549,7 +499,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         variant="standard"
                                         id={`startDate-${index}`}
                                         data-testid={`admin-alerts-form-start-date-${index}`}
-                                        error={isInvalidStartDate(dateset.startDate)}
+                                        error={isInvalidStartDate(dateset.startDate, defaults)}
                                         InputLabelProps={{ shrink: true }}
                                         label={locale.form.labels.startdate}
                                         onChange={handleChange('startDate')}
