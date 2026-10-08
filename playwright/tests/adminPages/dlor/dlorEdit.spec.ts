@@ -661,6 +661,65 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                         };
                     });
                 });
+
+                test('admin can edit an object without making changes to existing file', async ({ page }) => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                        object_file_name: 'image.gif',
+                        object_file_size: 1000,
+                        object_download_instructions: null,
+                        object_link_url: null,
+                        object_link_interaction_type: null,
+                        object_link_file_type: null,
+                        object_link_size: null,
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                    );
+                    await assertDlorFormSubmittedData(page, async () => {
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('admin-dlor-save-button-submit').click();
+
+                        await expect(
+                            page
+                                .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                                .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object'),
+                        ).toBeVisible();
+
+                        return {
+                            object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                            object_description:
+                                '<p>Understanding the importance of accessibility online and creating accessible content with a longer first line. Ramble a little.</p><p>and a second line of detail in the description</p>',
+                            object_summary:
+                                'Understanding the importance of accessibility online and creating accessible content.',
+                            object_owning_team_id: 1,
+                            object_link_url: null,
+                            object_download_instructions: 'Add this object to your course.',
+                            object_publishing_user: 'uqldegro',
+                            object_status: 'current',
+                            object_restrict_to: 'none',
+                            object_link_interaction_type: null,
+                            object_link_file_type: 'new',
+                            object_is_featured: 1,
+                            object_cultural_advice: 0,
+                            notificationText: '',
+                            object_keyword_ids: [100000, 100001, 100002],
+                            team_name: 'LIB DX Digital Content',
+                            team_manager: 'John Smith',
+                            team_email: 'dlor@library.uq.edu.au',
+                            facets: [3, 11, 14, 18, 30, 34, 45],
+                            object_keywords: ['accessible content', 'study hacks', 'universal design'],
+                        };
+                    });
+                });
             });
 
             test('admin can edit an object for a new team with notify and return to list', async ({ page }) => {

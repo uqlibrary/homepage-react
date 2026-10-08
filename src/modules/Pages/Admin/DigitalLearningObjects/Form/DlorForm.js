@@ -2057,15 +2057,16 @@ export const DlorForm = ({
                                 const labelProps = {
                                     optional: null,
                                 };
+                                const errorCount = panelErrorCount(index, hasFile);
                                 return (
                                     <Step key={step.label} {...stepProps} sx={{ paddingRight: '25px' }}>
                                         <StepLabel {...labelProps}>
-                                            {panelErrorCount(index, hasFile) === 0 ? (
+                                            {!errorCount ? (
                                                 <span>{step.label}</span>
                                             ) : (
                                                 <StyledErrorCountBadge
                                                     color="error"
-                                                    badgeContent={panelErrorCount(index, hasFile)}
+                                                    badgeContent={errorCount}
                                                     data-testid={`dlor-panel-validity-indicator-${index}`}
                                                 >
                                                     {step.label}
@@ -2099,7 +2100,7 @@ export const DlorForm = ({
                                     disabled={
                                         validatePanelOwnership(formValues) > 0 ||
                                         validatePanelDescription(formValues) > 0 ||
-                                        validatePanelLinks(formValues, fileToBeUploaded) > 0 ||
+                                        validatePanelLinks(formValues, hasFile) > 0 ||
                                         validatePanelFiltering(formValues) > 0
                                     }
                                     onClick={async () => await saveDlor()}
