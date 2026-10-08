@@ -101,7 +101,7 @@ jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
 
 describe('BookableSpacesList campus selection', () => {
     beforeEach(() => {
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         window.localStorage.clear();
     });
 
@@ -202,7 +202,7 @@ describe('BookableSpacesList campus selection', () => {
         mockMapReady = true;
         window.history.replaceState({}, '', '/spaces');
         document.cookie = 'UQLspacesPreferredCampus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         window.localStorage.clear();
     });
 
@@ -358,7 +358,7 @@ describe('BookableSpacesList campus selection', () => {
     });
 
     it('keeps the most recently selected map pin active instead of restoring the stale session value', async () => {
-        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '101');
+        window.localStorage.setItem('bookableSpacesSelectedSpaceId', '101');
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -376,14 +376,14 @@ describe('BookableSpacesList campus selection', () => {
             );
         });
 
-        await waitFor(() => expect(window.sessionStorage.getItem('bookableSpacesSelectedSpaceId')).toBe('201'));
+        await waitFor(() => expect(window.localStorage.getItem('bookableSpacesSelectedSpaceId')).toBe('201'));
 
         const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
         expect(latestSidebarListProps.expandedSpaceId).toBe(201);
     });
 
     it('restores the previously selected space from session storage on the map view', async () => {
-        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '201');
+        window.localStorage.setItem('bookableSpacesSelectedSpaceId', '201');
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -610,14 +610,14 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         await waitFor(() => {
-            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const rawState = window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
             expect(rawState).toContain('selectedFacilityTypes');
         });
     });
 
     it('removes a stale capacityFilterValue from session storage when the default range is restored', async () => {
         window.history.replaceState({}, '', '/spaces/results/');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
             JSON.stringify({
                 selectedFacilityTypes: [
@@ -647,7 +647,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         await waitFor(() => {
-            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const rawState = window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
             expect(rawState).not.toContain('capacityFilterValue');
         });
     });
@@ -673,7 +673,7 @@ describe('BookableSpacesList campus selection', () => {
             createdAt: Date.now(),
         };
 
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedLiveState));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedLiveState));
 
         rtlRender(
             <WithRouter route="/spaces/results/" initialEntries={['/spaces/results/']}>
@@ -701,7 +701,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('ignores malformed persisted journey state instead of crashing when hydrating filters', async () => {
         window.history.replaceState({}, '', '/spaces/results/');
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, '{not-valid-json');
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, '{not-valid-json');
         useAccountContext.mockReturnValue({ account: { id: 42 } });
 
         rtlRender(
@@ -718,7 +718,7 @@ describe('BookableSpacesList campus selection', () => {
     });
 
     it('clears the stored selected space when a list item is collapsed', async () => {
-        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '101');
+        window.localStorage.setItem('bookableSpacesSelectedSpaceId', '101');
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -733,7 +733,7 @@ describe('BookableSpacesList campus selection', () => {
             latestSidebarListProps.onSpaceToggle(baseProps.bookableSpacesRoomList.data.locations[0], false);
         });
 
-        await waitFor(() => expect(window.sessionStorage.getItem('bookableSpacesSelectedSpaceId')).toBeNull());
+        await waitFor(() => expect(window.localStorage.getItem('bookableSpacesSelectedSpaceId')).toBeNull());
     });
 
     it('falls back to the campus centre when library selection is reset to all libraries', async () => {
@@ -759,7 +759,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('treats invalid campus or library values as the all-campuses default', async () => {
         window.history.replaceState({}, '', '/spaces/results/');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
             JSON.stringify({
                 selectedCampus: 'not-a-number',
@@ -1166,7 +1166,7 @@ describe('BookableSpacesList campus selection', () => {
         );
 
         await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 1 }));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 1 }));
 
         const latestSidebarProps = mockSidebarRender.mock.calls.at(-1)[0];
         act(() => {
@@ -1174,9 +1174,9 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         await waitFor(() => {
-            expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+            expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
         });
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyViewState')).toBe(
+        expect(window.localStorage.getItem('bookableSpacesJourneyViewState')).toBe(
             JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
         );
     });
@@ -1203,7 +1203,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         await waitFor(() => {
-            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const rawState = window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
             expect(rawState).not.toBeNull();
             expect(JSON.parse(rawState)).toEqual(expect.objectContaining({ selectedCampus: 2 }));
         });
@@ -1217,11 +1217,11 @@ describe('BookableSpacesList campus selection', () => {
         );
         act(() => mockSidebarRender.mock.calls.at(-1)[0].handleCampusSelection({ target: { value: '1' } }));
         act(() => mockSidebarRender.mock.calls.at(-1)[0].handleLibrarySelection({ target: { value: '11' } }));
-        window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        window.localStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
 
         act(() => mockSidebarRender.mock.calls.at(-1)[0].onResetAllFilters());
 
-        expect(JSON.parse(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY))).toEqual({
+        expect(JSON.parse(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY))).toEqual({
             selectedCampus: 1,
             selectedLibrary: 11,
         });
@@ -1233,11 +1233,11 @@ describe('BookableSpacesList campus selection', () => {
                 <BookableSpacesList {...baseProps} />
             </WithRouter>,
         );
-        window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        window.localStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
 
         act(() => mockSidebarRender.mock.calls.at(-1)[0].onResetAllFilters());
 
-        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
     });
 
     it('covers the zero-campus-and-library fallback branch during reset when no persisted state exists', () => {
@@ -1259,7 +1259,7 @@ describe('BookableSpacesList campus selection', () => {
 
         act(() => resetSidebarProps.onResetAllFilters());
 
-        expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
+        expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull();
         expect(readJourneyLiveFilterStateSpy).toHaveBeenCalled();
 
         readJourneyLiveFilterStateSpy.mockRestore();
@@ -1284,7 +1284,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('waits for facility groups before hydrating saved filters', () => {
         const persistedState = { selectedCampus: 2, selectedFacilityTypes: [{ facility_type_id: 11, selected: true }] };
-        window.sessionStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedState));
+        window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedState));
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
                 <BookableSpacesList {...baseProps} facilityTypeList={null} />
@@ -1295,7 +1295,7 @@ describe('BookableSpacesList campus selection', () => {
 
     it('hydrates saved filters from the shared browser storage when session storage is empty', async () => {
         const persistedState = { selectedCampus: 2, selectedFacilityTypes: [{ facility_type_id: 11, selected: true }] };
-        window.sessionStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+        window.localStorage.removeItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify(persistedState));
 
         rtlRender(
@@ -1836,11 +1836,11 @@ describe('BookableSpacesList campus selection', () => {
                 expect.objectContaining({ facility_type_id: 11, selected: false, unselected: false }),
             ]);
         });
-        await waitFor(() => expect(window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull());
+        await waitFor(() => expect(window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY)).toBeNull());
     });
 
     it('restores the space saved in session storage once the map becomes ready', async () => {
-        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '201');
+        window.localStorage.setItem('bookableSpacesSelectedSpaceId', '201');
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -1854,7 +1854,7 @@ describe('BookableSpacesList campus selection', () => {
     });
 
     it('clears a stale saved space id that no longer matches any visible space', async () => {
-        window.sessionStorage.setItem('bookableSpacesSelectedSpaceId', '999');
+        window.localStorage.setItem('bookableSpacesSelectedSpaceId', '999');
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -1862,7 +1862,7 @@ describe('BookableSpacesList campus selection', () => {
             </WithRouter>,
         );
 
-        await waitFor(() => expect(window.sessionStorage.getItem('bookableSpacesSelectedSpaceId')).toBeNull());
+        await waitFor(() => expect(window.localStorage.getItem('bookableSpacesSelectedSpaceId')).toBeNull());
     });
 
     it('highlights and un-highlights a space panel over time when a space is selected', async () => {
@@ -1985,7 +1985,7 @@ describe('BookableSpacesList campus selection', () => {
         });
 
         await waitFor(() => {
-            const rawState = window.sessionStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
+            const rawState = window.localStorage.getItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY);
             const parsed = JSON.parse(rawState);
             expect(parsed.selectedFacilityTypes).toEqual([
                 expect.objectContaining({ facility_type_id: 11, selected: true }),

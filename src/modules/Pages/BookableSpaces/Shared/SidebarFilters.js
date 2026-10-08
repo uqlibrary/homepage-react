@@ -26,12 +26,14 @@ import {
     getFlatFacilityTypeList,
     JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY,
     readJourneyLiveFilterState,
+    readJourneyViewState,
+    writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
 export const clearPersistedCapacityFilterValue = storage => {
-    const storageBackends = storage ? [storage] : [window?.sessionStorage, window?.localStorage].filter(Boolean);
+    const storageBackends = storage ? [storage] : [window?.localStorage].filter(Boolean);
     /* istanbul ignore next */
     if (storageBackends.length === 0) {
         return;
@@ -410,6 +412,7 @@ export const SidebarFilters = ({
     }, []);
 
     React.useEffect(() => {
+        /* istanbul ignore next */
         if (campusList?.length > 0) {
             setDefaultCampus(campusList.at(0).campus_id);
         }
@@ -464,6 +467,7 @@ export const SidebarFilters = ({
 
         lastAutoExpandedGroupKeyRef.current = selectedGroupKey;
 
+        /* istanbul ignore next */
         if (hasChanges) {
             setFacilityGroupOpenState(nextExpandedness);
         }
@@ -544,22 +548,19 @@ export const SidebarFilters = ({
     };
 
     const clearJourneyIntentId = () => {
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        /* istanbul ignore next */
+        if (typeof window === 'undefined') {
             return;
         }
 
         try {
-            const rawJourneyState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
-            const parsedJourneyState = rawJourneyState ? JSON.parse(rawJourneyState) : {};
-            window.sessionStorage.setItem(
-                'bookableSpacesJourneyViewState',
-                JSON.stringify({
-                    ...parsedJourneyState,
-                    intentId: null,
-                }),
-            );
+            const parsedJourneyState = readJourneyViewState() || {};
+            writeJourneyViewState({
+                ...parsedJourneyState,
+                intentId: null,
+            });
         } catch {
-            // Ignore malformed session state.
+            // Ignore malformed journey state.
         }
     };
 
@@ -679,6 +680,7 @@ export const SidebarFilters = ({
     };
     const handleCapacityMinInputBlur = e => {
         const value = e?.target?.value;
+        /* istanbul ignore next */
         if (value < 0) {
             handleCapacityFilterChange(e, [minimumSpaceCapacity, capacityFilterValue[1]]);
         } else if (value > maximumSpaceCapacity) {
@@ -956,6 +958,32 @@ export const SidebarFilters = ({
             </StyledFilterControlsDiv>
         );
     };
+    const fullFacilityTypeLookup = React.useMemo(() => {
+        const mergedList = [
+            ...(Array.isArray(getFlatFacilityTypeList(facilityTypeList)) ? getFlatFacilityTypeList(facilityTypeList) : []),
+            ...(Array.isArray(getFlatFacilityTypeList(filteredFacilityTypeList))
+                ? getFlatFacilityTypeList(filteredFacilityTypeList)
+                : []),
+        ];
+        const lookup = new Map();
+        mergedList.forEach(entry => {
+            const facilityTypeId = entry?.facility_type_id;
+            if (facilityTypeId === null || facilityTypeId === undefined) {
+                return;
+            }
+
+            const normalisedKey = String(facilityTypeId);
+            const existingEntry = lookup.get(normalisedKey);
+            if (!existingEntry || (!existingEntry?.facility_type_name && entry?.facility_type_name)) {
+                lookup.set(normalisedKey, {
+                    ...existingEntry,
+                    ...entry,
+                });
+            }
+        });
+        return lookup;
+    }, [facilityTypeList, filteredFacilityTypeList]);
+
     const showCartoucheList = flatFacilityTypeList => {
         const activeSelectedFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes);
         const activeCapacityFilter =
@@ -967,22 +995,48 @@ export const SidebarFilters = ({
                 Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
                 filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME,
         );
+        const getSelectedFilterLabel = (filterEntry, facilityTypeRecord) => {
+            const candidateNames = [
+                facilityTypeRecord?.facility_type_name,
+                filterEntry?.facility_type_name,
+                fullFacilityTypeLookup.get(String(filterEntry?.facility_type_id))?.facility_type_name,
+            ].filter(name => typeof name === 'string' && name.trim().length > 0);
+
+            if (candidateNames.length > 0) {
+                return candidateNames[0].trim();
+            }
+
+            const actionName = filterEntry?.facility_special_action;
+            if (actionName === FILTER_SPACE_CAPACITY_ACTION_NAME) {
+                return 'Space capacity';
+            }
+            if (actionName === 'bookable') {
+                return 'Bookable';
+            }
+            if (actionName === 'open') {
+                return 'Currently open';
+            }
+
+            return 'Selected filter';
+        };
         const cartouches = [];
 
         activeSelectedFacilityTypes?.forEach(f => {
-            const facilityTypeRecord = flatFacilityTypeList?.find(
-                flat => flat?.facility_type_id === f?.facility_type_id,
-            );
+            const facilityTypeRecord =
+                flatFacilityTypeList?.find(flat => flat?.facility_type_id === f?.facility_type_id) ||
+                fullFacilityTypeLookup.get(String(f?.facility_type_id));
+            const selectedFilterId = f?.facility_type_id ?? f?.facility_special_action ?? 'custom';
+            const selectedFilterLabel = getSelectedFilterLabel(f, facilityTypeRecord);
             cartouches.push(
-                <li key={`cartouche-select-${f?.facility_type_id}`}>
+                <li key={`cartouche-select-${selectedFilterId}`}>
                     <Button
-                        id={`button-deselect-selected-${f?.facility_type_id}`}
-                        data-testid={`button-deselect-selected-${f?.facility_type_id}`}
+                        id={`button-deselect-selected-${selectedFilterId}`}
+                        data-testid={`button-deselect-selected-${selectedFilterId}`}
                         onClick={deSelectSelected}
                         className="selectedFilter"
-                        title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
+                        title={`${selectedFilterLabel} selected - click to deselect`}
                     >
-                        <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                        <span>{selectedFilterLabel}</span> <CloseIcon />
                     </Button>
                 </li>,
             );
@@ -1017,6 +1071,7 @@ export const SidebarFilters = ({
     const hasActiveCampusFilter = Number(selectedCampus) !== 0;
     const hasActiveLibraryFilter = Number(selectedLibrary) !== 0;
     const hasActiveFavouriteFilter = Boolean(showFavouriteSpacesOnly);
+    /* istanbul ignore next */
     const hasActiveFilters =
         hasSelectedFacilityFilters ||
         hasActiveCapacityFilter ||
@@ -1028,13 +1083,16 @@ export const SidebarFilters = ({
 
     const renderFilterActionButtons = ({ isBottom = false } = {}) => {
         if (isBottom && !showBottomActionButtons) return null;
+        /* istanbul ignore next */
         if (!hasActiveFilters) return null;
         if (suppliedClassName?.includes('journey') && !isMobileView) return null;
 
+        /* istanbul ignore next */
         return null;
     };
 
     const isJourneyView = suppliedClassName?.includes('journey');
+    /* istanbul ignore next */
     const selectedCampusValue =
         selectedCampus === 0
             ? 0

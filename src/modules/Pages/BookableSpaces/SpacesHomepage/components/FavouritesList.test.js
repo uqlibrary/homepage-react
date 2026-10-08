@@ -56,7 +56,7 @@ describe('FavouritesList', () => {
         renderWithProviders(<FavouritesList {...props} />);
 
         const allLink = screen.getByTestId('spaces-homepage-favourites-all-link');
-        expect(allLink).toHaveAttribute('href', '/spaces/results');
+        expect(allLink).toHaveAttribute('href', `/spaces/results/${props.favouriteIntentDefinition.id}`);
 
         fireEvent.click(allLink);
         expect(props.setSelectedIntentId).toHaveBeenCalledWith('quiet');

@@ -52,6 +52,7 @@ import {
     readJourneyLiveFilterState,
     removeJourneyLiveFilterState,
     writeJourneyLiveFilterState,
+    writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { CAMPUS_DUTTON_PARK } from 'config/locale';
 
@@ -297,12 +298,12 @@ export const BookableSpacesList = ({
     const [expandedSpaceId, setExpandedSpaceId] = useState(() => {
         // Browser compatibility block - likely not used.
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined' || !window.localStorage) {
             return null;
         }
 
         try {
-            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            const rawSelectedSpaceId = window.localStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
             if (!rawSelectedSpaceId) {
                 return null;
             }
@@ -380,8 +381,8 @@ export const BookableSpacesList = ({
                 return;
             }
             /* istanbul ignore else */
-            if (typeof window !== 'undefined' && window.sessionStorage) {
-                window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(Number(spaceId)));
+            if (typeof window !== 'undefined' && window.localStorage) {
+                window.localStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(Number(spaceId)));
             }
         },
         [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY],
@@ -415,12 +416,12 @@ export const BookableSpacesList = ({
     const getPersistedSelectedSpaceId = React.useCallback(() => {
         // Guard only - likely never used
         /* istanbul ignore next */
-        if (typeof window === 'undefined' || !window.sessionStorage) {
+        if (typeof window === 'undefined' || !window.localStorage) {
             return null;
         }
 
         try {
-            const rawSelectedSpaceId = window.sessionStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            const rawSelectedSpaceId = window.localStorage.getItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
             if (!rawSelectedSpaceId) {
                 return null;
             }
@@ -461,8 +462,8 @@ export const BookableSpacesList = ({
             if (expandedSpaceId === space.space_id) {
                 setExpandedSpaceId(null);
                 /* istanbul ignore else */
-                if (typeof window !== 'undefined' && window.sessionStorage) {
-                    window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    window.localStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
                 }
             }
         },
@@ -470,16 +471,16 @@ export const BookableSpacesList = ({
     );
 
     React.useEffect(() => {
-        if (useJourneyExperience || typeof window === 'undefined' || !window.sessionStorage) {
+        if (useJourneyExperience || typeof window === 'undefined' || !window.localStorage) {
             return;
         }
 
         if (expandedSpaceId === null || expandedSpaceId === undefined) {
-            window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            window.localStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
             return;
         }
 
-        window.sessionStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(expandedSpaceId));
+        window.localStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(expandedSpaceId));
     }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, useJourneyExperience]);
 
     React.useEffect(() => {
@@ -498,8 +499,8 @@ export const BookableSpacesList = ({
 
         if (!selectedSpace) {
             /* istanbul ignore else */
-            if (typeof window !== 'undefined' && window.sessionStorage) {
-                window.sessionStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            if (typeof window !== 'undefined' && window.localStorage) {
+                window.localStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
             }
             setExpandedSpaceId(null);
             return;
@@ -789,7 +790,6 @@ export const BookableSpacesList = ({
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
     const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
-    const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
     const resetAllSpaceFilters = useCallback(() => {
         const resetFacilityTypes = (selectedFacilityTypes || /* istanbul ignore next */ []).map(filter => ({
@@ -830,10 +830,7 @@ export const BookableSpacesList = ({
                 }
             }
 
-            window.sessionStorage?.setItem(
-                JOURNEY_VIEW_STATE_STORAGE_KEY,
-                JSON.stringify({ view: 'results', intentId: null, spaceId: null }),
-            );
+            writeJourneyViewState({ view: 'results', intentId: null, spaceId: null });
         }
     }, [
         maximumSpaceCapacity,

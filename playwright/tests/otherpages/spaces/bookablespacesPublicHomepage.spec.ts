@@ -130,12 +130,12 @@ test.describe('Spaces Homepage', () => {
         await expect(page.locator('[data-testid^="spaces-result-list-item-"]')).toHaveCount(10); // first page of spaces is present
     });
 
-    test('intent click preselects filters in the current session but not via copied URL', async ({ page, browser }) => {
+    test('intent click preselects filters and the copied URL preserves the same intent selection', async ({ page, browser }) => {
         await page.goto('/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await page.getByTestId('spaces-journey-intent-card-postgrad').click();
-        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page).toHaveURL(/\/spaces\/results\/postgrad$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesOnFirstPage = page.getByRole('button', { name: /Show Room features filter options/i });
@@ -150,7 +150,7 @@ test.describe('Spaces Homepage', () => {
 
         await secondPage.goto(copiedUrl);
         await secondPage.setViewportSize({ width: 1300, height: 1000 });
-        await expect(secondPage).toHaveURL(/\/spaces\/results$/);
+        await expect(secondPage).toHaveURL(/\/spaces\/results\/postgrad$/);
         await expect(secondPage.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesOnSecondPage = secondPage.getByRole('button', {
@@ -159,7 +159,7 @@ test.describe('Spaces Homepage', () => {
         if (await showRoomFeaturesOnSecondPage.count()) {
             await showRoomFeaturesOnSecondPage.click();
         }
-        await expect(secondPage.getByRole('checkbox', { name: 'Postgraduate only space' })).not.toBeChecked();
+        await expect(secondPage.getByRole('checkbox', { name: 'Postgraduate only space' })).toBeChecked();
 
         await secondContext.close();
     });
@@ -169,7 +169,7 @@ test.describe('Spaces Homepage', () => {
         await page.setViewportSize({ width: 1300, height: 1000 });
 
         await page.getByTestId('spaces-journey-intent-card-postgrad').click();
-        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page).toHaveURL(/\/spaces\/results\/postgrad$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesBeforeReload = page.getByRole('button', { name: /Show Room features filter options/i });
@@ -180,7 +180,7 @@ test.describe('Spaces Homepage', () => {
         await expect(postgradCheckbox).toBeChecked();
 
         await page.reload();
-        await expect(page).toHaveURL(/\/spaces\/results$/);
+        await expect(page).toHaveURL(/\/spaces\/results\/postgrad$/);
         await expect(page.getByTestId('bookable-spaces-journey-results-view')).toBeVisible();
 
         const showRoomFeaturesAfterReload = page.getByRole('button', { name: /Show Room features filter options/i });

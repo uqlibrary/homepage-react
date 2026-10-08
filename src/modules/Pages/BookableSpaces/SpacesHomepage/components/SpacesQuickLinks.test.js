@@ -7,9 +7,16 @@ import { rtlRender, screen, WithRouter } from 'test-utils';
 import { SpacesQuickLinks } from './SpacesQuickLinks';
 
 jest.mock('modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard', () => {
-    function MockSingleLinkCard({ testId, cardHeading, shortParagraph, landingUrl, onNavigate }) {
+    function MockSingleLinkCard({ testId, cardHeading, shortParagraph, landingUrl, onNavigate, onMouseDown, onContextMenu }) {
         return (
-            <button type="button" data-testid={testId} data-landing-url={landingUrl} onClick={onNavigate}>
+            <button
+                type="button"
+                data-testid={testId}
+                data-landing-url={landingUrl}
+                onClick={onNavigate}
+                onMouseDown={onMouseDown}
+                onContextMenu={onContextMenu}
+            >
                 {cardHeading}
                 {shortParagraph ? <span>{shortParagraph}</span> : null}
             </button>
@@ -31,6 +38,7 @@ describe('SpacesQuickLinks', () => {
         favouriteIntentDefinition: { id: 'favourite' },
         getIntentLandingUrl: jest.fn(intent => `/spaces/results/${intent?.id || 'all'}`),
         onIntentLinkNavigate: jest.fn(),
+        onIntentLinkPersist: jest.fn(),
         onSeeAllSpaces: jest.fn(),
     };
 
@@ -57,6 +65,33 @@ describe('SpacesQuickLinks', () => {
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
         expect(defaultProps.onIntentLinkNavigate).toHaveBeenCalledWith(expect.objectContaining({ id: 'quiet' }));
+
+        fireEvent.mouseDown(screen.getByTestId('spaces-journey-intent-card-group'), { button: 0 });
+        expect(defaultProps.onIntentLinkPersist).toHaveBeenCalledWith(expect.objectContaining({ id: 'group' }));
+
+        fireEvent.contextMenu(screen.getByTestId('spaces-journey-intent-card-group'));
+        expect(defaultProps.onIntentLinkPersist).toHaveBeenLastCalledWith(expect.objectContaining({ id: 'group' }));
+    });
+
+    it('ignores non-primary mouse button presses while still supporting context-menu persistence', () => {
+        const props = {
+            ...defaultProps,
+            onIntentLinkPersist: jest.fn(),
+        };
+
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks {...props} />
+            </WithRouter>,
+        );
+
+        const quietCard = screen.getByTestId('spaces-journey-intent-card-quiet');
+        fireEvent.mouseDown(quietCard, { button: 2 });
+        expect(props.onIntentLinkPersist).not.toHaveBeenCalled();
+
+        fireEvent.contextMenu(quietCard);
+        expect(props.onIntentLinkPersist).toHaveBeenCalledTimes(1);
+        expect(props.onIntentLinkPersist).toHaveBeenCalledWith(expect.objectContaining({ id: 'quiet' }));
     });
 
     it('handles missing optional callbacks and an absent intent list without crashing', () => {
@@ -65,6 +100,7 @@ describe('SpacesQuickLinks', () => {
             navigateToView: jest.fn(),
             availableIntentDefinitionsForLanding: null,
             onIntentLinkNavigate: undefined,
+            onIntentLinkPersist: undefined,
             onSeeAllSpaces: undefined,
         };
 
@@ -77,6 +113,26 @@ describe('SpacesQuickLinks', () => {
         expect(screen.queryByTestId('spaces-journey-intent-card-0')).not.toBeInTheDocument();
         fireEvent.click(screen.getByRole('link', { name: 'See all spaces' }));
         expect(props.navigateToView).toHaveBeenCalledWith('results');
+    });
+
+    it('renders intent cards without persistence callbacks when the optional handler is omitted', () => {
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks
+                    {...defaultProps}
+                    onIntentLinkPersist={undefined}
+                    availableIntentDefinitionsForLanding={[
+                        { id: 'quiet', label: 'Quiet study', description: 'A calm space to read', IconSvg: null },
+                    ]}
+                />
+            </WithRouter>,
+        );
+
+        const card = screen.getByTestId('spaces-journey-intent-card-quiet');
+        expect(() => {
+            fireEvent.mouseDown(card, { button: 0 });
+            fireEvent.contextMenu(card);
+        }).not.toThrow();
     });
 
     it('renders intent cards without an onNavigate callback when the optional handler is omitted', () => {

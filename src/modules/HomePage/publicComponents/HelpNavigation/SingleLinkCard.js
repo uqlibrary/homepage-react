@@ -167,6 +167,8 @@ const SingleLinkCard = ({
     testId,
     onClick,
     onNavigate,
+    onMouseDown,
+    onContextMenu,
     showH3 = null,
     followingElement,
     ariaLabel,
@@ -199,6 +201,8 @@ const SingleLinkCard = ({
                     fillContainer={fillContainer}
                     data-testid={testId}
                     onClick={handleClick}
+                    onMouseDown={onMouseDown}
+                    onContextMenu={onContextMenu}
                     aria-label={ariaLabel}
                 >
                     <div className={'panelBodyWrapper'}>
@@ -230,6 +234,8 @@ SingleLinkCard.propTypes = {
     testId: PropTypes.string,
     onClick: PropTypes.func,
     onNavigate: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onContextMenu: PropTypes.func,
     showH3: PropTypes.any,
     followingElement: PropTypes.any,
     ariaLabel: PropTypes.string,

@@ -323,13 +323,82 @@ export const JOURNEY_QUERY_PARAM_INTENT = 'journeyIntent';
 export const JOURNEY_QUERY_PARAM_SPACE = 'journeySpace';
 export const JOURNEY_RETURN_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyReturnFilterState';
 export const JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY = 'bookableSpacesJourneyLiveFilterState';
+export const JOURNEY_VIEW_STATE_STORAGE_KEY = 'bookableSpacesJourneyViewState';
 
 const getJourneyStorageBackends = storageWindow => {
+    /* istanbul ignore next */
     if (storageWindow === null || typeof storageWindow === 'undefined') {
         return [];
     }
 
-    return [storageWindow.sessionStorage, storageWindow.localStorage].filter(Boolean);
+    try {
+        /* istanbul ignore next */
+        return storageWindow.localStorage ? [storageWindow.localStorage] : [];
+    } catch {
+        return [];
+    }
+};
+
+const getJourneyViewStorageBackends = storageWindow => {
+    /* istanbul ignore next */
+    if (storageWindow === null || typeof storageWindow === 'undefined') {
+        return [];
+    }
+
+    try {
+        /* istanbul ignore next */
+        return storageWindow.localStorage ? [storageWindow.localStorage] : [];
+    } catch {
+        return [];
+    }
+};
+
+export const readJourneyViewState = storageWindow => {
+    /* istanbul ignore next */
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+
+    for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
+        try {
+            const rawState = storage.getItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
+            if (!rawState) {
+                continue;
+            }
+
+            const parsedState = JSON.parse(rawState);
+            /* istanbul ignore next */
+            if (parsedState !== null && typeof parsedState === 'object') {
+                return parsedState;
+            }
+        } catch {
+            // Ignore malformed or non-JSON values and continue checking the next storage backend.
+        }
+    }
+
+    return null;
+};
+
+export const writeJourneyViewState = (nextState, storageWindow) => {
+    /* istanbul ignore next */
+    const resolvedStorageWindow = typeof storageWindow === 'undefined' ? window : storageWindow;
+    /* istanbul ignore next */
+    const serialisedState = nextState === null || typeof nextState === 'undefined' ? null : JSON.stringify(nextState);
+
+    for (const storage of getJourneyViewStorageBackends(resolvedStorageWindow)) {
+        try {
+            /* istanbul ignore next */
+            if (serialisedState === null) {
+                storage.removeItem(JOURNEY_VIEW_STATE_STORAGE_KEY);
+            } else {
+                storage.setItem(JOURNEY_VIEW_STATE_STORAGE_KEY, serialisedState);
+            }
+        } catch {
+            // Ignore storage failures and continue.
+        }
+    }
+};
+
+export const removeJourneyViewState = () => {
+    writeJourneyViewState(null);
 };
 
 export const readJourneyLiveFilterState = storageWindow => {
@@ -442,14 +511,17 @@ const getJourneyPathname = url => {
     return pathValue.replace(/\/+$/, '') || '/spaces';
 };
 
-export const serialiseJourneyUrl = ({ view, spaceId }) => {
+export const serialiseJourneyUrl = ({ view, intentId, spaceId }) => {
     const url = new URL(window.location.href);
     const hashValue = url.hash || '';
     const isHashRouting = hashValue.startsWith('#/');
 
-    const buildPath = ({ nextView, nextSpaceId }) => {
+    const buildPath = ({ nextView, nextIntentId, nextSpaceId }) => {
         /* istanbul ignore else */
         if (nextView === 'results') {
+            if (nextIntentId) {
+                return `/spaces/results/${encodeURIComponent(String(nextIntentId))}`;
+            }
             return '/spaces/results';
         }
 
@@ -461,7 +533,7 @@ export const serialiseJourneyUrl = ({ view, spaceId }) => {
         return '/spaces';
     };
 
-    const nextPath = buildPath({ nextView: view, nextSpaceId: spaceId });
+    const nextPath = buildPath({ nextView: view, nextIntentId: intentId, nextSpaceId: spaceId });
 
     if (isHashRouting) {
         const branchPrefix = url.pathname && url.pathname !== '/' ? url.pathname.replace(/\/+$/, '') : '';

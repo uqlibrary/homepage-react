@@ -149,7 +149,7 @@ export default {
                 },
                 {
                     "facility_type_id": 49,
-                    "facility_type_name": "Low Light"
+                    "facility_type_name": "Low light"
                 },
                 {
                     "facility_type_id": 60,
@@ -203,6 +203,10 @@ export default {
                 {
                     "facility_type_id": 22,
                     "facility_type_name": "Toilets, male"
+                },
+                {
+                    "facility_type_id": 49,
+                    "facility_type_name": "Low light"
                 },
                 {
                     "facility_type_id": 29,

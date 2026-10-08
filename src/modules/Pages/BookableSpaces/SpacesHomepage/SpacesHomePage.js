@@ -136,6 +136,7 @@ export const SpacesHomePage = ({
     setSelectedIntentId,
     getIntentLandingUrl,
     onIntentLinkNavigate,
+    onIntentLinkPersist,
 }) => {
     const [pageAnnouncement, setPageAnnouncement] = React.useState('');
     useTitle('Bookable Spaces - UQ Library');
@@ -206,6 +207,7 @@ export const SpacesHomePage = ({
                         handleIntentSelect={handleIntentSelect}
                         getIntentLandingUrl={getIntentLandingUrl}
                         onIntentLinkNavigate={onIntentLinkNavigate}
+                        onIntentLinkPersist={onIntentLinkPersist}
                         onSeeAllSpaces={onSeeAllSpaces}
                     />
                 </StandardPage>
@@ -232,6 +234,7 @@ SpacesHomePage.propTypes = {
     setSelectedIntentId: PropTypes.func,
     getIntentLandingUrl: PropTypes.func.isRequired,
     onIntentLinkNavigate: PropTypes.func,
+    onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
