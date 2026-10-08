@@ -1791,6 +1791,7 @@ describe('spaces helpers', () => {
         expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 7 });
 
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify('plain-string'));
+        expect(readJourneyLiveFilterState()).toBeNull();
         window.localStorage.setItem(JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY, JSON.stringify({ selectedCampus: 11 }));
         expect(readJourneyLiveFilterState()).toEqual({ selectedCampus: 11 });
 
