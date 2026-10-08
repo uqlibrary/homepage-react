@@ -368,9 +368,9 @@ export const DlorForm = ({
         return secondPanelErrorCount;
     }
 
-    function validatePanelLinks(currentValues, fileToBeUploaded) {
+    function validatePanelLinks(currentValues, hasFile) {
         let thirdPanelErrorCount = 0;
-        !fileToBeUploaded && !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
+        !hasFile && !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
 
         [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(currentValues?.object_link_interaction_type) &&
             (!currentValues?.object_link_file_type ||
@@ -1998,13 +1998,13 @@ export const DlorForm = ({
         );
     }
 
-    function panelErrorCount(index, fileToBeUploaded) {
+    function panelErrorCount(index, hasFile) {
         if (index === 0) {
             return validatePanelOwnership(formValues);
         } else if (index === 1) {
             return validatePanelDescription(formValues);
         } else if (index === 2) {
-            return validatePanelLinks(formValues, fileToBeUploaded);
+            return validatePanelLinks(formValues, hasFile);
         } else {
             // index must = 3
             return validatePanelFiltering(formValues);
@@ -2059,12 +2059,12 @@ export const DlorForm = ({
                                 return (
                                     <Step key={step.label} {...stepProps} sx={{ paddingRight: '25px' }}>
                                         <StepLabel {...labelProps}>
-                                            {panelErrorCount(index, fileToBeUploaded) === 0 ? (
+                                            {panelErrorCount(index, hasFile) === 0 ? (
                                                 <span>{step.label}</span>
                                             ) : (
                                                 <StyledErrorCountBadge
                                                     color="error"
-                                                    badgeContent={panelErrorCount(index)}
+                                                    badgeContent={panelErrorCount(index, hasFile)}
                                                     data-testid={`dlor-panel-validity-indicator-${index}`}
                                                 >
                                                     {step.label}
