@@ -1796,7 +1796,10 @@ export const DlorForm = ({
     };
 
     const saveDlor = async () => {
-        const valuesToSend = { ...formValues };
+        const valuesToSend = {
+            ...formValues,
+            object_link_interaction_type: formValues.object_link_interaction_type || linkInteractionTypeNONE,
+        };
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
