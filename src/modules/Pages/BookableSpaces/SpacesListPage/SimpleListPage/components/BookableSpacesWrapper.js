@@ -151,9 +151,13 @@ export const resolveJourneyIntentFilters = ({
     setSelectedFacilityTypes,
 }) => {
     const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
-    const sourceFacilityGroups =
-        filteredFacilityTypeList?.data?.facility_type_groups || facilityTypeList?.data?.facility_type_groups;
-    if (!sourceFacilityGroups?.length) {
+    const sourceFacilityGroups = [
+        ...(Array.isArray(facilityTypeList?.data?.facility_type_groups) ? facilityTypeList.data.facility_type_groups : []),
+        ...(Array.isArray(filteredFacilityTypeList?.data?.facility_type_groups)
+            ? filteredFacilityTypeList.data.facility_type_groups
+            : []),
+    ];
+    if (!sourceFacilityGroups.length) {
         return { applied: false, nextFilters: existingFilters, lastAppliedIntentId: null };
     }
 
@@ -170,13 +174,33 @@ export const resolveJourneyIntentFilters = ({
             facilitySpecialAction: child?.facility_special_action || null,
         })),
     );
+    const dedupedSourceEntriesById = new Map();
+    sourceEntries.forEach(entry => {
+        if (entry.facilityTypeId === null) {
+            return;
+        }
+
+        const existingEntry = dedupedSourceEntriesById.get(entry.facilityTypeId);
+        if (!existingEntry) {
+            dedupedSourceEntriesById.set(entry.facilityTypeId, entry);
+            return;
+        }
+
+        if (!existingEntry.facilityTypeName && entry.facilityTypeName) {
+            dedupedSourceEntriesById.set(entry.facilityTypeId, {
+                ...existingEntry,
+                facilityTypeName: entry.facilityTypeName,
+            });
+        }
+    });
+    const uniqueSourceEntries = Array.from(dedupedSourceEntriesById.values());
     const sourceNameById = new Map(
-        sourceEntries
+        uniqueSourceEntries
             .filter(entry => entry.facilityTypeId !== null)
             .map(entry => [entry.facilityTypeId, entry.facilityTypeName]),
     );
 
-    const sourceFilters = sourceEntries
+    const sourceFilters = uniqueSourceEntries
         .filter(entry => entry.facilityTypeId !== null)
         .map(entry => ({
             facility_type_group_id: entry.facilityTypeGroupId,

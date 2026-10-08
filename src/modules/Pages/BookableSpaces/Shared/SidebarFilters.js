@@ -958,6 +958,32 @@ export const SidebarFilters = ({
             </StyledFilterControlsDiv>
         );
     };
+    const fullFacilityTypeLookup = React.useMemo(() => {
+        const mergedList = [
+            ...(Array.isArray(getFlatFacilityTypeList(facilityTypeList)) ? getFlatFacilityTypeList(facilityTypeList) : []),
+            ...(Array.isArray(getFlatFacilityTypeList(filteredFacilityTypeList))
+                ? getFlatFacilityTypeList(filteredFacilityTypeList)
+                : []),
+        ];
+        const lookup = new Map();
+        mergedList.forEach(entry => {
+            const facilityTypeId = entry?.facility_type_id;
+            if (facilityTypeId === null || facilityTypeId === undefined) {
+                return;
+            }
+
+            const normalisedKey = String(facilityTypeId);
+            const existingEntry = lookup.get(normalisedKey);
+            if (!existingEntry || (!existingEntry?.facility_type_name && entry?.facility_type_name)) {
+                lookup.set(normalisedKey, {
+                    ...existingEntry,
+                    ...entry,
+                });
+            }
+        });
+        return lookup;
+    }, [facilityTypeList, filteredFacilityTypeList]);
+
     const showCartoucheList = flatFacilityTypeList => {
         const activeSelectedFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes);
         const activeCapacityFilter =
@@ -969,22 +995,48 @@ export const SidebarFilters = ({
                 Number(filter?.facility_type_id) === FILTER_CAPACITY_TYPE_ID ||
                 filter?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME,
         );
+        const getSelectedFilterLabel = (filterEntry, facilityTypeRecord) => {
+            const candidateNames = [
+                facilityTypeRecord?.facility_type_name,
+                filterEntry?.facility_type_name,
+                fullFacilityTypeLookup.get(String(filterEntry?.facility_type_id))?.facility_type_name,
+            ].filter(name => typeof name === 'string' && name.trim().length > 0);
+
+            if (candidateNames.length > 0) {
+                return candidateNames[0].trim();
+            }
+
+            const actionName = filterEntry?.facility_special_action;
+            if (actionName === FILTER_SPACE_CAPACITY_ACTION_NAME) {
+                return 'Space capacity';
+            }
+            if (actionName === 'bookable') {
+                return 'Bookable';
+            }
+            if (actionName === 'open') {
+                return 'Currently open';
+            }
+
+            return 'Selected filter';
+        };
         const cartouches = [];
 
         activeSelectedFacilityTypes?.forEach(f => {
-            const facilityTypeRecord = flatFacilityTypeList?.find(
-                flat => flat?.facility_type_id === f?.facility_type_id,
-            );
+            const facilityTypeRecord =
+                flatFacilityTypeList?.find(flat => flat?.facility_type_id === f?.facility_type_id) ||
+                fullFacilityTypeLookup.get(String(f?.facility_type_id));
+            const selectedFilterId = f?.facility_type_id ?? f?.facility_special_action ?? 'custom';
+            const selectedFilterLabel = getSelectedFilterLabel(f, facilityTypeRecord);
             cartouches.push(
-                <li key={`cartouche-select-${f?.facility_type_id}`}>
+                <li key={`cartouche-select-${selectedFilterId}`}>
                     <Button
-                        id={`button-deselect-selected-${f?.facility_type_id}`}
-                        data-testid={`button-deselect-selected-${f?.facility_type_id}`}
+                        id={`button-deselect-selected-${selectedFilterId}`}
+                        data-testid={`button-deselect-selected-${selectedFilterId}`}
                         onClick={deSelectSelected}
                         className="selectedFilter"
-                        title={`${facilityTypeRecord?.facility_type_name} selected - click to deselect`}
+                        title={`${selectedFilterLabel} selected - click to deselect`}
                     >
-                        <span>{facilityTypeRecord?.facility_type_name}</span> <CloseIcon />
+                        <span>{selectedFilterLabel}</span> <CloseIcon />
                     </Button>
                 </li>,
             );

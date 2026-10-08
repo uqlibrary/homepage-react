@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
+import * as spacesHelpers from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
@@ -115,6 +116,143 @@ describe('SidebarFilters campus selector', () => {
             facility_special_action: null,
         },
     ];
+
+    it('uses the full facility list to label an intent chip even when the current filtered list does not contain that filter', () => {
+        renderWithTheme({
+            ...baseProps,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: false,
+                            facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Postgraduate only space' }],
+                        },
+                    ],
+                },
+            },
+        });
+
+        const selectedFilterButton = screen.getByTestId('button-deselect-selected-11');
+        expect(selectedFilterButton).toHaveTextContent('Postgraduate only space');
+        expect(selectedFilterButton).toHaveAttribute(
+            'title',
+            'Postgraduate only space selected - click to deselect',
+        );
+    });
+
+    it('falls back to action labels when no facility name is available and ignores malformed facility ids', () => {
+        const mixedFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: null, facility_type_name: 'Ignore me' },
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: mixedFixture,
+            filteredFacilityTypeList: mixedFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'bookable',
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'open',
+                },
+            ],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-capacity')).toHaveTextContent('Space capacity');
+        expect(screen.getByTestId('button-deselect-selected-bookable')).toHaveTextContent('Bookable');
+        expect(screen.getByTestId('button-deselect-selected-open')).toHaveTextContent('Currently open');
+    });
+
+    it('covers the non-array flat-list fallback and default custom action chip label', () => {
+        const getFlatFacilityTypeListSpy = jest.spyOn(spacesHelpers, 'getFlatFacilityTypeList');
+        getFlatFacilityTypeListSpy.mockReturnValue({ find: () => undefined });
+
+        renderWithTheme({
+            ...baseProps,
+            selectedFacilityTypes: [{ facility_type_group_id: 1, selected: true, unselected: false }],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-custom')).toHaveTextContent('Selected filter');
+        getFlatFacilityTypeListSpy.mockRestore();
+    });
+
+    it('fills the facility label from a later duplicate record when an earlier one is missing a name', () => {
+        const duplicateIdFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 57, facility_type_name: undefined },
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: duplicateIdFixture,
+            filteredFacilityTypeList: duplicateIdFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 57,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-57')).toHaveTextContent('Natural light');
+    });
 
     it('puts the reset filters control in the sidebar header and removes the legacy remove-all button', () => {
         renderWithTheme({
