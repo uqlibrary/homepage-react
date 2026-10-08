@@ -7,9 +7,16 @@ import { rtlRender, screen, WithRouter } from 'test-utils';
 import { SpacesQuickLinks } from './SpacesQuickLinks';
 
 jest.mock('modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard', () => {
-    function MockSingleLinkCard({ testId, cardHeading, shortParagraph, landingUrl, onNavigate }) {
+    function MockSingleLinkCard({ testId, cardHeading, shortParagraph, landingUrl, onNavigate, onMouseDown, onContextMenu }) {
         return (
-            <button type="button" data-testid={testId} data-landing-url={landingUrl} onClick={onNavigate}>
+            <button
+                type="button"
+                data-testid={testId}
+                data-landing-url={landingUrl}
+                onClick={onNavigate}
+                onMouseDown={onMouseDown}
+                onContextMenu={onContextMenu}
+            >
                 {cardHeading}
                 {shortParagraph ? <span>{shortParagraph}</span> : null}
             </button>
@@ -31,6 +38,7 @@ describe('SpacesQuickLinks', () => {
         favouriteIntentDefinition: { id: 'favourite' },
         getIntentLandingUrl: jest.fn(intent => `/spaces/results/${intent?.id || 'all'}`),
         onIntentLinkNavigate: jest.fn(),
+        onIntentLinkPersist: jest.fn(),
         onSeeAllSpaces: jest.fn(),
     };
 
@@ -57,6 +65,12 @@ describe('SpacesQuickLinks', () => {
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
         expect(defaultProps.onIntentLinkNavigate).toHaveBeenCalledWith(expect.objectContaining({ id: 'quiet' }));
+
+        fireEvent.mouseDown(screen.getByTestId('spaces-journey-intent-card-group'), { button: 0 });
+        expect(defaultProps.onIntentLinkPersist).toHaveBeenCalledWith(expect.objectContaining({ id: 'group' }));
+
+        fireEvent.contextMenu(screen.getByTestId('spaces-journey-intent-card-group'));
+        expect(defaultProps.onIntentLinkPersist).toHaveBeenLastCalledWith(expect.objectContaining({ id: 'group' }));
     });
 
     it('handles missing optional callbacks and an absent intent list without crashing', () => {

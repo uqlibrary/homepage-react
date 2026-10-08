@@ -87,6 +87,7 @@ export const SpacesQuickLinks = ({
     favouriteIntentDefinition,
     getIntentLandingUrl,
     onIntentLinkNavigate,
+    onIntentLinkPersist,
     onSeeAllSpaces,
 }) => {
     return (
@@ -140,6 +141,19 @@ export const SpacesQuickLinks = ({
                                         ? () => onIntentLinkNavigate(intent)
                                         : undefined
                                 }
+                                onMouseDown={event => {
+                                    if (event?.button !== 0) {
+                                        return;
+                                    }
+                                    if (typeof onIntentLinkPersist === 'function') {
+                                        onIntentLinkPersist(intent);
+                                    }
+                                }}
+                                onContextMenu={() => {
+                                    if (typeof onIntentLinkPersist === 'function') {
+                                        onIntentLinkPersist(intent);
+                                    }
+                                }}
                             />
                         );
                     });
@@ -196,6 +210,7 @@ SpacesQuickLinks.propTypes = {
     favouriteIntentDefinition: PropTypes.any,
     getIntentLandingUrl: PropTypes.func.isRequired,
     onIntentLinkNavigate: PropTypes.func,
+    onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
 };
 

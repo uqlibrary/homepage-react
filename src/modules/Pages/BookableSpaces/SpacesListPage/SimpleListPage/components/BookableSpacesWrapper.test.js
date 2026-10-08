@@ -1074,7 +1074,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(onResetAllFilters).toHaveBeenCalled();
     });
 
-    it('uses a simple results link for the landing card without encoding intent in the URL', () => {
+    it('uses an intent-specific results link for the landing card so a new tab can restore the selected intent', () => {
         window.history.replaceState({}, '', '/spaces');
 
         renderJourney({
@@ -1096,12 +1096,11 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
         const hrefValue = quietLink.getAttribute('href');
-        expect(hrefValue).toBe('/spaces/results');
+        expect(hrefValue).toBe('/spaces/results/quiet');
 
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
-        expect(parsedUrl.pathname).toBe('/spaces/results');
+        expect(parsedUrl.pathname).toBe('/spaces/results/quiet');
         expect(parsedUrl.search).toBe('');
-        // mapFilters parameter is no longer used
         expect(parsedUrl.searchParams.get('mapFilters')).toBeNull();
     });
 
@@ -1203,6 +1202,29 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         renderJourney(defaultProps);
 
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
+    });
+
+    it('preserves a custom capacity range when restoring the current intent from the results route', () => {
+        const setCapacityFilterValue = jest.fn();
+
+        window.localStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.localStorage.setItem(
+            'bookableSpacesJourneyLiveFilterState',
+            JSON.stringify({ selectedCampus: 2, selectedLibrary: 7, capacityFilterValue: [4, 8] }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results/quiet');
+
+        renderJourney({
+            ...defaultProps,
+            setCapacityFilterValue,
+            selectedCampus: 2,
+            selectedLibrary: 7,
+        });
+
+        expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 20]);
     });
 
     it('restores the favourites-only filter when loading the favourite route directly', async () => {

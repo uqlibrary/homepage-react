@@ -14,7 +14,7 @@ describe('Routes getRoutesConfig method', () => {
 
         expect(routeMap['/spaces']?.element?.type).toBe(pages.BookableSpacesLandingPage);
         expect(routeMap['/spaces/results']?.element?.type).toBe(pages.BookableSpacesSimpleListPage);
-        expect(routeMap['/spaces/results/:intentToken']?.element?.type).toBeUndefined();
+        expect(routeMap['/spaces/results/:intentToken']?.element?.type).toBe(pages.BookableSpacesSimpleListPage);
         expect(routeMap['/spaces/mapresults']?.element?.type).toBe(pages.BookableSpacesMapPage);
         expect(routeMap['/spaces/results/map']?.element?.type).toBeUndefined();
         // expect(routeMap['/spaces/detail/:spaceId']?.element?.type).toBe(pages.BookableSpacesDetailPage);
