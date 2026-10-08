@@ -6,6 +6,8 @@ import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/li
 import moment from 'moment-timezone';
 import {
     assertDlorFormSubmittedData,
+    assertHasLinkFileTabError,
+    assertMissingLinkFileTabError,
     createFileMock,
     selectFileForUpload,
     setObjectReviewDate,
@@ -585,6 +587,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                         object_review_date_next: moment().format('YYYY-MM-DD'),
                         object_file_name: 'old-image.png',
                         object_file_size: 1000,
+                        object_download_instructions: null,
+                        object_link_url: null,
+                        object_link_interaction_type: null,
+                        object_link_file_type: null,
+                        object_link_size: null,
                     };
                     await page.goto(
                         `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
@@ -598,8 +605,11 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                         await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(
                             `${overwrites.object_file_name} 1 KB`,
                         );
+                        await assertMissingLinkFileTabError(page);
                         await page.getByTestId('dlor-object-file-list-clear').click();
+                        await assertHasLinkFileTabError(page);
                         await selectFileForUpload(page, image);
+                        await assertMissingLinkFileTabError(page);
                         await expect(page.getByTestId('dlor-object-file-list-filename')).toHaveText(
                             `${image.name} 1 KB`,
                         );
@@ -630,14 +640,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                             object_summary:
                                 'Understanding the importance of accessibility online and creating accessible content.',
                             object_owning_team_id: 1,
-                            object_link_url: 'https://www.youtube.com/watch?v=jwKH6X3cGMg',
-                            object_download_instructions:
-                                "<p>Download the Common Cartridge file and H5P quiz to embed in Blackboard.</p><p>and a second line of detail in the description, looking at an <a href='http://example.com'>example link</a></p>",
+                            object_link_url: null,
+                            object_download_instructions: 'Add this object to your course.',
                             object_publishing_user: 'uqldegro',
                             object_status: 'current',
                             object_restrict_to: 'none',
-                            object_link_interaction_type: 'view',
-                            object_link_file_type: 'video',
+                            object_link_interaction_type: null,
+                            object_link_file_type: 'new',
                             object_is_featured: 1,
                             object_cultural_advice: 0,
                             notificationText: '',
@@ -645,11 +654,69 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                             team_name: 'LIB DX Digital Content',
                             team_manager: 'John Smith',
                             team_email: 'dlor@library.uq.edu.au',
-                            object_link_size: 2864,
                             facets: [3, 11, 14, 18, 30, 34, 45],
                             object_keywords: ['accessible content', 'study hacks', 'universal design'],
                             deleteExistingFile: true,
                             newFile: { path: './image.gif', relativePath: './image.gif' },
+                        };
+                    });
+                });
+
+                test('admin can edit an object without making changes to existing file', async ({ page }) => {
+                    const overwrites = {
+                        object_review_date_next: moment().format('YYYY-MM-DD'),
+                        object_file_name: 'image.gif',
+                        object_file_size: 1000,
+                        object_download_instructions: null,
+                        object_link_url: null,
+                        object_link_interaction_type: null,
+                        object_link_file_type: null,
+                        object_link_size: null,
+                    };
+                    await page.goto(
+                        `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
+                    );
+                    await assertDlorFormSubmittedData(page, async () => {
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('dlor-form-next-button').click();
+                        await page.getByTestId('admin-dlor-save-button-submit').click();
+
+                        await expect(
+                            page
+                                .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
+                                .getByText('Changes have been saved'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('confirm-dlor-save-outcome').getByText('View Object'),
+                        ).toBeVisible();
+                        await expect(
+                            page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object'),
+                        ).toBeVisible();
+
+                        return {
+                            object_title: 'Accessibility - Digital Essentials (has Youtube link)',
+                            object_description:
+                                '<p>Understanding the importance of accessibility online and creating accessible content with a longer first line. Ramble a little.</p><p>and a second line of detail in the description</p>',
+                            object_summary:
+                                'Understanding the importance of accessibility online and creating accessible content.',
+                            object_owning_team_id: 1,
+                            object_link_url: null,
+                            object_download_instructions: 'Add this object to your course.',
+                            object_publishing_user: 'uqldegro',
+                            object_status: 'current',
+                            object_restrict_to: 'none',
+                            object_link_interaction_type: null,
+                            object_link_file_type: 'new',
+                            object_is_featured: 1,
+                            object_cultural_advice: 0,
+                            notificationText: '',
+                            object_keyword_ids: [100000, 100001, 100002],
+                            team_name: 'LIB DX Digital Content',
+                            team_manager: 'John Smith',
+                            team_email: 'dlor@library.uq.edu.au',
+                            facets: [3, 11, 14, 18, 30, 34, 45],
+                            object_keywords: ['accessible content', 'study hacks', 'universal design'],
                         };
                     });
                 });
