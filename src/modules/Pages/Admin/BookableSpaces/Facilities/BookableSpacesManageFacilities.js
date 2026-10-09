@@ -1117,7 +1117,7 @@ export const BookableSpacesManageFacilities = ({
                     ) {
                         return (
                             <Grid container>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <InlineLoader message="Loading" />
                                 </Grid>
                             </Grid>
@@ -1128,7 +1128,7 @@ export const BookableSpacesManageFacilities = ({
                     ) {
                         return (
                             <Grid container>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <p data-testid="apiError">Something went wrong - please try again later.</p>
                                 </Grid>
                             </Grid>
@@ -1182,7 +1182,7 @@ export const BookableSpacesManageFacilities = ({
 
                                 {facilityTypeList?.data?.facility_type_groups?.length === 0 && (
                                     <Grid container>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <p data-testid="space-facility-types-empty-message">
                                                 No facility types currently in system.
                                             </p>
@@ -1202,7 +1202,7 @@ export const BookableSpacesManageFacilities = ({
                                         Tip: drag the Group name <i>onto</i> the group you want it to appear just above
                                     </Typography>
                                     <Grid container style={{ marginBottom: '2rem' }}>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <DndProvider backend={HTML5Backend}>
                                                 <div data-testid="spaces-dragLandingAarea">
                                                     <ul>

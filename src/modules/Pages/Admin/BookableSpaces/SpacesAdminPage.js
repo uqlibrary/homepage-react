@@ -72,7 +72,7 @@ export const SpacesAdminPage = ({ pageTitle, currentPageSlug, children, standard
                         {systemTitle}
                     </Typography>
                 </StyledGrid>
-                <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', rowGap: '2.5rem' }}>
+                <Grid size={{ xs: 12 }} style={{ display: 'flex', flexDirection: 'column', rowGap: '2.5rem' }}>
                     <StyledBox>
                         <StyledTableHeadingTypography
                             component={'h2'}

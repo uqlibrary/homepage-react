@@ -339,7 +339,7 @@ export const DLOTeamForm = ({
                                                 )}
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_email">
                                                     Email address to contact team *

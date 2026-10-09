@@ -43,7 +43,7 @@ export const MembershipFormRow = ({ row, ...fieldProps }) => {
     // A field may set its own width; otherwise a captioned row shares its width evenly and a lone control
     // takes two thirds.
     const renderField = field => (
-        <Grid item xs={12} sm={getFieldConfig(field).gridSm ?? (row.legend ? true : 8)} key={field}>
+        <Grid size={{ xs: 12, sm: getFieldConfig(field).gridSm ?? (row.legend ? true : 8) }} key={field}>
             <MembershipFormField field={field} hideLabel={!!row.legend} {...fieldProps} />
         </Grid>
     );
