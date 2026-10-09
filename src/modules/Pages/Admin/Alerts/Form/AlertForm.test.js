@@ -3,6 +3,7 @@ import { fireEvent, rtlRender, userEvent } from 'test-utils';
 
 import AlertForm from './AlertForm';
 import { breadcrumbs } from 'config/routes';
+import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 
 const mockNavigate = jest.fn();
 
@@ -36,13 +37,18 @@ function setup(testProps = {}) {
         saveAlertChange: jest.fn(),
         ...testProps.actions,
     };
+    const mergedDefaults = { ...defaultValues, ...testProps.defaults };
     const props = {
         alertLoading: false,
         alertResponse: null,
         alertStatus: null,
         alertError: null,
         ...testProps,
-        defaults: { ...defaultValues, ...testProps.defaults },
+        defaults: {
+            ...mergedDefaults,
+            dateList: mergedDefaults.dateList.map(dateRange => ({ ...dateRange })),
+            systems: [...mergedDefaults.systems],
+        },
         actions,
     };
 
@@ -84,7 +90,45 @@ describe('AlertForm', () => {
         expect(getByTestId('admin-alerts-form-body').querySelector('textarea')).toHaveValue('');
         expect(getByTestId('admin-alerts-form-start-date-0').querySelector('input')).toHaveValue('2030-05-01T09:00');
         expect(getByTestId('admin-alerts-form-end-date-0').querySelector('input')).toHaveValue('2030-05-01T17:00');
+        // No title or message provided, so Save button should be disabled
         expect(getByTestId('admin-alerts-form-button-save')).toBeDisabled();
+    });
+
+    it('shows and clears errors', () => {
+        const { getByTestId } = setup();
+        const titleInput = getByTestId('admin-alerts-form-title').querySelector('input');
+        const bodyInput = getByTestId('admin-alerts-form-body').querySelector('textarea');
+        const startDateInput = getByTestId('admin-alerts-form-start-date-0').querySelector('input');
+        const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
+
+        fireEvent.click(getByTestId('admin-alerts-form-checkbox-linkrequired'));
+        const linkUrlInput = getByTestId('admin-alerts-form-link-url').querySelector('input');
+
+        expect(titleInput).toHaveAttribute('aria-invalid', 'true');
+        expect(bodyInput).toHaveAttribute('aria-invalid', 'true');
+        expect(linkUrlInput).toHaveAttribute('aria-invalid', 'true');
+
+        fireEvent.change(titleInput, { target: { value: 'Library notice' } });
+        fireEvent.change(bodyInput, { target: { value: 'Important message' } });
+        expect(titleInput).toHaveAttribute('aria-invalid', 'false');
+        expect(bodyInput).toHaveAttribute('aria-invalid', 'false');
+
+        fireEvent.change(linkUrlInput, { target: { value: 'not-a-url' } });
+        expect(linkUrlInput).toHaveAttribute('aria-invalid', 'true');
+        fireEvent.change(linkUrlInput, { target: { value: 'https://example.org' } });
+        expect(linkUrlInput).toHaveAttribute('aria-invalid', 'false');
+
+        expect(startDateInput).toHaveAttribute('aria-invalid', 'false');
+        expect(endDateInput).toHaveAttribute('aria-invalid', 'false');
+        fireEvent.change(startDateInput, { target: { value: '2030-04-30T17:00' } });
+        expect(startDateInput).toHaveAttribute('aria-invalid', 'true');
+        fireEvent.change(endDateInput, { target: { value: '2030-04-30T17:00' } });
+        expect(endDateInput).toHaveAttribute('aria-invalid', 'true');
+        fireEvent.change(startDateInput, { target: { value: '2030-05-02T09:00' } });
+        expect(startDateInput).toHaveAttribute('aria-invalid', 'false');
+        expect(endDateInput).toHaveAttribute('aria-invalid', 'true');
+        fireEvent.change(endDateInput, { target: { value: '2030-05-02T17:00' } });
+        expect(endDateInput).toHaveAttribute('aria-invalid', 'false');
     });
 
     it('creates an alert with the entered content and date range', async () => {
@@ -112,6 +156,113 @@ describe('AlertForm', () => {
                 systems: [],
             },
         ]);
+    });
+
+    it('creates one alert for each date range in the date set', async () => {
+        const createAlert = jest.fn();
+        const { getByRole, getByTestId } = setup({ actions: { createAlert } });
+
+        // add a new date range to the existing dates added in the setup() function
+        await userEvent.click(getByRole('button', { name: 'Add a date set' }));
+
+        expect(getByTestId('admin-alerts-form-row-1')).toBeInTheDocument();
+        // get default populated date values
+        const secondStart = getByTestId('admin-alerts-form-start-date-1').querySelector('input').value;
+        const secondEnd = getByTestId('admin-alerts-form-end-date-1').querySelector('input').value;
+
+        fireEvent.change(getByTestId('admin-alerts-form-title').querySelector('input'), {
+            target: { value: 'Library notice' },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-body').querySelector('textarea'), {
+            target: { value: 'Important message' },
+        });
+
+        await userEvent.click(getByTestId('admin-alerts-form-button-save'));
+
+        expect(createAlert).toHaveBeenCalledWith([
+            {
+                id: null,
+                title: 'Library notice',
+                body: 'Important message',
+                priority_type: 'info',
+                start: '2030-05-01 09:00:00',
+                end: '2030-05-01 17:00:00',
+                systems: [],
+            },
+            {
+                id: null,
+                title: 'Library notice',
+                body: 'Important message',
+                priority_type: 'info',
+                start: formatDate(secondStart),
+                end: formatDate(secondEnd),
+                systems: [],
+            },
+        ]);
+    });
+
+    it('creates alerts with every form value and all added date ranges', async () => {
+        const createAlert = jest.fn();
+        const { getByRole, getByTestId } = setup({ actions: { createAlert } });
+        const dateRanges = [
+            { startDate: '2030-05-04T09:30', endDate: '2030-05-04T17:30' },
+            { startDate: '2030-05-05T10:00', endDate: '2030-05-05T18:00' },
+            { startDate: '2030-05-06T11:15', endDate: '2030-05-06T19:15' },
+        ];
+
+        await userEvent.click(getByRole('button', { name: 'Add a date set' }));
+        await userEvent.click(getByRole('button', { name: 'Add a date set' }));
+
+        fireEvent.change(getByTestId('admin-alerts-form-title').querySelector('input'), {
+            target: { value: 'Updated library notice' },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-body').querySelector('textarea'), {
+            target: { value: 'Scheduled maintenance' },
+        });
+        await userEvent.click(getByTestId('admin-alerts-form-checkbox-linkrequired'));
+        fireEvent.change(getByTestId('admin-alerts-form-link-title').querySelector('input'), {
+            target: { value: 'Service information' },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-link-url').querySelector('input'), {
+            target: { value: 'https://example.org/service' },
+        });
+        await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
+
+        for (const system of ['homepage', 'primo', 'espace']) {
+            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-${system}`));
+        }
+
+        fireEvent.mouseDown(getByRole('combobox'));
+        await userEvent.click(getByTestId('admin-alerts-form-option-urgent'));
+
+        dateRanges.forEach(({ startDate, endDate }, index) => {
+            fireEvent.change(getByTestId(`admin-alerts-form-start-date-${index}`).querySelector('input'), {
+                target: { value: startDate },
+            });
+            fireEvent.change(getByTestId(`admin-alerts-form-end-date-${index}`).querySelector('input'), {
+                target: { value: endDate },
+            });
+            expect(getByTestId(`admin-alerts-form-start-date-${index}`).querySelector('input')).toHaveValue(startDate);
+            expect(getByTestId(`admin-alerts-form-end-date-${index}`).querySelector('input')).toHaveValue(endDate);
+        });
+
+        expect(getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input')).toBeChecked();
+        expect(getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input')).toBeChecked();
+        expect(getByTestId('admin-alerts-form-button-save')).toBeEnabled();
+
+        await userEvent.click(getByTestId('admin-alerts-form-button-save'));
+
+        expect(createAlert).toHaveBeenCalledWith(
+            dateRanges.map(({ startDate, endDate }) => ({
+                id: null,
+                title: 'Updated library notice',
+                body: 'Scheduled maintenance[permanent][Service information](https://example.org/service)',
+                priority_type: 'urgent',
+                start: formatDate(startDate),
+                end: formatDate(endDate),
+                systems: ['homepage', 'primo', 'espace'],
+            })),
+        );
     });
 
     it('shows link fields when link-required is checked and validates the URL', () => {
@@ -184,7 +335,6 @@ describe('AlertForm', () => {
         });
 
         fireEvent.click(getByTestId('admin-alerts-form-button-preview'));
-
         expect(document.getElementById('alert-preview')).toHaveAttribute('alertmessage', 'Important message');
     });
 
@@ -205,12 +355,15 @@ describe('AlertForm', () => {
         });
         fireEvent.click(getByTestId('admin-alerts-form-button-preview'));
 
-        const preview = document.getElementById('alert-preview');
+        // uq-alert doesnt initialise in this test so we have to manually
+        // attach a shadow DOM to it, to test the link within the alert preview
+        const alertPreview = document.getElementById('alert-preview');
         const link = document.createElement('a');
         link.id = 'alert-link';
-        preview.attachShadow({ mode: 'open' }).appendChild(link);
+        alertPreview.attachShadow({ mode: 'open' }).appendChild(link);
         jest.advanceTimersByTime(100);
 
+        // now we can test the link
         expect(link).toHaveAttribute('href', '#');
         expect(link).toHaveAttribute(
             'title',
@@ -218,15 +371,55 @@ describe('AlertForm', () => {
         );
     });
 
-    it('clears the form and returns to the alert list when cancelled', async () => {
+    it('clears the form when cancelled', async () => {
         const clearAlerts = jest.fn();
         const clearAnAlert = jest.fn();
-        const { getByTestId } = setup({ actions: { clearAlerts, clearAnAlert } });
+        const { getByTestId } = setup({
+            actions: { clearAlerts, clearAnAlert },
+            defaults: {
+                alertTitle: 'Library notice',
+                enteredbody: 'Important message',
+                dateList: [{ startDate: '2030-05-02T10:00', endDate: '2030-05-02T18:00' }],
+                linkRequired: true,
+                linkTitle: 'More information',
+                linkUrl: 'https://uq.edu.au',
+                permanentAlert: true,
+                systems: ['homepage'],
+            },
+        });
         const standardPage = document.getElementById('StandardPage');
         standardPage.scrollIntoView = jest.fn();
+        const titleInput = getByTestId('admin-alerts-form-title').querySelector('input');
+        const bodyInput = getByTestId('admin-alerts-form-body').querySelector('textarea');
+        const startDateInput = getByTestId('admin-alerts-form-start-date-0').querySelector('input');
+        const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
+        const linkRequiredCheckbox = getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input');
+        const linkTitleInput = getByTestId('admin-alerts-form-link-title').querySelector('input');
+        const linkUrlInput = getByTestId('admin-alerts-form-link-url').querySelector('input');
+        const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
+        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
+
+        expect(titleInput).toHaveValue('Library notice');
+        expect(bodyInput).toHaveValue('Important message');
+        expect(startDateInput).toHaveValue('2030-05-02T10:00');
+        expect(endDateInput).toHaveValue('2030-05-02T18:00');
+        expect(linkRequiredCheckbox).toBeChecked();
+        expect(linkTitleInput).toHaveValue('More information');
+        expect(linkUrlInput).toHaveValue('https://uq.edu.au');
+        expect(permanentCheckbox).toBeChecked();
+        expect(homepageCheckbox).toBeChecked();
 
         await userEvent.click(getByTestId('admin-alerts-form-button-cancel'));
 
+        expect(titleInput).toHaveValue('');
+        expect(bodyInput).toHaveValue('');
+        expect(startDateInput).toHaveValue('2030-05-01T09:00');
+        expect(endDateInput).toHaveValue('2030-05-01T17:00');
+        expect(linkRequiredCheckbox).not.toBeChecked();
+        expect(linkTitleInput).toHaveValue('');
+        expect(linkUrlInput).toHaveValue('');
+        expect(permanentCheckbox).not.toBeChecked();
+        expect(homepageCheckbox).not.toBeChecked();
         expect(clearAlerts).toHaveBeenCalledTimes(1);
         expect(clearAnAlert).toHaveBeenCalledTimes(1);
         expect(mockNavigate).toHaveBeenCalledWith('/admin/alerts');
@@ -237,13 +430,44 @@ describe('AlertForm', () => {
         const { findByTestId, getByTestId } = setup({
             alertResponse: { id: 12 },
             alertStatus: 'saved',
-            defaults: { alertTitle: 'Library notice', enteredbody: 'Important message' },
+            defaults: {
+                alertTitle: 'Library notice',
+                enteredbody: 'Important message',
+                dateList: [{ startDate: '2030-05-02T10:00', endDate: '2030-05-02T18:00' }],
+                linkRequired: true,
+                linkTitle: 'More information',
+                linkUrl: 'https://uq.edu.au',
+                permanentAlert: true,
+                systems: ['homepage'],
+            },
         });
+        const standardPage = document.getElementById('StandardPage');
+        standardPage.scrollIntoView = jest.fn();
+        const titleInput = getByTestId('admin-alerts-form-title').querySelector('input');
+        const bodyInput = getByTestId('admin-alerts-form-body').querySelector('textarea');
+        const startDateInput = getByTestId('admin-alerts-form-start-date-0').querySelector('input');
+        const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
+        const linkRequiredCheckbox = getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input');
+        const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
+        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
+
+        expect(titleInput).toHaveValue('Library notice');
+        expect(bodyInput).toHaveValue('Important message');
+        expect(startDateInput).toHaveValue('2030-05-02T10:00');
+        expect(endDateInput).toHaveValue('2030-05-02T18:00');
+        expect(linkRequiredCheckbox).toBeChecked();
+        expect(permanentCheckbox).toBeChecked();
+        expect(homepageCheckbox).toBeChecked();
 
         await userEvent.click(await findByTestId('confirm-alert-add-save-succeeded'));
 
-        expect(getByTestId('admin-alerts-form-title').querySelector('input')).toHaveValue('');
-        expect(getByTestId('admin-alerts-form-body').querySelector('textarea')).toHaveValue('');
+        expect(titleInput).toHaveValue('');
+        expect(bodyInput).toHaveValue('');
+        expect(startDateInput).toHaveValue('2030-05-01T09:00');
+        expect(endDateInput).toHaveValue('2030-05-01T17:00');
+        expect(linkRequiredCheckbox).not.toBeChecked();
+        expect(permanentCheckbox).not.toBeChecked();
+        expect(homepageCheckbox).not.toBeChecked();
         expect(mockNavigate).not.toHaveBeenCalled();
     });
 
@@ -264,10 +488,6 @@ describe('AlertForm', () => {
         await findByTestId('confirm-alert-clone-save-succeeded');
 
         expect(getByTestId('message-title')).toHaveTextContent('2 alerts have been cloned');
-        await userEvent.click(getByTestId('confirm-alert-clone-save-succeeded'));
-        expect(getByTestId('admin-alerts-form-start-date-0').querySelector('input').value).toMatch(
-            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/,
-        );
     });
 
     it('updates an existing alert', async () => {
@@ -279,6 +499,7 @@ describe('AlertForm', () => {
                 type: 'edit',
                 alertTitle: 'Library notice',
                 enteredbody: 'Important message',
+                dateList: [{ startDate: '2030-05-03T11:00', endDate: '2030-05-03T19:00' }],
                 updatedBy: 'Alex Example',
             },
         });
@@ -298,13 +519,73 @@ describe('AlertForm', () => {
             title: 'Updated notice',
             body: 'Updated message',
             priority_type: 'info',
-            start: '2030-05-01 09:00:00',
-            end: '2030-05-01 17:00:00',
+            start: '2030-05-03 11:00:00',
+            end: '2030-05-03 19:00:00',
             systems: [],
         });
     });
 
-    it('returns to the list from a successful add confirmation', async () => {
+    it('saves every edited form value through the UI', async () => {
+        const saveAlertChange = jest.fn();
+        const { getByRole, getByTestId } = setup({
+            actions: { saveAlertChange },
+            defaults: {
+                id: 42,
+                type: 'edit',
+                alertTitle: 'Existing notice',
+                enteredbody: 'Existing message',
+                dateList: [{ startDate: '2030-05-03T11:00', endDate: '2030-05-03T19:00' }],
+                startDateDefault: '2030-05-03T11:00',
+                endDateDefault: '2030-05-03T19:00',
+                minimumDate: '2030-05-03T11:00',
+            },
+        });
+        const startDate = '2030-05-04T09:30';
+        const endDate = '2030-05-05T17:30';
+
+        fireEvent.change(getByTestId('admin-alerts-form-title').querySelector('input'), {
+            target: { value: 'Edited library notice' },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-body').querySelector('textarea'), {
+            target: { value: 'Updated service information' },
+        });
+        await userEvent.click(getByTestId('admin-alerts-form-checkbox-linkrequired'));
+        fireEvent.change(getByTestId('admin-alerts-form-link-title').querySelector('input'), {
+            target: { value: 'Read the update' },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-link-url').querySelector('input'), {
+            target: { value: 'https://example.org/updated' },
+        });
+        await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
+
+        for (const system of ['homepage', 'primo', 'espace']) {
+            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-${system}`));
+        }
+
+        fireEvent.mouseDown(getByRole('combobox'));
+        await userEvent.click(getByTestId('admin-alerts-form-option-extreme'));
+        fireEvent.change(getByTestId('admin-alerts-form-start-date-0').querySelector('input'), {
+            target: { value: startDate },
+        });
+        fireEvent.change(getByTestId('admin-alerts-form-end-date-0').querySelector('input'), {
+            target: { value: endDate },
+        });
+
+        expect(getByTestId('admin-alerts-form-button-save')).toBeEnabled();
+        await userEvent.click(getByTestId('admin-alerts-form-button-save'));
+
+        expect(saveAlertChange).toHaveBeenCalledWith({
+            id: 42,
+            title: 'Edited library notice',
+            body: 'Updated service information[permanent][Read the update](https://example.org/updated)',
+            priority_type: 'extreme',
+            start: formatDate(startDate),
+            end: formatDate(endDate),
+            systems: ['homepage', 'primo', 'espace'],
+        });
+    });
+
+    it('shows a closeable "added" confirmation', async () => {
         const clearAlerts = jest.fn();
         const clearAnAlert = jest.fn();
         const { findByTestId } = setup({
@@ -320,7 +601,7 @@ describe('AlertForm', () => {
         expect(mockNavigate).toHaveBeenCalledWith('/admin/alerts');
     });
 
-    it('returns to the list from a successful clone confirmation', async () => {
+    it('shows a closeable "cloned" confirmation', async () => {
         const clearAlerts = jest.fn();
         const clearAnAlert = jest.fn();
         const { findByTestId } = setup({
@@ -337,7 +618,7 @@ describe('AlertForm', () => {
         expect(mockNavigate).toHaveBeenCalledWith('/admin/alerts');
     });
 
-    it('returns to the list after confirming an edit save', async () => {
+    it('shows a closeable "saved" confirmation', async () => {
         const clearAlerts = jest.fn();
         const clearAnAlert = jest.fn();
         const { findByTestId } = setup({
