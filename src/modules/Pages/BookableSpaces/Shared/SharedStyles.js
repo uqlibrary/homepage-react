@@ -5,10 +5,13 @@ export const StyledIconWordWrapperDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.5rem',
+    color: theme.palette.primary.main,
     '& svg': {
         width: '24px',
         height: '24px',
-        stroke: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        fill: 'currentColor',
+        stroke: 'currentColor',
     },
     '& span': {
         color: theme.palette.designSystem.headingColor,
