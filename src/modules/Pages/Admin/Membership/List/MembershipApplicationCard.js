@@ -11,10 +11,8 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { alpha } from '@mui/material/styles';
-import { visuallyHidden } from '@mui/utils';
 import moment from 'moment';
 
 import MembershipInlineEdit from './MembershipInlineEdit';
@@ -93,20 +91,34 @@ export const formatDate = value => format(value, API_DATE_FORMAT, 'D MMM YYYY');
 export const formatDateTime = value => format(value, API_DATETIME_FORMAT, 'D MMM YYYY, h:mma');
 
 /**
- * A fact drawn as an icon rather than a word. The icon is decoration - it is the hidden label that names the
- * value, since a date reads as "10 Jul 2026" to a screen reader and nothing tells it which date that is.
+ * The type-specific facts an application carries that are worth a glance on the card - a student number for an
+ * alumnus, the service for a hospital applicant. Each is paired with a label, so a lone value reads as what it
+ * is rather than as stray text beside the contact line. Only the facts the record actually carries are returned.
  */
-export const IconFact = ({ icon: Icon, label, children }) => (
-    <>
-        <Icon aria-hidden="true" sx={{ fontSize: 14, verticalAlign: '-0.2em', marginRight: 0.375 }} />
-        <Box component="span" sx={visuallyHidden}>
+export const typeFacts = membership =>
+    [
+        membership?.alumni_num && { key: 'alumni_num', label: strings.studentNumber, value: membership.alumni_num },
+        membership?.hospital_service && {
+            key: 'hospital_service',
+            label: strings.service,
+            value: membership.hospital_service,
+        },
+    ].filter(Boolean);
+
+/**
+ * One labelled type-specific fact, drawn as a quiet "label value" pair. The label is muted and the value carries
+ * the weight, so the eye lands on the value while the label stays available to say what it is.
+ */
+export const TypeFact = ({ label, value }) => (
+    <Box component="span" sx={{ color: 'text.primary' }}>
+        <Box component="span" sx={{ color: 'text.secondary' }}>
             {label}{' '}
         </Box>
-        {children}
-    </>
+        {value}
+    </Box>
 );
 
-IconFact.propTypes = { icon: PropTypes.elementType, label: PropTypes.string, children: PropTypes.node };
+TypeFact.propTypes = { label: PropTypes.string, value: PropTypes.node };
 
 // The avatar is decoration that helps an admin find their place in a long queue, so it is hidden from screen
 // readers - the name is right beside it.
@@ -135,10 +147,10 @@ export const initialsOf = membership =>
  * almost every fact starts its own line anyway, so the facts stack and the dots go - which also stops a fact
  * being split down the middle, "Born" stranded at one line's end and its date at the next one's start.
  */
-export const MetaLine = ({ children, ...props }) => {
+export const MetaLine = ({ children, sx, ...props }) => {
     const items = React.Children.toArray(children).filter(Boolean);
     return (
-        <Typography component="div" variant="caption" color="text.secondary" sx={{ lineHeight: 1.6 }} {...props}>
+        <Typography component="div" variant="caption" color="text.secondary" sx={{ lineHeight: 1.6, ...sx }} {...props}>
             {items.map((item, index) => (
                 <React.Fragment key={index}>
                     {index > 0 && ' '}
@@ -164,7 +176,7 @@ export const MetaLine = ({ children, ...props }) => {
     );
 };
 
-MetaLine.propTypes = { children: PropTypes.node };
+MetaLine.propTypes = { children: PropTypes.node, sx: PropTypes.object };
 
 /**
  * One labelled value in the issued-account panel, drawn as a term-and-definition pair so a screen reader reads
@@ -281,8 +293,10 @@ export const MembershipApplicationCard = ({
 
                     {/* One column beside the avatar. */}
                     <Box sx={{ flex: '1 1 auto', minWidth: 0 }}>
-                        {/* The name and the application's status share the top line: the name to jump to, the
-                            status to read at a glance. */}
+                        {/* The name leads the top line, and the two tags that place the application at a glance sit
+                            opposite it: the type it is (a neutral tag) and the state it is in (coloured). The type
+                            is a tag rather than a word buried in the facts below, since it is the fact the rules
+                            turn on. Both can wrap under the name where a narrow card leaves them no room. */}
                         <Box
                             sx={{
                                 display: 'flex',
@@ -300,32 +314,43 @@ export const MembershipApplicationCard = ({
                                 {name}
                             </Typography>
 
-                            <Chip
-                                size="small"
-                                label={statusText(membership.status)}
-                                color={statusColour(membership.status)}
-                                data-testid={`membership-status-${membership.id}`}
-                                sx={{ flexShrink: 0 }}
-                            />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'flex-end',
+                                    gap: 0.5,
+                                    flexShrink: 0,
+                                }}
+                            >
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={typeTitles[membership.type] ?? membership.type}
+                                    data-testid={`membership-type-${membership.id}`}
+                                />
+                                <Chip
+                                    size="small"
+                                    label={statusText(membership.status)}
+                                    color={statusColour(membership.status)}
+                                    data-testid={`membership-status-${membership.id}`}
+                                />
+                            </Box>
                         </Box>
 
+                        {/* The contact and timeline facts, each named by the word beside it - the email by its
+                            icon, the dates by their labels - and all in one muted weight, so the line reads as
+                            supporting detail rather than competing with the name and tags above it. */}
                         <MetaLine data-testid={`membership-meta-${membership.id}`}>
-                            {/* The type is a fact about the application, not a state of it. It leads the line,
-                                and carries the only emphasis in it, because it is the fact that decides which
-                                rules apply. The hospital service that qualifies it follows immediately. */}
-                            <Box
-                                component="span"
-                                sx={{ fontWeight: 600, color: 'text.primary' }}
-                                data-testid={`membership-type-${membership.id}`}
-                            >
-                                {typeTitles[membership.type] ?? membership.type}
-                            </Box>
-                            {!!membership.hospital_service && membership.hospital_service}
                             {!!membership.mail && (
                                 <Link
                                     href={`mailto:${membership.mail}?subject=${encodeURIComponent(
                                         strings.mailSubject,
                                     )}`}
+                                    // Muted to the weight of the facts around it, so a card of grey detail is not
+                                    // broken up by one line in a louder colour; the underline still marks it a link
+                                    // without the colour having to (WCAG 1.4.1).
+                                    color="text.secondary"
                                     // The one fact that opts out of staying whole. An address has no length
                                     // limit worth trusting, and an unbreakable one would push the card wider
                                     // than the screen (WCAG 1.4.10).
@@ -338,16 +363,23 @@ export const MembershipApplicationCard = ({
                                     {membership.mail}
                                 </Link>
                             )}
-                            {!!membership.submitted_on && (
-                                <IconFact icon={EventOutlinedIcon} label={strings.submittedOn}>
-                                    {formatDateTime(membership.submitted_on)}
-                                </IconFact>
-                            )}
+                            {!!membership.submitted_on &&
+                                `${strings.submittedOn} ${formatDateTime(membership.submitted_on)}`}
                             {!!membership.date_of_birth &&
                                 membership.type !== 'fryer' &&
                                 `${strings.birthdate} ${formatDate(membership.date_of_birth)}`}
-                            {!!membership.alumni_num && membership.alumni_num}
                         </MetaLine>
+
+                        {/* The type-specific facts, each labelled, on their own line beneath the contact facts so a
+                            student number or a hospital service reads as the thing it is. Shown only where the
+                            application carries one. */}
+                        {typeFacts(membership).length > 0 && (
+                            <MetaLine data-testid={`membership-facts-${membership.id}`} sx={{ marginTop: 0.25 }}>
+                                {typeFacts(membership).map(fact => (
+                                    <TypeFact key={fact.key} label={fact.label} value={fact.value} />
+                                ))}
+                            </MetaLine>
+                        )}
 
                         {/* The evidence an admin decides on: a receipt is why a paying application is confirmed
                             rather than deleted, and a failed payment is why it is deleted rather than confirmed.

@@ -228,6 +228,10 @@ export const SeriesView = ({
             return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
 
+        function navigateToDetailPage(uuid) {
+            window.location.href = getDlorViewPageUrl(uuid);
+        }
+
         return (
             <Grid
                 size={{ xs: 12 }}
@@ -368,10 +372,6 @@ export const SeriesView = ({
         }
     }, [dlorList, dlorListError, dlorListLoading, actions]);
 
-    function navigateToDetailPage(uuid) {
-        window.location.href = getDlorViewPageUrl(uuid);
-    }
-
     return (
         <StandardPage>
             {getTitleBlock()}
@@ -390,7 +390,7 @@ export const SeriesView = ({
                         </StyledHeaderDiv>
                         {!!dlorList &&
                             dlorList
-                                .filter(item => item.object_series_id && item.object_series_id == seriesId)
+                                .filter(item => item.object_series_id && String(item.object_series_id) === seriesId)
                                 .sort((a, b) => {
                                     /* istanbul ignore next */
                                     const orderA =

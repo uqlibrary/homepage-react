@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 
-import MembershipApplicationDialog, { editableValues, paymentSummary } from './MembershipApplicationDialog';
+import MembershipApplicationDialog, {
+    editableValues,
+    extraDetailFields,
+    paymentSummary,
+} from './MembershipApplicationDialog';
 
 const membershipFormData = { titles: ['Mr', 'Ms', 'Dr', 'Mx'] };
 const typeTitles = { community: 'Community', alumni: 'Alumni' };
@@ -26,6 +30,7 @@ const record = {
     date_of_birth: '02-12-1985',
     expires_on: '31-12-2026',
     barcode: '2406700012345',
+    uid: 'uqjsmith',
 };
 
 const setup = (props = {}) => {
@@ -60,6 +65,19 @@ describe('MembershipApplicationDialog', () => {
         expect(details).toHaveTextContent('2 Dec 1985');
         expect(details).toHaveTextContent('31-12-2026');
         expect(details).toHaveTextContent('2406700012345');
+        // The account username (uid) the membership is issued against, read-only.
+        expect(details).toHaveTextContent('UID');
+        expect(details).toHaveTextContent('uqjsmith');
+    });
+
+    it('omits the uid row when the record has no account username yet', () => {
+        // An application not yet issued an account has no uid, so the row is left off entirely.
+        const { uid, ...withoutUid } = record;
+        setup({ membership: withoutUid });
+
+        const details = screen.getByTestId('membership-view-details');
+        expect(details).not.toHaveTextContent('UID');
+        expect(details).not.toHaveTextContent('uqjsmith');
     });
 
     it('prefills the editable fields from the record', async () => {
@@ -167,7 +185,71 @@ describe('MembershipApplicationDialog', () => {
         });
     });
 
+    describe('type-specific detail', () => {
+        it('shows the extra fields the application type collected, read-only and labelled', () => {
+            setup({
+                membership: {
+                    ...record,
+                    alumni_num: 's4742747',
+                    alumni_awards: 'BSc',
+                    alumni_graduated: 2025,
+                },
+            });
+
+            const details = screen.getByTestId('membership-view-details');
+            expect(details).toHaveTextContent('Previous student number');
+            expect(details).toHaveTextContent('s4742747');
+            expect(details).toHaveTextContent('Awards');
+            expect(details).toHaveTextContent('BSc');
+            expect(details).toHaveTextContent('Year graduated from UQ');
+            expect(details).toHaveTextContent('2025');
+        });
+
+        it('leaves out a type field the applicant did not fill in', () => {
+            // Only the student number is filled; the other alumni fields are left blank.
+            setup({ membership: { ...record, alumni_num: 's4742747' } });
+
+            const details = screen.getByTestId('membership-view-details');
+            expect(details).toHaveTextContent('Previous student number');
+            expect(details).not.toHaveTextContent('Awards');
+            expect(details).not.toHaveTextContent('Year graduated from UQ');
+        });
+
+        it('brings a different type its own fields', () => {
+            setup({
+                membership: {
+                    id: '104',
+                    type: 'hospital',
+                    status: 'unconfirmed',
+                    first_name: 'Halfway',
+                    sn: 'Through',
+                    hospital_service: "Royal Brisbane and Women's Hospital",
+                },
+            });
+
+            const details = screen.getByTestId('membership-view-details');
+            expect(details).toHaveTextContent('Hospital / Service');
+            expect(details).toHaveTextContent("Royal Brisbane and Women's Hospital");
+        });
+
+        it('shows the payment code the application was lodged under', () => {
+            setup({ membership: { ...record, payment_code: 'COM' } });
+
+            const details = screen.getByTestId('membership-view-details');
+            expect(details).toHaveTextContent('Payment code');
+            expect(details).toHaveTextContent('COM');
+        });
+    });
+
     describe('helpers', () => {
+        it('extraDetailFields keeps the filled type fields and drops identity, blanks and unknown types', () => {
+            expect(extraDetailFields({ type: 'alumni', alumni_num: 's1', alumni_awards: '', first_name: 'A' })).toEqual(
+                ['alumni_num'],
+            );
+            // A type the rules do not know collects nothing, so there is nothing extra to show.
+            expect(extraDetailFields({ alumni_num: 's1' })).toEqual([]);
+        });
+
         it('editableValues picks only the editable fields, defaulting a missing one to empty', () => {
             const values = editableValues({ id: 'x', first_name: 'A', sn: 'B', status: 'confirmed' });
 

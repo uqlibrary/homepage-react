@@ -29,7 +29,7 @@ const palette = {
     },
     accent: {
         light: '#962A8B',
-        main: '#3881cb',
+        main: '#0d6dcd',
         dark: '#3b1a59',
     },
     white: {
@@ -54,12 +54,22 @@ const palette = {
     designSystem: {
         borderColor: '#dcdcdd', // $grey-200
         border: '1px solid #dcdcdd',
+        borderRadius: '4px',
         deemphasisedText: '#757377', // $grey-700
         panelBackgroundColor: '#f3f3f4', // $grey-50
         headingColor: '#19151c', // $black
         bodyCopy: '#3b383e', // $grey-900
+        bodySmallFontSize: '14px',
         disabledText: '#d1d0d2', // $grey-300
-        warningYellow: '#fef8e8', // $warning-50 Background for warning alerts
+        fontFamilyH1: 'Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        purple: {
+            purple50: '#eee9f2',
+        },
+        alert: {
+            info: '#e7f0fa',
+            warning: '#fef8e8',
+            error: '#fbeaea',
+        },
     },
 };
 
@@ -110,6 +120,12 @@ export const mui1theme = createTheme({
         suppressDeprecationWarnings: true,
         caption: {
             color: '#000',
+        },
+        artTrail: {
+            fontSize: 16,
+            fontWeightHeavy: 500,
+            headingFontFamily: 'Montserrat,Helvetica,Arial,sans-serif',
+            bodyFontFamily: 'Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif',
         },
     },
     overrides: {

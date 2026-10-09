@@ -56,15 +56,18 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
+            bookablespaces: {
+                title: 'Spaces Management',
+            },
+            bookablespacetypes: {
+                title: 'Space Type Management',
+            },
         },
         learningresources: {
             title: 'Learning resources',
         },
         paymentReceipt: {
             title: 'Payment receipt',
-        },
-        bookExamBooth: {
-            title: 'Book an exam booth in the UQ Centre',
         },
         membership: {
             title: 'UQ Library Membership',
@@ -74,6 +77,18 @@ export default {
         },
         pastExamPaperList: {
             title: 'View exam papers',
+        },
+        bookablespaces: {
+            title: 'Spaces',
+        },
+        bookablespacetypes: {
+            title: 'Space Types',
+        },
+        artTrailLanding: {
+            title: 'Art Trail Welcome',
+        },
+        artTrail: {
+            title: 'Art Trail',
         },
     },
 };

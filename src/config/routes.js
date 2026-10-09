@@ -4,6 +4,7 @@ import {
     canSeeLearningResourcesPage,
     isAlertsAdminUser,
     isDlorAdminUser,
+    isSpacesAdminUser,
     isMembershipAdminUser,
     isTestTagUser,
 } from 'helpers/access';
@@ -52,6 +53,13 @@ export const flattedPathConfigExact = [
     '/digital-learning-hub',
     'https://www.library.uq.edu.au/404.js',
     '/digital-learning-hub-list',
+    '/spaces',
+    '/spaces/detail',
+    '/admin/spaces',
+    '/admin/spacetypes',
+    '/admin/spaces/manage/locations',
+    '/admin/spaces/add',
+    '/admin/spaces/manage/facilitytypes',
     '/digital-learning-hub/dashboard',
 ];
 export const flattedPathConfig = [
@@ -69,6 +77,7 @@ export const flattedPathConfig = [
     '/digital-learning-hub/submit',
     '/digital-learning-hub/edit',
     '/exams/course',
+    '/admin/spaces/edit',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
@@ -77,25 +86,28 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const dlorId = ':dlorId';
     const seriesId = ':seriesId';
     const confirmationId = ':confirmationId';
+    const spaceUuid = ':spaceUuid';
+
+    // A standalone section with its own look and feel — App renders it without the shared chrome.
+    const publicStandalonePages = [
+        {
+            path: pathConfig.artTrailApp,
+            element: <components.ArtTrailApp />,
+            pageTitle: 'Indigenous art and Library discovery trail',
+            standalone: true,
+        },
+    ];
 
     const publicPages = [
         {
             path: pathConfig.index,
             element: <components.Index />,
-            exact: true,
             pageTitle: locale.pages.index.title,
         },
         {
             path: pathConfig.paymentReceipt,
             element: <components.PaymentReceipt />,
-            exact: true,
             pageTitle: locale.pages.paymentReceipt.title,
-        },
-        {
-            path: pathConfig.bookExamBooth,
-            element: <components.BookExamBooth />,
-            exact: false,
-            pageTitle: locale.pages.bookExamBooth.title,
         },
         {
             path: pathConfig.membership,
@@ -151,25 +163,22 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorHome,
             element: <components.DLOList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
         {
             path: pathConfig.dlorViewSeries(seriesId),
             element: <components.SeriesView />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - View Series',
         },
         {
             path: pathConfig.dlorSubscriptionConfirmation(confirmationId),
             element: <components.DLOConfirmSubscription />,
-            // exact: true,
             pageTitle: 'Digital Learning Object Repository - Confirm Subscription request',
         },
         {
             path: pathConfig.dlorUnsubscribe(confirmationId),
             element: <components.DLOConfirmUnsubscription />,
-            // exact: true,
+
             pageTitle: 'Digital Learning Object Repository - Confirm Unsubscription request',
         },
         {
@@ -180,20 +189,57 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.pastExamPaperSearch,
             element: <components.PastExamPaperSearch />,
-            exact: false,
             pageTitle: locale.pages.pastExamPaperSearch.title,
         },
         {
             path: pathConfig.dlorSubmit,
             element: <components.DLONew />,
-            exact: false,
             pageTitle: 'Submit request for new object',
         },
         {
             path: pathConfig.dlorOwnObjectEdit(dlorId),
             element: <components.DLOOwnEdit />,
-            exact: false,
             pageTitle: 'Edit details of your object',
+        },
+        {
+            path: pathConfig.bookablespaces,
+            element: <components.BookableSpacesLandingPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/results',
+            element: <components.BookableSpacesSimpleListPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/mapresults',
+            element: <components.BookableSpacesMapPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        // {
+        //     path: '/spaces/detail/:spaceId',
+        //     element: <components.BookableSpacesDetailPage />,
+        //     exact: true,
+        //     pageTitle: 'Library spaces',
+        // },
+        {
+            path: pathConfig.bookablespacesDetail(spaceUuid),
+            element: <components.BookableSpacesDetailPage />,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: '/spaces/details/:spaceId',
+            element: <components.BookableSpacesDetailPage />,
+            exact: true,
+            pageTitle: 'Library spaces',
+        },
+        {
+            path: pathConfig.artTrailLanding,
+            element: <components.ArtTrail />,
+            pageTitle: 'Landing page for the Indigenous art and Library discovery trail',
         },
     ];
 
@@ -201,7 +247,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.learningresources,
             element: <components.LearningResources />,
-            exact: true,
             pageTitle: locale.pages.learningresources.title,
         },
     ];
@@ -211,13 +256,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.alerts,
             element: <components.AlertsList />,
-            exact: true,
             pageTitle: locale.pages.admin.alerts.title,
         },
         {
             path: pathConfig.admin.alertsadd,
             element: <components.AlertsAdd />,
-            exact: true,
             pageTitle: locale.pages.admin.alerts.form.add.title,
         },
         {
@@ -241,7 +284,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.masquerade,
             element: <components.Masquerade />,
-            exact: true,
             pageTitle: locale.pages.admin.masquerade.title,
         },
     ];
@@ -269,73 +311,61 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.dloradmin,
             element: <components.DLOAdminHomepage />,
-            exact: true,
             pageTitle: 'Manage the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dloradd,
             element: <components.DLOAdd />,
-            exact: true,
             pageTitle: 'Create a new Object',
         },
         {
             path: pathConfig.admin.dloredit(dlorId),
             element: <components.DLOEdit />,
-            exact: true,
             pageTitle: 'Edit an Object',
         },
         {
             path: pathConfig.admin.dlorteammanage,
             element: <components.DLOTeamList />,
-            exact: true,
             pageTitle: 'Manage Teams for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamedit(dlorTeamId),
             element: <components.DLOTeamEdit />,
-            exact: true,
             pageTitle: 'Edit a Team for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorteamadd,
             element: <components.DLOTeamAdd />,
-            exact: true,
             pageTitle: 'Create a new Team',
         },
         {
             path: pathConfig.admin.dlorseriesmanage,
             element: <components.DLOSeriesList />,
-            exact: true,
             pageTitle: 'Manage Series for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorseriesedit(dlorSeriesId),
             element: <components.DLOSeriesEdit />,
-            exact: true,
             pageTitle: 'Edit a Series for the Digital Learning Hub',
         },
         {
             path: pathConfig.admin.dlorseriesadd,
             element: <components.DLOSeriesAdd />,
-            exact: true,
             pageTitle: 'Create a new Series',
         },
         {
             path: pathConfig.admin.dlorfiltersmanage,
             element: <components.DLOFilterManage />,
-            exact: true,
             pageTitle: 'Manage Filters',
         },
         {
             path: pathConfig.admin.dlorvocabularymanage,
             element: <components.DLOVocabularyManage />,
-            exact: true,
             pageTitle: 'Manage Vocabulary',
         },
         {
             path: pathConfig.admin.dlorScheduler,
             element: <components.DLOBulkSchedule />,
-            exact: true,
             pageTitle: 'Manage feature schedules',
         },
     ];
@@ -343,7 +373,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorProtected,
             element: <components.DLOList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository',
         },
         {
@@ -354,7 +383,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorDashboard,
             element: <components.DLODashboard />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - Dashboard',
         },
     ];
@@ -363,7 +391,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.dlorOwnTeamList,
             element: <components.DLOOwnTeamList />,
-            exact: true,
             pageTitle: 'Digital Learning Object Repository - Team Management',
         },
         {
@@ -377,90 +404,117 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         {
             path: pathConfig.admin.testntagdashboard,
             element: <components.TestTagDashboard />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntaginspect,
             element: <components.TestTagInspection />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageassettypes,
             element: <components.TestTagManageAssetTypes />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanagelocations,
             element: <components.TestTagManageLocations />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageinspectiondevices,
             element: <components.TestTagManageInspectionDevices />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanagebulkassetupdate,
             element: <components.TestTagManageBulkAssetUpdate />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageinspectiondetails,
             element: <components.TestTagManageInspectionDetails />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportrecalibrationssdue,
             element: <components.TestTagReportRecalibrationsDue />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportinspectionsdue,
             element: <components.TestTagReportInspectionsDue />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportinspectionsbylicenceduser,
             element: <components.TestTagReportInspectionsByLicencedUser />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagreportassetsbyfilters,
             element: <components.TestTagAssetReportByFilters />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageusers,
             element: <components.TestTagManageUsers />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageteams,
             element: <components.TestTagManageTeams />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
         {
             path: pathConfig.admin.testntagmanageprintertemplates,
             element: <components.TestTagManagePrinterTemplates />,
-            exact: true,
             pageTitle: locale.pages.admin.testntag.title,
         },
     ];
 
+    const bookableSpacesAdminPages = [
+        {
+            path: pathConfig.admin.bookableSpacesDashboard,
+            element: <components.BookableSpacesManageSpaces />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpaceTypesDashboard,
+            element: <components.BookableSpacesManageSpaceTypes />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespacetypes.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageLocations,
+            element: <components.BookableSpacesManageLocations />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesManageFacilityTypes,
+            element: <components.BookableSpacesManageFacilities />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesAdd,
+            // element: <components.BookableSpacesAddSpace />,
+            element: <components.BookableSpacesAddSpace />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+        {
+            path: pathConfig.admin.bookableSpacesEdit(spaceUuid),
+            element: <components.BookableSpacesEditSpace />,
+            exact: true,
+            pageTitle: locale.pages.admin.bookablespaces.title,
+        },
+    ];
+
     return [
+        ...publicStandalonePages,
         ...publicPages,
         ...(account && canSeeLearningResourcesPage(account) ? courseResourcesDisplay : []),
         ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
@@ -470,6 +524,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && isTestTagUser(account) ? testntagDisplay : []),
         ...(account ? dlorTeamAdminDisplay : []),
         ...(account ? authenticatedDlorDisplay : []),
+        ...(account && isSpacesAdminUser(account) ? bookableSpacesAdminPages : []),
         {
             path: '*',
             element: <components.NotFound />,
@@ -478,16 +533,17 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 };
 
 // the top level link that appears in the page breadcrumb
-// call with use effect on eveyer page that should have a 3rd level breadcrumb
+// call with use effect on every page that should have a 3rd level breadcrumb
 export const breadcrumbs = {
     alertsadmin: { pathname: '/admin/alerts', title: 'Alerts admin' },
     dloradmin: { pathname: '/admin/dlor', title: 'Digital learning hub admin' },
+    bookablespacesadmin: { pathname: '/spaces', title: 'Spaces management' },
     testntag: { pathname: '/admin/testntag', title: 'Test and tag' },
-    bookexambooth: { pathname: '/book-exam-booth', title: 'Book an Exam booth' },
     dlor: { pathname: '/digital-learning-hub', title: 'Digital learning hub' },
     exampapers: { pathname: '/exams', title: 'Past exam papers' },
     learningresources: { pathname: '/learning-resources', title: 'Learning resources' },
     paymentreceipt: { pathname: '/payment-receipt', title: 'Payment receipt' },
+    bookablespaces: { pathname: '/spaces', title: 'Spaces' },
     membership: { pathname: '/membership', title: 'Membership' },
     membershipadmin: { pathname: '/admin/membership', title: 'Membership admin' },
     membershipadminsettings: { pathname: '/admin/membership/settings', title: 'Membership expiry settings' },

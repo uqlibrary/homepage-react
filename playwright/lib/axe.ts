@@ -16,6 +16,7 @@ export const assertAccessibility = async (
         rules?: string[];
         disabledRules?: string[];
         includedImpacts?: string[];
+        excludedSelectors?: string[];
     },
 ) => {
     await expect(async () => await expect(page.locator(selector).first()).toBeVisible({ timeout: 2000 })).toPass();
@@ -25,6 +26,7 @@ export const assertAccessibility = async (
     const disableRules = options?.disabledRules || defaultDisabledRules;
 
     builder.include(selector);
+    options?.excludedSelectors?.forEach(excludedSelector => builder.exclude(excludedSelector));
     if (options?.rules?.length) {
         builder.withRules(options.rules);
     }

@@ -121,7 +121,7 @@ describe('Locations', () => {
 
         it('handles add action as expected', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
+            const { getByText, getByTestId, findByTestId } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -191,7 +191,7 @@ describe('Locations', () => {
 
         it('handles update action as expected', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
+            const { getByText, getByTestId, findByTestId } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),

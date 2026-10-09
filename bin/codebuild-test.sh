@@ -5,8 +5,12 @@ export COMMIT_INFO_AUTHOR=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:
 export COMMIT_INFO_EMAIL=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%ae")
 export COMMIT_INFO_MESSAGE=$(git show ${CI_COMMIT_ID} --no-patch --pretty=format:"%B")
 export CI_BUILD_URL="https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/fez-frontend/executions/${CI_BUILD_NUMBER}"
-export PWTEST_SHARD_WEIGHTS=37:32:31 # ENV VAR name expected by PW, please don't rename it
-export PW_SHARD_COUNT=3
+
+# Run CC only on these branches
+# NB: These branches will require 3 pipelines to run all tests, branches not in this list require only 2.
+if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild" || $CI_BRANCH == "feature-uqlsibba-1" || $CI_BRANCH == "feature-uqclien-1" || $CI_BRANCH == "feature-marcelopm-1" || $CI_BRANCH == *"coverage"*) ]]; then
+    CODE_COVERAGE_REQUIRED=1
+fi
 
 echo
 echo "Commit Info:"
@@ -65,13 +69,13 @@ function fix_coverage_report_paths() {
 
 function install_pw_deps() {
     printf "\n--- \e[INSTALLING PW DEPS [STARTING AT $(date)] 1\e[0m ---\n"
-        sed -i 's|http://archive.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-        sed -i 's|http://security.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
-        apt-get clean
-        apt-get update
-        npx playwright install chromium-headless-shell
-        npx playwright install-deps chromium-headless-shell
-        printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
+	sed -i 's|http://archive.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+	sed -i 's|http://security.ubuntu.com/ubuntu|http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+	apt-get clean
+	apt-get update
+	npx playwright install chromium-headless-shell
+	npx playwright install-deps chromium-headless-shell
+	printf "\n--- \e[ENDED INSTALLING PW DEPS AT $(date)] 1\e[0m ---\n"
 }
 
 function run_pw_test_shard() {
@@ -81,13 +85,15 @@ function run_pw_test_shard() {
 
     printf "\n--- \e[1mRUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} [STARTING AT $(date)] 2\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
-        npm run test:e2e:cc -- -- --shard="${PW_SHARD_INDEX}/${PW_SHARD_COUNT}"
+        npm run test:e2e:cc -- -- --shard="$PW_SHARD_INDEX/2"
         fix_coverage_report_paths coverage/playwright/coverage-final.json
     else
-        npm run test:e2e -- --shard="${PW_SHARD_INDEX}/${PW_SHARD_COUNT}"
+        npm run test:e2e -- --shard="$PW_SHARD_INDEX/2"
     fi
     printf "\n--- [ENDED RUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} AT $(date)] \n"
 }
+
+check_code_style
 
 case "$PIPE_NUM" in
 "1")
@@ -98,31 +104,24 @@ case "$PIPE_NUM" in
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
-
-    check_code_style
-
-    printf "\n\n--- INSTALL JEST ---\n"
-    echo "$ npm install -g jest"
-    npm install -g jest
-    set -e
-
-    printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
-
+	printf "\n\n--- INSTALL JEST ---\n"
+	echo "$ npm install -g jest"
+	npm install -g jest
+	set -e
+	printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
         export JEST_HTML_REPORTER_OUTPUT_PATH=coverage/jest/jest-html-report.html
         npm run test:unit:ci
-        sed -i.bak 's,'"$CODEBUILD_SRC_DIR"',,g' coverage/jest/coverage-final.json
+        fix_coverage_report_paths coverage/jest/coverage-final.json
     else
         npm run test:unit:ci:nocoverage
     fi
-
-    run_pw_test_shard "$PIPE_NUM"
 ;;
 *)
 ;;
 esac
 
 # Copy empty file to prevent a build failure as we only report on combined cobertura coverage when $TEST_COVERAGE=1
-if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
+#if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
     mkdir -p coverage && cp cobertura-sample-coverage.xml coverage/cobertura-coverage.xml
-fi
+#fi

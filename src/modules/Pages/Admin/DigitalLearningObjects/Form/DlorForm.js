@@ -30,7 +30,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
 import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
-import { scrollToTopOfPage } from 'helpers/general';
+import { isValidUrl, scrollToTopOfPage, slugifyName } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -43,7 +43,6 @@ import {
     getTotalSecondsFromMinutesAndSecond,
     isPreviewableUrl,
     isValidNumber,
-    slugifyName,
     validFileSizeUnits,
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import {
@@ -51,7 +50,6 @@ import {
     isValidEmail,
     splitStringToArrayOnPipe,
 } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { isValidUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { isDlorAdminUser, isInDLOROwningTeam } from 'helpers/access';
 import { breadcrumbs } from 'config/routes';
 import { pluralise } from 'helpers/general';
@@ -188,7 +186,6 @@ export const DlorForm = ({
         actions.requestNewKeyword(requestedKeywordValues).then(() => {
             setRequestedKeywordValues({});
             setIsRequestKeywordOpened(false);
-            console.log('Keyword request sent successfully');
         });
     };
 
@@ -283,7 +280,6 @@ export const DlorForm = ({
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
@@ -334,6 +330,13 @@ export const DlorForm = ({
             ) {
                 firstPanelErrorCount++;
             }
+            if (
+                currentValues?.team_admin_username_new === undefined ||
+                !currentValues?.team_admin_username_new ||
+                currentValues?.team_admin_username_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
             (currentValues?.team_email_new === undefined ||
                 !currentValues?.team_email_new ||
                 currentValues?.team_email_new?.length < 1 ||
@@ -341,6 +344,7 @@ export const DlorForm = ({
                 firstPanelErrorCount++;
         } else if (mode === 'edit') {
             currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            currentValues?.team_admin_username_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
             (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
                 firstPanelErrorCount++;
         }
@@ -385,7 +389,6 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        console.log('currentValues', currentValues);
         currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
@@ -438,7 +441,6 @@ export const DlorForm = ({
     };
 
     const handleDateChange = newValue => {
-        console.log('Date Changed here');
         const formattedDate = moment(newValue).format('YYYY-MM-DD');
         const newValues = { ...formValues, object_review_date_next: formattedDate };
         setFormValues(newValues);
@@ -648,6 +650,25 @@ export const DlorForm = ({
                             />
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_new">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username-new"
+                                required
+                                value={formValues?.team_admin_username_new || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_new')}
+                                type="text"
+                                error={!formValues?.team_admin_username_new}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_new && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
                             <Input
                                 id="team_email_new"
@@ -685,6 +706,25 @@ export const DlorForm = ({
                                 value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
                                 onChange={handleChange('team_manager_edit')}
                             />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_edit">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username_edit"
+                                required
+                                value={formValues?.team_admin_username_edit || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_edit')}
+                                type="text"
+                                error={!formValues?.team_admin_username_edit}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_edit && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
@@ -753,6 +793,7 @@ export const DlorForm = ({
                                 <RichTextEditor
                                     id="object_admin_notes"
                                     testId="object-admin-notes"
+                                    ariaLabel="Admin Notes"
                                     value={formValues?.object_admin_notes || ''}
                                     onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
@@ -904,6 +945,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="object_description"
                         testId="object-description"
+                        ariaLabel="Description of Object *"
                         value={formValues?.object_description || ''}
                         onChange={htmlData => {
                             handleEditorChange('object_description', htmlData);
@@ -1294,6 +1336,7 @@ export const DlorForm = ({
                     <RichTextEditor
                         id="download_instructions"
                         testId="download_instructions"
+                        ariaLabel="Instructions"
                         value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
                         onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
@@ -1457,7 +1500,6 @@ export const DlorForm = ({
                                         requested_keyword: e.target.value,
                                         requested_object_uuid: dlorItem?.object_public_uuid,
                                     });
-                                    // console.log('requestedKeywordValues', requestedKeywordValues);
                                 }}
                                 error={
                                     !!requestedKeywordValues?.requested_keyword &&
@@ -1724,7 +1766,6 @@ export const DlorForm = ({
 
     const saveDlor = () => {
         const valuesToSend = { ...formValues };
-        console.log(valuesToSend);
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
@@ -1735,16 +1776,19 @@ export const DlorForm = ({
             valuesToSend.team_name = valuesToSend.team_name_new;
             valuesToSend.team_manager = valuesToSend.team_manager_new;
             valuesToSend.team_email = valuesToSend.team_email_new;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_new;
         } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
             // they can only change manager and email for the original team;
             // if they entered this then changed teams, undo
             delete valuesToSend.team_name;
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
+            delete valuesToSend.team_admin_username;
         } else {
             valuesToSend.team_name = valuesToSend.team_name_edit;
             valuesToSend.team_manager = valuesToSend.team_manager_edit;
             valuesToSend.team_email = valuesToSend.team_email_edit;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_edit;
         }
 
         delete valuesToSend.team_name_new;
@@ -1753,6 +1797,8 @@ export const DlorForm = ({
         delete valuesToSend.team_name_edit;
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
+        delete valuesToSend.team_admin_username_new;
+        delete valuesToSend.team_admin_username_edit;
 
         // valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
@@ -1798,7 +1844,7 @@ export const DlorForm = ({
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
                 : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
-
+        console.log('VALUES TO SEND ARE', valuesToSend);
         return saveDlorPromise.then(() => {
             // Save admin notes after DLO is created or updated
             if (
@@ -1840,7 +1886,7 @@ export const DlorForm = ({
         scrollToTopOfPage();
     };
 
-    const navigateToListPage = isAdmin => {
+    const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
