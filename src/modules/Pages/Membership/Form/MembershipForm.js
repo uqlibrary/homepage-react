@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router';
 
@@ -12,12 +12,14 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { useForm } from 'modules/SharedComponents/Toolbox/ReactHookForm';
 import { pathConfig } from 'config/pathConfig';
 import { breadcrumbs } from 'config/routes';
+import { isMembershipCaptchaConfigured } from 'config/general';
 
 import { MEMBERSHIP_TYPES } from '../membershipFieldRules';
 import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
 import { isRenewal, transformRequest, transformResponse } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
+import { MembershipCaptcha } from './MembershipCaptcha';
 import MembershipFileUpload from './MembershipFileUpload';
 import MembershipFormSections from './MembershipFormSections';
 import MembershipTerms from './MembershipTerms';
@@ -49,6 +51,24 @@ export const MembershipForm = ({
     const type = membership?.type ?? typeParam;
     const isRenewing = isRenewal(membership);
     const current = findAccountType(membershipFormData, type);
+
+    // A new application is protected by an AWS WAF CAPTCHA where one is configured; a renewal, which authenticates
+    // on the id and code from its emailed link, is not. The puzzle is shown only once the applicant chooses to
+    // apply - and only after the form validates - rather than on load, so it cannot time out while the form is
+    // being filled in. Solving it then submits the application (see the resubmit effect below). The reset signal
+    // redraws a fresh puzzle after a WAF rejection (see onSubmit) so the applicant can verify again.
+    const captchaRequired = !isRenewing && isMembershipCaptchaConfigured();
+    const [captchaVisible, setCaptchaVisible] = useState(false);
+    const [captchaSolved, setCaptchaSolved] = useState(false);
+    const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+    // The exact token AWS hands back when the puzzle is solved - this is the one carrying the CAPTCHA proof the
+    // API's WAF rule checks, so it is sent as-is rather than re-read later (which can yield a challenge-only token).
+    const captchaTokenRef = useRef(null);
+    const handleCaptchaSolved = useCallback(wafToken => {
+        captchaTokenRef.current = wafToken;
+        setCaptchaSolved(true);
+    }, []);
+    const formRef = useRef(null);
 
     // Attachments live beside the form rather than in it: they are uploaded as they are chosen, not validated
     // as a field, and the form only needs the stored result at submit time.
@@ -103,11 +123,28 @@ export const MembershipForm = ({
         }
     }, [current, membershipFormData, membershipFormDataLoading, navigate]);
 
+    // Once the puzzle (revealed by the first apply press) reports solved, submit the application programmatically.
+    // Re-running the form's own submit reuses the validated path - validation and error handling are unchanged -
+    // but this time the CAPTCHA is solved, so it goes through to the API with a fresh token.
+    useEffect(() => {
+        if (captchaRequired && captchaVisible && captchaSolved) {
+            formRef.current.requestSubmit();
+        }
+    }, [captchaRequired, captchaVisible, captchaSolved]);
+
     const onSubmit = safelyHandleSubmit(async values => {
         // Applying now would drop documents the applicant chose but has not uploaded. safelyHandleSubmit turns
         // this into the form's server-error slot, which the summary below reports.
         if (hasPendingUploads) {
             throw new Error(locale.upload.pendingUploads);
+        }
+
+        // On a new application the puzzle is shown only now - the form has validated and the applicant has chosen
+        // to apply - not on load, where it could time out while the form was filled in. The first apply reveals
+        // the puzzle and stops here; solving it re-submits the application (see the resubmit effect above).
+        if (captchaRequired && !captchaSolved) {
+            setCaptchaVisible(true);
+            return;
         }
 
         const request = transformRequest(
@@ -116,12 +153,24 @@ export const MembershipForm = ({
         );
 
         try {
-            // A renewal authenticates on the id and code from the link, so they travel with the body.
+            // A renewal authenticates on the id and code from the link, so they travel with the body. A new
+            // application carries the AWS WAF token the solved puzzle handed back - the one with the CAPTCHA proof.
+            const wafToken = captchaRequired ? captchaTokenRef.current : undefined;
             const saved = isRenewing
                 ? await actions.renewMembership({ ...request, id, code })
-                : await actions.submitMembership(request);
+                : await actions.submitMembership(request, wafToken);
             navigate(pathConfig.membershipReceived(saved.id));
         } catch (error) {
+            // The WAF CAPTCHA action answers a request with no valid, unexpired token with HTTP 405. That happens
+            // when the token minted at puzzle-solve has aged past the CAPTCHA immunity window while the form was
+            // filled in. Draw a fresh puzzle and ask the applicant to verify again, rather than reporting a
+            // dead-end error they cannot act on.
+            if (error?.response?.status === 405) {
+                captchaTokenRef.current = null;
+                setCaptchaSolved(false);
+                setCaptchaResetSignal(signal => signal + 1);
+                throw new Error(form.captcha.expired);
+            }
             // The API reports field-level problems keyed by field name, so they go back onto the fields.
             setServerFieldErrors(error?.errors);
             throw error;
@@ -186,7 +235,7 @@ export const MembershipForm = ({
                  * submit on the first empty required field with a transient bubble a screen reader does not
                  * announce, and our own error reporting never runs.
                  */}
-                <form onSubmit={onSubmit} noValidate data-testid="membership-form-element">
+                <form ref={formRef} onSubmit={onSubmit} noValidate data-testid="membership-form-element">
                     <Typography variant="body2" sx={{ marginBottom: 1 }}>
                         {form.mandatoryNote}
                     </Typography>
@@ -255,6 +304,12 @@ export const MembershipForm = ({
                             </Alert>
                         )}
                     </Box>
+
+                    {/* The anti-bot puzzle appears here only after the first apply press on a valid new
+                        application (see onSubmit); solving it submits. It is never asked for on a renewal. */}
+                    {captchaRequired && captchaVisible && (
+                        <MembershipCaptcha onSolved={handleCaptchaSolved} resetSignal={captchaResetSignal} />
+                    )}
 
                     <Button
                         type="submit"

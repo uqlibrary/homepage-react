@@ -9,6 +9,7 @@ env:
     SENTRY_ORG: "/CodeBuild/homepage/SENTRY_ORG"
     SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
     BARCODE_SCANNER_WASM_PATH: "/CodeBuild/homepage/BARCODE_SCANNER_WASM_PATH"
+    AWS_WAF_CAPTCHA_API_KEY: "/CodeBuild/homepage/AWS_WAF_CAPTCHA_API_KEY"
 phases:
   install:
     runtime-versions:

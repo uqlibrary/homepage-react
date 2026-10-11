@@ -7,6 +7,7 @@ import { mui1theme } from 'config';
 
 import locale from '../membership.locale';
 import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
+import { isMembershipCaptchaConfigured } from 'config/general';
 import MembershipForm from './MembershipForm';
 
 const { form } = locale;
@@ -22,6 +23,25 @@ jest.mock('../membershipOutage', () => ({
     isFrozen: jest.fn(() => false),
     isPaymentGatewayOutage: jest.fn(() => false),
 }));
+
+// The CAPTCHA is off unless a test turns it on, so the bulk of the form's behaviour is exercised without it.
+jest.mock('config/general', () => ({
+    ...jest.requireActual('config/general'),
+    isMembershipCaptchaConfigured: jest.fn(() => false),
+}));
+
+// The real puzzle loads AWS's script and is covered in MembershipCaptcha.test.js; here it stands in as a solve
+// button that hands back a token, so the form's gating and the token it sends can be driven. Solving passes the
+// token up through onSolved exactly as the real component does.
+jest.mock('./MembershipCaptcha', () => {
+    const MockCaptcha = ({ onSolved }) => (
+        <button type="button" data-testid="mock-captcha-solve" onClick={() => onSolved('waf-token-123')}>
+            solve
+        </button>
+    );
+    MockCaptcha.propTypes = { onSolved: require('prop-types').func };
+    return { __esModule: true, MembershipCaptcha: MockCaptcha };
+});
 
 // The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
 // the submit payload and its onPendingChange gates the submit.
@@ -111,6 +131,7 @@ describe('MembershipForm', () => {
         mockNavigate.mockClear();
         isFrozen.mockReturnValue(false);
         isPaymentGatewayOutage.mockReturnValue(false);
+        isMembershipCaptchaConfigured.mockReturnValue(false);
     });
 
     it('closes the form for everyone during a maintenance freeze', () => {
@@ -353,6 +374,81 @@ describe('MembershipForm', () => {
             setup({ membership: null, membershipError: 'Forbidden' }, renewalRoute);
 
             expect(screen.getByTestId('membership-form-load-error')).toHaveTextContent(form.renewalLoadFailed);
+        });
+    });
+
+    describe('CAPTCHA protection', () => {
+        beforeEach(() => {
+            isMembershipCaptchaConfigured.mockReturnValue(true);
+        });
+
+        it('shows the puzzle only after a valid application is applied for, not on load', async () => {
+            const { actions } = setup();
+
+            // The submit button is there from the start; the puzzle is not drawn until the applicant applies.
+            expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            // The puzzle now appears, and nothing is submitted until it is solved.
+            expect(await screen.findByTestId('mock-captcha-solve')).toBeInTheDocument();
+            expect(actions.submitMembership).not.toHaveBeenCalled();
+        });
+
+        it('does not draw the puzzle when the applied-for form is invalid', async () => {
+            setup();
+
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+
+            await waitFor(() =>
+                expect(screen.getByTestId('membership-form-error-summary')).toHaveTextContent(form.invalidSummary),
+            );
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+        });
+
+        it('submits with the solved token and continues to the received page', async () => {
+            const { actions } = setup();
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+            await userEvent.click(await screen.findByTestId('mock-captcha-solve'));
+
+            await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+            // The exact token the puzzle handed back (via onSolved) is what's sent, not a re-read value.
+            expect(actions.submitMembership.mock.calls[0][1]).toBe('waf-token-123');
+            await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/membership/received/abc-123'));
+        });
+
+        it('does not ask a renewal to solve a puzzle', () => {
+            setup(
+                { membership: { id: 'abc-009', type: 'community', status: 'renewing' } },
+                '/membership/form/community/abc-009/the-code',
+            );
+
+            // A renewal is exempt: the submit button is present and no puzzle is ever drawn.
+            expect(screen.getByTestId('membership-form-submit')).toBeInTheDocument();
+            expect(screen.queryByTestId('mock-captcha-solve')).not.toBeInTheDocument();
+        });
+
+        it('draws a fresh puzzle and asks for re-verification when the WAF rejects the token', async () => {
+            // The WAF CAPTCHA action answers a request with no valid token with HTTP 405.
+            const { actions } = setup({
+                actions: { submitMembership: jest.fn().mockRejectedValue({ response: { status: 405 } }) },
+            });
+
+            await fillInCommunityForm();
+            await userEvent.click(screen.getByTestId('membership-form-submit'));
+            await userEvent.click(await screen.findByTestId('mock-captcha-solve'));
+
+            await waitFor(() => expect(actions.submitMembership).toHaveBeenCalled());
+            await waitFor(() =>
+                expect(screen.getByTestId('membership-form-server-error')).toHaveTextContent(form.captcha.expired),
+            );
+            // The puzzle stays available to solve again, and nothing navigates away.
+            expect(screen.getByTestId('mock-captcha-solve')).toBeInTheDocument();
+            expect(mockNavigate).not.toHaveBeenCalledWith(expect.stringContaining('/received'));
         });
     });
 });
