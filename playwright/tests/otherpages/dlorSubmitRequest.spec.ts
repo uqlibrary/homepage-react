@@ -214,11 +214,13 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await page.getByTestId('object-owning-team').click();
                 await page.getByTestId('object-form-teamid-new').click();
 
-                // now that we have chosen "new team" the form is invalid until we enter all 3 fields
-                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/3/); // panel invalidity count present
+                // now that we have chosen "new team" the form is invalid until we enter all 4 fields
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/4/); // panel invalidity count present
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
-                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/2/); // panel invalidity count present
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/3/); // panel invalidity count present
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/2/); // panel invalidity count present
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/1/); // panel invalidity count present
                 await expect(page.getByTestId('error-message-team-email-new')).toHaveText(
                     /This email address is not valid\./,

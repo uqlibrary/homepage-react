@@ -289,13 +289,17 @@ test.describe('Add an object to the Digital Learning Hub', () => {
 
                 // now that we have chosen "new team" the form is invalid until we enter all 3 fields
                 await expect(
-                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('3'),
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('4'),
                 ).toBeVisible();
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await expect(
-                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('2'),
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('3'),
                 ).toBeVisible();
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await expect(
+                    page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('2'),
+                ).toBeVisible();
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await expect(
                     page.locator('[data-testid="dlor-panel-validity-indicator-0"] span').getByText('1'),
                 ).toBeVisible();
@@ -611,6 +615,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                 // enter a new team
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
 
                 // go to the second panel, Description
@@ -720,6 +725,7 @@ test.describe('Add an object to the Digital Learning Hub', () => {
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'new',
                     object_restrict_to: 'none',
+                    team_admin_username: 'johnadmin',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',

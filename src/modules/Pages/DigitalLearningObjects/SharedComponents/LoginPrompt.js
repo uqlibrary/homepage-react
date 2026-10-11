@@ -12,7 +12,7 @@ const StyledLoginPrompt = styled(Box)(() => ({
     color: 'rgba(0, 0, 0, 0.87)',
     fontWeight: 400,
     lineHeight: 1.5,
-    margin: 0,
+    margin: '24px 0',
     padding: 12,
     display: 'flex',
     alignItems: 'center',
@@ -23,11 +23,21 @@ const StyledLoginPrompt = styled(Box)(() => ({
     },
 }));
 
-const LoginPrompt = ({ account, narrower = false, prompt = 'for extra features', instyle }) => {
+const LoginPrompt = ({
+    account,
+    isLoggedIn = !!account?.id,
+    narrower = false,
+    prompt = 'for extra features',
+    instyle,
+    helpUrl = 'https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#s-lg-box-22922915',
+    helpAriaLabel = 'Learn more about "Digital Learning Objects"',
+}) => {
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
+    const shouldRender = typeof account === 'undefined' ? !isLoggedIn : !account?.id;
+
     return (
         <>
-            {!account?.id && (
+            {shouldRender && (
                 <StyledLoginPrompt
                     data-testid="dlor-homepage-loginprompt"
                     sx={{ instyle, margin: !!narrower ? /* istanbul ignore next */ '0 12px' : undefined }}
@@ -38,14 +48,14 @@ const LoginPrompt = ({ account, narrower = false, prompt = 'for extra features',
                             Log in
                         </a>
                         &nbsp;{prompt}
-                        {'  '}&nbsp;
-                        <a
-                            href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#s-lg-box-22922915"
-                            target="_blank"
-                            aria-label='Learn more about "Digital Learning Objects"'
-                        >
-                            <HelpOutlineIcon style={{ marginTop: 6 }} />
-                        </a>
+                        {!!helpUrl && (
+                            <>
+                                {'  '}&nbsp;
+                                <a href={helpUrl} target="_blank" aria-label={helpAriaLabel}>
+                                    <HelpOutlineIcon style={{ marginTop: 6 }} />
+                                </a>
+                            </>
+                        )}
                     </span>
                 </StyledLoginPrompt>
             )}
@@ -55,9 +65,12 @@ const LoginPrompt = ({ account, narrower = false, prompt = 'for extra features',
 
 LoginPrompt.propTypes = {
     account: PropTypes.object,
+    isLoggedIn: PropTypes.bool,
     narrower: PropTypes.bool,
     prompt: PropTypes.string,
     instyle: PropTypes.any,
+    helpUrl: PropTypes.string,
+    helpAriaLabel: PropTypes.string,
 };
 
 export default LoginPrompt;

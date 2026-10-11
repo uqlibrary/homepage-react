@@ -1,0 +1,173 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Grid, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
+import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
+
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
+import { StyledSkipLinkAnchor } from 'helpers/general';
+
+const StyledHeadingWrapperSpan = styled(Grid)(() => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    paddingRight: '1rem',
+    '& .spaceTitle': {
+        paddingLeft: 0,
+        paddingRight: '15px',
+    },
+    '& .spaceTitleRoomName': {
+        whiteSpace: 'nowrap',
+    },
+    '&:has(.openNewWrapper)': {
+        paddingRight: '2rem',
+    },
+}));
+const StyledBookableSpaceGridItem = styled(Grid)(() => ({
+    marginTop: '12px',
+    '&:last-child': {
+        marginBottom: '1rem',
+    },
+}));
+const StyledSpaceGridWrapperDiv = styled('div')(() => ({
+    backgroundColor: 'white',
+    overflowY: 'auto',
+    maxHeight: '99vh',
+    paddingTop: '0.5rem',
+    paddingLeft: '1rem',
+}));
+
+const SidebarSpacesList = ({
+    actions,
+    filteredSpaceLocations,
+    totalSpaceCount,
+    activeFilterCount,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    StyledStandardCard,
+    suppliedClassName = null,
+    spacesFavouritesList = null,
+    onSpaceSelect = null,
+    onSpaceToggle = null,
+    expandedSpaceId = null,
+}) => {
+    // const markerRefs = React.useRef({});
+    //
+    // const handleMapOpenButtonClick = id => {
+    //     if (markerRefs.current[id]) {
+    //         markerRefs.current[id].openPopup();
+    //     }
+    // };
+
+    return (
+        <StyledSpaceGridWrapperDiv id="space-wrapper" data-testid="space-wrapper" className={suppliedClassName}>
+            <StyledSkipLinkAnchor href="#topOfSidebar">Skip back to list of filters</StyledSkipLinkAnchor>
+            {filteredSpaceLocations?.length === 0 && (
+                <p data-testid="no-spaces-visible">
+                    No Spaces match these filters - change your selection in the sidebar to show some spaces.
+                </p>
+            )}
+            {filteredSpaceLocations?.length > 0 && (
+                <Typography
+                    component={'h2'}
+                    variant={'h6'}
+                    data-testid={
+                        !!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount
+                            ? 'space-space-count'
+                            : undefined
+                    }
+                >
+                    Available Spaces
+                    {!!activeFilterCount && filteredSpaceLocations?.length < totalSpaceCount && (
+                        <span> ({filteredSpaceLocations.length})</span>
+                    )}
+                </Typography>
+            )}
+            {filteredSpaceLocations?.length > 0 &&
+                filteredSpaceLocations?.map(bookableSpace => {
+                    const isExpanded = expandedSpaceId === bookableSpace?.space_id;
+                    return (
+                        <StyledBookableSpaceGridItem
+                            item
+                            xs={12}
+                            key={`space-${bookableSpace?.space_id}`}
+                            id={`space-${bookableSpace?.space_id}`}
+                            data-testid={`space-${bookableSpace?.space_id}`}
+                            // style={{ display: 'block' }}
+                        >
+                            <StyledStandardCard
+                                fullHeight
+                                title={
+                                    <StyledHeadingWrapperSpan>
+                                        <SpacesFavouriteIcon
+                                            actions={actions}
+                                            bookableSpace={bookableSpace}
+                                            isFavourite={spacesFavouritesList?.some(
+                                                fav => fav.space_id === bookableSpace?.space_id,
+                                            )}
+                                        />
+                                        <span
+                                            className="spaceTitle"
+                                            onClick={() => onSpaceSelect?.(bookableSpace)}
+                                            onKeyDown={() => onSpaceSelect?.(bookableSpace)}
+                                            style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
+                                            title="Show on map"
+                                            data-testid={`space-${bookableSpace.space_id}-name`}
+                                        >
+                                            {bookableSpace?.space_type_details?.space_type_name}{' '}
+                                            {!!bookableSpace?.space_name && (
+                                                <span className="spaceTitleRoomName">{bookableSpace.space_name}</span>
+                                            )}
+                                        </span>
+                                        {isExpanded && (
+                                            <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>
+                                                <OpenSpaceDetailsButton spaceDetails={bookableSpace} />
+                                            </span>
+                                        )}
+                                    </StyledHeadingWrapperSpan>
+                                }
+                                style={{ marginRight: '0.5rem' }}
+                                squareTop
+                                subCard
+                            >
+                                <MapSpaceDetails
+                                    actions={actions}
+                                    weeklyHours={weeklyHours}
+                                    weeklyHoursLoading={weeklyHoursLoading}
+                                    weeklyHoursError={weeklyHoursError}
+                                    bookableSpace={bookableSpace}
+                                    collapsed
+                                    isExpanded={isExpanded}
+                                    onToggle={onSpaceToggle}
+                                    isFavourite={spacesFavouritesList?.some(
+                                        fav => fav.space_id === bookableSpace?.space_id,
+                                    )}
+                                />
+                            </StyledStandardCard>
+                        </StyledBookableSpaceGridItem>
+                    );
+                })}
+        </StyledSpaceGridWrapperDiv>
+    );
+};
+
+SidebarSpacesList.propTypes = {
+    actions: PropTypes.any,
+    filteredSpaceLocations: PropTypes.any,
+    totalSpaceCount: PropTypes.number,
+    activeFilterCount: PropTypes.number,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
+    StyledStandardCard: PropTypes.any,
+    suppliedClassName: PropTypes.string,
+    spacesFavouritesList: PropTypes.any,
+    onSpaceSelect: PropTypes.func,
+    onSpaceToggle: PropTypes.func,
+    expandedSpaceId: PropTypes.number,
+};
+
+export default React.memo(SidebarSpacesList);

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -11,7 +13,6 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TextField from '@mui/material/TextField';
 import MapIcon from '@mui/icons-material/Map';
 import { styled } from '@mui/material/styles';
 

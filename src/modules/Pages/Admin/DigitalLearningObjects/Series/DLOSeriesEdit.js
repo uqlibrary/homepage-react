@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, Link as RouterLink, useNavigate } from 'react-router';
@@ -15,9 +16,9 @@ import Typography from '@mui/material/Typography';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { styled } from '@mui/material/styles';
 
-import IconButton from '@mui/material/IconButton';
-import AddCircle from '@mui/icons-material/AddCircle';
-import DeleteForever from '@mui/icons-material/DeleteForever';
+import { IconButton } from '@mui/material';
+import { AddCircle, DeleteForever } from '@mui/icons-material';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -36,7 +37,7 @@ import { breadcrumbs } from 'config/routes';
 import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { useAccountContext } from 'context';
 
-const StyledDraggableListItem = styled('li')(({ theme }) => ({
+const StyledDraggableListItem = styled('li')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     // Remove margin and padding
@@ -66,7 +67,7 @@ const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
+const DraggableListItem = React.memo(({ item, index, moveItem, handleDelete }) => {
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
@@ -141,6 +142,12 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
         </li>
     );
 });
+DraggableListItem.proptypes = {
+    item: PropTypes.any,
+    index: PropTypes.any,
+    moveItem: PropTypes.any,
+    handleDelete: PropTypes.any,
+};
 
 export const DLOSeriesEdit = ({
     actions,
@@ -155,10 +162,6 @@ export const DLOSeriesEdit = ({
 }) => {
     const { account } = useAccountContext();
     const navigate = useNavigate();
-    const handleEditorChange = (fieldname, newContent) => {
-        const newValues = { ...formValues, [fieldname]: newContent };
-        setFormValues(newValues);
-    };
 
     const { dlorSeriesId } = useParams();
     const [cookies, setCookie] = useCookies();
@@ -174,6 +177,11 @@ export const DLOSeriesEdit = ({
         object_list_linked: [],
         object_list_unassigned: [],
     });
+
+    const handleEditorChange = (fieldname, newContent) => {
+        const newValues = { ...formValues, [fieldname]: newContent };
+        setFormValues(newValues);
+    };
 
     const moveItem = (fromIndex, toIndex) => {
         const updatedList = [...formValues.object_list_linked];
@@ -216,12 +224,10 @@ export const DLOSeriesEdit = ({
     }, []);
 
     useEffect(() => {
-        console.log('DLOR SERIES', dlorSeries);
         if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
             const seriesDetail = (!!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId))) || {};
             if (Object.keys(seriesDetail).length === 0) {
-                console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
                 ((seriesDetail.object_series_name = dlorSeries?.series_name),
                     (seriesDetail.object_series_description = dlorSeries?.series_description));
@@ -232,7 +238,6 @@ export const DLOSeriesEdit = ({
                     series_name: seriesDetail?.object_series_name,
                     series_description: seriesDetail?.object_series_description,
                 });
-            console.log('About to set the values', seriesDetail, dlorSeries);
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
@@ -286,7 +291,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleDelete = (index, uuid) => {
-        let newValues;
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
@@ -297,10 +301,9 @@ export const DLOSeriesEdit = ({
         }
         thisdlor.object_series_order = null;
         unassigned.push(thisdlor);
-        console.log('index', index, 'uuid', uuid, indexToRemove);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -310,8 +313,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleAdd = uuid => {
-        let newValues;
-        console.log(uuid);
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
@@ -324,7 +325,7 @@ export const DLOSeriesEdit = ({
         linked.push(thisdlor);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -335,8 +336,7 @@ export const DLOSeriesEdit = ({
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
-        let newValues;
-        newValues = { ...formValues, [prop]: theNewValue };
+        const newValues = { ...formValues, [prop]: theNewValue };
         setFormValues(newValues);
     };
 
@@ -458,6 +458,7 @@ export const DLOSeriesEdit = ({
                                                         <RichTextEditor
                                                             id="object_description"
                                                             testId="object-description"
+                                                            ariaLabel="Description of Series"
                                                             value={formValues?.series_description || ''}
                                                             onChange={htmlData => {
                                                                 handleEditorChange('series_description', htmlData);
@@ -589,6 +590,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorSeries: PropTypes.any,
     mode: PropTypes.string,
 };
 

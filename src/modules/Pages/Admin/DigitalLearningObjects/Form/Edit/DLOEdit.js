@@ -52,7 +52,6 @@ export const DLOEdit = ({
     React.useEffect(() => {
         /* istanbul ignore next */
         if (!dlorKeywordsLoading && !dlorKeywordsError && (!dlorKeywords || dlorKeywords.length === 0)) {
-            console.log('LOAD KEYWORDS');
             actions.loadDlorKeywords();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +61,7 @@ export const DLOEdit = ({
         /* istanbul ignore next */
         if (!!dlorId) {
             actions.clearADlor();
-            actions.loadADLOR(dlorId);
+            actions.loadADLOR(dlorId, true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
@@ -113,6 +112,7 @@ export const DLOEdit = ({
         team_name_edit: dlorItem?.owner.team_name,
         team_manager_edit: dlorItem?.owner.team_manager,
         team_email_edit: dlorItem?.owner.team_email,
+        team_admin_username_edit: dlorItem?.owner.team_admin_username,
         object_keywords_string: dlorItem?.object_keywords?.join('|'),
         object_keywords: dlorItem?.object_keywords || [],
         facets: dlorItem?.object_filters,
@@ -186,6 +186,9 @@ DLOEdit.propTypes = {
     dlorAdminNotesLoaded: PropTypes.bool,
     dlorAdminNotesLoadError: PropTypes.any,
     dlorAdminNotes: PropTypes.array,
+    dlorKeywords: PropTypes.any,
+    dlorKeywordsLoading: PropTypes.any,
+    dlorKeywordsError: PropTypes.any,
 };
 
 export default DLOEdit;

@@ -1,6 +1,16 @@
 import { test, expect } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
+
+const openDlorTeamAdminMenu = async page => {
+    await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+    await page.setViewportSize({ width: 1300, height: 1000 });
+
+    const teamAdminMenuButton = page.getByTestId('admin-dlor-team-admin-menu-button');
+    await expect(teamAdminMenuButton).toBeVisible({ timeout: 30000 });
+    await teamAdminMenuButton.click();
+};
+
 test.describe('Digital Learning Hub admin Edit Team', () => {
     test.beforeEach(async ({ page }) => {
         await page.context().clearCookies();
@@ -28,6 +38,9 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             );
             await expect(page.locator('[data-testid="admin-dlor-team-form-team-manager"] input')).toHaveValue(
                 'Jane Green',
+            );
+            await expect(page.locator('[data-testid="admin-dlor-team-form-team-admin-username"] input')).toHaveValue(
+                'uqstaff',
             );
             await expect(page.locator('[data-testid="admin-dlor-team-form-team-email"] input')).toHaveValue(
                 'train@library.uq.edu',
@@ -128,12 +141,14 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
         test('saves correctly', async ({ page, context }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
             // Modify the input fields
             await teamNameInput.fill('Lib train Library Corporate Services changed');
             await teamManagerInput.fill('Jane Green changed');
+            await teamAdminUsernameInput.fill('uqstaff2');
             await teamEmailInput.fill('train@library.uq.edu.au');
 
             // Click the save button
@@ -149,6 +164,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             const expectedValues = {
                 team_name: 'Lib train Library Corporate Services changed',
                 team_manager: 'Jane Green changed',
+                team_admin_username: 'uqstaff2',
                 team_email: 'train@library.uq.edu.au',
             };
 
@@ -224,9 +240,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
     });
     test.describe('team admin functionality', () => {
         test('has a team admin menu - object request', async ({ page }) => {
-            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await openDlorTeamAdminMenu(page);
             await expect(
                 page.getByTestId('team-admin-submit-object-request').getByText('Submit new object request'),
             ).toBeVisible();
@@ -240,9 +254,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             ).toContainText('Create an Object for the Digital Learning Hub');
         });
         test('has a team admin menu - team management', async ({ page }) => {
-            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await openDlorTeamAdminMenu(page);
             await expect(page.getByTestId('team-admin-details--button').getByText('My team(s) details')).toBeVisible();
             await page.getByTestId('team-admin-details--button').click();
 
@@ -267,6 +279,7 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             });
 
             expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
+            await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
             await page.getByTestId('admin-dlor-team-admin-menu-button').click();
             await page.getByTestId('admin-dlor-export-team-objects--button').click();
             // Verify that the URL.createObjectURL method was called

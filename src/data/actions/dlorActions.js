@@ -139,7 +139,6 @@ export function createDlor(request, isDlorAdminUser = true) {
     // used to determine the API endpoint to use. Default is true.
     return async dispatch => {
         dispatch({ type: actions.DLOR_CREATING });
-        console.log('POINT CHECK');
         return post(isDlorAdminUser ? DLOR_CREATE_API() : DLOR_REQUEST_API(), request)
             .then(data => {
                 dispatch({
@@ -692,16 +691,13 @@ export function loadDlorAdminNotes(uuid) {
     };
 }
 
-// eslint-disable-next-line camelcase
 export function saveDlorAdminNote(uuid, object_admin_note_content) {
     return dispatch => {
         dispatch({ type: actions.DLOR_ADMIN_NOTES_LOADING });
         return post(DLOR_ADMIN_NOTES_API(uuid), {
-            // eslint-disable-next-line camelcase
             object_admin_note_content,
         })
             .then(response => {
-                console.log('DLOR Admin Notes Response', response);
                 dispatch({
                     type: actions.DLOR_ADMIN_NOTES_LOADED,
                     payload: response.data,
@@ -784,12 +780,10 @@ export function deleteDlorTeamMember(id, teamId) {
 }
 
 export function loadDlorKeywords() {
-    console.log('loadDlorKeywords called');
     return dispatch => {
         dispatch({ type: actions.DLOR_KEYWORDS_LOADING });
         return get(DLOR_KEYWORDS_API())
             .then(response => {
-                console.log('DLOR Keywords Response', response);
                 dispatch({
                     type: actions.DLOR_KEYWORDS_LOADED,
                     payload: response.data,
@@ -805,12 +799,10 @@ export function loadDlorKeywords() {
     };
 }
 export function updateDlorKeywords(request) {
-    console.log('UpdateDlor called', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
         return post(DLOR_KEYWORDS_UPDATE_API(), request)
             .then(response => {
-                console.log('UPDATE RESPONSE', response);
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATED,
                     payload: response.data,
@@ -847,7 +839,6 @@ export function deleteDlorSynonym(request) {
 }
 
 export function loadDlorStatistics() {
-    console.log('loadDlorStatistics action creator called');
     return dispatch => {
         dispatch({ type: actions.DLOR_STATISTICS_LOADING });
         return get(DLOR_STATISTICS_API())
@@ -868,7 +859,6 @@ export function loadDlorStatistics() {
 }
 
 export function loadDLORSchedules() {
-    console.log('loadDLORSchedules action creator called');
     return dispatch => {
         dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
         return get(DLOR_SCHEDULE_API())
@@ -888,12 +878,10 @@ export function loadDLORSchedules() {
     };
 }
 export function addDLORSchedule(request) {
-    console.log('addDLORSchedule action creator called', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
         return post(DLOR_SCHEDULE_API(), request)
             .then(response => {
-                console.log('addDLORSchedule response', response);
                 dispatch({
                     type: actions.DLOR_SCHEDULE_LOADED,
                     payload: response.data,
@@ -911,12 +899,10 @@ export function addDLORSchedule(request) {
 }
 
 export function editDLORSchedule(id, request) {
-    console.log('editDLORSchedule action creator called', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
         return put(DLOR_SCHEDULE_UPDATE_API(id), request)
             .then(response => {
-                console.log('editDLORSchedule response', response);
                 dispatch({
                     type: actions.DLOR_SCHEDULE_LOADED,
                     payload: response.data,
@@ -924,7 +910,6 @@ export function editDLORSchedule(id, request) {
                 // dispatch(loadDLORSchedules());
             })
             .catch(error => {
-                console.log('editDLORSchedule error', error);
                 dispatch({
                     type: actions.DLOR_SCHEDULE_FAILED,
                     payload: error.message,
@@ -940,7 +925,6 @@ export function deleteDlorSchedule(id) {
         dispatch({ type: actions.DLOR_SCHEDULE_LOADING });
         return destroy(DLOR_SCHEDULE_UPDATE_API(id))
             .then(response => {
-                console.log('deleteDLORSchedule response', response);
                 dispatch({
                     type: actions.DLOR_SCHEDULE_LOADED,
                     payload: response.data,
@@ -948,7 +932,6 @@ export function deleteDlorSchedule(id) {
                 // dispatch(loadDLORSchedules());
             })
             .catch(error => {
-                console.log('editDLORSchedule error', error);
                 dispatch({
                     type: actions.DLOR_SCHEDULE_FAILED,
                     payload: error.message,
@@ -960,12 +943,10 @@ export function deleteDlorSchedule(id) {
 }
 
 export function requestNewKeyword(request) {
-    console.log('request new keyword called', request);
     return dispatch => {
         dispatch({ type: actions.DLOR_KEYWORDS_UPDATING });
         return post(DLOR_REQUEST_KEYWORD_API(), request)
             .then(response => {
-                console.log('KEYWORD RESPONSE', response);
                 dispatch({
                     type: actions.DLOR_KEYWORDS_UPDATED,
                     payload: response.data,
