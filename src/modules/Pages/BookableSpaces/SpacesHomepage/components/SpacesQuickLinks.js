@@ -114,7 +114,7 @@ export const SpacesQuickLinks = ({
                 container
                 spacing={3}
                 sx={{
-                    mt: '-24px',
+                    mt: 0,
                     '& li.MuiGrid-item': { pt: 0 },
                     '& a': { boxSizing: 'border-box', width: '100%', minWidth: { xs: 0, sm: 'auto' } },
                 }}
