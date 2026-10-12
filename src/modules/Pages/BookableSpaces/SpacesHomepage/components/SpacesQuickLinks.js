@@ -93,7 +93,7 @@ export const SpacesQuickLinks = ({
     return (
         <Box className="spaces-list" sx={{ mb: 3 }}>
             <StyledHeaderWithLinkToAllGridItem item xs={12}>
-                <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '16px' }}>
+                <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '8px' }}>
                     Find a study space
                 </Typography>
                 <Link
