@@ -4,6 +4,9 @@ import { styled } from '@mui/material/styles';
 export const StyledHeaderWithLinkToAllGridItem = styled(Grid)(({ theme }) => ({
     marginTop: '-32px',
     paddingBottom: theme.spacing(3),
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(2),
     '& h2': {
         marginTop: '22px',
         fontSize: '32px',
