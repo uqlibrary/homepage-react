@@ -156,7 +156,6 @@ export const BookableSpacesManageSpaceTypes = ({
     //     setDisplayedRows2(rows);
     // };
 
-    // eslint-disable-next-line no-unused-vars
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = 'spaces-list-paginator';
