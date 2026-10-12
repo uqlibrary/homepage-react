@@ -94,7 +94,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                             </Box>
 
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/uq-blak-history/"
                                         target="_blank"
@@ -106,7 +106,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/uq-blak-history/"
                                         target="_blank"
@@ -125,7 +125,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                 </Grid>
                             </Grid>
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/storying-the-archive/"
                                         target="_blank"
@@ -137,7 +137,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/storying-the-archive/"
                                         target="_blank"
@@ -155,7 +155,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                 </Grid>
                             </Grid>
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/languageofrelationships/"
                                         target="_blank"
@@ -167,7 +167,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/languageofrelationships/"
                                         target="_blank"

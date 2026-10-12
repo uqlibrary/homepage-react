@@ -480,7 +480,7 @@ const ArtTrailApp = () => {
                 {showStepper && (
                     <>
                         <Grid container sx={FOOTER_STEPPER_ROW_SX}>
-                            <Grid xs={12} sx={FOOTER_CONTENT_SX}>
+                            <Grid size={{ xs: 12 }} sx={FOOTER_CONTENT_SX}>
                                 <MobileStepper
                                     variant={isTrailWelcomeStep ? 'dots' : 'text'}
                                     position="static"
@@ -525,7 +525,7 @@ const ArtTrailApp = () => {
                 )}
 
                 <Grid container sx={FOOTER_TAB_ROW_SX}>
-                    <Grid xs={12} sx={FOOTER_CONTENT_SX}>
+                    <Grid size={{ xs: 12 }} sx={FOOTER_CONTENT_SX}>
                         <BottomNavigation
                             showLabels
                             value={activeTab}
