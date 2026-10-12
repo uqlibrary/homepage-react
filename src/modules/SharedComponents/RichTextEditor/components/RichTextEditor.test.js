@@ -6,50 +6,39 @@ let mockEditorHtml = '<p>edited</p>';
 
 jest.mock('mui-tiptap', () => {
     const react = require('react');
-
-    const normalizeEditorHtml = htmlValue => {
-        if (typeof htmlValue !== 'string') {
-            return '';
-        }
-
-        const normalizedValue = htmlValue.replace(/\s/g, '');
-        if (normalizedValue === '<p></p>' || normalizedValue === '<p><br></p>' || normalizedValue === '<p><br/></p>') {
-            return '';
-        }
-
-        return htmlValue;
+    const actual = jest.requireActual('mui-tiptap');
+    const mockEditor = {
+        isDestroyed: false,
+        isInitialized: true,
+        editorView: { dom: { isConnected: true } },
+        getHTML: jest.fn(() => mockEditorHtml),
+        commands: { setContent: jest.fn() },
     };
 
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate, sx, id, dataTestId, editorProps, ariaLabel }) => {
-            const editorOverflow = sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
-            const attributes = {
-                ...(editorProps?.attributes || {}),
-                ...(id ? { id } : {}),
-                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
-                ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
-                role: 'textbox',
-                'aria-multiline': 'true',
-            };
+        ...actual,
 
+        useRichTextEditorContext: () => mockEditor,
+        /* eslint-disable-next-line react/prop-types */
+        RichTextEditor: ({ children, renderControls, sx, onUpdate, editorProps }) => {
+            // eslint-disable-next-line react/prop-types
+            const editorOverflow = sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
             react.useEffect(() => {
-                onUpdate?.({
-                    editor: {
-                        getHTML: () => normalizeEditorHtml(mockEditorHtml),
-                    },
-                });
+                onUpdate?.({ editor: mockEditor });
             }, [onUpdate]);
 
-            return react.createElement(
-                'div',
-                {
-                    ...attributes,
-                    'data-editor-overflow': editorOverflow,
-                },
-                renderControls?.(),
-                typeof children === 'function' ? children() : children,
+            return (
+                <div data-testid="mock-rich-text-editor">
+                    {renderControls?.(mockEditor)}
+
+                    {/* eslint-disable-next-line react/prop-types */}
+                    <div className="ProseMirror" {...editorProps?.attributes} data-editor-overflow={editorOverflow}>
+                        {children?.(mockEditor)}
+                    </div>
+                </div>
             );
         },
+
         LinkBubbleMenu: () => react.createElement('div', { 'data-testid': 'mock-link-bubble-menu' }),
     };
 });
