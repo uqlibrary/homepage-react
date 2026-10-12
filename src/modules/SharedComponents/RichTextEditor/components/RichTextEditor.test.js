@@ -6,26 +6,37 @@ let mockEditorHtml = '<p>edited</p>';
 
 jest.mock('mui-tiptap', () => {
     const react = require('react');
+    const actual = jest.requireActual('mui-tiptap');
+    const mockEditor = {
+        isDestroyed: false,
+        isInitialized: true,
+        editorView: { dom: { isConnected: true } },
+        getHTML: jest.fn(() => mockEditorHtml),
+        commands: { setContent: jest.fn() },
+    };
 
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate, id, 'data-testid': dataTestId, editorProps }) => {
+        ...actual,
+
+        useRichTextEditorContext: () => mockEditor,
+        /* eslint-disable-next-line react/prop-types */
+        RichTextEditor: ({ children, renderControls, onUpdate, editorProps }) => {
             react.useEffect(() => {
-                onUpdate?.({ editor: { getHTML: () => mockEditorHtml } });
+                onUpdate?.({ editor: mockEditor });
             }, [onUpdate]);
 
-            const attributes = {
-                ...(editorProps?.attributes || {}),
-                ...(id ? { id } : {}),
-                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
-            };
+            return (
+                <div data-testid="mock-rich-text-editor">
+                    {renderControls?.(mockEditor)}
 
-            return react.createElement(
-                'div',
-                attributes,
-                renderControls?.(),
-                typeof children === 'function' ? children() : children,
+                    {/* eslint-disable-next-line react/prop-types */}
+                    <div className="ProseMirror" {...editorProps?.attributes}>
+                        {children?.(mockEditor)}
+                    </div>
+                </div>
             );
         },
+
         LinkBubbleMenu: () => react.createElement('div', { 'data-testid': 'mock-link-bubble-menu' }),
     };
 });
