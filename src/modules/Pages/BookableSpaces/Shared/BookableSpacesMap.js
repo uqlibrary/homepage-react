@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link, MemoryRouter } from 'react-router';

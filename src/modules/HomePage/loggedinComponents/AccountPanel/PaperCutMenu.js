@@ -8,6 +8,8 @@ import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 
 import { addClass, linkToDrupal, removeClass } from 'helpers/general';
+import { markedPrintBalance, getTopUrl } from './Helpers';
+import { dsDiscountDollarDashIcon } from './Icons';
 
 const StyledPrintBalanceButton = styled(Button)(({ theme }) => ({
     '&[aria-expanded="true"] span': {
@@ -103,38 +105,7 @@ const StyledMenuList = styled(List)(({ theme }) => ({
     },
 }));
 
-const dsDiscountDollarDashIcon = (
-    <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-        <g id="Discount-Dollar-Dash--Streamline-Streamline--3.0 1" clipPath="url(#clip0_1183_3145)">
-            <path
-                d="M1.01562 10C1.01563 12.3828 1.96219 14.668 3.64709 16.3529C5.33198 18.0378 7.6172 18.9844 10 18.9844C12.3828 18.9844 14.668 18.0378 16.3529 16.3529C18.0378 14.668 18.9844 12.3828 18.9844 10C18.9844 7.6172 18.0378 5.33198 16.3529 3.64709C14.668 1.96219 12.3828 1.01563 10 1.01562C7.6172 1.01563 5.33198 1.96219 3.64709 3.64709C1.96219 5.33198 1.01563 7.6172 1.01562 10Z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M8.20313 11.7969C8.20313 12.1523 8.30851 12.4997 8.50595 12.7952C8.7034 13.0907 8.98403 13.321 9.31237 13.457C9.6407 13.593 10.002 13.6286 10.3506 13.5592C10.6991 13.4899 11.0193 13.3188 11.2706 13.0675C11.5219 12.8162 11.693 12.496 11.7623 12.1474C11.8317 11.7989 11.7961 11.4376 11.6601 11.1092C11.5241 10.7809 11.2938 10.5003 10.9983 10.3028C10.7028 10.1054 10.3554 10 10 10C9.64461 10 9.29721 9.89462 9.00171 9.69717C8.70622 9.49973 8.47591 9.2191 8.33991 8.89076C8.2039 8.56242 8.16832 8.20113 8.23765 7.85257C8.30698 7.50401 8.47812 7.18384 8.72942 6.93254C8.98072 6.68125 9.30089 6.51011 9.64945 6.44078C9.99801 6.37144 10.3593 6.40703 10.6876 6.54303C11.016 6.67903 11.2966 6.90934 11.494 7.20484C11.6915 7.50033 11.7969 7.84774 11.7969 8.20313"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path d="M10 5.20825V6.40617" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M10 13.5938V14.7917" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-        <defs>
-            <clipPath>
-                <rect width="20" height="20" fill="white" />
-            </clipPath>
-        </defs>
-    </svg>
-);
-
 export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, printBalanceError }) => {
-    function markedPrintBalance() {
-        if (!!printBalanceLoading || !printBalance?.hasOwnProperty('balance') || !!printBalanceError) {
-            return null;
-        }
-        return <> (${printBalance?.balance})</>;
-    }
-
     const [menuAnchorElement, setMenuAnchorElement] = useState(null);
     const popperRef = useRef(null);
 
@@ -243,14 +214,6 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
         }
         !!tabTo && tabTo.focus();
     };
-    const getTopUrl = topupAmount => {
-        const papercutAddress =
-            'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[topupAmount]&email=[email]';
-        return papercutAddress
-            .replace('[id]', account.id)
-            .replace('[topupAmount]', topupAmount)
-            .replace('[email]', printBalance.email);
-    };
 
     const topupAmounts = [5, 10, 20];
     return (
@@ -271,7 +234,7 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
             >
                 {dsDiscountDollarDashIcon}{' '}
                 <span data-testid="papercut-print-balance" data-analyticsid="papercut-accordion-label">
-                    Print balance {markedPrintBalance()}
+                    Print balance {markedPrintBalance(printBalance, printBalanceLoading, printBalanceError)}
                 </span>
             </StyledPrintBalanceButton>
             <Popper
@@ -322,7 +285,9 @@ export const PaperCutMenu = ({ account, printBalance, printBalanceLoading, print
                                         data-analyticsid={`pp-papercut-item-button-${index + 1}`}
                                         onKeyDown={handlePapercutTabNextKeyDown}
                                     >
-                                        <a href={getTopUrl(topupAmount)}>{topUpLabel(topupAmount)}</a>
+                                        <a href={getTopUrl(account.id, topupAmount, printBalance.email)}>
+                                            {topUpLabel(topupAmount)}
+                                        </a>
                                     </MenuItem>
                                 );
                             });

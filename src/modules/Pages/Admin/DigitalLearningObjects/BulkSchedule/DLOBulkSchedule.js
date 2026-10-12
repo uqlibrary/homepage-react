@@ -44,7 +44,6 @@ export const DLOBulkSchedule = ({
     };
     const [viewOnly, setViewOnly] = React.useState(false);
 
-    // eslint-disable-next-line react/prop-types
     const ScheduleTableSection = ({ title, schedules, onEdit, onView, onDelete, buttonTestIdPrefix }) => (
         <Accordion sx={{ marginTop: 2 }}>
             <AccordionSummary
