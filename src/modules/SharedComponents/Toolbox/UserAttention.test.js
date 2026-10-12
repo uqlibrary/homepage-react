@@ -19,7 +19,7 @@ describe('UserAttention Component', () => {
         },
     });
 
-    const renderWithTheme = (props) =>
+    const renderWithTheme = props =>
         render(
             <ThemeProvider theme={theme}>
                 <UserAttention {...props} />
