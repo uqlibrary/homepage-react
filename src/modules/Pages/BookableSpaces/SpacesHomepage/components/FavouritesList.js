@@ -75,9 +75,18 @@ export const FavouritesList = ({
                 sx={
                     !hasFavourites
                         ? {
+                              marginTop: '12px',
+                              '& h2': {
+                                  marginTop: 0,
+                              },
                               paddingBottom: '14px',
                           }
-                        : undefined
+                        : {
+                              marginTop: '12px',
+                              '& h2': {
+                                  marginTop: 0,
+                              },
+                          }
                 }
             >
                 <Typography component={'h2'}>Your favourite spaces</Typography>
