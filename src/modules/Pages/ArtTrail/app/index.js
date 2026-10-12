@@ -397,7 +397,7 @@ const ArtTrailApp = () => {
                                 {menuAnchor ? <CloseIcon /> : <MenuIcon />}
                             </IconButton>
                         </Grid>
-                        <Grid xs>
+                        <Grid size="grow">
                             <HeaderLogo />
                         </Grid>
                     </Grid>
