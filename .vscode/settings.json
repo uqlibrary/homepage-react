@@ -32,4 +32,8 @@
     "statusBar.debuggingForeground": "#e7e7e7"
   },
   "peacock.color": "#007fff",
+  "chat.tools.terminal.autoApprove": {
+    "npx jest": true,
+    "npx eslint": true
+  },
 }

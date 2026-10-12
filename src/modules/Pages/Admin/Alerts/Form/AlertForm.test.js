@@ -490,6 +490,55 @@ describe('AlertForm', () => {
         expect(getByTestId('message-title')).toHaveTextContent('2 alerts have been cloned');
     });
 
+    it('reloads the clone form with fresh dates after confirming a successful clone', async () => {
+        const { findByTestId, getByTestId } = setup({
+            alertResponse: { id: 12 },
+            alertStatus: 'saved',
+            defaults: {
+                type: 'clone',
+                alertTitle: 'Library notice',
+                enteredbody: 'Important message',
+                dateList: [{ startDate: '2030-05-01T09:00', endDate: '2030-05-01T17:00' }],
+                linkRequired: true,
+                linkTitle: 'More information',
+                linkUrl: 'https://uq.edu.au',
+                permanentAlert: true,
+                systems: ['homepage'],
+            },
+        });
+        const standardPage = document.getElementById('StandardPage');
+        standardPage.scrollIntoView = jest.fn();
+        const titleInput = getByTestId('admin-alerts-form-title').querySelector('input');
+        const bodyInput = getByTestId('admin-alerts-form-body').querySelector('textarea');
+        const startDateInput = getByTestId('admin-alerts-form-start-date-0').querySelector('input');
+        const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
+        const linkRequiredCheckbox = getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input');
+        const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
+        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
+
+        await findByTestId('confirm-alert-clone-save-succeeded');
+        jest.useFakeTimers().setSystemTime(new Date(2030, 4, 3, 12, 34));
+
+        fireEvent.change(titleInput, { target: { value: 'Changed title' } });
+        fireEvent.change(bodyInput, { target: { value: 'Changed message' } });
+        fireEvent.change(startDateInput, { target: { value: '2030-05-02T09:00' } });
+        fireEvent.change(endDateInput, { target: { value: '2030-05-02T17:00' } });
+        fireEvent.click(linkRequiredCheckbox);
+        fireEvent.click(permanentCheckbox);
+        fireEvent.click(homepageCheckbox);
+
+        fireEvent.click(getByTestId('confirm-alert-clone-save-succeeded'));
+
+        expect(titleInput).toHaveValue('Library notice');
+        expect(bodyInput).toHaveValue('Important message');
+        expect(startDateInput).toHaveValue('2030-05-03T12:34');
+        expect(endDateInput).toHaveValue('2030-05-03T23:59');
+        expect(linkRequiredCheckbox).toBeChecked();
+        expect(permanentCheckbox).toBeChecked();
+        expect(homepageCheckbox).toBeChecked();
+        expect(standardPage.scrollIntoView).toHaveBeenCalledTimes(1);
+    });
+
     it('updates an existing alert', async () => {
         const saveAlertChange = jest.fn();
         const { getByTestId } = setup({
