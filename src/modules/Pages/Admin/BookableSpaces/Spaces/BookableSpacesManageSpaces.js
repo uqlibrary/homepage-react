@@ -1727,19 +1727,19 @@ export const BookableSpacesManageSpaces = ({
                 {(() => {
                     if (!!savingProgressShown) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }}>
                                 <InlineLoader message="Saving" />
                             </StyledBookableSpaceGridItem>
                         );
                     } else if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }}>
                                 <InlineLoader message="Loading" />
                             </StyledBookableSpaceGridItem>
                         );
                     } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }}>
                                 <StyledStandardCard fullHeight>
                                     <p>Something went wrong - please try again later.</p>
                                 </StyledStandardCard>
@@ -1750,7 +1750,7 @@ export const BookableSpacesManageSpaces = ({
                         bookableSpacesRoomList?.data?.locations?.length === 0
                     ) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }}>
                                 <StyledStandardCard fullHeight>
                                     <p>No spaces currently in system - please try again soon.</p>
                                 </StyledStandardCard>
@@ -1758,7 +1758,10 @@ export const BookableSpacesManageSpaces = ({
                         );
                     } else {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
+                            <StyledBookableSpaceGridItem
+                                size={{ xs: 12, md: 9 }}
+                                style={{ marginTop: 0, paddingTop: 0 }}
+                            >
                                 {displayListOfBookableSpaces()}
                             </StyledBookableSpaceGridItem>
                         );
