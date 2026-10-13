@@ -1241,7 +1241,9 @@ describe('BookableSpacesList campus selection', () => {
     });
 
     it('covers the zero-campus-and-library fallback branch during reset when no persisted state exists', () => {
-        const readJourneyLiveFilterStateSpy = jest.spyOn(spacesHelpersModule, 'readJourneyLiveFilterState').mockReturnValue(null);
+        const readJourneyLiveFilterStateSpy = jest
+            .spyOn(spacesHelpersModule, 'readJourneyLiveFilterState')
+            .mockReturnValue(null);
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>

@@ -383,8 +383,7 @@ export const SidebarFilters = ({
     ]);
 
     React.useEffect(() => {
-        const hasLiveJourneyFilterState =
-            typeof window !== 'undefined' && !!readJourneyLiveFilterState();
+        const hasLiveJourneyFilterState = typeof window !== 'undefined' && !!readJourneyLiveFilterState();
         if (hasLiveJourneyFilterState) {
             return;
         }
@@ -960,7 +959,9 @@ export const SidebarFilters = ({
     };
     const fullFacilityTypeLookup = React.useMemo(() => {
         const mergedList = [
-            ...(Array.isArray(getFlatFacilityTypeList(facilityTypeList)) ? getFlatFacilityTypeList(facilityTypeList) : []),
+            ...(Array.isArray(getFlatFacilityTypeList(facilityTypeList))
+                ? getFlatFacilityTypeList(facilityTypeList)
+                : []),
             ...(Array.isArray(getFlatFacilityTypeList(filteredFacilityTypeList))
                 ? getFlatFacilityTypeList(filteredFacilityTypeList)
                 : []),

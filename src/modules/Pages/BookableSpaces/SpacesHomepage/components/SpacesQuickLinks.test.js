@@ -7,7 +7,15 @@ import { rtlRender, screen, WithRouter } from 'test-utils';
 import { SpacesQuickLinks } from './SpacesQuickLinks';
 
 jest.mock('modules/HomePage/publicComponents/HelpNavigation/SingleLinkCard', () => {
-    function MockSingleLinkCard({ testId, cardHeading, shortParagraph, landingUrl, onNavigate, onMouseDown, onContextMenu }) {
+    function MockSingleLinkCard({
+        testId,
+        cardHeading,
+        shortParagraph,
+        landingUrl,
+        onNavigate,
+        onMouseDown,
+        onContextMenu,
+    }) {
         return (
             <button
                 type="button"
