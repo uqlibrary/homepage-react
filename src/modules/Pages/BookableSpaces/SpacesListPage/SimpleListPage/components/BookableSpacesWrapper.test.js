@@ -828,7 +828,9 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             highlightedSpace: baseSpace,
         });
 
-        expect(screen.getByText(/Click the star icon next to a space/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toHaveTextContent(
+            /Select the.*Add to favourites.*star icon next to a space/i,
+        );
         expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
     });
 
