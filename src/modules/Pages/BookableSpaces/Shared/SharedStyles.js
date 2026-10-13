@@ -5,10 +5,13 @@ export const StyledIconWordWrapperDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     columnGap: '0.5rem',
+    color: theme.palette.primary.main,
     '& svg': {
         width: '24px',
         height: '24px',
-        stroke: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        fill: 'currentColor',
+        stroke: 'currentColor',
     },
     '& span': {
         color: theme.palette.designSystem.headingColor,
@@ -16,11 +19,14 @@ export const StyledIconWordWrapperDiv = styled('div')(({ theme }) => ({
         fontWeight: 700,
         lineHeight: '1.25rem',
     },
-    '& a': {
+    '& a, & a:visited, & a:link': {
         color: theme.palette.primary.main,
         fontWeight: 500,
         paddingBlock: '2px',
         textDecoration: 'underline',
+        '& span': {
+            color: theme.palette.primary.main,
+        },
         '&:hover, &:focus': {
             backgroundColor: 'transparent',
             '& span': {
