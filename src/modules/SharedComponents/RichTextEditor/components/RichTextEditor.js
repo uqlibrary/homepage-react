@@ -43,6 +43,8 @@ const normalizeEditorHtml = htmlValue => {
     return htmlValue;
 };
 
+const isEditorUsable = editor => !!editor && !editor.isDestroyed && !!editor.editorView?.dom?.isConnected;
+
 const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
     return (
         <MuiRichTextEditor
@@ -66,11 +68,7 @@ const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
                 },
             }}
         >
-            {() => (
-                <>
-                    <LinkBubbleMenu />
-                </>
-            )}
+            {editor => <>{isEditorUsable(editor) && <LinkBubbleMenu />}</>}
         </MuiRichTextEditor>
     );
 };
