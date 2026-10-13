@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 import { useTitle } from 'hooks';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -171,7 +171,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return false;
     };
 
-    // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
@@ -295,7 +294,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         examList: PropTypes.any,
     };
 
-    // eslint-disable-next-line react/prop-types
     const DesktopTableCells = ({ examList, examData, courseCode }) => {
         const renderSingleExam = (exam, semesterIndex, examIndex) => {
             return (

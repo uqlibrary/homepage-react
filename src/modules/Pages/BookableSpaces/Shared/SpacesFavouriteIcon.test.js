@@ -29,7 +29,11 @@ describe('SpacesFavouriteIcon', () => {
         useAccountContext.mockReturnValue({ account: null });
 
         const { container } = rtlRender(
-            <SpacesFavouriteIcon actions={{ addSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite={false} />,
+            <SpacesFavouriteIcon
+                actions={{ addSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite={false}
+            />,
         );
 
         expect(container).toBeEmptyDOMElement();
@@ -37,7 +41,11 @@ describe('SpacesFavouriteIcon', () => {
 
     it('renders a placeholder when the favourite state is unknown', () => {
         const { container } = rtlRender(
-            <SpacesFavouriteIcon actions={{ addSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite={undefined} />,
+            <SpacesFavouriteIcon
+                actions={{ addSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite={undefined}
+            />,
         );
 
         expect(container.querySelector('span')).toHaveStyle({ width: '24px' });
@@ -45,14 +53,22 @@ describe('SpacesFavouriteIcon', () => {
 
     it('renders the add and remove favourite icons in their idle states', () => {
         const { rerender } = rtlRender(
-            <SpacesFavouriteIcon actions={{ addSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite={false} />,
+            <SpacesFavouriteIcon
+                actions={{ addSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite={false}
+            />,
         );
 
         expect(screen.getByTestId('space-12-detail-favourite')).toBeInTheDocument();
         expect(screen.getByLabelText('Add to Favourites')).toBeInTheDocument();
 
         rerender(
-            <SpacesFavouriteIcon actions={{ removeSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite />,
+            <SpacesFavouriteIcon
+                actions={{ removeSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite
+            />,
         );
 
         expect(screen.getByTestId('space-12-detail-unfavourite')).toBeInTheDocument();
@@ -64,12 +80,7 @@ describe('SpacesFavouriteIcon', () => {
         };
 
         rtlRender(
-            <SpacesFavouriteIcon
-                actions={actions}
-                bookableSpace={{ space_id: 12 }}
-                isFavourite={false}
-                isDetailPage
-            />,
+            <SpacesFavouriteIcon actions={actions} bookableSpace={{ space_id: 12 }} isFavourite={false} isDetailPage />,
         );
 
         fireEvent.click(screen.getByTestId('space-12-detail-favourite'));
@@ -82,12 +93,20 @@ describe('SpacesFavouriteIcon', () => {
         const useStateSpy = jest.spyOn(React, 'useState').mockReturnValue([13, jest.fn()]);
 
         const { rerender } = rtlRender(
-            <SpacesFavouriteIcon actions={{ addSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite={false} />,
+            <SpacesFavouriteIcon
+                actions={{ addSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite={false}
+            />,
         );
         expect(screen.getByTestId('space-12-detail-favourite')).toBeInTheDocument();
 
         rerender(
-            <SpacesFavouriteIcon actions={{ removeSpaceFavourite: jest.fn() }} bookableSpace={{ space_id: 12 }} isFavourite />,
+            <SpacesFavouriteIcon
+                actions={{ removeSpaceFavourite: jest.fn() }}
+                bookableSpace={{ space_id: 12 }}
+                isFavourite
+            />,
         );
         expect(screen.getByTestId('space-12-detail-unfavourite')).toBeInTheDocument();
 
@@ -125,9 +144,7 @@ describe('SpacesFavouriteIcon', () => {
             removeSpaceFavourite: jest.fn().mockRejectedValue(new Error('failed')),
         };
 
-        rtlRender(
-            <SpacesFavouriteIcon actions={actions} bookableSpace={{ space_id: 12 }} isFavourite isDetailPage />,
-        );
+        rtlRender(<SpacesFavouriteIcon actions={actions} bookableSpace={{ space_id: 12 }} isFavourite isDetailPage />);
 
         fireEvent.click(screen.getByTestId('space-12-detail-unfavourite'));
 

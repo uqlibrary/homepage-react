@@ -44,6 +44,7 @@ import { StyledJourneyPanelSection } from 'modules/Pages/BookableSpaces/SpacesLi
 import OpenSpaceDetailsButton from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton';
 
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
+import * as spacesHelpers from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { parseJourneyStateFromUrl, serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 jest.mock('@mui/material', () => {
@@ -124,7 +125,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     beforeEach(() => {
         MockDate.reset();
         window.history.replaceState({}, '', '/#/spaces');
-        window.sessionStorage.clear();
+        window.localStorage.clear();
     });
 
     it('covers the exported journey result helper branches', () => {
@@ -165,7 +166,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('scrolls to the list filters only when opening them', () => {
-        document.body.innerHTML = '<div id="filterSidebar" class="mobileHidden"><h2 id="topOfSidebar">Filter spaces</h2></div>';
+        document.body.innerHTML =
+            '<div id="filterSidebar" class="mobileHidden"><h2 id="topOfSidebar">Filter spaces</h2></div>';
         const heading = document.getElementById('topOfSidebar');
         heading.scrollIntoView.mockClear();
 
@@ -238,7 +240,10 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                         {
                             ...baseSpace,
                             space_description: '',
-                            space_type_details: { space_type_name: 'Silent study', space_type_description: 'Quiet zone' },
+                            space_type_details: {
+                                space_type_name: 'Silent study',
+                                space_type_description: 'Quiet zone',
+                            },
                         },
                     ]}
                 />
@@ -461,6 +466,34 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    it('skips hydrated journey state when both the route and storage are empty', () => {
+        const parseSpy = jest.spyOn(spacesHelpers, 'parseJourneyStateFromUrl').mockReturnValue(null);
+        const readSpy = jest.spyOn(spacesHelpers, 'readJourneyViewState').mockReturnValue(null);
+
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
+
+        expect(parseSpy).toHaveBeenCalled();
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+
+        parseSpy.mockRestore();
+        readSpy.mockRestore();
+    });
+
+    it('persists a right-click intent selection with cleared filters before navigating', () => {
+        renderJourney({
+            ...defaultProps,
+            initialView: 'landing',
+        });
+
+        fireEvent.contextMenu(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        expect(window.localStorage.getItem('bookableSpacesJourneyViewState')).toContain('"intentId":"quiet"');
+        expect(screen.getByTestId('spaces-journey-intent-card-quiet')).toBeInTheDocument();
+    });
 
     it('renders the journey panel with and without top spacing', () => {
         const { rerender } = rtlRender(
@@ -799,7 +832,9 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             highlightedSpace: baseSpace,
         });
 
-        expect(screen.getByText(/Click the star icon next to a space/i)).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-homepage-favourites-empty-state')).toHaveTextContent(
+            /Select the.*Add to favourites.*star icon next to a space/i,
+        );
         expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
     });
 
@@ -854,7 +889,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('ignores restored intent filters when the facility groups list is empty', async () => {
         const setSelectedFacilityTypes = jest.fn();
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -876,7 +911,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('does not apply any intent filters when the available facility ids are invalid', async () => {
         const setSelectedFacilityTypes = jest.fn();
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -922,7 +957,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('leaves filters unselected when the restored intent matches no facility names', async () => {
         const setSelectedFacilityTypes = jest.fn();
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -970,7 +1005,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('ignores malformed persisted journey state instead of crashing', () => {
-        window.sessionStorage.setItem('bookableSpacesJourneyViewState', '{not valid json');
+        window.localStorage.setItem('bookableSpacesJourneyViewState', '{not valid json');
         window.history.replaceState({}, '', '/#/spaces/results');
 
         renderJourney({
@@ -1074,7 +1109,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(onResetAllFilters).toHaveBeenCalled();
     });
 
-    it('uses a simple results link for the landing card without encoding intent in the URL', () => {
+    it('uses an intent-specific results link for the landing card so a new tab can restore the selected intent', () => {
         window.history.replaceState({}, '', '/spaces');
 
         renderJourney({
@@ -1096,12 +1131,11 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         const quietLink = screen.getByTestId('spaces-journey-intent-card-quiet');
         const hrefValue = quietLink.getAttribute('href');
-        expect(hrefValue).toBe('/spaces/results');
+        expect(hrefValue).toBe('/spaces/results/quiet');
 
         const parsedUrl = new URL(hrefValue, 'http://localhost:2020');
-        expect(parsedUrl.pathname).toBe('/spaces/results');
+        expect(parsedUrl.pathname).toBe('/spaces/results/quiet');
         expect(parsedUrl.search).toBe('');
-        // mapFilters parameter is no longer used
         expect(parsedUrl.searchParams.get('mapFilters')).toBeNull();
     });
 
@@ -1139,14 +1173,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     });
 
     it('stores the selected intent id in journey state when an intent card is clicked', () => {
-        window.sessionStorage.clear();
+        window.localStorage.clear();
         window.history.replaceState({}, '', '/spaces');
 
         renderJourney(defaultProps);
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
 
-        const storedState = window.sessionStorage.getItem('bookableSpacesJourneyViewState');
+        const storedState = window.localStorage.getItem('bookableSpacesJourneyViewState');
         expect(storedState).toBeTruthy();
         expect(JSON.parse(storedState)).toEqual({ view: 'results', intentId: 'quiet', spaceId: null });
     });
@@ -1173,7 +1207,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             capacityFilterValue: [4, 8],
         };
 
-        window.sessionStorage.setItem('bookableSpacesJourneyLiveFilterState', JSON.stringify(defaultSessionState));
+        window.localStorage.setItem('bookableSpacesJourneyLiveFilterState', JSON.stringify(defaultSessionState));
         window.history.replaceState({}, '', '/spaces');
 
         renderJourney({
@@ -1187,14 +1221,14 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
 
-        const storedState = JSON.parse(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState'));
+        const storedState = JSON.parse(window.localStorage.getItem('bookableSpacesJourneyLiveFilterState'));
         expect(storedState.selectedCampus).toBe(2);
         expect(storedState.selectedLibrary).toBe(7);
         expect(storedState.capacityFilterValue).toBeUndefined();
     });
 
     it('restores results and selected intent from session state', () => {
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -1205,9 +1239,32 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.getByText('Silent study Space999')).toBeInTheDocument();
     });
 
+    it('preserves a custom capacity range when restoring the current intent from the results route', () => {
+        const setCapacityFilterValue = jest.fn();
+
+        window.localStorage.setItem(
+            'bookableSpacesJourneyViewState',
+            JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
+        );
+        window.localStorage.setItem(
+            'bookableSpacesJourneyLiveFilterState',
+            JSON.stringify({ selectedCampus: 2, selectedLibrary: 7, capacityFilterValue: [4, 8] }),
+        );
+        window.history.replaceState({}, '', '/#/spaces/results/quiet');
+
+        renderJourney({
+            ...defaultProps,
+            setCapacityFilterValue,
+            selectedCampus: 2,
+            selectedLibrary: 7,
+        });
+
+        expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 20]);
+    });
+
     it('restores the favourites-only filter when loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
         );
@@ -1240,12 +1297,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
 
     it('preserves the favourites-only sidebar filter after loading the favourite route directly', async () => {
         window.history.replaceState({}, '', '/#/spaces/results');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
         );
         window.history.replaceState({}, '', '/#/spaces/results');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'favourite', spaceId: null }),
         );
@@ -1372,7 +1429,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('applies an intent filter when the current filter list is empty on initial load', async () => {
         const setSelectedFacilityTypes = jest.fn();
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -1465,7 +1522,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -1532,7 +1589,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -1592,7 +1649,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             );
         };
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );
@@ -1634,7 +1691,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 facility_special_action: null,
             },
         ];
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyViewState',
             JSON.stringify({ view: 'results', intentId: 'quiet', spaceId: null }),
         );

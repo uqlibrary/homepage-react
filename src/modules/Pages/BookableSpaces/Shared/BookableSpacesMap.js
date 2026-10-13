@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link, MemoryRouter } from 'react-router';
@@ -39,6 +38,7 @@ const StyledMapWrapperDiv = styled('div')(() => ({
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
         padding: '10px 16px 10px 10px',
+        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
     },
     '& .mapboxgl-popup-close-button': {
         top: '0',

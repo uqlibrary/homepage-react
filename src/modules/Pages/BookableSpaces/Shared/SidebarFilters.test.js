@@ -3,10 +3,26 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
+import * as spacesHelpers from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { JOURNEY_LIVE_FILTER_STATE_STORAGE_KEY } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { SidebarFilters, clearPersistedCapacityFilterValue } from './SidebarFilters';
 
 describe('SidebarFilters campus selector', () => {
+    const originalWindowLocalStorage = window.localStorage;
+
+    beforeEach(() => {
+        document.cookie = 'UQLspacesPreferredCampus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        window.localStorage.clear();
+        window.localStorage.clear();
+    });
+
+    afterEach(() => {
+        Object.defineProperty(window, 'localStorage', {
+            value: originalWindowLocalStorage,
+            configurable: true,
+        });
+    });
+
     const theme = createTheme({
         palette: {
             primary: { main: '#51247a', light: '#7f5b97', dark: '#360f52' },
@@ -100,6 +116,142 @@ describe('SidebarFilters campus selector', () => {
             facility_special_action: null,
         },
     ];
+
+    it('uses the full facility list to label an intent chip even when the current filtered list does not contain that filter', () => {
+        renderWithTheme({
+            ...baseProps,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+            filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Facilities',
+                            facility_type_group_order: 1,
+                            facility_type_group_loads_open: false,
+                            facility_type_children: [
+                                { facility_type_id: 11, facility_type_name: 'Postgraduate only space' },
+                            ],
+                        },
+                    ],
+                },
+            },
+        });
+
+        const selectedFilterButton = screen.getByTestId('button-deselect-selected-11');
+        expect(selectedFilterButton).toHaveTextContent('Postgraduate only space');
+        expect(selectedFilterButton).toHaveAttribute('title', 'Postgraduate only space selected - click to deselect');
+    });
+
+    it('falls back to action labels when no facility name is available and ignores malformed facility ids', () => {
+        const mixedFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: null, facility_type_name: 'Ignore me' },
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: mixedFixture,
+            filteredFacilityTypeList: mixedFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'bookable',
+                },
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: undefined,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'open',
+                },
+            ],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-capacity')).toHaveTextContent('Space capacity');
+        expect(screen.getByTestId('button-deselect-selected-bookable')).toHaveTextContent('Bookable');
+        expect(screen.getByTestId('button-deselect-selected-open')).toHaveTextContent('Currently open');
+    });
+
+    it('covers the non-array flat-list fallback and default custom action chip label', () => {
+        const getFlatFacilityTypeListSpy = jest.spyOn(spacesHelpers, 'getFlatFacilityTypeList');
+        getFlatFacilityTypeListSpy.mockReturnValue({ find: () => undefined });
+
+        renderWithTheme({
+            ...baseProps,
+            selectedFacilityTypes: [{ facility_type_group_id: 1, selected: true, unselected: false }],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-custom')).toHaveTextContent('Selected filter');
+        getFlatFacilityTypeListSpy.mockRestore();
+    });
+
+    it('fills the facility label from a later duplicate record when an earlier one is missing a name', () => {
+        const duplicateIdFixture = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: false,
+                        facility_type_children: [
+                            { facility_type_id: 57, facility_type_name: undefined },
+                            { facility_type_id: 57, facility_type_name: 'Natural light' },
+                        ],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: duplicateIdFixture,
+            filteredFacilityTypeList: duplicateIdFixture,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 57,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: null,
+                },
+            ],
+        });
+
+        expect(screen.getByTestId('button-deselect-selected-57')).toHaveTextContent('Natural light');
+    });
 
     it('puts the reset filters control in the sidebar header and removes the legacy remove-all button', () => {
         renderWithTheme({
@@ -275,6 +427,45 @@ describe('SidebarFilters campus selector', () => {
         );
     });
 
+    it('skips journey intent clearing when the browser window is unavailable', () => {
+        const setCapacityFilterValue = jest.fn();
+        const props = {
+            ...baseProps,
+            capacityFilterValue: [4, 8],
+            setCapacityFilterValue,
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 1,
+                    facility_type_id: 9003,
+                    selected: true,
+                    unselected: false,
+                    facility_special_action: 'capacity',
+                },
+            ],
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_children: [{ facility_type_id: 9003, facility_type_name: 'Space capacity' }],
+                        },
+                    ],
+                },
+            },
+        };
+
+        renderWithTheme(props);
+
+        const originalWindow = global.window;
+        global.window = undefined;
+
+        try {
+            expect(() => fireEvent.click(screen.getByTestId('button-deselect-selected-9003'))).not.toThrow();
+        } finally {
+            global.window = originalWindow;
+        }
+    });
+
     it('keeps the active capacity bound when one side of the range is temporarily cleared while editing', () => {
         const setCapacityFilterValue = jest.fn();
         const capacityGroupFixture = {
@@ -402,7 +593,7 @@ describe('SidebarFilters campus selector', () => {
             ],
         };
 
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
             'bookableSpacesJourneyLiveFilterState',
             JSON.stringify({
                 capacityFilterValue: [4, 8],
@@ -415,7 +606,7 @@ describe('SidebarFilters campus selector', () => {
         fireEvent.click(screen.getByTestId('filtertype-57'));
 
         expect(setCapacityFilterValue).not.toHaveBeenCalledWith([1, 50]);
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
+        expect(window.localStorage.getItem('bookableSpacesJourneyLiveFilterState')).toContain('capacityFilterValue');
     });
 
     it('opens the parent group for journey intent preselected filters', async () => {
@@ -487,7 +678,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -537,7 +732,11 @@ describe('SidebarFilters campus selector', () => {
                             facility_type_group_loads_open: true,
                             facility_type_children: [
                                 { facility_type_id: 57, facility_type_name: 'Natural light' },
-                                { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                                {
+                                    facility_type_id: 9003,
+                                    facility_type_name: 'Space capacity',
+                                    facility_special_action: 'capacity',
+                                },
                             ],
                         },
                     ],
@@ -625,8 +824,8 @@ describe('SidebarFilters campus selector', () => {
     });
 
     it('clears persisted journey capacity state and ignores malformed session JSON during reset', () => {
-        window.sessionStorage.setItem('bookableSpacesJourneyViewState', '{bad json');
-        window.sessionStorage.setItem(
+        window.localStorage.setItem('bookableSpacesJourneyViewState', '{bad json');
+        window.localStorage.setItem(
             'bookableSpacesJourneyLiveFilterState',
             JSON.stringify({ capacityFilterValue: [8, 16], other: 'keep' }),
         );
@@ -642,30 +841,34 @@ describe('SidebarFilters campus selector', () => {
 
         fireEvent.click(screen.getByTestId('reset-filters-button'));
 
-        expect(window.sessionStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBe(JSON.stringify({ other: 'keep' }));
+        expect(window.localStorage.getItem('bookableSpacesJourneyLiveFilterState')).toBe(
+            JSON.stringify({ other: 'keep' }),
+        );
     });
 
-    it('gracefully handles undefined sessionStorage while rendering a journey group', () => {
-        const originalSessionStorage = window.sessionStorage;
-        Object.defineProperty(window, 'sessionStorage', {
+    it('gracefully handles undefined localStorage while rendering a journey group', () => {
+        const originalLocalStorage = window.localStorage;
+        Object.defineProperty(window, 'localStorage', {
             value: undefined,
             configurable: true,
         });
 
-        renderWithTheme({
-            ...baseProps,
-            suppliedClassName: 'journeyFilterSidebar',
-            selectedFacilityTypes: [],
-            filteredFacilityTypeList: facilityGroupFixture,
-            facilityTypeList: facilityGroupFixture,
-        });
+        try {
+            renderWithTheme({
+                ...baseProps,
+                suppliedClassName: 'journeyFilterSidebar',
+                selectedFacilityTypes: [],
+                filteredFacilityTypeList: facilityGroupFixture,
+                facilityTypeList: facilityGroupFixture,
+            });
 
-        fireEvent.click(screen.getByTestId('facility-type-group-1'));
-
-        Object.defineProperty(window, 'sessionStorage', {
-            value: originalSessionStorage,
-            configurable: true,
-        });
+            fireEvent.click(screen.getByTestId('facility-type-group-1'));
+        } finally {
+            Object.defineProperty(window, 'localStorage', {
+                value: originalLocalStorage,
+                configurable: true,
+            });
+        }
     });
 
     it('scrolls to the sidebar and resets a default capacity range when the special filter is cleared', () => {
@@ -678,7 +881,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -788,7 +995,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_loads_open: true,
                         facility_type_group_help: 'Helpful note for Facilities',
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -797,8 +1008,8 @@ describe('SidebarFilters campus selector', () => {
 
         const setSelectedFacilityTypes = jest.fn();
         const setCapacityFilterValue = jest.fn();
-        const originalSessionStorage = window.sessionStorage;
-        Object.defineProperty(window, 'sessionStorage', {
+        const originalLocalStorage = window.localStorage;
+        Object.defineProperty(window, 'localStorage', {
             value: undefined,
             configurable: true,
         });
@@ -826,8 +1037,8 @@ describe('SidebarFilters campus selector', () => {
             expect(screen.getByText('Helpful note for Facilities')).toBeInTheDocument();
             fireEvent.mouseDown(screen.getByTestId('reset-filters-button'));
         } finally {
-            Object.defineProperty(window, 'sessionStorage', {
-                value: originalSessionStorage,
+            Object.defineProperty(window, 'localStorage', {
+                value: originalLocalStorage,
                 configurable: true,
             });
         }
@@ -846,7 +1057,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_loads_open: true,
                         facility_type_children: [
                             { facility_type_id: 'custom', facility_type_name: 'Custom option' },
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -929,7 +1144,11 @@ describe('SidebarFilters campus selector', () => {
                             facility_type_group_loads_open: true,
                             facility_type_children: [
                                 { facility_type_id: 57, facility_type_name: 'Natural light' },
-                                { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                                {
+                                    facility_type_id: 9003,
+                                    facility_type_name: 'Space capacity',
+                                    facility_special_action: 'capacity',
+                                },
                             ],
                         },
                     ],
@@ -1029,7 +1248,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -1068,7 +1291,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -1107,7 +1334,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -1146,27 +1377,21 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_name: 'Group C',
                         facility_type_group_order: 3,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 31, facility_type_name: 'Type C1' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 31, facility_type_name: 'Type C1' }],
                     },
                     {
                         facility_type_group_id: 1,
                         facility_type_group_name: 'Group A',
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 11, facility_type_name: 'Type A1' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Type A1' }],
                     },
                     {
                         facility_type_group_id: 2,
                         facility_type_group_name: 'Group B',
                         facility_type_group_order: 2,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 21, facility_type_name: 'Type B1' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 21, facility_type_name: 'Type B1' }],
                     },
                 ],
             },
@@ -1218,18 +1443,14 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_name: 'Group 1',
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 11, facility_type_name: 'Type 1' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Type 1' }],
                     },
                     {
                         facility_type_group_id: 2,
                         facility_type_group_name: 'Group 2',
                         facility_type_group_order: 2,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 21, facility_type_name: 'Type 2' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 21, facility_type_name: 'Type 2' }],
                     },
                 ],
             },
@@ -1266,9 +1487,7 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_name: 'Group 1',
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 11, facility_type_name: 'Type 1' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 11, facility_type_name: 'Type 1' }],
                     },
                 ],
             },
@@ -1289,7 +1508,7 @@ describe('SidebarFilters campus selector', () => {
         // Verify the favourites checkbox is visible
         const favouritesCheckbox = screen.getByTestId('filter-show-favourite-spaces-only');
         expect(favouritesCheckbox).toBeInTheDocument();
-        
+
         // Click the checkbox and verify handler is called
         fireEvent.click(favouritesCheckbox.querySelector('input'));
         expect(setShowFavouriteSpacesOnly).toHaveBeenCalled();
@@ -1307,7 +1526,11 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: true,
                         facility_type_children: [
-                            { facility_type_id: 9003, facility_type_name: 'Space capacity', facility_special_action: 'capacity' },
+                            {
+                                facility_type_id: 9003,
+                                facility_type_name: 'Space capacity',
+                                facility_special_action: 'capacity',
+                            },
                         ],
                     },
                 ],
@@ -1349,9 +1572,7 @@ describe('SidebarFilters campus selector', () => {
                         facility_type_group_name: 'Facilities',
                         facility_type_group_order: 1,
                         facility_type_group_loads_open: false,
-                        facility_type_children: [
-                            { facility_type_id: 57, facility_type_name: 'Natural light' },
-                        ],
+                        facility_type_children: [{ facility_type_id: 57, facility_type_name: 'Natural light' }],
                     },
                 ],
             },
@@ -1361,7 +1582,7 @@ describe('SidebarFilters campus selector', () => {
             ...baseProps,
             facilityTypeList: facilityGroupFixture,
             filteredFacilityTypeList: facilityGroupFixture,
-            selectedCampus: 2,  // exercises hasActiveCampusFilter (selectedCampus !== 0)
+            selectedCampus: 2, // exercises hasActiveCampusFilter (selectedCampus !== 0)
             selectedLibrary: 5, // exercises hasActiveLibraryFilter (selectedLibrary !== 0)
             showFavouriteSpacesOnly: true, // exercises hasActiveFavouriteFilter
             campusList: [

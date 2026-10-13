@@ -62,6 +62,26 @@ describe('bookableSpacesAdminHelpers toast helpers', () => {
         expect(breadcrumbParent.textContent).toContain('Test');
     });
 
+    it('leaves the breadcrumbs untouched when they have already been added', () => {
+        const siteHeader = document.createElement('uq-site-header');
+        const shadowRoot = siteHeader.attachShadow({ mode: 'open' });
+        const breadcrumbParent = document.createElement('ul');
+        breadcrumbParent.id = 'breadcrumb_nav';
+        // More than the two base crumbs already present means a previous call added them, so the helper must
+        // bail out rather than append a second set.
+        breadcrumbParent.innerHTML = '<li>Home</li><li>Admin</li><li>Spaces</li>';
+        shadowRoot.appendChild(breadcrumbParent);
+        document.body.appendChild(siteHeader);
+
+        addBreadcrumbsToSiteHeader(['<li><a href="/admin/spaces/test">Test</a></li>']);
+        jest.advanceTimersByTime(200);
+
+        // The "already added" guard returns before touching anything: no new crumb, no header attributes.
+        expect(breadcrumbParent.children.length).toBe(3);
+        expect(breadcrumbParent.querySelector('#secondlevel-site-breadcrumb-link')).toBeNull();
+        expect(siteHeader.getAttribute('secondleveltitle')).toBeNull();
+    });
+
     it('exposes the static admin locale values used by the BookableSpaces forms', () => {
         expect(locale.noSpringshareHoursLabel).toContain('No Springshare opening hours');
         expect(locale.unselectedSpringshareOption).toMatchObject({
