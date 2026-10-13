@@ -63,7 +63,7 @@ import {
 import { tabs, menuItems } from './config';
 import { useDocumentScrollLock, useGoogleAnalytics } from './hooks';
 import { action, analyticsId } from './config/trackingEvents';
-import { GlobalStyles } from '@mui/material';
+import GlobalStyles from '@mui/material/GlobalStyles';
 
 const CULTURAL_DISCLAIMER_COOKIE = 'ART_TRAIL_CULTURAL_DISCLAIMER_SEEN';
 

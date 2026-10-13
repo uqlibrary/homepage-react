@@ -1,0 +1,425 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useAccountContext } from 'context';
+
+import { Box, Button, Chip, Stack, Typography } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import { pluralise } from 'helpers/general';
+
+import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
+import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
+import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon';
+import SpacesOutageNotice from 'modules/Pages/BookableSpaces/Shared/SpacesOutageNotice';
+import { getFriendlyLocationDescription } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import SpaceOpenStatusChip from 'modules/Pages/BookableSpaces/Shared/SpaceOpenStatusChip';
+import { OpeningHoursDown } from 'modules/Pages/BookableSpaces/Shared/OpeningHoursDown';
+
+import { getVisibleSpaceOutage } from 'modules/Pages/Admin/BookableSpaces/Spaces/Form/spaceOutageHelpers';
+
+const journeyFallbackDetailImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
+
+const StyledDetailSurface = styled('div')(({ theme }) => ({
+    color: theme.palette.designSystem.bodyCopy,
+    marginTop: '1rem',
+}));
+const StyledSpaceTitleWrapperBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    '& > span': {
+        display: 'flex',
+        columnGap: '6px',
+        justifyContent: 'flex-start',
+        '& h2': {
+            fontWeight: 500,
+            color: theme.palette.designSystem.headingColor,
+            lineHeight: 1.2,
+        },
+    },
+}));
+const StyledRoomTitleText = styled('span')(() => ({
+    whiteSpace: 'nowrap',
+}));
+// const StyledNameTypography = styled(Typography)(({ theme }) => ({
+//     color: theme.palette.designSystem.bodyCopy,
+//     marginBottom: '1rem',
+//     fontSize: '1rem',
+// }));
+const StyledFriendlyLocationDiv = styled('div')(() => ({
+    marginBottom: '1rem',
+    '& .location-space': {
+        lineHeight: 1.25,
+    },
+    '& .location-floor': {
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
+    },
+}));
+const StyledH3Typography = styled(Typography)(({ theme }) => ({
+    fontSize: '24px',
+    marginBottom: '1rem',
+    color: theme.palette.designSystem.headingColor,
+    paddingBottom: '0.5rem',
+}));
+const StyledH4Typography = styled(Typography)(({ theme }) => ({
+    fontWeight: 500,
+    fontSize: '20px',
+    color: theme.palette.designSystem.headingColor,
+}));
+const StyledDetailImage = styled('div')(({ theme }) => ({
+    width: '100%',
+    backgroundColor: '#ece8f3',
+    overflow: 'hidden',
+    minHeight: '240px',
+    border: `1px solid ${theme.palette.designSystem.borderColor}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& img': {
+        width: '100%',
+        height: '100%',
+        maxHeight: '420px',
+        objectFit: 'cover',
+        display: 'block',
+    },
+    [theme.breakpoints.down('sm')]: {
+        minHeight: '200px',
+        '& img': {
+            maxHeight: '260px',
+        },
+    },
+}));
+/* istanbul ignore next */
+const StyledMissingImageBox = styled(Box)(({ theme }) => ({
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.designSystem.bodyCopy,
+    fontWeight: 600,
+}));
+
+const StyledBodyChip = styled(Chip)(({ theme }) => ({
+    fontSize: '1rem',
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
+    '& span': {
+        padding: '12px 16px',
+        fontWeight: 400,
+    },
+}));
+const StyledSpaceDescriptionTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.designSystem.bodyCopy,
+    fontSize: '1rem',
+}));
+const StyledTopBox = styled(Box)(() => ({
+    display: 'grid',
+    gap: '1.5rem',
+    alignItems: 'start',
+    gridTemplateColumns: '1fr',
+    '&.horizontallayout': {
+        gridTemplateColumns: '1fr 1fr',
+    },
+    // '&.verticallayout': {
+    // },
+}));
+
+const JourneySpaceDetailsView = ({
+    actions,
+    selectedSpace,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    /* istanbul ignore next */
+    showBackButton = true,
+    /* istanbul ignore next */
+    narrowView = true,
+    /* istanbul ignore next */
+    verticalView = true,
+    /* istanbul ignore next */
+    backLabel = 'Back to results',
+    onBack,
+    /* istanbul ignore next */
+    isFavourite = false,
+    /* istanbul ignore next */
+    spacesFavouritesError = null,
+    /* istanbul ignore next */
+    showMap = true,
+}) => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('sm')); // must be called unconditionally
+    const isMobileLayout = narrowView || isMobileView;
+
+    const { account } = useAccountContext();
+    const isLoggedIn = !!account?.id;
+
+    const detailImages = React.useMemo(() => {
+        if (!selectedSpace) return [];
+
+        const resolvedImages = [];
+        const pushImage = image => {
+            if (!image) return;
+            if (typeof image === 'string') {
+                resolvedImages.push({
+                    src: image,
+                    alt:
+                        selectedSpace?.space_photo_description ||
+                        selectedSpace?.space_name ||
+                        /* istanbul ignore next */ 'Space image',
+                });
+                return;
+            }
+            /* istanbul ignore else */
+            if (typeof image === 'object') {
+                const src =
+                    image.src ||
+                    /* istanbul ignore next */ image.url ||
+                    /* istanbul ignore next */ image.space_photo_url;
+                /* istanbul ignore next */
+                if (!src) return;
+                resolvedImages.push({
+                    src,
+                    alt:
+                        image.alt ||
+                        image.description ||
+                        selectedSpace?.space_photo_description ||
+                        selectedSpace?.space_name,
+                });
+            }
+        };
+
+        [selectedSpace?.space_photo_urls, selectedSpace?.space_photos, selectedSpace?.space_images].forEach(
+            candidate => {
+                if (Array.isArray(candidate)) {
+                    candidate.forEach(pushImage);
+                }
+            },
+        );
+
+        pushImage(selectedSpace?.space_photo_url);
+
+        const uniqueImages = resolvedImages.filter(
+            (image, index, arr) => !!image?.src && arr.findIndex(i => i.src === image.src) === index,
+        );
+
+        if (uniqueImages.length === 0) {
+            return [
+                {
+                    src: journeyFallbackDetailImage,
+                    alt: 'Placeholder image for this space',
+                },
+            ];
+        }
+
+        return uniqueImages;
+    }, [selectedSpace]);
+
+    const visibleOutage = React.useMemo(
+        () => getVisibleSpaceOutage(selectedSpace?.space_outages),
+        [selectedSpace?.space_outages],
+    );
+
+    if (!selectedSpace) {
+        return null;
+    }
+
+    return (
+        <>
+            {showBackButton ? (
+                <Button
+                    variant="text"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={onBack}
+                    sx={{ textTransform: 'none', alignSelf: 'flex-start' }}
+                >
+                    {backLabel}
+                </Button>
+            ) : null}
+
+            <StyledTopBox
+                id={`space-${selectedSpace?.space_id}-details`}
+                className={isMobileLayout ? 'verticallayout' : 'horizontallayout'}
+            >
+                <StyledDetailImage data-testid={`space-${selectedSpace?.space_id}-details-image`}>
+                    {detailImages?.[0]?.src ? (
+                        <img
+                            src={detailImages[0].src}
+                            alt={detailImages[0].alt}
+                            onError={event => {
+                                event.currentTarget.onerror = null;
+                                event.currentTarget.src = journeyFallbackDetailImage;
+                            }}
+                        />
+                    ) : (
+                        /* istanbul ignore next */ <StyledMissingImageBox>No image available</StyledMissingImageBox>
+                    )}
+                </StyledDetailImage>
+                <Stack spacing={2} sx={{ pt: { xs: 0, md: 0.5 } }}>
+                    <Box>
+                        <StyledSpaceTitleWrapperBox>
+                            <span>
+                                {!narrowView &&
+                                    !verticalView &&
+                                    isLoggedIn &&
+                                    !!selectedSpace?.space_id &&
+                                    spacesFavouritesError !== true && (
+                                        <SpacesFavouriteIcon
+                                            actions={actions}
+                                            bookableSpace={selectedSpace}
+                                            isFavourite={isFavourite}
+                                            isDetailPage
+                                        />
+                                    )}
+                                {(!narrowView || !!verticalView) && (
+                                    <Typography
+                                        component="h1"
+                                        variant="h5"
+                                        data-testid={`space-${selectedSpace?.space_id}-details-name`}
+                                    >
+                                        {selectedSpace?.space_type_details?.space_type_name}{' '}
+                                        {!!selectedSpace?.space_name && (
+                                            <StyledRoomTitleText>{selectedSpace.space_name}</StyledRoomTitleText>
+                                        )}
+                                    </Typography>
+                                )}
+                            </span>
+                        </StyledSpaceTitleWrapperBox>
+                        <StyledFriendlyLocationDiv data-testid={`space-${selectedSpace?.space_id}-friendly-location`}>
+                            {getFriendlyLocationDescription(selectedSpace, false, { space_name: true })}
+                        </StyledFriendlyLocationDiv>{' '}
+                        {!visibleOutage && (
+                            <SpaceOpenStatusChip
+                                space={selectedSpace}
+                                weeklyHours={weeklyHours}
+                                weeklyHoursLoading={weeklyHoursLoading}
+                                weeklyHoursError={weeklyHoursError}
+                            />
+                        )}
+                    </Box>
+
+                    {!!visibleOutage && (
+                        <SpacesOutageNotice
+                            bookableSpace={selectedSpace}
+                            visibleOutage={visibleOutage}
+                            hideReason={!visibleOutage.reason}
+                        />
+                    )}
+
+                    {!!(
+                        selectedSpace?.space_type_details?.space_type_description || selectedSpace?.space_description
+                    ) && (
+                        <Box>
+                            {!!selectedSpace?.space_type_details?.space_type_description && (
+                                <StyledSpaceDescriptionTypography
+                                    data-testid={`spaces-${selectedSpace.space_id}-details-space-type-description`}
+                                    variant="body2"
+                                    sx={{
+                                        mb: selectedSpace?.space_description ? 1 : 0,
+                                    }}
+                                >
+                                    {selectedSpace.space_type_details.space_type_description}
+                                </StyledSpaceDescriptionTypography>
+                            )}
+                            {!!selectedSpace?.space_description && (
+                                <StyledSpaceDescriptionTypography
+                                    variant="body2"
+                                    data-testid={`space-${selectedSpace?.space_id}-details-description`}
+                                >
+                                    {String(selectedSpace.space_description)
+                                        .replace(/<[^>]*>/g, ' ')
+                                        .trim()}
+                                </StyledSpaceDescriptionTypography>
+                            )}
+                        </Box>
+                    )}
+                </Stack>
+            </StyledTopBox>
+
+            <StyledDetailSurface>
+                <StyledH3Typography component="h2" variant="h6">
+                    Space details
+                </StyledH3Typography>
+                <Stack spacing={2.5}>
+                    <BookingLink bookableSpace={selectedSpace} />
+
+                    {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
+                        <Box data-testid={`space-${selectedSpace?.space_id}-capacity`}>
+                            <Typography component="h3" style={{ display: 'inline' }}>
+                                Capacity
+                            </Typography>
+                            <Typography variant="body2" style={{ display: 'inline' }}>
+                                : {selectedSpace.space_capacity}{' '}
+                                {pluralise('person', selectedSpace.space_capacity, 'people')}
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {selectedSpace?.facility_types?.length > 0 && (
+                        <Box data-testid={`space-${selectedSpace.space_id}-facility`}>
+                            <StyledH4Typography component="h3" variant="body2" sx={{ mb: 0.75 }}>
+                                Facilities
+                            </StyledH4Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                {selectedSpace.facility_types.map(f => (
+                                    <StyledBodyChip
+                                        key={f.facility_type_id}
+                                        label={f.facility_type_name}
+                                        size="small"
+                                        variant="outlined"
+                                        data-testid={`space-${selectedSpace.space_id}-facility-${f?.facility_type_id}`}
+                                    />
+                                ))}
+                            </Box>
+                        </Box>
+                    )}
+
+                    <OpeningHoursDown
+                        weeklyHoursLoading={weeklyHoursLoading}
+                        weeklyHoursError={weeklyHoursError}
+                        weeklyHours={weeklyHours}
+                        bookableSpace={selectedSpace}
+                        showShortList={false}
+                    />
+                </Stack>
+            </StyledDetailSurface>
+
+            {showMap && (
+                <StyledDetailSurface sx={{ p: 0, overflow: 'hidden' }}>
+                    <StyledH3Typography component="h2" variant="h6" sx={{ pb: '1rem' }}>
+                        Location
+                    </StyledH3Typography>
+                    <div style={{ height: isMobileLayout ? '260px' : '340px' }} data-testid="spaces-map-wrapper">
+                        <BookableSpacesMap
+                            sortedSpaceLocations={[selectedSpace]}
+                            spacesFavouritesList={null}
+                            onMarkerClick={/* istanbul ignore next */ () => /* istanbul ignore next */ null}
+                            centreLatLong={selectedSpace}
+                        />
+                    </div>
+                </StyledDetailSurface>
+            )}
+        </>
+    );
+};
+
+JourneySpaceDetailsView.propTypes = {
+    actions: PropTypes.any,
+    selectedSpace: PropTypes.object,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.bool,
+    weeklyHoursError: PropTypes.any,
+    showBackButton: PropTypes.bool,
+    narrowView: PropTypes.bool,
+    verticalView: PropTypes.bool,
+    backLabel: PropTypes.string,
+    onBack: PropTypes.func,
+    isFavourite: PropTypes.bool,
+    spacesFavouritesError: PropTypes.any,
+    showMap: PropTypes.bool,
+};
+
+export default React.memo(JourneySpaceDetailsView);

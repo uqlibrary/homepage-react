@@ -1,0 +1,1249 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
+
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+
+import EditIcon from '@mui/icons-material/Edit';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
+
+import { baseButtonStyles, pluralise, removeClass } from 'helpers/general';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { useConfirmationState } from 'hooks';
+
+import {
+    addBreadcrumbsToSiteHeader,
+    closeDeletionConfirmation,
+    closeDialog,
+    displayToastMessage,
+    showGenericConfirmAndDeleteDialog,
+    springshareLocations,
+} from 'modules/Pages/Admin/BookableSpaces/bookableSpacesAdminHelpers';
+
+import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
+import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
+import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+
+const StyledMainDialog = styled('dialog')(({ theme }) => ({
+    width: '80%',
+    border: '1px solid rgba(38, 85, 115, 0.15)',
+    maxWidth: '1136px',
+    // '&.hidden': {
+    //     position: 'absolute',
+    //     left: '-10000px',
+    //     top: 'auto',
+    //     overflow: 'hidden',
+    //     clip: 'rect(1px, 1px, 1px, 1px)',
+    //     width: '1px',
+    //     height: '1px',
+    //     whiteSpace: 'nowrap',
+    // },
+    '& h2': {
+        paddingInline: '1rem',
+    },
+    '& .dialogRow': {
+        padding: '0.5rem 1rem',
+        '& h3': {
+            marginBottom: 0,
+            marginTop: '0.5rem',
+        },
+        '& label': {
+            fontWeight: 500,
+            display: 'block',
+        },
+        '& input[type="text"]': {
+            padding: '0.5rem',
+            width: '90%',
+        },
+        '& input:not(:valid)': {
+            outline: '1px solid red',
+        },
+        '& :focus-visible': {
+            outlineColor: theme.palette.primary.light,
+        },
+        '& ul': {
+            marginBlock: 0,
+        },
+        '& li': {
+            paddingBlock: '0.5rem',
+            '& input[type="radio"], & label': {
+                display: 'inline',
+            },
+        },
+        '& ul.radioList li': {
+            listStyle: 'none',
+        },
+    },
+    '& .dialogRowSideBySide': {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        columnGap: '0.5rem',
+        alignItems: 'flex-start',
+        '& div': {
+            marginBottom: '0.2rem',
+        },
+        '& div:not(:first-of-type)': {
+            fontWeight: '300',
+        },
+    },
+    '& .dialogFooter': {
+        marginTop: '1rem',
+        '& > div': {
+            display: 'flex',
+            justifyContent: 'space-between',
+        },
+        '& button': {
+            marginLeft: '0.5rem',
+        },
+        '& p': {
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            columnGap: '0.5rem',
+            marginLeft: '1rem',
+        },
+        '& svg': {
+            width: '1rem',
+            height: '1rem',
+            color: theme.palette.error.light,
+            '&.hidden': {
+                display: 'none',
+            },
+        },
+    },
+}));
+const StyledConfirmationButtons = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+}));
+const StyledButton = styled(Button)(({ theme }) => ({
+    ...baseButtonStyles,
+    backgroundColor: theme.palette.primary.light,
+    borderColor: theme.palette.primary.light,
+    color: '#fff',
+    alignItems: 'center',
+    gap: '.5rem',
+    position: 'relative',
+    transition: 'background-color 200ms ease-out, color 200ms ease-out, border 200ms ease-out',
+    '&.secondary': {
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: theme.palette.primary.light,
+        color: theme.palette.primary.light,
+        '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            borderColor: theme.palette.primary.light,
+            color: '#fff',
+        },
+    },
+    '&.alert': {
+        backgroundColor: '#d62929',
+        borderColor: '#d62929',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: '#fff',
+            color: '#d62929',
+        },
+    },
+    '&.primary': {
+        '&:hover': {
+            backgroundColor: '#fff',
+            borderColor: '#51247a',
+            color: '#51247a',
+            textDecoration: 'underline',
+        },
+    },
+}));
+const StyledEditButton = styled(Button)(({ theme }) => ({
+    '& svg': {
+        color: 'grey',
+        height: '1rem',
+    },
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '-0.5rem',
+    paddingLeft: 0,
+    textTransform: 'none', // undo the ALL CAPS that is the default for a MUI button
+    lineHeight: 'normal',
+    justifyContent: 'flex-start',
+    '&:hover, &:focus': {
+        backgroundColor: 'transparent',
+        transition: 'color 200ms ease-out, text-decoration 200ms ease-out, background-color 200ms ease-out',
+        '& svg': {
+            color: 'black',
+        },
+        '& span': {
+            color: '#fff',
+            backgroundColor: theme.palette.primary.light,
+        },
+    },
+    '& span': {
+        fontSize: '1rem',
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none', // remove mui ripple
+    },
+}));
+const StyledRow = styled('div')(() => ({
+    marginBlock: '0.2rem',
+}));
+const StyledGroundFloorIndicatorSpan = styled('span')(() => ({
+    paddingLeft: '0.25rem',
+}));
+
+const getIdentifierForFloorGroundFloorIndicator = floorId => `groundfloor-for-${floorId}`;
+
+export const BookableSpacesManageLocations = ({
+    actions,
+    campusList,
+    campusListLoading,
+    campusListError,
+    weeklyHours,
+    weeklyHoursLoading,
+    weeklyHoursError,
+}) => {
+    console.log('campusList', campusListLoading, campusListError, campusList);
+    console.log('weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
+
+    const [cookies, setCookie] = useCookies();
+
+    const [isConfirmationBoxOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [confirmationLocale, setConfirmationLocale] = React.useState({
+        confirmationTitle: 'An error occurred while saving',
+        confirmButtonLabel: 'OK',
+    });
+    const hideConfirmationLocal = () => {
+        hideConfirmation(0);
+    };
+    const showErrorMessageinPopup = confirmationTitle => {
+        setConfirmationLocale({
+            ...confirmationLocale,
+            confirmationTitle: confirmationTitle,
+        });
+        showConfirmation();
+    };
+    const warningTextId = 'warningtext';
+    const displayUserWarningMessage = (warningMessage, showWarningIcon) => {
+        const warningMessageNode = document.createTextNode(warningMessage);
+
+        const primaryTextElement = document.createElement('span');
+        !!primaryTextElement && (primaryTextElement.id = warningTextId);
+        !!primaryTextElement && !!warningMessageNode && primaryTextElement?.appendChild(warningMessageNode);
+
+        const dialogMessageElement = document.getElementById('dialogMessageContent');
+        !!dialogMessageElement && !!primaryTextElement && dialogMessageElement?.appendChild(primaryTextElement);
+
+        const warningIcon = document.getElementById('warning-icon');
+        !!showWarningIcon && removeClass(warningIcon, 'hidden');
+    };
+
+    const [savingProgressShown, showSavingProgress] = React.useState(false);
+    const [selectedCampusCentre, setSelectedCampusCentre] = React.useState(null);
+    const [showCampusMap, setShowCampusMap] = React.useState(false);
+
+    const handleCloseDialog = e => {
+        closeDialog(e);
+        setShowCampusMap(false);
+    };
+
+    React.useEffect(() => {
+        addBreadcrumbsToSiteHeader([
+            '<li class="uq-breadcrumb__item"><span class="uq-breadcrumb__link">Location management</span></li>',
+        ]);
+
+        if (campusListError === null && campusListLoading === null && campusList === null) {
+            actions.loadBookableSpaceCampusChildren(); // get campusList
+            actions.loadWeeklyHours(); // get weeklyHours
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const springshareList = React.useMemo(() => {
+        if (
+            weeklyHoursLoading === false &&
+            weeklyHoursError === false &&
+            weeklyHours?.locations &&
+            Array.isArray(weeklyHours?.locations)
+        ) {
+            return springshareLocations(weeklyHours);
+        }
+        return [];
+    }, [weeklyHoursLoading, weeklyHoursError, weeklyHours]);
+
+    function deleteGenericLocation(locationType, locationId, successMessage, failureMessage) {
+        showSavingProgress(true);
+
+        closeDeletionConfirmation(); // close delete conf dialog
+        closeDialog(); // close main dialog
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .deleteBookableSpaceLocation({ locationType, locationId })
+                .then(() => {
+                    displayToastMessage(successMessage);
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('deleteBookableSpaceLocation', failureMessage, e);
+                    showErrorMessageinPopup(
+                        '[BSML-004] Sorry, an error occurred and the location was not deleted - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+    }
+
+    const saveChangeToLibrary = e => {
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        const locationType = data?.locationType;
+        const locationId = data[`${locationType}Id`];
+
+        // validate form
+        const errorMessages = [];
+        !data?.library_name && errorMessages?.push('Please enter the Library name');
+        (!data?.building_name || !data?.building_number) &&
+            errorMessages?.push('Please enter building name and number');
+        if (errorMessages?.length > 0) {
+            // showErrorMessageinPopup(errorMessages?.join('; '));
+            displayUserWarningMessage(errorMessages?.join('; '), errorMessages?.length > 0);
+            return;
+        }
+
+        showSavingProgress(true);
+        closeDialog(e);
+
+        const valuesToSend = {
+            library_name: data?.library_name,
+            building_name: data?.building_name,
+            building_number: data?.building_number,
+            library_campus_id: data?.campus_id,
+            building_ground_floor_id: data?.building_ground_floor_id,
+            library_about_page_default: data?.library_about_page_default,
+            library_springshare_id: data?.library_springshare_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
+                .then(() => {
+                    displayToastMessage('Change to library saved');
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: saving library ', locationId, 'failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-005] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+    };
+
+    const saveChangeToCampus = e => {
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveChangeToCampus data=', data);
+        const locationType = data?.locationType;
+        const locationId = data[`${locationType}Id`];
+
+        // validate form
+        const failureMessage = (!data?.campus_name || !data?.campus_number) && 'Please enter campus name and number';
+        console.log(failureMessage);
+        if (!!failureMessage) {
+            displayUserWarningMessage(failureMessage, true);
+            return;
+        }
+
+        const valuesToSend = {
+            campus_name: data?.campus_name,
+            campus_number: data?.campus_number,
+            campus_latitude: data?.campus_latitude,
+            campus_longitude: data?.campus_longitude,
+        };
+
+        showSavingProgress(true);
+        closeDialog(e);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
+                .then(() => {
+                    displayToastMessage('Change to campus saved');
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: saving campus ', locationId, 'failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-003] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+    };
+
+    // allow for having spaces in a building where we don't have a Library
+    const displayedLibraryName = libraryDetails =>
+        libraryDetails?.library_name || libraryDetails?.building_name || /* istanbul ignore next */ 'unknown Library';
+
+    /*
+     * FLOOR FUNCTIONS
+     */
+    const floorCoreForm = (floorDetails = {}) => {
+        const floorNameFieldLabel = Object.keys(floorDetails)?.length === 0 ? 'New level name' : 'Level name';
+        return `<input name="locationType" type="hidden" value="floor" />
+        <div class="dialogRow" data-testid="floor-name">
+            <label for="displayedFloorId">${floorNameFieldLabel}</label>
+            <input id="displayedFloorId" name="floor_name" type="text" required value="${
+                floorDetails?.floor_name ?? ''
+            }"  maxlength="10" />
+        </div>
+        <ul>
+            <li>Just the number - avoid prefixing with 'Level'</li>
+            <li>Ground floor is controlled on the Library manager - you should put the floor number (or actual name in rare cases) here</li>
+        </ul>
+`;
+    };
+
+    const saveNewFloor = e => {
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+
+        // validate form
+        if (!data?.floor_name) {
+            // showErrorMessageinPopup('Please enter floor name');
+            displayUserWarningMessage('Please enter floor name', true);
+            return false;
+        }
+
+        showSavingProgress(true);
+        closeDialog(e);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            floor_name: data?.floor_name,
+            floor_library_id: data?.libraryId,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(valuesToSend, locationType)
+                .then(newFloor => {
+                    if (!!data?.isGroundFloor && data?.isGroundFloor === 'Y') {
+                        const libraryData = {
+                            ground_floor_id: newFloor?.data?.floor_id,
+                        };
+                        return actions.updateBookableSpaceLocation(libraryData, 'library', data?.libraryId);
+                    } else {
+                        return true;
+                    }
+                })
+                .then(() => {
+                    displayToastMessage('Level added');
+
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: adding new floor failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-006] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    function showAddFloorForm(e, libraryDetails, currentGroundFloorDetails) {
+        const groundFloorDescription = !!currentGroundFloorDetails
+            ? `Current ground floor is Level ${currentGroundFloorDetails?.floor_name}`
+            : 'No floor is currently marked as the ground floor';
+        const formBody = `<h2>Add a floor to ${displayedLibraryName(libraryDetails)}</h2>
+            <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
+            ${floorCoreForm()}
+            <div class="dialogRow dialogRowSideBySide" data-testid="mark-ground-floor">
+                <input type="checkbox" name="isGroundFloor" value="Y" id="isGroundFloor">
+                <label for="isGroundFloor">
+                    <div>Mark new floor as Ground floor</div>
+                    <div>(${groundFloorDescription})</div>
+                    <div>A ground floor is not compulsory!</div>
+                </label> 
+            </div>`;
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.removeEventListener('click', saveChangeToLibrary);
+        !!saveButton && saveButton?.addEventListener('click', saveNewFloor);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+    }
+
+    const saveChangeToFloor = e => {
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+
+        // validate form
+        const failureMessage = !data?.floor_name && 'Please enter floor name';
+        if (!!failureMessage) {
+            // showErrorMessageinPopup(failureMessage);
+            displayUserWarningMessage(failureMessage, true);
+            return false;
+        }
+
+        showSavingProgress(true);
+        closeDialog(e);
+
+        const locationType = data?.locationType;
+        const locationId = !!data && data[`${locationType}Id`];
+
+        const valuesToSend = {
+            floor_name: data?.floor_name,
+            floor_library_id: data?.floor_library_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            !!locationId &&
+            actions
+                .updateBookableSpaceLocation(valuesToSend, locationType, locationId)
+                .then(() => {
+                    displayToastMessage('Changes to floor saved');
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: saving floor ', locationId, 'failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-007] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    function deleteFloor(e, floorDetails) {
+        const locationType = 'floor';
+        const locationId = floorDetails?.floor_id;
+        const successMessage = `Level ${floorDetails?.floor_name} in ${displayedLibraryName(floorDetails)} deleted`;
+        const failureMessage = `catch: deleting floor ${floorDetails?.floor_id} failed:`;
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteFloorDialog(e, floorDetails) {
+        const line1 = `Do you really want to delete floor ${floorDetails?.floor_name}?`;
+        const line2 = 'This will also delete associated rooms.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton?.addEventListener('click', e => deleteFloor(e, floorDetails));
+        showGenericConfirmAndDeleteDialog(line1, line2);
+    }
+
+    function showEditFloorForm(floorId) {
+        const floorDetails =
+            floorId > 0 &&
+            (() => {
+                for (const campus of campusList) {
+                    for (const library of campus?.libraries) {
+                        const floor = library?.floors?.find(floor => floor?.floor_id === floorId);
+                        if (floor) {
+                            return {
+                                ...floor,
+                                library_name: displayedLibraryName(library),
+                            };
+                        }
+                    }
+                }
+                return null;
+            })();
+
+        if (!floorDetails) {
+            console.log(`Can't find floor with floor_id = "${floorId}" in campus list from api`);
+            showErrorMessageinPopup('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `
+            <h2>Edit level details</h2>
+            <input name="floorId" type="hidden" value="${floorDetails?.floor_id}" />${floorCoreForm(floorDetails)}`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToFloor);
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteFloorDialog(e, floorDetails));
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+    }
+
+    /*
+     * LIBRARY FUNCTIONS
+     */
+    function libraryCoreForm(libraryDetails = {}) {
+        const libraryNameFieldLabel = Object.keys(libraryDetails)?.length === 0 ? 'New Library name' : 'Library name';
+        return `<input name="locationType" type="hidden" value="library" />
+            <div class="dialogRow" data-testid="library-name">
+                <label for="libraryName">${libraryNameFieldLabel} *</label>
+                <input id="libraryName" name="library_name" type="text" value="${
+                    libraryDetails?.library_name || ''
+                }" required  maxlength="255" />
+            </div>
+            <div class="dialogRow" data-testid="building-name">
+                <label for="buildingName">Building name *</label>
+                <input id="buildingName" name="building_name" type="text" value="${
+                    libraryDetails?.building_name || ''
+                }" required  maxlength="255" />
+            </div>
+            <div class="dialogRow" data-testid="building-number">
+                <label for="buildingNumber">Building number *</label>
+                <input id="buildingNumber" name="building_number" type="text" value="${
+                    libraryDetails?.building_number || ''
+                }" required  maxlength="10" />
+            </div>
+            <div class="dialogRow" data-testid="library_springshare_id">
+                <h3>Choose the Springshare Opening hours to associate with this Library</h3>
+                <ul>
+                     <li>
+                        <input type="radio" name="library_springshare_id" id="library_springshare_id-0" value="0" checked />
+                        <label for="library_springshare_id-0">None</label>
+                     </li>
+                        ${
+                            (!!springshareList &&
+                                springshareList?.length > 0 &&
+                                springshareList
+                                    ?.map(springshareItem => {
+                                        const checked =
+                                            libraryDetails?.library_springshare_id === springshareItem?.id
+                                                ? ' checked'
+                                                : '';
+                                        return `<li style="padding-block: 0.25rem">
+                                    <input type="radio" name="library_springshare_id" id="library_springshare_id-${springshareItem?.id}" data-testid="library_springshare_id-${springshareItem?.id}" value="${springshareItem?.id}"${checked} />
+                                    <label for="library_springshare_id-${springshareItem?.id}">${springshareItem?.display_name}</label>
+                                 </li>`;
+                                    })
+                                    ?.join('')) ||
+                            /* istanbul ignore next */ ''
+                        }
+                </ul>
+            </div>
+            <div class="dialogRow" data-testid="library_about_page_default">
+                <label for="library_about_page_default">The "About" page for this library (usually the Drupal library page)</label>
+                <input id="library_about_page_default" name="library_about_page_default" type="text" value="${
+                    libraryDetails?.library_about_page_default || ''
+                }"  maxlength="255" />
+            </div>
+            `;
+    }
+
+    const saveNewLibrary = e => {
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+
+        // validate form
+        const errorMessages = [];
+        !data?.library_name && errorMessages?.push('Please enter the Library name');
+        (!data?.building_name || !data?.building_number) &&
+            errorMessages?.push('Please enter building name and number');
+        const errorFound = errorMessages?.length > 0;
+        if (errorFound) {
+            displayUserWarningMessage(errorMessages?.join('; '), errorMessages?.length > 0);
+            return;
+        }
+
+        closeDialog(e);
+        showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            library_name: data?.library_name,
+            building_name: data?.building_name,
+            building_number: data?.building_number,
+            library_campus_id: data?.library_campus_id,
+            library_about_page_default: data?.library_about_page_default,
+            library_springshare_id: data?.library_springshare_id,
+        };
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(valuesToSend, locationType)
+                .then(() => {
+                    displayToastMessage('Library added');
+
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: adding new library failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-002] Sorry, an error occurred and the Location change did not save - the admins have been informed',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+    };
+
+    function showAddLibraryForm(e, campusDetails) {
+        const formBody = `<h2>Add a library to ${campusDetails?.campus_name || /* istanbul ignore next */ 'unknown'} campus</h2>
+            ${libraryCoreForm()}
+            <input id="libraryCampusId" name="library_campus_id" type="hidden" value="${
+                campusDetails?.campus_id || /* istanbul ignore next */ ''
+            }" required  maxlength="10" />
+            `;
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.removeEventListener('click', saveChangeToCampus);
+        !!saveButton && saveButton?.addEventListener('click', saveNewLibrary);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+    }
+
+    function deleteLibrary(e, libraryDetails) {
+        const locationType = 'library';
+        const locationId = libraryDetails?.library_id;
+        const successMessage = `${libraryDetails?.library_name} deleted`;
+        const failureMessage = `catch: deleting library ${locationId} failed:`;
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteLibraryDialog(e, libraryDetails) {
+        const line1 = `Do you really want to delete ${displayedLibraryName(libraryDetails)}?`;
+        const line2 = 'This will also delete associated floors.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton &&
+            confirmationOKButton?.addEventListener('click', e => deleteLibrary(e, libraryDetails));
+        showGenericConfirmAndDeleteDialog(line1, line2);
+    }
+
+    function showEditLibraryForm(libraryId, libraryCampusId) {
+        const libraryDetails =
+            libraryId > 0 &&
+            campusList?.flatMap(campus => campus?.libraries)?.find(library => library?.library_id === libraryId);
+
+        if (!libraryDetails) {
+            console.log(`Can't find library with library_id = "${libraryId}" in campus list from api`);
+            showErrorMessageinPopup('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `<h2>Edit Library details</h2>
+            <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
+            <input name="ground_floor_id_old" type="hidden" value="${
+                libraryDetails?.ground_floor_id ?? ''
+            }" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
+                <h3>Levels - Choose ground floor:</h3>
+                ${
+                    libraryDetails?.floors?.length > 0
+                        ? '<ul class="radioList">' +
+                          libraryDetails?.floors
+                              ?.map(floor => {
+                                  const checked = floor?.floor_id === libraryDetails?.ground_floor_id ? ' checked' : '';
+                                  return `<li>
+                                            <input type="radio" id="groundFloor-${
+                                                floor?.floor_id
+                                            }" name="ground_floor_id" ${checked} value="${floor?.floor_id}" />
+                                            <label for="groundFloor-${floor?.floor_id}">${getPrefixedFloorName(
+                                                floor?.floor_name,
+                                            )}</label> 
+                                        </li>`;
+                              })
+                              ?.join('') +
+                          `<li>
+                            <input type="radio" id="groundFloor-none" name="ground_floor_id" ${
+                                !libraryDetails?.ground_floor_id ? ' checked' : ''
+                            } />
+                            <label for="groundFloor-none">None</label> 
+                        </li>
+                    </ul>`
+                        : /* istanbul ignore next */ ''
+                }
+                        
+                ${libraryDetails?.floors?.length === 0 ? /* istanbul ignore next */ '<p>No floors</p>' : ''}
+                </div>
+                
+                <div class="dialogRow" data-testid="library-campus-list">
+                    <div style="display: flex; justify-content: flex-start; align-items: center; column-gap: 1rem">
+                        <h3>Change Campus</h3>
+                        <p style="margin-top: 0.5rem; margin-bottom: 0;">(New campus? Create it first)</p>
+                    </div>
+                    <ul class="radioList" data-testid="change-campus">
+                    ${campusList
+                        ?.map(campus => {
+                            const checked = campus?.campus_id === libraryCampusId ? ' checked' : '';
+                            return `<li>
+                                    <input type="radio" id="chooseSite-${campus?.campus_id}" name="campus_id" ${checked} value="${campus?.campus_id}" />
+                                    <label for="chooseSite-${campus?.campus_id}">${campus?.campus_name}</label> 
+                                </li>`;
+                        })
+                        ?.join('')}
+                    </ul>
+                </div>`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add floor');
+        const currentGroundFloorDetails = libraryDetails?.floors?.find(
+            f => libraryDetails?.ground_floor_id === f?.floor_id,
+        );
+        !!addNewButton &&
+            addNewButton?.addEventListener('click', e =>
+                showAddFloorForm(e, libraryDetails, currentGroundFloorDetails),
+            );
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToLibrary);
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteLibraryDialog(e, libraryDetails));
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+    }
+
+    /*
+     * CAMPUS FUNCTIONS
+     */
+    const campusCoreForm = /* istanbul ignore next */ (campusDetails = {}) => {
+        const campusNameFieldLabel =
+            Object.keys(campusDetails)?.length === 0 ? /* istanbul ignore next */ 'New campus name' : 'Campus name';
+        const formType = !campusDetails?.campus_name ? 'add' : 'edit';
+        const campusName = campusDetails?.campus_name ?? '';
+        const campusNumber = campusDetails?.campus_number ?? '';
+        const campusLatitude = campusDetails?.campus_latitude ?? /* istanbul ignore next */ '';
+        const campusLongitude = campusDetails?.campus_longitude ?? /* istanbul ignore next */ '';
+        return `<div>
+            <input  name="locationType" type="hidden" value="campus" />
+            <input name="campus_latitude" type="hidden" id="campus_latitude" data-testid="campus_latitude" value="${campusLatitude}" required maxlength="255" />
+            <input name="campus_longitude" type="hidden" id="campus_longitude" value="${campusLongitude}"  required maxlength="255"/>
+            <div class="dialogRow" data-testid="${formType}-campus-name">
+                <label for="campusName">${campusNameFieldLabel} *</label>
+                <input id="campusName" name="campus_name" type="text" value="${campusName}" required maxlength="255" />
+            </div>
+            <div class="dialogRow" data-testid="${formType}-campus-number">
+                <label for="campusNumber">Campus number *</label>
+                <input id="campusNumber" name="campus_number" type="text" value="${campusNumber}" required maxlength="10" />
+            </div>
+        </div>`;
+    };
+
+    const saveNewCampus = e => {
+        console.log('saveNewCampus');
+        const form = e?.target?.closest('form');
+
+        const formData = new FormData(form);
+        const data = !!formData && Object.fromEntries(formData);
+        console.log('saveNewCampus data=', data);
+
+        // validate form
+        if (!data?.campus_name || !data?.campus_number) {
+            console.log('saveNewCampus err');
+            displayUserWarningMessage('Please enter campus name and number', true);
+
+            return false;
+        }
+        console.log('saveNewCampus ok');
+
+        closeDialog(e);
+        showSavingProgress(true);
+
+        const locationType = data?.locationType;
+        const valuesToSend = {
+            campus_name: data?.campus_name,
+            campus_number: data?.campus_number,
+            campus_latitude: data?.campus_latitude,
+            campus_longitude: data?.campus_longitude,
+        };
+        console.log('saveNewCampus valuesToSend', valuesToSend);
+
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
+        if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+        }
+
+        !!locationType &&
+            actions
+                .addBookableSpaceLocation(valuesToSend, locationType)
+                .then(() => {
+                    displayToastMessage('Campus added');
+                    actions.loadBookableSpaceCampusChildren();
+                })
+                .catch(e => {
+                    console.log('catch: adding new campus failed:', e);
+                    showErrorMessageinPopup(
+                        '[BSML-001] Sorry, an error occurred and the Location change did not save - the admins have been informed.',
+                    );
+                })
+                .finally(() => {
+                    showSavingProgress(false);
+                });
+        return true;
+    };
+
+    function showAddCampusForm() {
+        const campusValues = {
+            campus_latitude: campusList?.at(0)?.campus_latitude,
+            campus_longitude: campusList?.at(0)?.campus_longitude,
+        };
+        setSelectedCampusCentre(campusValues);
+        const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm(campusValues)}`;
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const elementId = 'addNewButton';
+        const addNewButton = document.getElementById(elementId);
+        !!addNewButton && (addNewButton.style.display = 'none');
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
+
+        const mapWrapper = document.getElementById('mapWrapper');
+        !!mapWrapper && (mapWrapper.style.display = 'block');
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    function deleteCampus(e, campusDetails) {
+        console.log('deleteCampus', campusDetails);
+        const locationType = 'campus';
+        const locationId = campusDetails?.campus_id;
+        const successMessage = `${campusDetails?.campus_name} campus deleted`;
+        const failureMessage = `catch: deleting campus ${locationId} failed:`;
+        console.log('deleteCampus', locationType, locationId);
+        deleteGenericLocation(locationType, locationId, successMessage, failureMessage);
+    }
+
+    function showConfirmAndDeleteCampusDialog(e, campusDetails) {
+        const line1 = `Do you really want to delete ${campusDetails?.campus_name} campus?`;
+        const line2 = 'This will also delete associated Libraries.';
+        const confirmationOKButton = document.getElementById('confDialogOkButton');
+        !!confirmationOKButton && confirmationOKButton?.addEventListener('click', e => deleteCampus(e, campusDetails));
+        showGenericConfirmAndDeleteDialog(line1, line2);
+    }
+
+    function showEditCampusForm(campusId) {
+        const campusDetails = campusId > 0 && campusList?.find(s => s?.campus_id === campusId);
+
+        if (!campusDetails) {
+            console.log(`Can't find campus with campus_id = "${campusId}" in campuslist from api`);
+            showErrorMessageinPopup('Sorry, something went wrong');
+            return;
+        }
+
+        const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
+            <input  name="campusId" type="hidden" value="${campusDetails?.campus_id}" />${campusCoreForm(
+                campusDetails,
+            )}<div class="dialogRow">
+                <h3>Libraries on this Campus</h3>
+                ${
+                    campusDetails?.libraries?.length > 0
+                        ? `<ul data-testid="campus-library-list">${campusDetails?.libraries
+                              ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
+                              ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
+                              ?.join('')}</ul>`
+                        : /* istanbul ignore next */ ''
+                }
+                ${campusDetails?.libraries?.length === 0 ? /* istanbul ignore next */ '<p>No libraries</p>' : ''}
+            </div>`;
+        setSelectedCampusCentre(campusDetails);
+
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
+
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add Library');
+        !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
+
+        const mapid = 'mapWrapper';
+        const mapWrapper = document.getElementById(mapid);
+        !!mapWrapper && (mapWrapper.style.display = 'block');
+        setShowCampusMap(true);
+
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
+
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    function showCampusEntry(campus) {
+        return (
+            <>
+                <StyledRow
+                    key={`campus-${campus?.campus_id}`}
+                    data-testid={'spaces-campus-entry'}
+                    style={{ paddingLeft: '4rem' }}
+                >
+                    <StyledEditButton
+                        onClick={() => showEditCampusForm(campus?.campus_id)}
+                        aria-label={`Edit ${campus?.campus_name} campus details`}
+                        data-testid={`edit-campus-${campus?.campus_id}-button`}
+                    >
+                        <span id={`campus-${campus?.campus_id}`}>{campus?.campus_name}</span>
+                        <EditIcon />
+                    </StyledEditButton>
+                </StyledRow>
+                <>
+                    {campus?.libraries?.flatMap(library => [
+                        <StyledRow key={`library-${library?.library_id}`} style={{ paddingLeft: '8rem' }}>
+                            <StyledEditButton
+                                color="primary"
+                                onClick={() => showEditLibraryForm(library?.library_id, campus?.campus_id)}
+                                aria-label={`Edit ${displayedLibraryName(library)} details`}
+                                data-testid={`edit-library-${library?.library_id}-button`}
+                            >
+                                <span id={`library-${library?.library_id}`}>{`${displayedLibraryName(library)}`}</span>
+                                <span style={{ paddingLeft: '0.5rem' }}>{`(${library?.floors?.length} ${pluralise(
+                                    'Level',
+                                    library?.floors?.length,
+                                )})`}</span>
+                                <EditIcon />
+                            </StyledEditButton>
+                        </StyledRow>,
+                        ...(library?.floors?.map(floor => (
+                            <StyledRow key={`location-floor-${floor?.floor_id}`} style={{ paddingLeft: '12rem' }}>
+                                <StyledEditButton
+                                    color="primary"
+                                    onClick={() => showEditFloorForm(floor?.floor_id)}
+                                    aria-label={`Edit Level ${floor?.floor_name}`}
+                                    data-testid={`edit-floor-${floor?.floor_id}-button`}
+                                >
+                                    <span id={`floor-${floor?.floor_id}`}>{floor?.floor_name}</span>
+                                    {library?.ground_floor_id === floor?.floor_id && (
+                                        <StyledGroundFloorIndicatorSpan
+                                            id={getIdentifierForFloorGroundFloorIndicator(floor?.floor_id)}
+                                            data-testid={getIdentifierForFloorGroundFloorIndicator(floor?.floor_id)}
+                                        >
+                                            (Ground floor)
+                                        </StyledGroundFloorIndicatorSpan>
+                                    )}
+                                    <EditIcon />
+                                </StyledEditButton>
+                            </StyledRow>
+                        )) ?? /* istanbul ignore next */ []),
+                    ])}
+                </>
+            </>
+        );
+    }
+
+    return (
+        <SpacesAdminPage systemTitle="Spaces" pageTitle="Manage locations" currentPageSlug="manage-locations">
+            {(() => {
+                if (!!savingProgressShown || !!campusListLoading) {
+                    return <InlineLoader message="Loading" />;
+                } else if (!!campusListError) {
+                    return <p>Something went wrong - please try again later.</p>;
+                } else if (!campusList || campusList?.length === 0) {
+                    return <p>No spaces currently in system.</p>;
+                } else {
+                    return (
+                        <Grid container spacing={3} style={{ position: 'relative' }}>
+                            <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                                <div data-testid="spaces-location-wrapper">
+                                    {campusList?.map(campus => showCampusEntry(campus))}
+                                </div>
+                            </Grid>
+                            <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                                <div style={{ marginLeft: '2rem', marginTop: '2rem', padding: '1rem' }}>
+                                    <StyledButton
+                                        id="add-new-campus-button"
+                                        className={'primary'}
+                                        style={{ textTransform: 'initial' }}
+                                        onClick={showAddCampusForm}
+                                        data-testid="add-new-campus-button"
+                                    >
+                                        Add new Campus
+                                    </StyledButton>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    );
+                }
+            })()}
+
+            <dialog id="confirmationDialog" className="confirmationDialog" data-testid="confirmation-dialog">
+                <p id="confDialogMessage" data-testid="confirmation-dialog-message" />
+                <StyledConfirmationButtons>
+                    <StyledButton
+                        id="confDialogCancelButton"
+                        className={'secondary'}
+                        children={'No'}
+                        data-testid="confirmation-dialog-reject-button"
+                    />
+                    <StyledButton
+                        id="confDialogOkButton"
+                        className={'primary'}
+                        children={'Yes'}
+                        data-testid="confirmation-dialog-accept-button"
+                    />
+                </StyledConfirmationButtons>
+            </dialog>
+            <ConfirmationBox
+                confirmationBoxId="spaces-manage-locations-error"
+                onAction={hideConfirmationLocal}
+                onClose={hideConfirmationLocal}
+                hideCancelButton
+                isOpen={isConfirmationBoxOpen}
+                locale={confirmationLocale}
+            />
+            <StyledMainDialog id={'popupDialog'} closedby="any" data-testid="main-dialog">
+                <form>
+                    <div id="dialogMessage" />
+                    <div id="dialogBody" />
+                    <div id="mapWrapper" style={{ display: 'none' }}>
+                        {showCampusMap && <CampusLocationMap campusCentre={selectedCampusCentre} />}
+                    </div>
+                    <div id="dialogFooter" className={'dialogFooter'}>
+                        <p id="dialogMessage" data-testid="dialogMessage">
+                            <WarningOutlined className="hidden" id="warning-icon" data-testid="warning-icon" />
+                            <span id="dialogMessageContent" />
+                        </p>
+                        <div>
+                            <div>
+                                <StyledButton
+                                    id={'deleteButton'}
+                                    className={'alert'}
+                                    children={'Delete'}
+                                    data-testid="dialog-delete-button"
+                                />
+                            </div>
+                            <div>
+                                <StyledButton
+                                    id={'addNewButton'}
+                                    className={'secondary'}
+                                    data-testid="dialog-addnew-button"
+                                >
+                                    Add new
+                                </StyledButton>
+                                <StyledButton
+                                    className={'secondary'}
+                                    children={'Cancel'}
+                                    onClick={handleCloseDialog}
+                                    data-testid="dialog-cancel-button"
+                                />
+                                <StyledButton
+                                    id={'saveButton'}
+                                    className={'primary'}
+                                    children={'Save'}
+                                    data-testid="dialog-save-button"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </StyledMainDialog>
+        </SpacesAdminPage>
+    );
+};
+
+BookableSpacesManageLocations.propTypes = {
+    actions: PropTypes.any,
+    campusList: PropTypes.any,
+    campusListLoading: PropTypes.any,
+    campusListError: PropTypes.any,
+    weeklyHours: PropTypes.any,
+    weeklyHoursLoading: PropTypes.any,
+    weeklyHoursError: PropTypes.any,
+};
+
+export default React.memo(BookableSpacesManageLocations);

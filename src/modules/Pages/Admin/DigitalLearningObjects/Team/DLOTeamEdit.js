@@ -9,7 +9,6 @@ import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAd
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
-import { isDlorAdminUser } from 'helpers/access';
 
 export const DLOTeamEdit = ({
     actions,
@@ -39,7 +38,8 @@ export const DLOTeamEdit = ({
 
     const formDefaultsWithUsername = {
         ...dlorTeam?.data,
-        team_admin_username: dlorTeam?.data?.team_admin_username || dlorTeam?.data?.team_members?.[0]?.team_admin_username || '',
+        team_admin_username:
+            dlorTeam?.data?.team_admin_username || dlorTeam?.data?.team_members?.[0]?.team_admin_username || '',
     };
 
     return (

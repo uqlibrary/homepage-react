@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 import InfoIcon from '@mui/icons-material/Info';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const StyledInformationBox = styled(Box)(() => ({
     backgroundColor: '#dcedfd',

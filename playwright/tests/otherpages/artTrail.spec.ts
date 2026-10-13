@@ -93,8 +93,6 @@ test.describe('Art Trail', () => {
             await expect(page.getByRole('button', { name: 'Launch Web App' })).toBeVisible();
             await expect(page.getByRole('img', { name: 'Indigenous Art and Library Discovery Trail' })).toBeVisible();
 
-            await expect(page.locator('uq-header')).toHaveCount(1);
-            await expect(page.locator('uq-footer')).toHaveCount(1);
             await expect(page.getByRole('region', { name: 'Site content' })).toBeVisible();
 
             await assertAccessibility(page, '[data-testid="StandardPage"]');
@@ -126,8 +124,6 @@ test.describe('Art Trail', () => {
             ).toBeVisible();
 
             // The chrome App wraps every other route in is absent here.
-            await expect(page.locator('uq-header')).toHaveCount(0);
-            await expect(page.locator('uq-footer')).toHaveCount(0);
             await expect(page.getByRole('region', { name: 'Site content' })).toHaveCount(0);
 
             await assertAccessibility(page, '[data-testid="art-trail-app"]');

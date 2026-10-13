@@ -67,7 +67,7 @@ test.describe('authorisation errors', () => {
     }) => {
         await page.goto('/learning-resources?user=emcommunity');
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await expect(page.getByTestId('permission-denied')).toBeVisible();
+        await expect(page.getByTestId('permission-denied').first()).toBeVisible();
         await expect(
             page
                 .locator('body')

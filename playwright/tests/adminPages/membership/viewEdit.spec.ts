@@ -19,6 +19,8 @@ test.describe('Membership admin view/edit application', () => {
         await expect(dialog).toBeVisible();
         // The read-only context an admin decides against.
         await expect(dialog.getByTestId('membership-view-details')).toContainText('2406700012345');
+        // The account username (uid) the membership is issued against, read-only.
+        await expect(dialog.getByTestId('membership-view-details')).toContainText('uqjsmith');
         // The type-specific facts the application collected, read-only - here an alumni student number.
         await expect(dialog.getByTestId('membership-view-details')).toContainText('Previous student number');
         await expect(dialog.getByTestId('membership-view-details')).toContainText('s1234567');

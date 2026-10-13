@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Alert from '@mui/material/Alert';
@@ -90,7 +90,6 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
                 indicatorColor="primary"
                 textColor="primary"
                 onChange={(e, value) => {
-                    // console.log('test', value);
                     return setSelectedTabValue(value);
                 }}
                 variant={isMobileView ? 'fullWidth' : 'standard'}

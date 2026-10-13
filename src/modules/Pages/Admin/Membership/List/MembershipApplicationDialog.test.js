@@ -30,6 +30,7 @@ const record = {
     date_of_birth: '02-12-1985',
     expires_on: '31-12-2026',
     barcode: '2406700012345',
+    uid: 'uqjsmith',
 };
 
 const setup = (props = {}) => {
@@ -64,6 +65,19 @@ describe('MembershipApplicationDialog', () => {
         expect(details).toHaveTextContent('2 Dec 1985');
         expect(details).toHaveTextContent('31-12-2026');
         expect(details).toHaveTextContent('2406700012345');
+        // The account username (uid) the membership is issued against, read-only.
+        expect(details).toHaveTextContent('UID');
+        expect(details).toHaveTextContent('uqjsmith');
+    });
+
+    it('omits the uid row when the record has no account username yet', () => {
+        // An application not yet issued an account has no uid, so the row is left off entirely.
+        const { uid, ...withoutUid } = record;
+        setup({ membership: withoutUid });
+
+        const details = screen.getByTestId('membership-view-details');
+        expect(details).not.toHaveTextContent('UID');
+        expect(details).not.toHaveTextContent('uqjsmith');
     });
 
     it('prefills the editable fields from the record', async () => {

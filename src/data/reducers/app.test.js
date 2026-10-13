@@ -2,19 +2,11 @@ import * as actions from 'data/actions/actionTypes';
 import appReducer from './app';
 
 describe('app reducer', () => {
-    let emptyState;
-
     const initialState = {
         hidePossiblyYourPublicationsLure: false,
         appAlert: null,
         redirectPath: null,
     };
-
-    beforeEach(() => {
-        emptyState = {
-            ...initialState,
-        };
-    });
 
     it('returns the initialState due to an invalid action type', () => {
         const test = appReducer(initialState, { type: 'INVALID_ACTION_TYPE' });

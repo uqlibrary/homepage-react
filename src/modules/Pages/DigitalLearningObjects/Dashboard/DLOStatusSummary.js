@@ -1,5 +1,8 @@
 import React from 'react';
-import { Box, Typography, Grid, Divider } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
