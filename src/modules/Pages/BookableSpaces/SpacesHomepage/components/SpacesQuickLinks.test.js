@@ -40,7 +40,30 @@ describe('SpacesQuickLinks', () => {
         onIntentLinkNavigate: jest.fn(),
         onIntentLinkPersist: jest.fn(),
         onSeeAllSpaces: jest.fn(),
+        hasFavourites: false,
     };
+
+    it('adds the larger top spacing when the favourites block is absent', () => {
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks {...defaultProps} />
+            </WithRouter>,
+        );
+
+        const heading = screen.getByRole('heading', { name: 'Find a study space' });
+        expect(window.getComputedStyle(heading.parentElement).marginTop).toBe('48px');
+    });
+
+    it('reduces the top spacing when the current user has favourites', () => {
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks {...defaultProps} hasFavourites />
+            </WithRouter>,
+        );
+
+        const heading = screen.getByRole('heading', { name: 'Find a study space' });
+        expect(window.getComputedStyle(heading.parentElement).marginTop).toBe('28px');
+    });
 
     it('renders the landing header, filters out the favourite intent, and triggers the results navigation', () => {
         rtlRender(
