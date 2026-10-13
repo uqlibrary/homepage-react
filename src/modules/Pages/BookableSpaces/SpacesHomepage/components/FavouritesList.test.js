@@ -63,13 +63,12 @@ describe('FavouritesList', () => {
         expect(props.activateFavouritesResults).toHaveBeenCalledTimes(1);
     });
 
-    it('renders a plain-text empty-state prompt when no favourites are saved or the list is null', () => {
+    it('renders the empty-state prompt when no favourites are saved or the list is null', () => {
         renderWithProviders(<FavouritesList {...defaultProps} spacesFavouritesList={null} />);
 
         expect(screen.getByText('Your favourite spaces')).toBeInTheDocument();
-        expect(
-            screen.getByText("Click the star icon next to a space's name to add to your favourites"),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Select the/i)).toBeInTheDocument();
+        expect(screen.getByText('Add to favourites')).toBeInTheDocument();
         expect(screen.queryByTestId('spaces-homepage-favourites-all-link')).not.toBeInTheDocument();
     });
 
