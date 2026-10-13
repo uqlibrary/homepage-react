@@ -45,10 +45,7 @@ describe('UtilityBar', () => {
 
         expect(controller).toHaveAttribute('aria-expanded', 'false');
         expect(getByTestId('locations-wrapper')).toHaveAttribute('inert', 'true');
-        expect(getByTestId('homepage-hours-bookit-link')).toHaveAttribute(
-            'href',
-            'https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb',
-        );
+        expect(getByTestId('homepage-hours-bookit-link')).toHaveAttribute('href', '/spaces');
         expect(await findByTestId('locations-panel')).toBeInTheDocument();
     });
 

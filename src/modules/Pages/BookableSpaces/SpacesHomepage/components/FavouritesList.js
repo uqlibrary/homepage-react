@@ -12,7 +12,10 @@ import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesH
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 
 const StyledFavouritesContainerGrid = styled(Grid)(() => ({
-    marginTop: '-24px',
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 0,
     '& a': {
         boxSizing: 'border-box',
@@ -68,16 +71,25 @@ export const FavouritesList = ({
     const hasFavourites = favouritesToShow.length > 0;
 
     return (
-        <Box className="spaces-journey-favourites" sx={{ mb: 3 }}>
+        <Box className="spaces-journey-favourites" sx={{ mb: 0 }}>
             <StyledHeaderWithLinkToAllGridItem
                 item
                 xs={12}
                 sx={
                     !hasFavourites
                         ? {
+                              marginTop: '12px',
+                              '& h2': {
+                                  marginTop: 0,
+                              },
                               paddingBottom: '14px',
                           }
-                        : undefined
+                        : {
+                              marginTop: '12px',
+                              '& h2': {
+                                  marginTop: 0,
+                              },
+                          }
                 }
             >
                 <Typography component={'h2'}>Your favourite spaces</Typography>
@@ -112,7 +124,7 @@ export const FavouritesList = ({
                         lineHeight: 1.6,
                     }}
                 >
-                    Click the star icon next to a space&apos;s name to add to your favourites
+                    Select the <strong>Add to favourites</strong> star icon next to a space&apos;s name to add it to your favourites.
                 </Typography>
             )}
             {hasFavourites && (
