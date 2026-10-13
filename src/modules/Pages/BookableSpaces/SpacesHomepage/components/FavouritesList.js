@@ -12,7 +12,10 @@ import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesH
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 
 const StyledFavouritesContainerGrid = styled(Grid)(() => ({
-    marginTop: '-24px',
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
     paddingLeft: 0,
     '& a': {
         boxSizing: 'border-box',
@@ -68,7 +71,7 @@ export const FavouritesList = ({
     const hasFavourites = favouritesToShow.length > 0;
 
     return (
-        <Box className="spaces-journey-favourites" sx={{ mb: 3 }}>
+        <Box className="spaces-journey-favourites" sx={{ mb: 0 }}>
             <StyledHeaderWithLinkToAllGridItem
                 item
                 xs={12}

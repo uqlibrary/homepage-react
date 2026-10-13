@@ -209,6 +209,7 @@ export const SpacesHomePage = ({
                         onIntentLinkNavigate={onIntentLinkNavigate}
                         onIntentLinkPersist={onIntentLinkPersist}
                         onSeeAllSpaces={onSeeAllSpaces}
+                        hasFavourites={hasFavourites}
                     />
                 </StandardPage>
             </div>

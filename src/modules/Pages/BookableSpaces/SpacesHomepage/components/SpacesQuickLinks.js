@@ -89,10 +89,20 @@ export const SpacesQuickLinks = ({
     onIntentLinkNavigate,
     onIntentLinkPersist,
     onSeeAllSpaces,
+    hasFavourites = false,
 }) => {
     return (
         <Box className="spaces-list" sx={{ mb: 3 }}>
-            <StyledHeaderWithLinkToAllGridItem item xs={12}>
+            <StyledHeaderWithLinkToAllGridItem
+                item
+                xs={12}
+                sx={{
+                    marginTop: hasFavourites ? '28px' : '48px',
+                    '& h2': {
+                        marginTop: 0,
+                    },
+                }}
+            >
                 <Typography component={'h2'} sx={{ fontSize: '32px', fontWeight: 500, marginBottom: '8px' }}>
                     Find a study space
                 </Typography>
