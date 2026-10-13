@@ -14,7 +14,6 @@ const StyledGridItem = styled(Grid, {
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
-    flex: 1,
     '& > div': {
         height: '100%',
         display: 'flex',
