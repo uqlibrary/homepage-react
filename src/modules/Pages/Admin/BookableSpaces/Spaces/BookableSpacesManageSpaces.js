@@ -1758,10 +1758,7 @@ export const BookableSpacesManageSpaces = ({
                         );
                     } else {
                         return (
-                            <StyledBookableSpaceGridItem
-                                size={{ xs: 12, md: 9 }}
-                                style={{ marginTop: 0, paddingTop: 0 }}
-                            >
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} style={{ marginTop: 0, paddingTop: 0 }}>
                                 {displayListOfBookableSpaces()}
                             </StyledBookableSpaceGridItem>
                         );
