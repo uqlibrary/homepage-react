@@ -21,11 +21,13 @@ test.describe('Test and Tag Manage Users', () => {
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
+        await expect(page.getByTestId('user-management-data-table-toolbar-add-button')).toBeEnabled();
 
         await expect(page.locator('#action_cell-1-edit-button[data-value="uqjsmit"]')).not.toBeDisabled();
         // Click the first edit button
         await page.locator('#action_cell-1-edit-button[data-value="uqjsmit"]').click();
         await assertAccessibility(page, '[data-testid="StandardPage"]');
+        await expect(page.getByTestId('user_team-input')).toHaveValue('Work Station Support');
 
         // Field for licence should be disabled
         await expect(page.getByTestId('user_licence_number-input')).toBeDisabled();
