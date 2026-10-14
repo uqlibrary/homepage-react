@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useSelector } from 'react-redux';

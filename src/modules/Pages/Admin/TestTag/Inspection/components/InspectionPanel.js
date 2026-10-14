@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Select from '@mui/material/Select';

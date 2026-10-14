@@ -6,7 +6,6 @@ import { CoverageMap, createCoverageMap } from 'istanbul-lib-coverage';
 import { createContext } from 'istanbul-lib-report';
 import { create as createReporter } from 'istanbul-reports';
 import { ReporterDescription } from '@playwright/test';
-import * as process from 'node:process';
 
 export type Config =
     | {
@@ -16,6 +15,7 @@ export type Config =
           jsonReportDir: string | undefined;
           jsonReportFilename: string | undefined;
           jsonPartialsDir: string | undefined;
+          structureDir: string | undefined;
       }
     | undefined;
 
@@ -42,13 +42,15 @@ export default class ReportMerger implements Base {
         // skip for failed test, unless explicitly specified
         if (testResult.status === 'failed' && this.config.bailOnTestFailure !== false) return;
 
-        const jsonPartialsDir = this.config.jsonPartialsDir || `${this.config.outputDir}/temp`;
+        const jsonPartialsDir = this.config.jsonPartialsDir || `${this.config.outputDir}/partials`;
+        const structureDir = this.config.structureDir || 'coverage/playwright-structure';
         const jsonReportDir = this.config.jsonReportDir || this.config.outputDir;
         const htmlReportDir = this.config.htmlReportDir || this.config.outputDir;
 
         // json report
         const mergeResult = this.mergeJsonPartialReports(
             jsonPartialsDir,
+            structureDir,
             jsonReportDir,
             this.config.jsonReportFilename || 'coverage-final.json',
         );
@@ -68,24 +70,52 @@ export default class ReportMerger implements Base {
         return `${this.baseDir}${append.trim() ? `/${append.trim()}` : ''}`;
     }
 
+    // Load the write-once structures (keyed by hash) and rejoin each per-test counts partial
+    // ({ [file]: { hash, s, f, b } }) back into full istanbul file coverage before merging.
+    loadStructures(structureDirPath: string): Record<string, Record<string, unknown>> {
+        const structures: Record<string, Record<string, unknown>> = {};
+        if (!fs.existsSync(structureDirPath)) return structures;
+        for (const f of fs.readdirSync(structureDirPath).filter(f => f.endsWith('.json'))) {
+            const s = JSON.parse(fs.readFileSync(path.join(structureDirPath, f), 'utf-8'));
+            if (s && s.hash) structures[s.hash] = s;
+        }
+        return structures;
+    }
+
+    rejoin(
+        counts: Record<string, { hash?: string }>,
+        structures: Record<string, Record<string, unknown>>,
+    ): Record<string, unknown> {
+        const full: Record<string, unknown> = {};
+        for (const key of Object.keys(counts)) {
+            const c = counts[key];
+            const structure = c.hash ? structures[c.hash] : undefined;
+            if (!structure) continue; // structure missing, skip rather than emit malformed coverage
+            full[key] = { ...structure, ...c };
+        }
+        return full;
+    }
+
     mergeJsonPartialReports(
         partialsDir: string,
+        structureDir: string,
         outputDir: string,
         outputFilename: string,
     ): [CoverageMap, string] | undefined {
         const partialsDirPath = this.getDir(partialsDir);
         const outputDirPath = this.getDir(outputDir);
 
-        // load partials
+        if (!fs.existsSync(partialsDirPath)) return;
         const files = fs.readdirSync(partialsDirPath).filter(f => f.endsWith('.json'));
-        if (!files.length) {
-            return;
-        }
+        if (!files.length) return;
 
-        // merge partials
+        const structures = this.loadStructures(this.getDir(structureDir));
+
+        // merge partials (rejoined with their structure)
         const map = createCoverageMap({});
         for (const file of files) {
-            map.merge(JSON.parse(fs.readFileSync(path.join(partialsDirPath, file), 'utf-8')));
+            const counts = JSON.parse(fs.readFileSync(path.join(partialsDirPath, file), 'utf-8'));
+            map.merge(this.rejoin(counts, structures));
         }
 
         // write result
