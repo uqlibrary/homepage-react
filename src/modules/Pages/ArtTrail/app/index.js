@@ -562,8 +562,11 @@ const ArtTrailApp = () => {
                 open={Boolean(DrawerContentComponent)}
                 onClose={handleDrawerClose}
                 onOpen={() => {}}
-                ModalProps={{
-                    keepMounted: true,
+                ModalProps={{ keepMounted: true }}
+                slotProps={{
+                    paper: {
+                        'aria-label': 'Art trail information drawer',
+                    },
                 }}
                 data-testid="art-trail-information-drawer"
                 sx={createDrawerSx(appTheme)}
