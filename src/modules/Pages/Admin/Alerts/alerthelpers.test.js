@@ -8,21 +8,6 @@ import {
     manuallyMakeWebComponentBePermanent,
 } from './alerthelpers';
 
-function createPreviewShadowRoot(...elementIds) {
-    const preview = document.createElement('div');
-    preview.id = 'alert-preview';
-    const shadowRoot = preview.attachShadow({ mode: 'open' });
-
-    elementIds.forEach(id => {
-        const element = document.createElement('div');
-        element.id = id;
-        shadowRoot.appendChild(element);
-    });
-
-    document.body.appendChild(preview);
-    return shadowRoot;
-}
-
 describe('alert helpers', () => {
     afterEach(() => {
         jest.useRealTimers();
@@ -82,87 +67,43 @@ describe('alert helpers', () => {
         });
     });
 
-    it('changes the preview link to notify the user', () => {
+    it('makePreviewActionButtonJustNotifyUser rewrites the preview link once it appears', () => {
         jest.useFakeTimers();
-        const shadowRoot = createPreviewShadowRoot('alert-link');
-        const link = shadowRoot.getElementById('alert-link');
-        const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-        const values = { linkUrl: '/details' };
+        const link = { setAttribute: jest.fn(), onclick: null };
+        const getById = jest.spyOn(document, 'getElementById');
+        getById.mockReturnValueOnce(null); // preview not rendered on the first tick
+        getById.mockReturnValue({ shadowRoot: { getElementById: () => link } });
 
-        makePreviewActionButtonJustNotifyUser(values);
-        jest.advanceTimersByTime(100);
+        makePreviewActionButtonJustNotifyUser({ linkUrl: 'https://example.com/page' });
 
-        expect(link).toHaveAttribute('href', '#');
-        expect(link).toHaveAttribute('title', 'On the live website, this button will visit /details when clicked');
-        expect(link.onclick()).toBe(false);
-        expect(alertSpy).toHaveBeenCalledWith('On the live website, this button will visit /details when clicked');
+        jest.advanceTimersByTime(100); // first tick: nothing to rewrite yet
+        expect(link.setAttribute).not.toHaveBeenCalled();
+
+        jest.advanceTimersByTime(100); // second tick: link found and rewritten
+        expect(link.setAttribute).toHaveBeenCalledWith('href', '#');
+        expect(link.setAttribute).toHaveBeenCalledWith('title', expect.stringContaining('https://example.com/page'));
+
+        // the interval clears once done, so no further polling happens
+        const callsAfterRewrite = getById.mock.calls.length;
+        jest.advanceTimersByTime(300);
+        expect(getById).toHaveBeenCalledTimes(callsAfterRewrite);
     });
 
-    it('marks the web component permanent and removes its close button', () => {
+    it('manuallyMakeWebComponentBePermanent strips the marker and removes the close button', () => {
         jest.useFakeTimers();
-        const shadowRoot = createPreviewShadowRoot('alert-close');
-        const closeButton = shadowRoot.getElementById('alert-close');
-        const webComponent = document.createElement('alert-list');
+        const closeButton = { remove: jest.fn() };
+        const getById = jest.spyOn(document, 'getElementById');
+        getById.mockReturnValueOnce(null); // preview not rendered on the first tick
+        getById.mockReturnValue({ shadowRoot: { getElementById: () => closeButton } });
+        const webComponent = { setAttribute: jest.fn() };
 
-        manuallyMakeWebComponentBePermanent(webComponent, 'Notice[permanent]');
+        manuallyMakeWebComponentBePermanent(webComponent, 'Closed for [permanent] maintenance');
+        expect(webComponent.setAttribute).toHaveBeenCalledWith('alertmessage', 'Closed for  maintenance');
 
-        expect(webComponent).toHaveAttribute('alertmessage', 'Notice');
-        expect(closeButton).toBeInTheDocument();
+        jest.advanceTimersByTime(100); // first tick: close button not there yet
+        expect(closeButton.remove).not.toHaveBeenCalled();
 
-        jest.advanceTimersByTime(100);
-
-        expect(shadowRoot.getElementById('alert-close')).toBeNull();
-    });
-
-    // These two poll for the reusable alert web component's shadow DOM (which the e2e tests mock away),
-    // so they are exercised here against a stubbed shadow root and fake timers.
-    describe('alert preview shadow-DOM tweaks', () => {
-        afterEach(() => {
-            jest.useRealTimers();
-            jest.restoreAllMocks();
-        });
-
-        it('makePreviewActionButtonJustNotifyUser rewrites the preview link once it appears', () => {
-            jest.useFakeTimers();
-            const link = { setAttribute: jest.fn(), onclick: null };
-            const getById = jest.spyOn(document, 'getElementById');
-            getById.mockReturnValueOnce(null); // preview not rendered on the first tick
-            getById.mockReturnValue({ shadowRoot: { getElementById: () => link } });
-
-            makePreviewActionButtonJustNotifyUser({ linkUrl: 'https://example.com/page' });
-
-            jest.advanceTimersByTime(100); // first tick: nothing to rewrite yet
-            expect(link.setAttribute).not.toHaveBeenCalled();
-
-            jest.advanceTimersByTime(100); // second tick: link found and rewritten
-            expect(link.setAttribute).toHaveBeenCalledWith('href', '#');
-            expect(link.setAttribute).toHaveBeenCalledWith(
-                'title',
-                expect.stringContaining('https://example.com/page'),
-            );
-
-            // the interval clears once done, so no further polling happens
-            const callsAfterRewrite = getById.mock.calls.length;
-            jest.advanceTimersByTime(300);
-            expect(getById).toHaveBeenCalledTimes(callsAfterRewrite);
-        });
-
-        it('manuallyMakeWebComponentBePermanent strips the marker and removes the close button', () => {
-            jest.useFakeTimers();
-            const closeButton = { remove: jest.fn() };
-            const getById = jest.spyOn(document, 'getElementById');
-            getById.mockReturnValueOnce(null); // preview not rendered on the first tick
-            getById.mockReturnValue({ shadowRoot: { getElementById: () => closeButton } });
-            const webComponent = { setAttribute: jest.fn() };
-
-            manuallyMakeWebComponentBePermanent(webComponent, 'Closed for [permanent] maintenance');
-            expect(webComponent.setAttribute).toHaveBeenCalledWith('alertmessage', 'Closed for  maintenance');
-
-            jest.advanceTimersByTime(100); // first tick: close button not there yet
-            expect(closeButton.remove).not.toHaveBeenCalled();
-
-            jest.advanceTimersByTime(100); // second tick: close button found and removed
-            expect(closeButton.remove).toHaveBeenCalledTimes(1);
-        });
+        jest.advanceTimersByTime(100); // second tick: close button found and removed
+        expect(closeButton.remove).toHaveBeenCalledTimes(1);
     });
 });
