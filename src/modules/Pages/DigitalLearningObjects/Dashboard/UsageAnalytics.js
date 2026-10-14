@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Checkbox, FormControlLabel, TextField, Stack, Button, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import { Line } from 'react-chartjs-2';
 
 // This component is dedicated to Jack. Farewell, buddy. Good Boy. I love you - Grandpa.

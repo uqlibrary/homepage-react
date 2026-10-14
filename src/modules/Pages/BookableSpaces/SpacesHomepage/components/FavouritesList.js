@@ -124,7 +124,8 @@ export const FavouritesList = ({
                         lineHeight: 1.6,
                     }}
                 >
-                    Select the <strong>Add to favourites</strong> star icon next to a space&apos;s name to add it to your favourites.
+                    Select the <strong>Add to favourites</strong> star icon next to a space&apos;s name to add it to
+                    your favourites.
                 </Typography>
             )}
             {hasFavourites && (

@@ -152,7 +152,9 @@ export const resolveJourneyIntentFilters = ({
 }) => {
     const existingFilters = Array.isArray(selectedFacilityTypes) ? selectedFacilityTypes : [];
     const sourceFacilityGroups = [
-        ...(Array.isArray(facilityTypeList?.data?.facility_type_groups) ? facilityTypeList.data.facility_type_groups : []),
+        ...(Array.isArray(facilityTypeList?.data?.facility_type_groups)
+            ? facilityTypeList.data.facility_type_groups
+            : []),
         ...(Array.isArray(filteredFacilityTypeList?.data?.facility_type_groups)
             ? filteredFacilityTypeList.data.facility_type_groups
             : []),

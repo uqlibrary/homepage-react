@@ -58,7 +58,8 @@ const LoginPrompt = ({
 }) => {
     const loginLink = `https://auth.library.uq.edu.au/login?return=${window.btoa(window.location.href)}`;
     const shouldRender = typeof account === 'undefined' ? !isLoggedIn : !account?.id;
-    const resolvedPrompt = typeof prompt === 'string' && prompt.trim().length > 0 ? prompt.trim() : 'for extra features';
+    const resolvedPrompt =
+        typeof prompt === 'string' && prompt.trim().length > 0 ? prompt.trim() : 'for extra features';
     const displayPrompt = /[.!?]$/.test(resolvedPrompt) ? resolvedPrompt : `${resolvedPrompt}.`;
 
     return (
@@ -70,9 +71,7 @@ const LoginPrompt = ({
                 >
                     <StyledInfoBadge aria-hidden="true" />
                     <span>
-                        <a href={loginLink}>
-                            Log in
-                        </a>
+                        <a href={loginLink}>Log in</a>
                         &nbsp;{displayPrompt}
                         {!!helpUrl && (
                             <>
