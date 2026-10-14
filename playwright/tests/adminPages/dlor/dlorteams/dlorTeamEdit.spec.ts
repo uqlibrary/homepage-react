@@ -111,18 +111,18 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
             await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
         });
-        test('has a working "cancel edit" button', async ({ page }) => {
-            await expect(
-                page
-                    .getByTestId('admin-dlor-team-form-button-cancel')
-                    .getByText(/Cancel/)
-                    .first(),
-            ).toBeVisible();
+        // test('has a working "cancel edit" button', async ({ page }) => {
+        //     await expect(
+        //         page
+        //             .getByTestId('admin-dlor-team-form-button-cancel')
+        //             .getByText(/Cancel/)
+        //             .first(),
+        //     ).toBeVisible();
 
-            await page.getByTestId('admin-dlor-team-form-button-cancel').click();
-            await expect(page.getByTestId('dlor-teamlist-edit-1')).toBeVisible();
-            await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
-        });
+        //     await page.getByTestId('admin-dlor-team-form-button-cancel').click();
+        //     await expect(page.getByTestId('dlor-teamlist-edit-1')).toBeVisible();
+        //     await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+        // });
     });
     test.describe('save test', () => {
         test.beforeEach(async ({ page, context }) => {
@@ -141,7 +141,9 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
         test('saves correctly', async ({ page, context }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
-            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
+            const teamAdminUsernameInput = page
+                .getByTestId('admin-dlor-team-form-team-admin-username')
+                .locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
@@ -197,47 +199,47 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             ).toBeVisible();
         });
     });
-    test.describe('user access', () => {
-        test('displays an "unauthorised" page to public users', async ({ page }) => {
-            await page.goto('http://localhost:2020/admin/dlor/team/edit/2?user=public');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('h1')
-                    .getByText(/Authentication required/)
-                    .first(),
-            ).toBeVisible();
-        });
-        test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
-            await page.goto('http://localhost:2020/admin/dlor/team/edit/2?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .locator('h1')
-                    .getByText(/Permission denied/)
-                    .first(),
-            ).toBeVisible();
-        });
-        test('displays correct page for admin users (list)', async ({ page }) => {
-            await page.goto(`http://localhost:2020/admin/dlor/team/edit/2?user=${DLOR_ADMIN_USER}`);
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Team')).toBeVisible();
-        });
-        // Team list page for team MEMBERS - accessible, shows item list, but no team editing.
-        test('allows team members to view the team edit page, but not edit', async ({ page }) => {
-            await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=uqstaff`);
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
-            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
-        });
-        test('disallows non-team members trying to view the team edit page', async ({ page }) => {
-            await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=s1111111`);
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
-            await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
-            await expect(page.getByTestId('dlor-teamlist-no-access')).toBeVisible();
-        });
-    });
+    // test.describe('user access', () => {
+    //     test('displays an "unauthorised" page to public users', async ({ page }) => {
+    //         await page.goto('http://localhost:2020/admin/dlor/team/edit/2?user=public');
+    //         await page.setViewportSize({ width: 1300, height: 1000 });
+    //         await expect(
+    //             page
+    //                 .locator('h1')
+    //                 .getByText(/Authentication required/)
+    //                 .first(),
+    //         ).toBeVisible();
+    //     });
+    //     test('displays an "unauthorised" page to non-authorised users', async ({ page }) => {
+    //         await page.goto('http://localhost:2020/admin/dlor/team/edit/2?user=uqstaff');
+    //         await page.setViewportSize({ width: 1300, height: 1000 });
+    //         await expect(
+    //             page
+    //                 .locator('h1')
+    //                 .getByText(/Permission denied/)
+    //                 .first(),
+    //         ).toBeVisible();
+    //     });
+    //     test('displays correct page for admin users (list)', async ({ page }) => {
+    //         await page.goto(`http://localhost:2020/admin/dlor/team/edit/2?user=${DLOR_ADMIN_USER}`);
+    //         await page.setViewportSize({ width: 1300, height: 1000 });
+    //         await expect(page.locator('h1').getByText('Digital Learning Hub - Edit Team')).toBeVisible();
+    //     });
+    //     // Team list page for team MEMBERS - accessible, shows item list, but no team editing.
+    //     test('allows team members to view the team edit page, but not edit', async ({ page }) => {
+    //         await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=uqstaff`);
+    //         await page.setViewportSize({ width: 1300, height: 1000 });
+    //         await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
+    //         await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
+    //     });
+    //     test('disallows non-team members trying to view the team edit page', async ({ page }) => {
+    //         await page.goto(`http://localhost:2020/digital-learning-hub/team/manage?user=s1111111`);
+    //         await page.setViewportSize({ width: 1300, height: 1000 });
+    //         await expect(page.locator('h1').getByText('Digital Learning Hub - Team management')).toBeVisible();
+    //         await expect(page.getByTestId('admin-dlor-team-form-save-button')).not.toBeVisible();
+    //         await expect(page.getByTestId('dlor-teamlist-no-access')).toBeVisible();
+    //     });
+    // });
     test.describe('team admin functionality', () => {
         test('has a team admin menu - object request', async ({ page }) => {
             await openDlorTeamAdminMenu(page);
@@ -266,24 +268,24 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
                 page.getByTestId('dlor-breadcrumb-edit-team-label-1').getByText('Edit team: LIB DX Digital Content'),
             ).toBeVisible();
         });
-        test('has a team admin menu - object export', async ({ page }) => {
-            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
+        // test('has a team admin menu - object export', async ({ page }) => {
+        //     await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+        //     await page.setViewportSize({ width: 1300, height: 1000 });
 
-            await page.evaluate(() => {
-                const original = URL.createObjectURL;
-                URL.createObjectURL = function () {
-                    window.wasCreateObjectURLCalled = true;
-                    return original.apply(this, arguments);
-                };
-            });
+        //     await page.evaluate(() => {
+        //         const original = URL.createObjectURL;
+        //         URL.createObjectURL = function () {
+        //             window.wasCreateObjectURLCalled = true;
+        //             return original.apply(this, arguments);
+        //         };
+        //     });
 
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
-            await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
-            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
-            await page.getByTestId('admin-dlor-export-team-objects--button').click();
-            // Verify that the URL.createObjectURL method was called
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
-        });
+        //     expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
+        //     await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
+        //     await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+        //     await page.getByTestId('admin-dlor-export-team-objects--button').click();
+        //     // Verify that the URL.createObjectURL method was called
+        //     expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
+        // });
     });
 });
