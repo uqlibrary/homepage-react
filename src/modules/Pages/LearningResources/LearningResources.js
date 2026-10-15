@@ -27,7 +27,7 @@ import { breadcrumbs } from 'config/routes';
 // now lecturers are putting much longer strings into some courses, eg where they have combined courses
 // EDUC1234 / EDUC1235 / EDUC6789 St Lucia
 // assume they are following their instructions and putting the campus on the end
-function getNormalisedCampus(params) {
+export const getNormalisedCampus = params => {
     let found = false;
     Object.values(global.campuses).map(validCampusname => {
         if (!!params.campus && params.campus.includes(validCampusname)) {
@@ -35,7 +35,7 @@ function getNormalisedCampus(params) {
         }
     });
     return found;
-}
+};
 
 export const isValidInput = params => {
     /**
