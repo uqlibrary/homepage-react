@@ -35,6 +35,9 @@
     "statusBar.inactiveBackground": "#007fff"
   },
   "peacock.color": "#007fff",
-  "jestrunner.jestCommand": "npm run test --",
+  "chat.tools.terminal.autoApprove": {
+    "npx jest": true,
+    "npx eslint": true
+  },
   "terminal.integrated.scrollback": 100000
 }
