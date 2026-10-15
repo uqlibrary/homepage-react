@@ -111,18 +111,18 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await expect(page.getByTestId('admin-dlor-team-form-error-message-team-email')).not.toBeVisible();
             await expect(page.getByTestId('admin-dlor-team-form-save-button')).toBeDisabled();
         });
-        // test('has a working "cancel edit" button', async ({ page }) => {
-        //     await expect(
-        //         page
-        //             .getByTestId('admin-dlor-team-form-button-cancel')
-        //             .getByText(/Cancel/)
-        //             .first(),
-        //     ).toBeVisible();
+        test('has a working "cancel edit" button', async ({ page }) => {
+            await expect(
+                page
+                    .getByTestId('admin-dlor-team-form-button-cancel')
+                    .getByText(/Cancel/)
+                    .first(),
+            ).toBeVisible();
 
-        //     await page.getByTestId('admin-dlor-team-form-button-cancel').click();
-        //     await expect(page.getByTestId('dlor-teamlist-edit-1')).toBeVisible();
-        //     await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
-        // });
+            await page.getByTestId('admin-dlor-team-form-button-cancel').click();
+            await expect(page.getByTestId('dlor-teamlist-edit-1')).toBeVisible();
+            await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
+        });
     });
     test.describe('save test', () => {
         test.beforeEach(async ({ page, context }) => {
@@ -186,6 +186,20 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
             await page.getByTestId('confirm-dlor-team-save-outcome').click();
             await expect(page).toHaveURL(`http://localhost:2020/admin/dlor/team/manage?user=${DLOR_ADMIN_USER}`);
             await expect(page.getByTestId('StandardPage-title')).toHaveText('Digital Learning Hub - Team management');
+        });
+
+        test('re-editing from the save confirmation reloads the original team values', async ({ page }) => {
+            const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
+            await expect(teamNameInput).toHaveValue('Lib train Library Corporate Services');
+
+            await teamNameInput.fill('Temporary team name');
+            await page.getByTestId('admin-dlor-team-form-save-button').click();
+            await expect(page.getByTestId('dialogbox-dlor-team-save-outcome')).toBeVisible();
+
+            await page.getByTestId('cancel-dlor-team-save-outcome').click();
+            await page.waitForLoadState('domcontentloaded');
+
+            await expect(teamNameInput).toHaveValue('Lib train Library Corporate Services');
         });
     });
     test.describe('failures', () => {
@@ -268,24 +282,24 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
                 page.getByTestId('dlor-breadcrumb-edit-team-label-1').getByText('Edit team: LIB DX Digital Content'),
             ).toBeVisible();
         });
-        // test('has a team admin menu - object export', async ({ page }) => {
-        //     await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
-        //     await page.setViewportSize({ width: 1300, height: 1000 });
+        test('has a team admin menu - object export', async ({ page }) => {
+            await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
+            await page.setViewportSize({ width: 1300, height: 1000 });
 
-        //     await page.evaluate(() => {
-        //         const original = URL.createObjectURL;
-        //         URL.createObjectURL = function () {
-        //             window.wasCreateObjectURLCalled = true;
-        //             return original.apply(this, arguments);
-        //         };
-        //     });
+            await page.evaluate(() => {
+                const original = URL.createObjectURL;
+                URL.createObjectURL = function () {
+                    window.wasCreateObjectURLCalled = true;
+                    return original.apply(this, arguments);
+                };
+            });
 
-        //     expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
-        //     await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
-        //     await page.getByTestId('admin-dlor-team-admin-menu-button').click();
-        //     await page.getByTestId('admin-dlor-export-team-objects--button').click();
-        //     // Verify that the URL.createObjectURL method was called
-        //     expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
-        // });
+            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
+            await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
+            await page.getByTestId('admin-dlor-team-admin-menu-button').click();
+            await page.getByTestId('admin-dlor-export-team-objects--button').click();
+            // Verify that the URL.createObjectURL method was called
+            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
+        });
     });
 });

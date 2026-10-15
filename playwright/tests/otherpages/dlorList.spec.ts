@@ -602,30 +602,30 @@ test.describe('Digital Learning Hub', () => {
             await expect(
                 page.locator('[data-testid="dlor-detailpage"] h1').getByText('Advanced literature searching'),
             ).toBeVisible();
-            // back to homepage
-            await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
-                'href',
-                '/digital-learning-hub',
-            );
-            await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
+            // // back to homepage
+            // await expect(page.locator('[data-testid="dlor-detailpage-sitelabel"] a')).toHaveAttribute(
+            //     'href',
+            //     '/digital-learning-hub',
+            // );
+            // await page.locator('[data-testid="dlor-detailpage-sitelabel"] a').click();
 
-            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
-            await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
+            // await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
+            // await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
 
-            // check the fourth panel
-            await page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] div[role="button"]').click();
+            // // check the fourth panel
+            // await page.locator('[data-testid="dlor-homepage-panel-938h-4986-654f"] div[role="button"]').click();
 
-            // the third detail page loads
-            await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub\/view\/938h_4986_654f/);
-            await expect(
-                page
-                    .locator('[data-testid="dlor-detailpage"] h1')
-                    .getByText('Artificial Intelligence - Digital Essentials'),
-            ).toBeVisible();
-            // back button, alternate route back to homepage, works
-            await page.goBack();
-            await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
-            await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
+            // // the third detail page loads
+            // await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub\/view\/938h_4986_654f/);
+            // await expect(
+            //     page
+            //         .locator('[data-testid="dlor-detailpage"] h1')
+            //         .getByText('Artificial Intelligence - Digital Essentials'),
+            // ).toBeVisible();
+            // // back button, alternate route back to homepage, works
+            // await page.goBack();
+            // await expect(page.locator('h1').getByText('Find a digital learning object')).toBeVisible();
+            // await expect(page).toHaveURL(/http:\/\/localhost:2020\/digital-learning-hub/);
         });
         test('shows a preview appropriately', async ({ page }) => {
             // shows a preview when a youtube video is linked

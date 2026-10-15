@@ -64,7 +64,6 @@ export const DLOTeamForm = ({
     const [editingMemberIdx, setEditingMemberIdx] = useState(null);
     const [editingMember, setEditingMember] = useState(null);
     const [newMember, setNewMember] = useState({ team_admin_username: '', team_admin_email: '' });
-    const [addMemberError, setAddMemberError] = useState('');
 
     // Add to your component's state
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -100,7 +99,6 @@ export const DLOTeamForm = ({
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
         navigate(dlorAdminLink('/team/manage', account));
-        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
@@ -109,7 +107,6 @@ export const DLOTeamForm = ({
 
     const clearForm = () => {
         closeConfirmationBox();
-        /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
     };
 
@@ -203,7 +200,6 @@ export const DLOTeamForm = ({
             value = value.replace(/\s/g, '').slice(0, 15);
         }
         setNewMember({ ...newMember, [prop]: value });
-        setAddMemberError('');
     };
 
     const handleAddNewMember = () => {
@@ -212,20 +208,17 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
         setNewMember({ team_admin_username: '', team_admin_email: '' });
-        setAddMemberError('');
     };
 
     const isAddButtonDisabled =
         !newMember.team_admin_username.trim() ||
         !isValidEmail(newMember.team_admin_email) ||
-        !!addMemberError ||
         !!dlorTeamSaving ||
         !!dlorTeamLoading;
 
     return (
         <Grid container spacing={2}>
             {(() => {
-                /* istanbul ignore else */
                 if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
                         <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
@@ -606,17 +599,6 @@ export const DLOTeamForm = ({
                                                                         Add
                                                                     </Button>
                                                                 </Grid>
-                                                                {addMemberError && (
-                                                                    <Grid item xs={12}>
-                                                                        <Typography
-                                                                            color="error"
-                                                                            variant="body2"
-                                                                            data-testid="add-team-member-error"
-                                                                        >
-                                                                            {addMemberError}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                )}
                                                             </Grid>
                                                         </Box>
                                                     </Grid>
@@ -678,7 +660,6 @@ export const DLOTeamForm = ({
                         </>
                     );
                 }
-                /* istanbul ignore next */
                 return <></>;
             })()}
         </Grid>

@@ -137,6 +137,16 @@ describe('DLOTeamForm', () => {
         expect(screen.getByTestId('dlor-teamItem-error')).toHaveTextContent('Load failed');
     });
 
+    it('renders an empty state when adding a team without defaults', () => {
+        renderForm({
+            mode: 'add',
+            formDefaults: null,
+        });
+
+        expect(screen.queryByTestId('dlor-team-item-list')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('inline-loader')).not.toBeInTheDocument();
+    });
+
     it('blocks editing for users who are not a member of the team', () => {
         useAccountContext.mockReturnValue({ account: { id: 'other-user', groups: ['other-group'] } });
 
@@ -145,6 +155,39 @@ describe('DLOTeamForm', () => {
         expect(screen.getByTestId('dlor-teamItem-error-message')).toHaveTextContent(
             'You are not a member of this team and cannot edit it.',
         );
+    });
+
+    it('closes the team save confirmation from its close control', () => {
+        renderForm({
+            dlorSavedTeam: { team_id: 42 },
+        });
+
+        fireEvent.click(screen.getByText('Close'));
+
+        expect(screen.queryByTestId('dlor-team-save-outcome')).not.toBeInTheDocument();
+    });
+
+    it('closes a failed team save confirmation from its action button', () => {
+        renderForm({
+            dlorSavedTeamError: 'Save failed',
+        });
+
+        const confirmation = screen.getByTestId('dlor-team-save-outcome');
+        expect(screen.getByTestId('confirmation-title')).toHaveTextContent('Save failed');
+        fireEvent.click(confirmation.querySelector('button'));
+
+        expect(screen.queryByTestId('dlor-team-save-outcome')).not.toBeInTheDocument();
+    });
+
+    it('closes an add confirmation without reloading the page', () => {
+        renderForm({
+            mode: 'add',
+            dlorSavedTeam: { team_id: 42 },
+        });
+
+        fireEvent.click(screen.getByText('Add another Team'));
+
+        expect(screen.queryByTestId('dlor-team-save-outcome')).not.toBeInTheDocument();
     });
 
     it('renders the form defaults and saves valid team updates', async () => {
