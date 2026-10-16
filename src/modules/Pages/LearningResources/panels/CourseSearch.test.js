@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithReduxStore, userEvent, preview } from 'test-utils';
+import { rtlRender, WithReduxStore, userEvent } from 'test-utils';
 import {
     CourseSearch,
     getPlaceInCurrentAccountList,
