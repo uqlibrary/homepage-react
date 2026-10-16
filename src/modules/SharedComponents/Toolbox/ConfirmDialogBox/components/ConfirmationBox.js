@@ -5,8 +5,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
 export const ConfirmationBox = ({
@@ -71,11 +71,11 @@ export const ConfirmationBox = ({
             </DialogContent>
             <DialogActions>
                 <Grid container spacing={1} justifyContent="space-between">
-                    <Hidden smDown>
-                        <Grid item xs />
-                    </Hidden>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                        <Grid />
+                    </Box>
                     {!hideActionButton && !!locale.confirmButtonLabel && (
-                        <Grid item xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledPrimaryButton
                                 children={locale.confirmButtonLabel}
                                 autoFocus={!!autoFocusPrimaryButton}
@@ -88,8 +88,8 @@ export const ConfirmationBox = ({
                         </Grid>
                     )}
                     {showAlternateActionButton && !!locale.alternateActionButtonLabel && (
-                        // an optional middle button
-                        <Grid item xs={12} sm={'auto'}>
+                        // an optional middle button that will display in a warning colour
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledTertiaryButton
                                 variant={'contained'}
                                 children={locale.alternateActionButtonLabel}
@@ -102,7 +102,7 @@ export const ConfirmationBox = ({
                         </Grid>
                     )}
                     {!hideCancelButton && !!locale.cancelButtonLabel && (
-                        <Grid item xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledSecondaryButton
                                 variant={'contained'}
                                 children={locale.cancelButtonLabel}

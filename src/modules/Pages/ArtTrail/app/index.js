@@ -17,7 +17,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -397,7 +397,7 @@ const ArtTrailApp = () => {
                                 {menuAnchor ? <CloseIcon /> : <MenuIcon />}
                             </IconButton>
                         </Grid>
-                        <Grid xs>
+                        <Grid size="grow">
                             <HeaderLogo />
                         </Grid>
                     </Grid>
@@ -480,7 +480,7 @@ const ArtTrailApp = () => {
                 {showStepper && (
                     <>
                         <Grid container sx={FOOTER_STEPPER_ROW_SX}>
-                            <Grid xs={12} sx={FOOTER_CONTENT_SX}>
+                            <Grid size={{ xs: 12 }} sx={FOOTER_CONTENT_SX}>
                                 <MobileStepper
                                     variant={isTrailWelcomeStep ? 'dots' : 'text'}
                                     position="static"
@@ -525,7 +525,7 @@ const ArtTrailApp = () => {
                 )}
 
                 <Grid container sx={FOOTER_TAB_ROW_SX}>
-                    <Grid xs={12} sx={FOOTER_CONTENT_SX}>
+                    <Grid size={{ xs: 12 }} sx={FOOTER_CONTENT_SX}>
                         <BottomNavigation
                             showLabels
                             value={activeTab}
@@ -562,8 +562,11 @@ const ArtTrailApp = () => {
                 open={Boolean(DrawerContentComponent)}
                 onClose={handleDrawerClose}
                 onOpen={() => {}}
-                ModalProps={{
-                    keepMounted: true,
+                ModalProps={{ keepMounted: true }}
+                slotProps={{
+                    paper: {
+                        'aria-label': 'Art trail information drawer',
+                    },
                 }}
                 data-testid="art-trail-information-drawer"
                 sx={createDrawerSx(appTheme)}

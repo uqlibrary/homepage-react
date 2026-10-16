@@ -3,23 +3,23 @@
 exports[`Component AppLoader should render as expected 1`] = `
 <div>
   <div
-    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-7fsne-MuiGrid-root"
+    class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-s03zfc-MuiGrid-root"
   >
     <div
-      class="MuiGrid-root MuiGrid-item spaceBetween css-13i4rnv-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-direction-xs-row spaceBetween css-17fpwt7-MuiGrid-root"
     >
       <span
         aria-label="Loading Library website"
-        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary white css-u4ps4u-MuiCircularProgress-root"
+        class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary white css-1jjkwrz-MuiCircularProgress-root"
         role="progressbar"
         style="width: 80px; height: 80px;"
       >
         <svg
-          class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+          class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
           viewBox="22 22 44 44"
         >
           <circle
-            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-176wh8e-MuiCircularProgress-circle"
+            class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
             cx="44"
             cy="44"
             fill="none"
@@ -30,7 +30,7 @@ exports[`Component AppLoader should render as expected 1`] = `
       </span>
     </div>
     <div
-      class="MuiGrid-root MuiGrid-item spaceBetween css-13i4rnv-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-direction-xs-row spaceBetween css-17fpwt7-MuiGrid-root"
     >
       <div
         alt="Fez logo"
@@ -38,10 +38,10 @@ exports[`Component AppLoader should render as expected 1`] = `
       />
     </div>
     <div
-      class="MuiGrid-root MuiGrid-item spaceBetween css-13i4rnv-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-direction-xs-row spaceBetween css-17fpwt7-MuiGrid-root"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 white css-1uywuy6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 white css-xgkcgd-MuiTypography-root"
       >
         Fez frontend
       </h6>

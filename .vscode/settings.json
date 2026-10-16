@@ -39,4 +39,5 @@
     "npx jest": true,
     "npx eslint": true
   },
+  "terminal.integrated.scrollback": 100000
 }

@@ -6,7 +6,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
@@ -98,11 +97,10 @@ export const InspectionSuccessPrintDialog = ({
             </DialogContent>
             <DialogActions>
                 <Grid container spacing={1} padding={2} justifyContent="space-between">
-                    <Hidden smDown>
-                        <Grid item xs />
-                    </Hidden>
-
-                    <Grid item xs={12} sm={'auto'}>
+                    <Grid sx={{ display: { xs: 'none', sm: 'block' } }}>
+                        <Grid />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 'auto' }}>
                         <StyledPrimaryButton
                             children={locale.confirmButtonLabel}
                             fullWidth
@@ -113,7 +111,7 @@ export const InspectionSuccessPrintDialog = ({
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={'auto'}>
+                    <Grid size={{ xs: 12, sm: 'auto' }}>
                         <StyledSecondaryButton
                             variant={'contained'}
                             onClick={_onPrint}

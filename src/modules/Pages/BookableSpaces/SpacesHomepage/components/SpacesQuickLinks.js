@@ -94,8 +94,7 @@ export const SpacesQuickLinks = ({
     return (
         <Box className="spaces-list" sx={{ mb: 3 }}>
             <StyledHeaderWithLinkToAllGridItem
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 sx={{
                     marginTop: hasFavourites ? '28px' : '48px',
                     '& h2': {

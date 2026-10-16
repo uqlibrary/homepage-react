@@ -232,8 +232,8 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'string',
         resizable: false,
-        valueGetter: params => getCleanVarName(params.row.printer_template_var_name),
-        // eslint-disable-next-line no-unused-vars
+        valueGetter: (_, row) => getCleanVarName(row.printer_template_var_name),
+
         renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
             <GridEditInputCell
                 {...params}
@@ -256,7 +256,7 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'string',
         resizable: false,
-        // eslint-disable-next-line no-unused-vars
+
         renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
             <GridEditInputCell
                 {...params}
@@ -279,7 +279,7 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'number',
         resizable: false,
-        valueGetter: params => Number(params.row.printer_template_var_value),
+        valueGetter: (_, row) => Number(row.printer_template_var_value),
         preProcessEditCellProps: params => {
             let hasError = false;
             try {

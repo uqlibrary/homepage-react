@@ -317,7 +317,7 @@ export const DLOAdminHomepage = ({
                 }}
             />
             <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
-                <Grid item xs={12} sx={{ textAlign: 'right' }}>
+                <Grid size={{ xs: 12 }} sx={{ textAlign: 'right' }}>
                     <IconButton
                         color="primary"
                         aria-controls={open ? 'admin-dlor-menu' : undefined}
@@ -476,7 +476,7 @@ export const DLOAdminHomepage = ({
                 {(() => {
                     if (!!dlorListLoading) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                 <Box sx={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </Box>
@@ -484,7 +484,7 @@ export const DLOAdminHomepage = ({
                         );
                     } else if (!!dlorListError) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-homepage-error">
                                     {dlorListError}
                                 </Typography>
@@ -492,7 +492,7 @@ export const DLOAdminHomepage = ({
                         );
                     } else if (!dlorList || dlorList.length === 0) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-homepage-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
@@ -506,7 +506,7 @@ export const DLOAdminHomepage = ({
                         const paginatedList = getPaginatedList(filteredListLocal, paginationPage);
                         return (
                             <>
-                                <Grid item xs={12} id="topOfBody">
+                                <Grid size={{ xs: 12 }} id="topOfBody">
                                     {statusTypes?.length > 0 &&
                                         statusTypes.map((objectStatus, index) => {
                                             const checkBoxid = `checkbox-status-${objectStatus.type}`;
@@ -529,7 +529,7 @@ export const DLOAdminHomepage = ({
                                             );
                                         })}
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         sx={{
                                             width: '100%',
@@ -553,7 +553,7 @@ export const DLOAdminHomepage = ({
                                         inputRef={keyWordSearchRef}
                                     />
                                 </Grid>
-                                <Grid item sx={{ width: '100%' }} data-testid="dlor-homepage-list">
+                                <Grid sx={{ width: '100%' }} data-testid="dlor-homepage-list">
                                     {paginatedList?.length > 0 &&
                                         paginatedList.map(o => {
                                             return (
@@ -561,7 +561,7 @@ export const DLOAdminHomepage = ({
                                                     container
                                                     key={`list-dlor-${o?.object_id}`}
                                                 >
-                                                    <Grid item xs={1} sx={{ marginTop: '4px' }}>
+                                                    <Grid size={{ xs: 1 }} sx={{ marginTop: '4px' }}>
                                                         {o?.object_is_featured === 1 && (
                                                             <DoneIcon
                                                                 data-testid={`dlor-homepage-featured-${o?.object_public_uuid}`}
@@ -571,8 +571,7 @@ export const DLOAdminHomepage = ({
                                                         )}
                                                     </Grid>
                                                     <StyleObjectDetailGridItem
-                                                        item
-                                                        xs={7}
+                                                        size={{ xs: 7 }}
                                                         data-testid={`dlor-homepage-panel-${convertSnakeCaseToKebabCase(
                                                             o?.object_public_uuid,
                                                         )}`}
@@ -656,7 +655,7 @@ export const DLOAdminHomepage = ({
                                                             <Typography component={'p'}>{o?.object_summary}</Typography>
                                                         </div>
                                                     </StyleObjectDetailGridItem>
-                                                    <Grid item xs={2}>
+                                                    <Grid size={{ xs: 2 }}>
                                                         <Typography component={'p'}>
                                                             {o?.owner?.publishing_user_username}
                                                         </Typography>
@@ -667,7 +666,7 @@ export const DLOAdminHomepage = ({
                                                             {o?.owner?.team_name}
                                                         </Typography>
                                                     </Grid>
-                                                    <Grid item xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         <IconButton
                                                             data-testid={`dlor-homepage-edit-${o?.object_public_uuid}`}
                                                             onClick={() => navigateToEditPage(o?.object_public_uuid)}
@@ -676,7 +675,7 @@ export const DLOAdminHomepage = ({
                                                             <EditIcon />
                                                         </IconButton>
                                                     </Grid>
-                                                    <Grid item xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         <IconButton
                                                             data-testid={`dlor-homepage-delete-${o?.object_public_uuid}`}
                                                             sx={{ height: '40px' }}

@@ -37,7 +37,7 @@ export default {
             fieldParams: {
                 minWidth: 200,
                 flex: 1,
-                valueGetter: params => renderLocation(params.row),
+                valueGetter: (_, row) => renderLocation(row),
                 renderCell: params => createLocationLink(renderLocation(params.row), params.row.floor_plan_url),
             },
         },

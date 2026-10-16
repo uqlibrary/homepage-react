@@ -44,20 +44,20 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
             >
-                <StyledHeaderGridItem item xs={12}>
+                <StyledHeaderGridItem size={{ xs: 12 }}>
                     <Typography component={'h2'}>Library updates</Typography>
                     <Link to={linkToDrupal('/about/updates')}>See more updates</Link>
                 </StyledHeaderGridItem>
                 {(() => {
                     if (!!drupalArticlesError) {
                         return (
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <p data-testid="drupal-error">No articles found</p>
                             </Grid>
                         );
                     } else if (!!drupalArticlesLoading) {
                         return (
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <p data-testid="drupal-loading">Loading</p>
                             </Grid>
                         );
@@ -69,7 +69,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
                         });
                     } else {
                         return (
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <p data-testid="drupal-empty">No articles found</p>
                             </Grid>
                         );

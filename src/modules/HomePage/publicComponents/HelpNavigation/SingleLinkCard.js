@@ -14,7 +14,6 @@ const StyledGridItem = styled(Grid, {
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
-    flex: 1,
     '& > div': {
         height: '100%',
         display: 'flex',
@@ -192,7 +191,7 @@ const SingleLinkCard = ({
     };
 
     return (
-        <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
+        <StyledGridItem component={'li'} size={{ xs: 12, uqDsDesktop: 4, uqDsTablet: 6 }} fillContainer={fillContainer}>
             <div>
                 <StyledLink
                     border={1}

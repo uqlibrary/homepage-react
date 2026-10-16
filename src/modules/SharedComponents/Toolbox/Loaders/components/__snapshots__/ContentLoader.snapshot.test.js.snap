@@ -6,41 +6,45 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
     class="layout-card"
   >
     <div
-      class="MuiGrid-root MuiGrid-container css-1bzpx2o-MuiGrid-root"
+      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-1iqomnd-MuiGrid-root"
       data-testid="StandardPage"
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 css-yqiqnf-MuiGrid-root"
       >
         <div
-          class="MuiGrid-root MuiGrid-container css-11lq3yg-MuiGrid-root"
+          class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row css-d64g0g-MuiGrid-root"
         >
           <div
-            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-ox0vta-MuiGrid-root"
+            class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 css-yqiqnf-MuiGrid-root"
           >
             <div
               style="padding: 8px;"
             >
               <div
-                class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-qiawb8-MuiGrid-root"
+                class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-1 css-no9lbm-MuiGrid-root"
               >
                 <div
-                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-tih3ug-MuiGrid-root"
+                  class="MuiGrid-root MuiGrid-direction-xs-row css-y1r2i4-MuiGrid-root"
+                />
+                 
+                <div
+                  class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto css-1hef13s-MuiGrid-root"
                   style="text-align: center;"
                 >
                   <span
                     aria-labelledby="loading-icon"
-                    class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-gml426-MuiCircularProgress-root"
+                    class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1wo54hr-MuiCircularProgress-root"
                     role="progressbar"
                     style="width: 18px; height: 18px;"
                   >
                     <svg
-                      class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+                      class="MuiCircularProgress-svg css-54pwck-MuiCircularProgress-svg"
                       viewBox="22 22 44 44"
                     >
                       <circle
-                        class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-176wh8e-MuiCircularProgress-circle"
+                        class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate css-19t5dcl-MuiCircularProgress-circle"
                         cx="44"
                         cy="44"
                         fill="none"
@@ -51,16 +55,19 @@ exports[`ContentLoader snapshots tests renders loader 1`] = `
                   </span>
                 </div>
                 <div
-                  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto css-tih3ug-MuiGrid-root"
+                  class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto css-1hef13s-MuiGrid-root"
                   style="text-align: center;"
                 >
                   <span
-                    class="MuiTypography-root MuiTypography-h5 css-cay52f-MuiTypography-root"
+                    class="MuiTypography-root MuiTypography-h5 css-ufz9lk-MuiTypography-root"
                     id="loading-icon"
                   >
                     Waiting to load...
                   </span>
                 </div>
+                <div
+                  class="MuiGrid-root MuiGrid-direction-xs-row css-y1r2i4-MuiGrid-root"
+                />
               </div>
             </div>
           </div>

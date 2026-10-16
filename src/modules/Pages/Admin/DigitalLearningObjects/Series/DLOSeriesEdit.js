@@ -388,7 +388,7 @@ export const DLOSeriesEdit = ({
                     {(() => {
                         if (!!dlorItemUpdating || !!dlorListLoading) {
                             return (
-                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                     <Box sx={{ minHeight: '600sx=' }}>
                                         <InlineLoader message="Loading" />
                                     </Box>
@@ -396,7 +396,7 @@ export const DLOSeriesEdit = ({
                             );
                         } else if (!!dlorListError) {
                             return (
-                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                     <Typography variant="body1" data-testid="dlor-seriesItem-error">
                                         {dlorListError}
                                     </Typography>
@@ -405,7 +405,7 @@ export const DLOSeriesEdit = ({
                         } else {
                             return (
                                 <>
-                                    <Grid item xs={12} data-testid="dlor-series-item-list">
+                                    <Grid size={{ xs: 12 }} data-testid="dlor-series-item-list">
                                         <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
                                             <ConfirmationBox
                                                 actionButtonColor="primary"
@@ -428,7 +428,7 @@ export const DLOSeriesEdit = ({
                                                 }
                                             />
                                             <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <FormControl variant="standard" fullWidth>
                                                         <InputLabel htmlFor="series_name">Series name *</InputLabel>
                                                         <Input
@@ -470,7 +470,7 @@ export const DLOSeriesEdit = ({
                                         </Grid>
                                     </Grid>
 
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <h2>Objects in this series</h2>
                                         <div id="dragLandingAarea">
                                             {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
@@ -491,7 +491,7 @@ export const DLOSeriesEdit = ({
                                         </div>
                                     </Grid>
 
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <details>
                                             <Typography
                                                 component={'summary'}
@@ -553,7 +553,7 @@ export const DLOSeriesEdit = ({
                                         </details>
                                     </Grid>
 
-                                    <Grid item xs={3} align="left">
+                                    <Grid size={{ xs: 3 }} align="left">
                                         <Button
                                             color="secondary"
                                             children="Cancel"
@@ -562,7 +562,7 @@ export const DLOSeriesEdit = ({
                                             variant="contained"
                                         />
                                     </Grid>
-                                    <Grid item xs={9} align="right">
+                                    <Grid size={{ xs: 9 }} align="right">
                                         <Button
                                             color="primary"
                                             data-testid="admin-dlor-series-form-save-button"

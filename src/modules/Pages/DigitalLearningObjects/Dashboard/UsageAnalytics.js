@@ -267,7 +267,7 @@ export default function UsageAnalytics({ usageData }) {
     return (
         <>
             <Grid container sx={{ boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.30)' }}>
-                <Grid item xs={12} md={8}>
+                <Grid size={{ xs: 12, md: 8 }}>
                     <Box
                         sx={{
                             border: '1px solid #eee',
@@ -326,7 +326,7 @@ export default function UsageAnalytics({ usageData }) {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <Box
                         sx={{
                             border: '1px solid #eee',

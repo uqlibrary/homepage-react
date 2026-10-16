@@ -44,7 +44,7 @@ describe('UtilityBar', () => {
         const controller = await findByRole('button', { name: 'Show/hide Locations and hours panel' });
 
         expect(controller).toHaveAttribute('aria-expanded', 'false');
-        expect(getByTestId('locations-wrapper')).toHaveAttribute('inert', 'true');
+        expect(getByTestId('locations-wrapper')).toHaveAttribute('inert');
         expect(getByTestId('homepage-hours-bookit-link')).toHaveAttribute('href', '/spaces');
         expect(await findByTestId('locations-panel')).toBeInTheDocument();
     });

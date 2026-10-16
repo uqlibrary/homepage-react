@@ -30,10 +30,7 @@ const LibraryArticle = ({ article, articleindex }) => {
         <StyledGridItem
             key={articleindex}
             articleindex={articleindex}
-            item
-            xs={12}
-            sm={articleindex === 0 ? 12 : 6}
-            md={articleindex === 0 ? 12 : 4}
+            size={{ xs: 12, sm: articleindex === 0 ? 12 : 6, md: articleindex === 0 ? 12 : 4 }}
             className="article-container"
         >
             <ArticleCard
