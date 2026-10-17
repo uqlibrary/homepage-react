@@ -40,8 +40,7 @@ export const AlertSplitButton = ({
     };
 
     const handleClose = event => {
-        /* istanbul ignore next */
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        if (anchorRef.current.contains(event.target)) {
             return;
         }
 
