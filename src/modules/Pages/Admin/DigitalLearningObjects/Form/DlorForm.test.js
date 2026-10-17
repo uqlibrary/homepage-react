@@ -1131,6 +1131,72 @@ describe('DlorForm', () => {
         );
     });
 
+    it('saves updated download file metadata for an edited object', async () => {
+        const actions = renderForm({
+            mode: 'edit',
+            dlorItem: {
+                object_public_uuid: 'edit-download',
+                object_owning_team_id: 1,
+                object_link_interaction_type: 'download',
+                object_link_file_type: 'XLS',
+                object_link_size: '3400',
+                object_link_types: [
+                    { object_link_file_type: 'XLS', object_link_interaction_type: 'download' },
+                    { object_link_file_type: 'PPT', object_link_interaction_type: 'download' },
+                ],
+                object_admin_notes: '',
+            },
+            formDefaults: {
+                ...validFormDefaults,
+                object_owning_team_id: 1,
+                object_link_interaction_type: 'download',
+                object_link_file_type: 'XLS',
+                object_link_size_amount: '3.4',
+                object_link_size_units: 'GB',
+                object_link_types: [
+                    { object_link_file_type: 'XLS', object_link_interaction_type: 'download' },
+                    { object_link_file_type: 'PPT', object_link_interaction_type: 'download' },
+                ],
+                object_admin_notes: '',
+            },
+            dlorFileTypeList: [
+                { object_link_file_type: 'XLS', object_link_interaction_type: 'download' },
+                { object_link_file_type: 'PPT', object_link_interaction_type: 'download' },
+            ],
+            actions: {
+                ...baseProps.actions,
+                updateDlor: jest.fn().mockResolvedValue({}),
+            },
+        });
+
+        advanceToStep(2);
+        fireEvent.mouseDown(screen.getByTestId('object-link-file-type').querySelector('[role="combobox"]'));
+        fireEvent.click(screen.getByRole('option', { name: 'PPT' }));
+        fireEvent.change(getFieldInput('object-link-size-amount'), {
+            target: { value: '33' },
+        });
+        fireEvent.mouseDown(screen.getByTestId('object-link-size-units').querySelector('[role="combobox"]'));
+        fireEvent.click(screen.getByRole('option', { name: 'MB' }));
+
+        advanceToStep(1);
+        fireEvent.click(screen.getByTestId('admin-dlor-save-button-submit'));
+
+        await waitFor(() => {
+            expect(actions.updateDlor).toHaveBeenCalledTimes(1);
+        });
+
+        const savedValues = actions.updateDlor.mock.calls[0][1];
+        expect(savedValues).toEqual(
+            expect.objectContaining({
+                object_link_interaction_type: 'download',
+                object_link_file_type: 'PPT',
+                object_link_size: '33000',
+            }),
+        );
+        expect(savedValues).not.toHaveProperty('object_link_size_amount');
+        expect(savedValues).not.toHaveProperty('object_link_size_units');
+    });
+
     it('saves an edited object in view mode, clears notification text, and covers update flow', async () => {
         const actions = renderForm({
             mode: 'edit',

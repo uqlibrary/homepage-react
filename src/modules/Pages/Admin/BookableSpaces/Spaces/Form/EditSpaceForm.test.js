@@ -730,7 +730,7 @@ describe('EditSpaceForm', () => {
                             space_draftmode: true,
                             space_deleted: true,
                         },
-                        spaceNotesList: [],
+                        spaceNotesList: null,
                         spaceNotesListLoading: false,
                         spaceNotesListError: false,
                     })}
@@ -1060,6 +1060,38 @@ describe('EditSpaceForm', () => {
         fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
 
         expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining({ archibus_room_id: 5 }));
+    });
+
+    it('falls back to a null space type id when no type can be resolved', () => {
+        const saveToDb = jest.fn();
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        saveToDb,
+                        formValues: {
+                            ...validFormValues,
+                            space_type_id: '',
+                            space_type: 'Unknown type',
+                        },
+                        bookableSpacesRoomList: {
+                            data: {
+                                known_space_types: [],
+                                locations: [],
+                            },
+                        },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('spaces-form-next-button'));
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(displayToastErrorMessage).toHaveBeenCalled();
+        expect(saveToDb).not.toHaveBeenCalled();
     });
 
     it('shows a message when a facility type group has no children', () => {

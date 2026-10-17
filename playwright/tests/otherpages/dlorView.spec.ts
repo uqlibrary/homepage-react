@@ -3,7 +3,6 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 import moment from 'moment-timezone';
 import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { DLOR_NO_EDIT_USER } from '@uq/pw/lib/constants';
-import { setInputValue } from '@uq/pw/lib/helpers';
 
 test.describe('Digital Learning Hub View page', () => {
     test.describe('details page', () => {
@@ -187,48 +186,6 @@ test.describe('Digital Learning Hub View page', () => {
             ).toBeVisible();
         });
 
-        test('shows correct button for different types of records', async ({ page }) => {
-            await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-16');
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText(/Access the object \(205m 45s\)/);
-
-            await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-15');
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText(/\(video\)/);
-            await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-14');
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText(/\(123\.5 MB\)/);
-            await page.goto('/digital-learning-hub/view/987y-dfgrf4-76gsg-13');
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText(/\(video\)/);
-            // ensure cancel button works.
-            await page.getByTestId('detailpage-demographics-button').click();
-            await page.getByTestId('demographics-cancel').click();
-            await expect(page.getByTestId('demographics-cancel')).not.toBeVisible();
-            await page.getByTestId('detailpage-notify-button').click();
-            await page.getByTestId('notifications-cancel').click();
-            await expect(page.getByTestId('notifications-cancel')).not.toBeVisible();
-        });
-        test('has expected cultural advice', async ({ page }) => {
-            // custom indicators appears
-            await page.goto('http://localhost:2020/digital-learning-hub/view/kj5t_8yg4_kj4f');
-            await expect(
-                page
-                    .getByTestId('dlor-detailpage-cultural-advice-custom-indicator')
-                    .getByText(/Cultural advice/)
-                    .first(),
-            ).toBeVisible();
-
-            await expect(
-                page
-                    .getByTestId('dlor-detailpage-featured-custom-indicator')
-                    .getByText(/Featured/)
-                    .first(),
-            ).toBeVisible();
-            await expect(page.getByTestId('dlor-detailpage-object-series-name-custom-indicator')).not.toBeVisible();
-            await expect(
-                page
-                    .getByTestId('dlor-detailpage-cultural-advice')
-                    .getByText(/Aboriginal and Torres Strait Islander peoples are warned/)
-                    .first(),
-            ).toBeVisible();
-        });
         test('is accessible', async ({ page }) => {
             await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -245,38 +202,9 @@ test.describe('Digital Learning Hub View page', () => {
             );
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('a view page without keywords has a sensible sidebar', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/9k45_hgr4_876h');
-
-            await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(/EndNote 20: Getting started/);
-            await expect(page.getByTestId('detailpage-metadata-keywords')).not.toBeVisible();
-        });
-        test('can handle an error', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?responseType=error');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(
-                page
-                    .getByTestId('dlor-detailpage-error')
-                    .getByText(/An error has occurred during the request and this request cannot be processed/)
-                    .first(),
-            ).toBeVisible();
-        });
-        test('can handle an empty result', async ({ page }) => {
-            // this should never happen. Maybe immediately after initial upload
-            await page.goto('digital-learning-hub/view/missingRecord');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(
-                page
-                    .getByTestId('dlor-detailpage-empty')
-                    .getByText(/We could not find the requested entry - please check the web address\./)
-                    .first(),
-            ).toBeVisible();
-        });
     });
     test.describe('demographics & notifications send properly', () => {
-        test.beforeEach(async ({ page, context }) => {
+        test.beforeEach(async ({ context }) => {
             // setup so we can check what we "sent" to the db
             await context.addCookies([
                 {
@@ -299,37 +227,6 @@ test.describe('Digital Learning Hub View page', () => {
             expect(cookie).toBeUndefined();
 
             await expect(page).toHaveURL(/exams/);
-        });
-
-        test('Notify requires you to enter an email address', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=s2222222');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('dlor-detailpage').locator('h1')).toBeVisible();
-
-            // enter a subject so that something is sent even thoiught they uncheck notify
-            await page.getByTestId('detailpage-notify-button').click();
-            await expect(page.getByTestId('notifications-capture')).not.toBeDisabled();
-
-            const userEmailInput = page.locator('#userEmail');
-            await expect(async () => {
-                await setInputValue(userEmailInput, '');
-                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
-            }).toPass();
-
-            await expect(async () => {
-                await setInputValue(userEmailInput, 'test');
-                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
-            }).toPass();
-
-            await expect(async () => {
-                await setInputValue(userEmailInput, 'test@test.com');
-                await expect(page.getByTestId('notifications-capture')).not.toBeDisabled({ timeout: 2000 });
-            }).toPass();
-
-            await expect(async () => {
-                await setInputValue(userEmailInput, 'thisfails');
-                await expect(page.getByTestId('notifications-capture')).toBeDisabled({ timeout: 2000 });
-            }).toPass();
         });
 
         test('sends demographics correctly', async ({ page, context }) => {
@@ -463,7 +360,7 @@ test.describe('Digital Learning Hub View page', () => {
             await page.getByTestId('confirm-dlor-save-notification').click();
         });
 
-        test('handles where the user was already subscribed', async ({ page, context }) => {
+        test('handles where the user was already subscribed', async ({ page }) => {
             await page.goto(
                 'digital-learning-hub/view/9bc174f7-5326-4a8b-bfab-d5081c688597?user=digiteamMember&responseType=alreadysubscribed',
             );
@@ -484,63 +381,7 @@ test.describe('Digital Learning Hub View page', () => {
             await page.getByTestId('confirm-dlor-save-notification').click();
         });
     });
-    test.describe('"Access it" units show properly', () => {
-        test('A watchable object shows the correct units on the Get It button', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/987y_isjgt_9866');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText('Access the object (video 47m 44s)');
-        });
-
-        test('A downloadable object shows the correct units on the Get It button', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/9bc192a8-324c-4f6b-ac50-07e7ff2df240');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText('Access the object (XLS 3.4 GB)');
-        });
-
-        test('A neither watchable nor downloadable object shows just "Access the object" on the Get It button', async ({
-            page,
-        }) => {
-            await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(page.getByTestId('detailpage-clicklink')).toHaveText('Access the object');
-        });
-    });
     test.describe('user-level privilege', () => {
-        test('the non-logged in user is prompted to login', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/987y_isjgt_9866?user=public');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-
-            await expect(
-                page
-                    .getByTestId('dlor-homepage-loginprompt')
-                    .getByText(/for extra features/)
-                    .first(),
-            ).toBeVisible();
-            await expect(page.getByTestId('detailpage-notify-button')).toHaveAttribute('aria-disabled', 'true');
-            await expect(page.getByTestId('detailpage-demographics-button')).toHaveAttribute('aria-disabled', 'true');
-        });
-        test('Loggedin user sees demographics/notify prompt', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
-
-            // the logged in user is prompted to enter fields
-            await expect(page.getByTestId('detailpage-getit-button')).not.toBeVisible();
-            await expect(
-                page
-                    .getByTestId('detailpage-clicklink')
-                    .getByText(/Access the object/)
-                    .first(),
-            ).toBeVisible();
-
-            // reveal the notify fields
-            await page.getByTestId('detailpage-notify-button').click();
-            await expect(page.locator('[data-testid="view-notify-preferredName"] input')).toHaveValue('Jane');
-            await expect(page.locator('[data-testid="view-notify-userEmail"] input')).toHaveValue(
-                'rhd@student.uq.edu.au',
-            );
-        });
         test('Admin sees an edit button', async ({ page }) => {
             await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?user=dloradmn');
             await page.setViewportSize({ width: 1300, height: 1000 });
@@ -638,47 +479,11 @@ test.describe('Digital Learning Hub View page', () => {
         });
     });
     test.describe('Component shows correct visibility information', () => {
-        test('Freely available object', async ({ page }) => {
-            await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('detailpage-visibility')).toHaveText(/Anyone can access this object\./);
-        });
-        test('UQ users only object', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-uqonly?user=dloradmn');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('detailpage-visibility')).toHaveText(
-                /This object is available to UQ staff and students\./,
-            );
-        });
-        test('UQ staff only object', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-staff?user=dloradmn');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('detailpage-visibility')).toHaveText(
-                /This object is available to UQ staff members only\./,
-            );
-        });
-        test('UQ Library Staff only', async ({ page }) => {
-            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-libstaff?user=dloradmn');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('detailpage-visibility')).toHaveText(
-                /This object is available to UQ Library staff members only\./,
-            );
-        });
         test('Access Denied messages', async ({ page }) => {
             await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-libstaff?user=anon');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('access-denied-message')).toHaveText(
                 /You need to be a UQ Library staff member to access this object/,
-            );
-            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-staff?user=anon');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('access-denied-message')).toHaveText(
-                /You need to be a UQ staff member to access this object/,
-            );
-            await page.goto('digital-learning-hub/view/987y-dfgrf4-76gsg-01-uqonly?user=anon');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(page.getByTestId('access-denied-message')).toHaveText(
-                /You need to be a UQ staff or student to access this object/,
             );
         });
     });

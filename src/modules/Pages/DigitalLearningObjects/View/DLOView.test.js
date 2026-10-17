@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router';
-import { fireEvent, rtlRender, screen, waitFor } from 'test-utils';
+import { cleanup, fireEvent, rtlRender, screen, waitFor } from 'test-utils';
 import { useCookies } from 'react-cookie';
 import { useAccountContext } from 'context';
 import { useParams } from 'react-router';
@@ -40,11 +40,13 @@ jest.mock('modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt', (
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/ConfirmDialogBox', () => ({
+    // eslint-disable-next-line react/prop-types
     ConfirmationBox: ({ isOpen, locale, onAction }) => {
         if (!isOpen) return null;
 
         return (
             <div data-testid="dialogbox-dlor-save-notification">
+                {/* eslint-disable-next-line react/prop-types */}
                 <h2 data-testid="message-title">{locale.confirmationTitle}</h2>
                 <button type="button" onClick={onAction}>
                     OK
@@ -104,6 +106,7 @@ const renderDLOView = (overrides = {}, account = {}) => {
         ...makeActions(),
         ...(overrides.actions || {}),
     };
+    useAccountContext.mockReturnValue({ account });
     const props = {
         dlorItem: makeObject(),
         dlorItemLoading: false,
@@ -250,18 +253,26 @@ describe('DLOView', () => {
             { id: 'student-1', firstName: 'Jane', mail: 'jane@example.com', user_group: 'UG' },
         );
 
-        expect(screen.getByRole('heading', { name: 'Artificial Intelligence - Digital Essentials' })).toBeInTheDocument();
+        expect(
+            screen.getByRole('heading', { name: 'Artificial Intelligence - Digital Essentials' }),
+        ).toBeInTheDocument();
         expect(screen.getByText('Featured')).toBeInTheDocument();
         expect(screen.getByText('Popular')).toBeInTheDocument();
         expect(screen.getByText('Cultural advice')).toBeInTheDocument();
         expect(screen.getByText('Series: Digital Essentials')).toBeInTheDocument();
         expect(screen.getByTestId('dlor-detailpage-cultural-advice')).toBeInTheDocument();
+        expect(screen.getByTestId('dlor-detailpage-cultural-advice')).toHaveTextContent(
+            'Aboriginal and Torres Strait Islander peoples are warned',
+        );
         expect(screen.getByTestId('dlor-detailpage-featured-custom-indicator')).toBeInTheDocument();
         expect(screen.getByTestId('dlor-detailpage-popular-custom-indicator')).toBeInTheDocument();
         expect(screen.getByTestId('dlor-detailpage-object-series-name-custom-indicator')).toBeInTheDocument();
         expect(screen.getByTestId('favorite-star-icon')).toBeInTheDocument();
         expect(screen.getByTestId('detailpage-preview')).toBeInTheDocument();
-        expect(screen.getByTitle('Embedded youtube')).toHaveAttribute('src', expect.stringContaining('embed/video12345'));
+        expect(screen.getByTitle('Embedded youtube')).toHaveAttribute(
+            'src',
+            expect.stringContaining('embed/video12345'),
+        );
         expect(screen.getByTestId('detailpage-clicklink')).toHaveTextContent('Access the object');
         expect(screen.getByTestId('detailpage-filter-topic')).toHaveTextContent('Assignments');
         expect(screen.getByTestId('detailpage-filter-item-type')).toHaveTextContent('Module');
@@ -300,13 +311,30 @@ describe('DLOView', () => {
         expect(screen.queryByRole('heading', { name: 'Details' })).not.toBeInTheDocument();
         expect(screen.getByTestId('dlor-detailpage')).toBeInTheDocument();
         expect(screen.getByTestId('dlor-homepage-loginprompt')).toBeInTheDocument();
+        expect(screen.getByTestId('detailpage-notify-button')).toHaveAttribute('aria-disabled', 'true');
+        expect(screen.getByTestId('detailpage-demographics-button')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it.each([
+        ['uquser', 'This object is available to UQ staff and students.'],
+        ['uqstaff', 'This object is available to UQ staff members only.'],
+        ['uqlibrarystaff', 'This object is available to UQ Library staff members only.'],
+    ])('renders the %s access description', (restriction, description) => {
+        renderDLOView(
+            { dlorItem: makeObject({ object_restrict_to: restriction }) },
+            { id: 'library-staff', user_group: 'LIBRARYSTAFFB' },
+        );
+
+        expect(screen.getByTestId('detailpage-visibility')).toHaveTextContent(description);
     });
 
     it.each([
         ['view', 'video', 2864, /Access the object \(video 47m 44s\)/],
         ['view', 'video', 0, /Access the object \(video\)/],
+        ['view', '', 2864, /Access the object \(47m 44s\)/],
         ['download', 'XLS', 3400000, /Access the object \(XLS 3\.4 GB\)/],
         ['download', 'XLS', 0, /Access the object \(XLS\)/],
+        ['download', '', 3400000, /Access the object \(3\.4 GB\)/],
         ['none', '', 0, 'Access the object'],
     ])('formats the get-it button for %s interaction records', (interaction, fileType, size, expectedLabel) => {
         renderDLOView({
@@ -327,10 +355,13 @@ describe('DLOView', () => {
     });
 
     it('navigates directly to the object link and opens its favorites actions', async () => {
-        const { actions } = renderDLOView({
-            dlorItem: makeObject({ object_link_url: '#object-link' }),
-            dlorFavouritesList: [],
-        }, { id: 'student-1', user_group: 'UG' });
+        const { actions } = renderDLOView(
+            {
+                dlorItem: makeObject({ object_link_url: '#object-link' }),
+                dlorFavouritesList: [],
+            },
+            { id: 'student-1', user_group: 'UG' },
+        );
 
         fireEvent.click(screen.getByTestId('detailpage-clicklink'));
         expect(window.location.hash).toBe('#object-link');
@@ -361,16 +392,28 @@ describe('DLOView', () => {
 
         restrictions.forEach(([restriction, message]) => {
             cleanup();
-            useAccountContext.mockReturnValue({
-                account: { id: 'community-user', user_group: 'COMMU' },
-            });
-            renderDLOView({
-                dlorItem: makeObject({ object_restrict_to: restriction }),
-            });
+            renderDLOView(
+                {
+                    dlorItem: makeObject({ object_restrict_to: restriction }),
+                },
+                { id: 'community-user', user_group: 'COMMU' },
+            );
 
             expect(screen.getByTestId('access-denied-message')).toHaveTextContent(message);
             expect(screen.queryByTestId('dlor-detailpage')).not.toBeInTheDocument();
         });
+    });
+
+    it('closes demographics and notification dialogs when cancelled', () => {
+        renderDLOView({}, { id: 'student-1', firstName: 'Jane', mail: 'jane@example.com', user_group: 'UG' });
+
+        fireEvent.click(screen.getByTestId('detailpage-demographics-button'));
+        fireEvent.click(screen.getByTestId('demographics-cancel'));
+        expect(screen.getByTestId('demographics-cancel')).not.toBeVisible();
+
+        fireEvent.click(screen.getByTestId('detailpage-notify-button'));
+        fireEvent.click(screen.getByTestId('notifications-cancel'));
+        expect(screen.getByTestId('notifications-cancel')).not.toBeVisible();
     });
 
     it('shows demographics inputs, validates required values, and saves the demographics payload', async () => {

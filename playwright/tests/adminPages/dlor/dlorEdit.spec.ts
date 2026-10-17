@@ -2,11 +2,10 @@ import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { readRichTextEditor, typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { addToInputValue } from '@uq/pw/lib/helpers';
-import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
+import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
 import type { Page } from '@playwright/test';
 
-const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
 
 const gotoEditPage = (page: Page, objectId: string, user: string) =>
@@ -244,151 +243,6 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('admin-dlor-form-button-cancel').click();
                 await expect(page).toHaveURL(`http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
             });
-            test('changes "download" url accessibility message', async ({ page, context }) => {
-                // setup so we can check what we "sent" to the db
-                await context.addCookies([
-                    {
-                        name: 'CYPRESS_TEST_DATA',
-                        value: 'active',
-                        domain: 'localhost',
-                        path: '/',
-                    },
-                ]);
-                await gotoEditPage(page, '9bc192a8-324c-4f6b-ac50-07e7ff2df240', DLOR_ADMIN_USER);
-
-                const today = moment().format('DD/MM/YYYY'); // Australian format to match display
-
-                const reviewInput = page.locator('[data-testid="object-review-date"] input');
-                await reviewInput.click();
-                await reviewInput.clear();
-                await reviewInput.fill(today);
-                await expect(reviewInput).toHaveValue(today);
-
-                // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
-                // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
-
-                // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type').getByText('can Download')).toBeVisible();
-                await expect(page.getByTestId('object-link-file-type').getByText('XLS')).toBeVisible();
-                await expect(page.locator('[data-testid="object-link-size-amount"] input')).toHaveValue('3.4');
-                await expect(page.getByTestId('object-link-size-units').getByText('GB')).toBeVisible();
-                await expect(page.getByTestId('object-link-duration-minutes')).toHaveCount(0);
-                await expect(page.getByTestId('object-link-duration-seconds')).toHaveCount(0);
-
-                await page.getByTestId('object-link-file-type').click();
-                await page.getByTestId('object-link-file-type-PPT').click();
-
-                await addToInputValue(page.locator('[data-testid="object-link-size-amount"] input'), '33');
-                await page.getByTestId('object-link-size-units').click();
-                await page.getByTestId('object-link-size-units-MB').click();
-
-                // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
-
-                // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
-                await page.locator('#fuzzy-search-option-3').click();
-
-                // and save
-                await page.getByTestId('admin-dlor-save-button-submit').click();
-
-                // wait for save outcome dialog
-                await expect(
-                    page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
-                ).toBeVisible();
-
-                // wait for the save to complete
-                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
-                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
-
-                {
-                    const cookie = await context.cookies();
-                    const savedCookie = cookie.find(c => c.name === 'CYPRESS_DATA_SAVED');
-                    expect(savedCookie).toBeTruthy();
-                    const decodedValue = decodeURIComponent(savedCookie!.value);
-                    const sentValues = JSON.parse(decodedValue);
-
-                    expect(sentValues.object_link_interaction_type).toBe('download');
-                    expect(sentValues.object_link_file_type).toBe('PPT');
-                    expect(sentValues.object_link_size).toBe('3433');
-
-                    await context.clearCookies();
-                }
-            });
-            test('changes "view" url accessibility message', async ({ page, context }) => {
-                // Setup cookie to check what we "sent" to the db
-                await context.addCookies([
-                    {
-                        name: 'CYPRESS_TEST_DATA',
-                        value: 'active',
-                        url: 'http://localhost:2020',
-                    },
-                ]);
-
-                await gotoEditPage(page, '987y_isjgt_9866', DLOR_ADMIN_USER);
-
-                const today = moment().format('DD/MM/YYYY'); // Australian format to match the display format
-
-                const dateInput = page.locator('[data-testid="object-review-date"] input');
-                await dateInput.click();
-                await dateInput.clear();
-                await dateInput.fill(today);
-                await dateInput.blur();
-                await dateInput.dispatchEvent('change');
-                await expect(dateInput).toHaveValue(today);
-                // go to panel 2
-                await page.getByTestId('dlor-form-next-button').click();
-                // go to panel 3
-                await page.getByTestId('dlor-form-next-button').click();
-
-                // accessible link message is "no message"
-                await expect(page.getByTestId('object-link-interaction-type').getByText('can View')).toBeVisible();
-                await expect(page.getByTestId('object-link-file-type').getByText('video')).toBeVisible();
-                await expect(page.locator('[data-testid="object-link-duration-minutes"] input')).toHaveValue('47');
-                await expect(page.locator('[data-testid="object-link-duration-seconds"] input')).toHaveValue('44');
-                await expect(page.getByTestId('object-link-size-amount')).not.toBeVisible();
-                await expect(page.getByTestId('object-link-size-units')).not.toBeVisible();
-
-                await page.getByTestId('object-link-file-type').click();
-                await page.getByTestId('object-link-file-type-something').click();
-
-                await addToInputValue(page.locator('[data-testid="object-link-duration-minutes"] input'), '3');
-                await addToInputValue(page.locator('[data-testid="object-link-duration-seconds"] input'), '1');
-
-                // go to panel 4
-                await page.getByTestId('dlor-form-next-button').click();
-
-                // select a keyword so we can save
-                await page.locator("[data-testid='fuzzy-search-input'] input").fill('test');
-                await page.locator('#fuzzy-search-option-3').click();
-
-                // and save
-                await expect(page.getByTestId('admin-dlor-save-button-submit')).toBeEnabled();
-                await page.getByTestId('admin-dlor-save-button-submit').click();
-
-                // wait for the save to complete
-                await expect(
-                    page.locator('[data-testid="dialogbox-dlor-save-outcome"] h2').getByText('Changes have been saved'),
-                ).toBeVisible();
-                await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
-                await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
-
-                {
-                    const savedCookie = await context
-                        .cookies()
-                        .then(cookies => cookies.find(c => c.name === 'CYPRESS_DATA_SAVED'));
-                    expect(savedCookie).toBeDefined();
-                    const sentValues = JSON.parse(decodeURIComponent(savedCookie!.value));
-
-                    expect(sentValues.object_link_interaction_type).toBe('view');
-                    expect(sentValues.object_link_file_type).toBe('something');
-                    expect(sentValues.object_link_size).toBe(28821);
-
-                    await context.clearCookies();
-                }
-            });
         });
 
         test.describe('successfully mock to db', () => {
@@ -497,6 +351,24 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 ).toBeVisible();
                 await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
                 await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();
+
+                const savedCookie = (await page.context().cookies()).find(
+                    cookie => cookie.name === 'CYPRESS_DATA_SAVED',
+                );
+                expect(savedCookie).toBeDefined();
+                const sentValues = JSON.parse(decodeURIComponent(savedCookie!.value));
+                expect(sentValues).toEqual(
+                    expect.objectContaining({
+                        object_link_interaction_type: 'download',
+                        object_link_file_type: 'XLS',
+                        object_link_size: '36000',
+                        team_admin_username: 'johnadmin',
+                        team_email: 'john@example.com',
+                        team_manager: 'john Manager',
+                        team_name: 'new team name',
+                    }),
+                );
+                await page.context().clearCookies();
 
                 // check the data we pretended to send to the server matches what we expect
                 // acts as check of what we sent to api
