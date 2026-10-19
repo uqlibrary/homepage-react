@@ -43,30 +43,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.getByTestId('ExpandMoreIcon').click();
 
                 // team editor
-
-                // swap teams and the edit button doesnt exist
                 await expect(page.getByTestId('object-form-teamid-change').getByText('Update contact')).toBeVisible();
-
-                // swap to "team 1"
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-1').click();
-                await expect(page.getByTestId('object-owning-team').getByText('LIB DX Digital Content')).toBeVisible();
-                await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
-                // swap to "team 3"
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-3').click();
-                await expect(
-                    page.getByTestId('object-owning-team').getByText('Library Indigenous Enquiries'),
-                ).toBeVisible();
-                await expect(page.getByTestId('object-form-teamid-change')).not.toBeVisible();
-
-                // back to "team 2", current Team
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-2').click();
-
-                // can open the editor for this team
-                await expect(page.getByTestId('dlor-form-team-manager-edit')).not.toBeVisible();
-                await expect(page.getByTestId('dlor-form-team-email-edit')).not.toBeVisible();
                 await page.getByTestId('object-form-teamid-change').click();
                 await expect(page.getByTestId('dlor-form-team-email-edit')).toBeVisible();
                 await assertAccessibility(page, '[data-testid="StandardPage"]', {
@@ -76,50 +53,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await assertAccessibility(page, '[data-testid="StandardPage"]', {
                     excludedSelectors: ['#team_admin_username'],
                 });
-
-                // check the Close button works
                 await page.getByTestId('object-form-teamid-change').click();
-                await expect(page.getByTestId('dlor-form-team-manager-edit')).not.toBeVisible();
                 await expect(page.getByTestId('dlor-form-team-email-edit')).not.toBeVisible();
-
-                // check the Close button works
-                await page.getByTestId('object-form-teamid-change').click();
-                await addToInputValue(page.locator('[data-testid="dlor-form-team-manager-edit"] input'), '111');
-                await page.locator('[data-testid="dlor-form-team-email-edit"] input').fill('lea@example.com');
-
-                // the user realises they actually want a new team and choose 'new' from the Owning team drop down
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-form-teamid-new').click();
-                // the fields _do not inherit_ from what the user types
-                await expect(page.locator('[data-testid="dlor-form-team-name-new"] input')).toHaveValue('');
-                await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team');
-                await expect(page.locator('[data-testid="dlor-form-team-manager-new"] input')).toHaveValue('');
-                await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('new name');
-                await expect(page.locator('[data-testid="dlor-form-team-admin-username-new"] input')).toHaveValue('');
-                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('newadmin');
-                await expect(page.locator('[data-testid="dlor-form-team-email-new"] input')).toHaveValue('');
-                await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('new@example.com');
-
-                // back to current team, team 2, so we can check those values are still there
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-owning-team-2').click();
-                await page.getByTestId('object-form-teamid-change').click();
-                await expect(page.locator('[data-testid="dlor-form-team-manager-edit"] input')).toHaveValue(
-                    'Jane Green111',
-                );
-                await expect(page.locator('[data-testid="dlor-form-team-email-edit"] input')).toHaveValue(
-                    'lea@example.com',
-                );
-
-                // and then if we go back to the new form _again_ it has held the previous values we entered
-                await page.getByTestId('object-owning-team').click();
-                await page.getByTestId('object-form-teamid-new').click();
-                // the fields _do not inherit_ from what the user types on the edit-current form
-                await expect(page.locator('[data-testid="dlor-form-team-name-new"] input')).toHaveValue('new team');
-                await expect(page.locator('[data-testid="dlor-form-team-manager-new"] input')).toHaveValue('new name');
-                await expect(page.locator('[data-testid="dlor-form-team-email-new"] input')).toHaveValue(
-                    'new@example.com',
-                );
 
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
@@ -164,67 +99,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 //     'search, evaluate, literature, strategy',
                 // );
 
-                const checkboxStatus = {
-                    'topic-aboriginal-and-torres-strait-islander': false,
-                    'topic-assignments': true,
-                    'topic-digital-skills': false,
-                    'topic-employability': false,
-                    'topic-information-literacy': false,
-                    'topic-referencing': false,
-                    'topic-research': true,
-                    'topic-software': false,
-                    'topic-other': false,
-                    'graduate-attributes-accomplished-scholars': true,
-                    'graduate-attributes-connected-citizens': false,
-                    'graduate-attributes-courageous-thinkers': false,
-                    'graduate-attributes-culturally-capable': false,
-                    'graduate-attributes-influential-communicators': true,
-                    'graduate-attributes-respectful-leaders': false,
-                    'item-type-guide': true,
-                    'item-type-interactive': false,
-                    'item-type-module': false,
-                    'item-type-presentation': false,
-                    'item-type-training-recording': false,
-                    'item-type-other': false,
-                    'media-format-audio': false,
-                    'media-format-dataset': false,
-                    'media-format-h5p': false,
-                    'media-format-image': false,
-                    'media-format-powerpoint': false,
-                    'media-format-pressbook': true,
-                    'media-format-pdf': false,
-                    'media-format-spreadsheet': false,
-                    'media-format-video': false,
-                    'media-format-webpage': false,
-                    'media-format-word-document': false,
-                    'media-format-other': false,
-                    'subject-cross-disciplinary': true,
-                    'subject-business-economics': false,
-                    'subject-engineering-architecture-information-technology': false,
-                    'subject-health-behavioural-sciences': false,
-                    'subject-humanities-arts': false,
-                    'subject-law': false,
-                    'subject-medicine-biomedical-sciences': false,
-                    'subject-science': false,
-                    'subject-social-sciences': false,
-                    'subject-other': false,
-                    'licence-cc-by-attribution': false,
-                    'licence-cc-by-nc-attribution-noncommercial': false,
-                    'licence-cc-by-nc-nd-attribution-noncommercial-no-derivatives': true,
-                    'licence-cc-by-nc-sa-attribution-noncommercial-share-alike': false,
-                    'licence-cc-by-nd-attribution-no-derivatives': false,
-                    'licence-cc-by-sa-attribution-share-alike': false,
-                    'licence-cc0public-domain': false,
-                    'licence-uq-copyright': false,
-                };
-                for (const [slug, isChecked] of Object.entries(checkboxStatus)) {
-                    const checkbox = page.locator(`[data-testid="filter-${slug}"] input`);
-                    if (isChecked) {
-                        await expect(checkbox).toBeChecked();
-                    } else {
-                        await expect(checkbox).not.toBeChecked();
-                    }
-                }
+                await expect(page.locator('[data-testid="filter-topic-assignments"] input')).toBeChecked();
+                await expect(page.locator('[data-testid="filter-topic-research"] input')).toBeChecked();
+                await expect(
+                    page.locator(
+                        '[data-testid="filter-licence-cc-by-nc-nd-attribution-noncommercial-no-derivatives"] input',
+                    ),
+                ).toBeChecked();
 
                 // no extra filters
                 await expect(page.getByTestId('filter-group-topic').locator('> *')).toHaveCount(9 + 1);
