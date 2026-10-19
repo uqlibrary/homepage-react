@@ -436,6 +436,13 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     await page.goto(
                         `http://localhost:2020/admin/dlor/edit/987y_isjgt_9866?user=${DLOR_ADMIN_USER}&responseBody[getDlorObject]=${JSON.stringify(overwrites)}&responseBody[presigned]=s3.amazonaws.com/object/123/image.png`,
                     );
+                    page.on('console', msg => {
+                        console.log(`[browser:${msg.type()}] ${msg.text()}`);
+                    });
+
+                    page.on('pageerror', error => {
+                        console.log('[browser:error]', error.message);
+                    });
                     await assertDlorFormSubmittedData(page, async () => {
                         // go to the third panel, Link
                         await page.getByTestId('dlor-form-next-button').click();

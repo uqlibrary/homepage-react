@@ -53,6 +53,8 @@ export const assertDlorFormSubmittedData = async (
     delete sentValues.object_review_date_next; // doesn't seem valid to figure out the date
     delete expectedValues.object_review_date_next;
 
+    console.log('sentValues', sentValues);
+    console.log('sentKeywords', sentKeywords);
     expect(sentValues).toEqual(expectedValues);
     expect(sentFacets).toEqual(expectedFacets);
     expect(sentKeywords).toEqual(expectedKeywords);

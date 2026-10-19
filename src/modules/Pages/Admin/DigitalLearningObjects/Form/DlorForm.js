@@ -202,15 +202,6 @@ export const DlorForm = ({
     };
 
     useEffect(() => {
-        const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
-        setFormValues(prevValues => ({
-            ...prevValues,
-            object_keyword_ids: keywordIds,
-            object_keywords: selectedKeywords.map(item => item.keyword),
-        }));
-    }, [selectedKeywords]);
-
-    useEffect(() => {
         // map the keywords from the keyword string BACK into the selectedKeywords structure
         if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
             const keywordStrings = splitStringToArrayOnPipe(
@@ -256,6 +247,7 @@ export const DlorForm = ({
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
             setConfirmationOpen(false);
+            console.log('RESET formValues to formDefaults', formDefaults);
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -397,7 +389,7 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
+        selectedKeywords.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
             return Array.isArray(variable) ? typeof variable[0] === 'object' && variable[0] !== null : false;
@@ -1795,8 +1787,16 @@ export const DlorForm = ({
     };
 
     const saveDlor = async () => {
+        console.log('formValues at submit', formValues);
+        const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
+        const keywordNames = selectedKeywords.map(item => item.keyword);
+
+        // validatePanelFiltering: use keywordNames.length < 1 instead of currentValues?.object_keywords?.length
+        // submit handler:
         const valuesToSend = {
             ...formValues,
+            object_keyword_ids: keywordIds,
+            object_keywords: keywordNames,
             object_link_interaction_type: formValues.object_link_interaction_type || linkInteractionTypeNONE,
         };
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
