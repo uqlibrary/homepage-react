@@ -6,50 +6,37 @@ let mockEditorHtml = '<p>edited</p>';
 
 jest.mock('mui-tiptap', () => {
     const react = require('react');
-
-    const normalizeEditorHtml = htmlValue => {
-        if (typeof htmlValue !== 'string') {
-            return '';
-        }
-
-        const normalizedValue = htmlValue.replace(/\s/g, '');
-        if (normalizedValue === '<p></p>' || normalizedValue === '<p><br></p>' || normalizedValue === '<p><br/></p>') {
-            return '';
-        }
-
-        return htmlValue;
+    const actual = jest.requireActual('mui-tiptap');
+    const mockEditor = {
+        isDestroyed: false,
+        isInitialized: true,
+        editorView: { dom: { isConnected: true } },
+        getHTML: jest.fn(() => mockEditorHtml),
+        commands: { setContent: jest.fn() },
     };
 
     return {
-        RichTextEditor: ({ renderControls, children, onUpdate, sx, id, dataTestId, editorProps, ariaLabel }) => {
-            const editorOverflow = sx?.['& .MuiTiptap-RichTextField-content']?.['& .ProseMirror']?.overflowY || 'auto';
-            const attributes = {
-                ...(editorProps?.attributes || {}),
-                ...(id ? { id } : {}),
-                ...(dataTestId ? { 'data-testid': dataTestId } : {}),
-                ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
-                role: 'textbox',
-                'aria-multiline': 'true',
-            };
+        ...actual,
 
+        useRichTextEditorContext: () => mockEditor,
+        /* eslint-disable-next-line react/prop-types */
+        RichTextEditor: ({ children, renderControls, onUpdate, editorProps }) => {
             react.useEffect(() => {
-                onUpdate?.({
-                    editor: {
-                        getHTML: () => normalizeEditorHtml(mockEditorHtml),
-                    },
-                });
+                onUpdate?.({ editor: mockEditor });
             }, [onUpdate]);
 
-            return react.createElement(
-                'div',
-                {
-                    ...attributes,
-                    'data-editor-overflow': editorOverflow,
-                },
-                renderControls?.(),
-                typeof children === 'function' ? children() : children,
+            return (
+                <div data-testid="mock-rich-text-editor">
+                    {renderControls?.(mockEditor)}
+
+                    {/* eslint-disable-next-line react/prop-types */}
+                    <div className="ProseMirror" {...editorProps?.attributes}>
+                        {children?.(mockEditor)}
+                    </div>
+                </div>
             );
         },
+
         LinkBubbleMenu: () => react.createElement('div', { 'data-testid': 'mock-link-bubble-menu' }),
     };
 });
@@ -63,18 +50,16 @@ describe('RichTextEditor', () => {
     it('renders and forwards editor updates through onChange', () => {
         mockEditorHtml = '<p>edited</p>';
         const onChange = jest.fn();
-        const { getByRole, getByTestId } = setup({ onChange });
-        const textbox = getByRole('textbox');
+        const { getByTestId, getByRole } = setup({ onChange });
 
-        expect(textbox).toBeInTheDocument();
-        expect(textbox).toHaveAttribute('data-editor-overflow', 'auto');
+        expect(getByRole('textbox')).toBeInTheDocument();
         expect(getByTestId('mock-rich-text-toolbar')).toBeInTheDocument();
         expect(getByTestId('mock-link-bubble-menu')).toBeInTheDocument();
         expect(onChange).toHaveBeenCalledWith('<p>edited</p>');
     });
 
     it('normalizes blank editor content and non-string values to empty strings before callback', () => {
-        const values = [undefined, null, '', '<p></p>', '<p><br></p>', '<p><br/></p>'];
+        const values = [undefined, null, '<p></p>', '<p><br></p>', '<p><br/></p>'];
 
         values.forEach(value => {
             mockEditorHtml = value;

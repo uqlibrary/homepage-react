@@ -50,6 +50,8 @@ test.describe('Digital Learning Hub admin Teams Members management', () => {
             const editEmailInput = editRow.getByRole('textbox').nth(1);
             await editUsernameInput.fill('uqstaffedit');
             await editEmailInput.fill('uqstaffedit@uq.edu.au');
+            await editRow.getByRole('checkbox').nth(0).click();
+            await editRow.getByRole('checkbox').nth(1).click();
             await page.getByTestId('team-member-save-0').click();
             // Test Cancel button
             await page.getByTestId('team-member-edit-0').click();

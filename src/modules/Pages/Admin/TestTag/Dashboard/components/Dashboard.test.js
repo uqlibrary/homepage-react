@@ -99,10 +99,21 @@ describe('Dashboard component', () => {
         expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
         // default test user has all perms except admin
         expect(getByTestId('dashboard-new-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-new-inspection-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-assets-due-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-devices-due-recalibration-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-reporting-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-assets-due-inspection-link')).toBeInTheDocument();
         expect(getByTestId('dashboard-devices-due-recalibration-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-assets-due-inspection-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-assets-inspected-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-inspections-by-user-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-devices-due-recalibration-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-management-asset-types-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-management-bulk-asset-update-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-management-inspections-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-management-inspection-devices-link')).toBeInTheDocument();
         expect(queryByTestId('dashboard-management-locations-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-management-users-link')).not.toBeInTheDocument();
 
@@ -153,6 +164,8 @@ describe('Dashboard component', () => {
 
         expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
+        expect(getByTestId('dashboard-assets-due-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-devices-due-recalibration-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-locations-link')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-users-link')).toBeInTheDocument();
@@ -162,6 +175,10 @@ describe('Dashboard component', () => {
         expect(queryByTestId('dashboard-management-inspections-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-new-inspection-panel')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-reporting-panel-header')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-inspected-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-assets-due-inspection-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-devices-due-recalibration-link')).not.toBeInTheDocument();
     });
@@ -184,6 +201,9 @@ describe('Dashboard component', () => {
         expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
         expect(getByTestId('dashboard-new-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-new-inspection-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-assets-due-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-devices-due-recalibration-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-bulk-asset-update-link')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-inspection-devices-link')).toBeInTheDocument();
@@ -192,6 +212,10 @@ describe('Dashboard component', () => {
         expect(queryByTestId('dashboard-management-locations-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-management-users-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-reporting-panel-header')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-inspected-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-assets-due-inspection-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-devices-due-recalibration-link')).not.toBeInTheDocument();
     });
@@ -213,6 +237,8 @@ describe('Dashboard component', () => {
 
         expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
+        expect(getByTestId('dashboard-assets-due-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-devices-due-recalibration-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-panel-header')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-bulk-asset-update-link')).toBeInTheDocument();
         expect(getByTestId('dashboard-management-inspection-devices-link')).toBeInTheDocument();
@@ -221,7 +247,12 @@ describe('Dashboard component', () => {
         expect(queryByTestId('dashboard-management-locations-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-management-users-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-new-inspection-panel')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-new-inspection-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-reporting-panel-header')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-assets-inspected-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeInTheDocument();
+        expect(queryByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-assets-due-inspection-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-devices-due-recalibration-link')).not.toBeInTheDocument();
     });
@@ -243,9 +274,16 @@ describe('Dashboard component', () => {
 
         expect(getByText('Dashboard for Work Station Support (Library)')).toBeInTheDocument();
 
+        expect(getByTestId('dashboard-assets-due-inspection-panel')).toBeInTheDocument();
+        expect(getByTestId('dashboard-devices-due-recalibration-panel')).toBeInTheDocument();
         expect(getByTestId('dashboard-reporting-panel-header')).toBeInTheDocument();
+        expect(queryByTestId('dashboard-new-inspection-link')).not.toBeInTheDocument();
         expect(getByTestId('dashboard-assets-due-inspection-link')).toBeInTheDocument();
         expect(getByTestId('dashboard-devices-due-recalibration-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-assets-due-inspection-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-assets-inspected-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-inspections-by-user-link')).toBeInTheDocument();
+        expect(getByTestId('dashboard-reporting-devices-due-recalibration-link')).toBeInTheDocument();
         expect(queryByTestId('dashboard-management-panel-header')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-management-bulk-asset-update-link')).not.toBeInTheDocument();
         expect(queryByTestId('dashboard-management-inspection-devices-link')).not.toBeInTheDocument();

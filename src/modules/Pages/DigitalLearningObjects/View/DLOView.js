@@ -13,7 +13,8 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { LocalFireDepartment, NotificationsActive } from '@mui/icons-material';
+import LocalFireDepartment from '@mui/icons-material/LocalFireDepartment';
+import NotificationsActive from '@mui/icons-material/NotificationsActive';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -51,7 +52,11 @@ import {
 import { dlorAdminLink, isValidEmail } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
-import { Chip, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Tooltip from '@mui/material/Tooltip';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -249,7 +254,6 @@ export const DLOView = ({
     dlorItemLoading,
     dlorItemError,
     accountLoading,
-    accountError,
     // sending demographics and/or subscribe request
     dlorUpdatedItem,
     dlorItemUpdating,
@@ -271,9 +275,6 @@ export const DLOView = ({
 
     // Add this state near your other useState declarations
     const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
-
-    // console.log(dlorId, 'Loading=', dlorItemLoading, '; Error=', dlorItemError, '; dlorItem=', dlorItem);
-    // console.log('Updating=', dlorItemUpdating, '; Error=', dlorUpdatedItemError, '; dlorItem=', dlorUpdatedItem);
 
     const isLoggedIn = !!account?.id;
 
@@ -385,7 +386,6 @@ export const DLOView = ({
     useEffect(() => {
         /* istanbul ignore else */
         if (!accountLoading) {
-            console.log('Loading Dlor for view page', dlorId, 'with account', account.id);
             actions.clearADlor();
             actions.loadADLOR(dlorId, !!account?.id);
         }
@@ -425,7 +425,6 @@ export const DLOView = ({
         // if they only sent demographics, we only wait for the "in progress" because we dont care what it responds
 
         if (!dlorItemUpdating && !!formValues?.sendDemographics && !dlorUpdatedItemError) {
-            console.log('A');
             setFormValues({ ...defaultFormValues, preferredName: account?.firstName, userEmail: account?.mail });
             setConfirmLocale(demograpicsResponseLocale);
             setIsDemographicsOpened(false);
@@ -434,7 +433,6 @@ export const DLOView = ({
             // navigateToObjectLink();
         }
         if (!dlorItemUpdating && !!formValues?.sendNotify && !dlorUpdatedItemError) {
-            console.log('B');
             const updatingMessage =
                 dlorUpdatedItem?.data?.subscription === false
                     ? 'You are already subscribed'
@@ -454,7 +452,6 @@ export const DLOView = ({
             // navigateToObjectLink();
         }
         if (!!dlorUpdatedItemError && (!!formValues?.sendDemographics || !!formValues?.sendNotify)) {
-            console.log('ERROR IF');
             setFormValues({ ...formValues, sendDemographics: false, sendNotify: false });
             setConfirmLocale({
                 confirmationTitle: 'There was a problem saving your supplied information - please try again later.',
@@ -467,7 +464,6 @@ export const DLOView = ({
         }
         //  they sent a notify then we will show a dialog, either success or failure
         // if (!dlorItemUpdating && (!!dlorUpdatedItem || !!dlorUpdatedItemError) && !!formValues?.notify) {
-        //     console.log('C');
         //     setConfirmationOpen(true);
         // }
     }, [
@@ -477,6 +473,7 @@ export const DLOView = ({
         formValues?.notify,
         navigateToObjectLink,
         formValues?.sendDemographics,
+        formValues?.sendNotify,
     ]);
 
     const deslugify = slug => {
@@ -526,8 +523,6 @@ export const DLOView = ({
     };
 
     // const saveAndNavigate = dlorItem => {
-    //     // console.log('saveAndNavigate formValues', dlorItem.object_link_url, formValues);
-
     //     if (formValues.schoolName.length > 0 || formValues.subjectCode.length > 0 || !!formValues.notify) {
     //         const valuestoSend = {
     //             dlorUuid: dlorItem.object_public_uuid,
@@ -614,14 +609,12 @@ export const DLOView = ({
     };
 
     function getItButtonLabel(dlorItem) {
-        console.log('GetItButtonLabel', dlorItem);
         const interactionType = dlorItem?.object_link_interaction_type || /* istanbul ignore next */ null;
         const fileType = dlorItem?.object_link_file_type || null;
         let label = 'Access the object';
         let details = '';
 
         if (interactionType === 'view') {
-            console.log('item', dlorItem);
             const viewingTime = dlorItem?.object_link_size
                 ? getDurationString(dlorItem?.object_link_size)
                 : /* istanbul ignore next */ '';
@@ -872,7 +865,6 @@ export const DLOView = ({
                 </Dialog>
                 <div>
                     {getTitleBlock()}
-                    {console.log('Can Access object?', canUserAccessObject(account, dlorItem?.object_restrict_to))}
                     {!canUserAccessObject(account, dlorItem?.object_restrict_to) ? (
                         <Box
                             sx={{
@@ -1456,6 +1448,7 @@ export const DLOView = ({
 
 DLOView.propTypes = {
     actions: PropTypes.any,
+    accountLoading: PropTypes.bool,
     dlorItem: PropTypes.any,
     dlorItemLoading: PropTypes.bool,
     dlorItemError: PropTypes.any,

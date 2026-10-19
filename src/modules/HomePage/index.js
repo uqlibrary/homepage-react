@@ -1,1 +1,1 @@
-export HomePageContainer from './HomePageContainer';
+export HomePageContainer from 'modules/HomePage/HomePageContainer';

@@ -2,7 +2,6 @@ import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router';
 
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -29,47 +28,47 @@ import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 
+export const displayPreview = thisAlert => {
+    const alertWrapper = document.getElementById('previewWrapper');
+    !!alertWrapper && (alertWrapper.innerHTML = '');
+
+    // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
+    const alertWebComponent = document.createElement('uq-alert');
+
+    if (!alertWebComponent) {
+        return null;
+    }
+
+    const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(thisAlert?.body);
+
+    alertWebComponent.setAttribute('id', 'alert-preview');
+    alertWebComponent.setAttribute('alerttitle', thisAlert.title);
+    alertWebComponent.setAttribute('priorityType', thisAlert.priority_type);
+    const body =
+        !!thisAlert.body &&
+        getBody({
+            permanentAlert: isPermanent,
+            linkRequired: linkRequired,
+            linkTitle: linkTitle,
+            linkUrl: linkUrl,
+            enteredbody: message,
+        });
+    if (!!isPermanent) {
+        manuallyMakeWebComponentBePermanent(alertWebComponent, body);
+    } else {
+        alertWebComponent.setAttribute('alertmessage', body);
+    }
+    if (!!linkRequired) {
+        makePreviewActionButtonJustNotifyUser({ ...thisAlert, linkUrl: linkUrl });
+    }
+    alertWrapper.appendChild(alertWebComponent);
+
+    return null;
+};
+
 export const AlertsView = ({ actions, alert, alertStatus }) => {
     const { alertid } = useParams();
     const navigate = useNavigate();
-
-    const displayPreview = thisAlert => {
-        const alertWrapper = document.getElementById('previewWrapper');
-        !!alertWrapper && (alertWrapper.innerHTML = '');
-
-        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
-        const alertWebComponent = document.createElement('uq-alert');
-        /* istanbul ignore next */
-        if (!alertWebComponent) {
-            return null;
-        }
-
-        const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
-
-        alertWebComponent.setAttribute('id', 'alert-preview');
-        alertWebComponent.setAttribute('alerttitle', thisAlert.title);
-        alertWebComponent.setAttribute('priorityType', thisAlert.priority_type);
-        const body =
-            !!thisAlert.body &&
-            getBody({
-                permanentAlert: isPermanent,
-                linkRequired: linkRequired,
-                linkTitle: linkTitle,
-                linkUrl: linkUrl,
-                enteredbody: message,
-            });
-        if (!!isPermanent) {
-            manuallyMakeWebComponentBePermanent(alertWebComponent, body);
-        } else {
-            alertWebComponent.setAttribute('alertmessage', body);
-        }
-        if (!!linkRequired) {
-            makePreviewActionButtonJustNotifyUser({ ...thisAlert, linkUrl: linkUrl });
-        }
-        alertWrapper.appendChild(alertWebComponent);
-
-        return null;
-    };
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -89,7 +88,6 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
         if (!!alert) {
             displayPreview(alert);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alert]);
 
     if (alertStatus === 'loading') {

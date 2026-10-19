@@ -56,6 +56,12 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
+            bookablespaces: {
+                title: 'Spaces Management',
+            },
+            bookablespacetypes: {
+                title: 'Space Type Management',
+            },
         },
         learningresources: {
             title: 'Learning resources',
@@ -71,6 +77,12 @@ export default {
         },
         pastExamPaperList: {
             title: 'View exam papers',
+        },
+        bookablespaces: {
+            title: 'Spaces',
+        },
+        bookablespacetypes: {
+            title: 'Space Types',
         },
         artTrailLanding: {
             title: 'Art Trail Welcome',

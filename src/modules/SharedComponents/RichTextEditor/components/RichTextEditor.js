@@ -9,7 +9,6 @@ const editorStyles = {
     '& .MuiTiptap-RichTextField-content': {
         '& .ProseMirror': {
             height: '200px',
-            overflowY: 'auto',
 
             '& h2': {
                 fontSize: '1.5em',
@@ -44,6 +43,8 @@ const normalizeEditorHtml = htmlValue => {
     return htmlValue;
 };
 
+const isEditorUsable = editor => !!editor && !editor.isDestroyed && !!editor.editorView?.dom?.isConnected;
+
 const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
     return (
         <MuiRichTextEditor
@@ -67,11 +68,7 @@ const RichTextEditor = ({ id, value, onChange, testId, ariaLabel }) => {
                 },
             }}
         >
-            {() => (
-                <>
-                    <LinkBubbleMenu />
-                </>
-            )}
+            {editor => <>{isEditorUsable(editor) && <LinkBubbleMenu />}</>}
         </MuiRichTextEditor>
     );
 };

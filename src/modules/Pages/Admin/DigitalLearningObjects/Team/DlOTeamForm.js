@@ -23,7 +23,7 @@ import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, TableContainer } from '@mui/material';
-import { ExpandMore, PausePresentation } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -53,8 +53,6 @@ export const DLOTeamForm = ({
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
 
-    console.log('Account', account);
-
     const [formValues, setFormValues] = useState({
         team_name: '',
         team_manager: '',
@@ -66,7 +64,6 @@ export const DLOTeamForm = ({
     const [editingMemberIdx, setEditingMemberIdx] = useState(null);
     const [editingMember, setEditingMember] = useState(null);
     const [newMember, setNewMember] = useState({ team_admin_username: '', team_admin_email: '' });
-    const [addMemberError, setAddMemberError] = useState('');
 
     // Add to your component's state
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -84,7 +81,8 @@ export const DLOTeamForm = ({
             setFormValues({
                 team_name: formDefaults?.team_name,
                 team_manager: formDefaults?.team_manager,
-                team_admin_username: formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
+                team_admin_username:
+                    formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
                 team_email: formDefaults?.team_email,
             });
         }
@@ -101,7 +99,6 @@ export const DLOTeamForm = ({
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
         navigate(dlorAdminLink('/team/manage', account));
-        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
@@ -110,7 +107,6 @@ export const DLOTeamForm = ({
 
     const clearForm = () => {
         closeConfirmationBox();
-        /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
     };
 
@@ -189,7 +185,6 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
 
-        console.log('Save edited team member:', editingMember);
         setEditingMemberIdx(null);
         setEditingMember(null);
     };
@@ -205,7 +200,6 @@ export const DLOTeamForm = ({
             value = value.replace(/\s/g, '').slice(0, 15);
         }
         setNewMember({ ...newMember, [prop]: value });
-        setAddMemberError('');
     };
 
     const handleAddNewMember = () => {
@@ -214,21 +208,17 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
         setNewMember({ team_admin_username: '', team_admin_email: '' });
-        setAddMemberError('');
     };
 
     const isAddButtonDisabled =
         !newMember.team_admin_username.trim() ||
         !isValidEmail(newMember.team_admin_email) ||
-        !!addMemberError ||
         !!dlorTeamSaving ||
         !!dlorTeamLoading;
 
-    console.log('Form Values');
     return (
         <Grid container spacing={2}>
             {(() => {
-                /* istanbul ignore else */
                 if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
                         <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
@@ -318,7 +308,9 @@ export const DLOTeamForm = ({
                                         </Grid>
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="team_admin_username">Team admin username *</InputLabel>
+                                                <InputLabel htmlFor="team_admin_username">
+                                                    Team admin username *
+                                                </InputLabel>
                                                 <Input
                                                     id="team_admin_username"
                                                     data-testid="admin-dlor-team-form-team-admin-username"
@@ -607,17 +599,6 @@ export const DLOTeamForm = ({
                                                                         Add
                                                                     </Button>
                                                                 </Grid>
-                                                                {addMemberError && (
-                                                                    <Grid item xs={12}>
-                                                                        <Typography
-                                                                            color="error"
-                                                                            variant="body2"
-                                                                            data-testid="add-team-member-error"
-                                                                        >
-                                                                            {addMemberError}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                )}
                                                             </Grid>
                                                         </Box>
                                                     </Grid>
@@ -679,7 +660,6 @@ export const DLOTeamForm = ({
                         </>
                     );
                 }
-                /* istanbul ignore next */
                 return <></>;
             })()}
         </Grid>

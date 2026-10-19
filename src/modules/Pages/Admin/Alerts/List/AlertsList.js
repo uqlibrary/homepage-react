@@ -35,6 +35,40 @@ const StyledMobileView = styled(Grid)(({ theme }) => ({
     },
 }));
 
+export const formatAlert = alert => {
+    const newAlert = { ...alert };
+    const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
+    const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
+    const currentDateOnTheHour = pastDateOnTheHour.replace(' YYYY', '');
+    const currentDateDuringTheHour = pastDateDuringHour.replace(' YYYY', '');
+    if (moment(alert.end).isBefore(moment())) {
+        newAlert.startDateDisplay = moment(alert.start).format(
+            moment(alert.start).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
+        );
+        newAlert.endDateDisplay = moment(alert.end).format(
+            moment(alert.end).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
+        );
+    } else {
+        newAlert.startDateDisplay = moment(alert.start).format(
+            moment(alert.start).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
+        );
+        newAlert.endDateDisplay = moment(alert.end).format(
+            moment(alert.end).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
+        );
+    }
+    // we provide a mousover with the complete data for clarity
+    const fullDateFormat = 'dddd D MMMM YYYY h.mma';
+    newAlert.startDateLong = moment(alert.start).format(fullDateFormat);
+    newAlert.endDateLong = moment(alert.end).format(fullDateFormat);
+    // Strip markdown from the body
+    const linkRegex = alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    newAlert.message = alert.body;
+    if (!!linkRegex && linkRegex.length === 3) {
+        newAlert.message = newAlert.message.replace(linkRegex[0], '').replace('  ', ' ');
+    }
+    return newAlert;
+};
+
 export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
@@ -58,47 +92,18 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
             setFutureAlerts([]);
             setCurrentAlerts([]);
             alerts.forEach(alert => {
-                const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
-                const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
-                const currentDateOnTheHour = pastDateOnTheHour.replace(' YYYY', '');
-                const currentDateDuringTheHour = pastDateDuringHour.replace(' YYYY', '');
-                if (moment(alert.end).isBefore(moment())) {
-                    alert.startDateDisplay = moment(alert.start).format(
-                        moment(alert.start).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
-                    alert.endDateDisplay = moment(alert.end).format(
-                        moment(alert.end).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
+                const formattedAlert = formatAlert(alert);
+                if (moment(formattedAlert.end).isBefore(moment())) {
+                    setPastAlerts(pastAlerts => [...pastAlerts, formattedAlert]);
+                } else if (moment(formattedAlert.start).isAfter(moment())) {
+                    setFutureAlerts(futureAlerts => [...futureAlerts, formattedAlert]);
                 } else {
-                    alert.startDateDisplay = moment(alert.start).format(
-                        moment(alert.start).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                    alert.endDateDisplay = moment(alert.end).format(
-                        moment(alert.end).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                }
-                // we provide a mousover with the complete data for clarity
-                const fullDateFormat = 'dddd D MMMM YYYY h.mma';
-                alert.startDateLong = moment(alert.start).format(fullDateFormat);
-                alert.endDateLong = moment(alert.end).format(fullDateFormat);
-                // Strip markdown from the body
-                const linkRegex = alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                alert.message = alert.body;
-                if (!!linkRegex && linkRegex.length === 3) {
-                    alert.message = alert.message.replace(linkRegex[0], '').replace('  ', ' ');
-                }
-                if (moment(alert.end).isBefore(moment())) {
-                    setPastAlerts(pastAlerts => [...pastAlerts, alert]);
-                } else if (moment(alert.start).isAfter(moment())) {
-                    setFutureAlerts(futureAlerts => [...futureAlerts, alert]);
-                } else {
-                    setCurrentAlerts(currentAlerts => [...currentAlerts, alert]);
+                    setCurrentAlerts(currentAlerts => [...currentAlerts, formattedAlert]);
                 }
             });
         }
     }, [alerts]);
 
-    /* istanbul ignore next */
     if (!!alertsError) {
         return (
             <StandardPage title="Alerts Management">
@@ -118,7 +123,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
         );
     }
 
-    /* istanbul ignore next */
     const deleteAlert = alertID => {
         // this is called, but the coverage isn't happening
         return actions.deleteAlert(alertID);
