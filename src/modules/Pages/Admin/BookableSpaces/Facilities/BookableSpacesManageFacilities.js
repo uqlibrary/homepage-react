@@ -1245,9 +1245,7 @@ export const BookableSpacesManageFacilities = ({
                                                     group => {
                                                         return (
                                                             <Grid
-                                                                item
-                                                                xs={12}
-                                                                sm={3}
+                                                                size={{ xs: 12, sm: 3 }}
                                                                 data-testid={`facilitygroup-${slugifyName(
                                                                     group?.facility_type_group_name,
                                                                 )}`}

@@ -64,7 +64,7 @@ const Selector = ({ onChange }) => {
             >
                 <input {...getInputProps()} />
                 <Grid container sx={{ width: '100%' }} alignItems="center">
-                    <Grid item xs={12} sm={8}>
+                    <Grid size={{ xs: 12, sm: 8 }}>
                         <Typography component="div" sx={{ fontSize: 12, fontWeight: 400, mt: '14px', mb: '14px' }}>
                             Please ensure:
                             <ul>
@@ -88,7 +88,7 @@ const Selector = ({ onChange }) => {
                             </ul>
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <Box
                             sx={{
                                 display: 'flex',

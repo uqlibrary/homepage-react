@@ -91,8 +91,7 @@ const SidebarSpacesList = ({
                     const isExpanded = expandedSpaceId === bookableSpace?.space_id;
                     return (
                         <StyledBookableSpaceGridItem
-                            item
-                            xs={12}
+                            size={{ xs: 12 }}
                             key={`space-${bookableSpace?.space_id}`}
                             id={`space-${bookableSpace?.space_id}`}
                             data-testid={`space-${bookableSpace?.space_id}`}

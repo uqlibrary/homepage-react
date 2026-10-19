@@ -73,8 +73,7 @@ export const FavouritesList = ({
     return (
         <Box className="spaces-journey-favourites" sx={{ mb: 0 }}>
             <StyledHeaderWithLinkToAllGridItem
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 sx={
                     !hasFavourites
                         ? {

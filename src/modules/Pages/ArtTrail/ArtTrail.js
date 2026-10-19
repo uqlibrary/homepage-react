@@ -25,7 +25,7 @@ export const ArtTrail = () => {
         <StandardPage>
             <Grid container spacing={2}>
                 <Grid
-                    xs={12}
+                    size={{ xs: 12 }}
                     alignContent="space-between"
                     display="flex"
                     flexDirection="row"
