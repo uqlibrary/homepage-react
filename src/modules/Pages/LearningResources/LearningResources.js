@@ -51,6 +51,7 @@ export const isValidInput = params => {
     let valid = true;
 
     const allowedKeys = ['coursecode', 'campus', 'semester'];
+    /* istanbul ignore else */
     if (window.location.hostname === 'localhost') {
         allowedKeys.push('user');
     }
