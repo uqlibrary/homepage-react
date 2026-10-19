@@ -1130,7 +1130,7 @@ export const DlorForm = ({
                     />
                 </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">File Uploader</InputLabel>
                     {!hasFile && <FileSelector onChange={onFileChange} />}
