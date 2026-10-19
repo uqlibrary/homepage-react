@@ -199,8 +199,9 @@ test.describe('Art Trail', () => {
                 await expect(page.getByRole('button', { name: 'Stop audio playback' })).toBeVisible();
                 await expect(page.getByRole('button', { name: 'Stop audio playback' })).toBeFocused();
                 await expect(page.getByRole('button', { name: 'Reset audio playback' })).toBeDisabled();
+                const audio = page.locator('audio');
                 await expect
-                    .poll(async () => Number(await page.getByTestId('audio-progress').getAttribute('aria-valuenow')))
+                    .poll(async () => audio.evaluate((el: HTMLAudioElement) => el.currentTime))
                     .toBeGreaterThan(0);
                 await page.getByRole('button', { name: 'Stop audio playback' }).click();
                 await expect(page.getByRole('button', { name: 'Reset audio playback' })).toBeVisible();
