@@ -247,7 +247,6 @@ export const DlorForm = ({
     useEffect(() => {
         if (mode === 'edit' && !!dlorItem) {
             setConfirmationOpen(false);
-            console.log('RESET formValues to formDefaults', formDefaults);
             setFormValues(formDefaults);
             setSummaryContent(formDefaults.object_summary);
             checkBoxArrayRef.current = flatMapFacets(formDefaults.facets);
@@ -1787,12 +1786,8 @@ export const DlorForm = ({
     };
 
     const saveDlor = async () => {
-        console.log('formValues at submit', formValues);
         const keywordIds = selectedKeywords.map(item => item.keyword_vocabulary_id);
         const keywordNames = selectedKeywords.map(item => item.keyword);
-
-        // validatePanelFiltering: use keywordNames.length < 1 instead of currentValues?.object_keywords?.length
-        // submit handler:
         const valuesToSend = {
             ...formValues,
             object_keyword_ids: keywordIds,
