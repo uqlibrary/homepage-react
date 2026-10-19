@@ -449,6 +449,52 @@ describe('EditSpaceForm', () => {
         });
     });
 
+    it('requires and saves a booking URL when an edited space becomes bookable', () => {
+        const saveToDb = jest.fn();
+        const StatefulForm = () => {
+            const [formValues, setFormValues] = React.useState({
+                ...validFormValues,
+                space_id: 654,
+                isBookableCheckbox: false,
+                space_external_book_url: '',
+            });
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm
+                        {...buildProps({
+                            mode: 'edit',
+                            saveToDb,
+                            formValues,
+                            setFormValues,
+                        })}
+                    />
+                </AccountContext.Provider>
+            );
+        };
+
+        rtlRender(<StatefulForm />);
+        expect(screen.queryByTestId('booking-link-details')).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('space-can-book'));
+        expect(screen.getByTestId('booking-link-details')).toBeInTheDocument();
+        expect(screen.getByTestId('spaces-button-error-list')).toHaveTextContent(
+            'Provide the booking link, or uncheck the checkbox',
+        );
+        expect(screen.getByTestId('admin-spaces-save-button-submit')).toBeDisabled();
+        expect(saveToDb).not.toHaveBeenCalled();
+
+        fireEvent.change(screen.getByTestId('space_external_book_url').querySelector('input'), {
+            target: { value: 'http://example.com' },
+        });
+        expect(screen.getByTestId('admin-spaces-save-button-submit')).toBeEnabled();
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(
+            expect.objectContaining({ space_external_book_url: 'http://example.com' }),
+        );
+    });
+
     it('shows current outage notices and renders note tables with date fallback and parsed content', () => {
         const loadBookableSpaceNotes = jest.fn();
         const pad = value => String(value).padStart(2, '0');
@@ -1014,6 +1060,166 @@ describe('EditSpaceForm', () => {
         expect(saveToDb).toHaveBeenCalledWith(
             expect.objectContaining({ space_capacity: 0, space_external_book_url: null }),
         );
+    });
+
+    it.each([
+        {
+            name: 'preserves capacity and clears the URL when booking is disabled',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: true,
+                space_capacity: 5,
+                space_external_book_url: 'https://example.com/book',
+            },
+            disableBooking: true,
+            updatedCapacity: null,
+            expected: { space_capacity: 5, space_external_book_url: null },
+        },
+        {
+            name: 'updates capacity for a bookable space',
+            initialValues: { ...validFormValues, isBookableCheckbox: true, space_capacity: 5 },
+            disableBooking: false,
+            updatedCapacity: '8',
+            expected: { space_capacity: '8', space_external_book_url: 'https://example.com/book' },
+        },
+        {
+            name: 'sets capacity for a non-bookable space',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: false,
+                space_capacity: 0,
+                space_external_book_url: '',
+            },
+            disableBooking: false,
+            updatedCapacity: '7',
+            expected: { space_capacity: '7', space_external_book_url: null },
+        },
+        {
+            name: 'normalizes cleared capacity to zero for a non-bookable space',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: false,
+                space_capacity: 1,
+                space_external_book_url: '',
+            },
+            disableBooking: false,
+            updatedCapacity: '',
+            expected: { space_capacity: 0, space_external_book_url: null },
+        },
+    ])('$name', ({ initialValues, disableBooking, updatedCapacity, expected }) => {
+        const saveToDb = jest.fn();
+        const StatefulForm = () => {
+            const [formValues, setFormValues] = React.useState(initialValues);
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm
+                        {...buildProps({
+                            mode: 'edit',
+                            saveToDb,
+                            formValues,
+                            setFormValues,
+                        })}
+                    />
+                </AccountContext.Provider>
+            );
+        };
+
+        rtlRender(<StatefulForm />);
+
+        if (disableBooking) {
+            fireEvent.click(screen.getByTestId('space-can-book'));
+            expect(screen.queryByTestId('capacity-required-indicator')).not.toBeInTheDocument();
+        }
+        if (updatedCapacity !== null) {
+            fireEvent.change(screen.getByTestId('space-capacity').querySelector('input'), {
+                target: { value: updatedCapacity },
+            });
+        }
+
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining(expected));
+    });
+
+    it.each([
+        {
+            name: 'turning off booking preserves the capacity and clears the booking URL',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: true,
+                space_capacity: 5,
+                space_external_book_url: 'https://example.com/book',
+            },
+            turnOffBooking: true,
+            updatedCapacity: undefined,
+            expected: { space_capacity: 5, space_external_book_url: null },
+        },
+        {
+            name: 'updates capacity for a bookable space',
+            initialValues: { ...validFormValues, isBookableCheckbox: true, space_capacity: 5 },
+            turnOffBooking: false,
+            updatedCapacity: '8',
+            expected: { space_capacity: '8', space_external_book_url: 'https://example.com/book' },
+        },
+        {
+            name: 'adds capacity to a non-bookable space',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: false,
+                space_capacity: 0,
+                space_external_book_url: '',
+            },
+            turnOffBooking: false,
+            updatedCapacity: '7',
+            expected: { space_capacity: '7', space_external_book_url: null },
+        },
+        {
+            name: 'normalizes a cleared capacity to zero for a non-bookable space',
+            initialValues: {
+                ...validFormValues,
+                isBookableCheckbox: false,
+                space_capacity: 1,
+                space_external_book_url: '',
+            },
+            turnOffBooking: false,
+            updatedCapacity: '',
+            expected: { space_capacity: 0, space_external_book_url: null },
+        },
+    ])('$name', ({ initialValues, turnOffBooking, updatedCapacity, expected }) => {
+        const saveToDb = jest.fn();
+        const StatefulForm = () => {
+            const [formValues, setFormValues] = React.useState(initialValues);
+
+            return (
+                <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                    <EditSpaceForm
+                        {...buildProps({
+                            mode: 'edit',
+                            saveToDb,
+                            formValues,
+                            setFormValues,
+                        })}
+                    />
+                </AccountContext.Provider>
+            );
+        };
+
+        rtlRender(<StatefulForm />);
+
+        if (turnOffBooking) {
+            fireEvent.click(screen.getByTestId('space-can-book'));
+            expect(screen.queryByTestId('capacity-required-indicator')).not.toBeInTheDocument();
+        }
+        if (updatedCapacity !== undefined) {
+            fireEvent.change(screen.getByTestId('space-capacity').querySelector('input'), {
+                target: { value: updatedCapacity },
+            });
+        }
+
+        fireEvent.click(screen.getByTestId('admin-spaces-save-button-submit'));
+
+        expect(saveToDb).toHaveBeenCalledWith(expect.objectContaining(expected));
     });
 
     it('saves without a description when the description checkbox is unchecked', () => {
