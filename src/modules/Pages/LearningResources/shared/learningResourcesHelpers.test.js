@@ -25,6 +25,28 @@ describe('filterProps helper', () => {
         );
     });
 
+    it('should rewrite course links outside the production homepage', () => {
+        const homepageLink = 'http://localhost:3000/?user=student';
+
+        expect(
+            _courseLink(
+                'PHIL1111',
+                'https://www.library.uq.edu.au/learning-resources/[courseCode]',
+                'localhost:3000',
+                homepageLink,
+            ),
+        ).toBe('http://localhost:3000/learning-resources/PHIL1111?user=student');
+
+        expect(
+            _courseLink(
+                'PHIL1111',
+                'https://www.library.uq.edu.au/learning-resources/[courseCode]',
+                'www.library.uq.edu.au',
+                homepageLink,
+            ),
+        ).toBe('https://www.library.uq.edu.au/learning-resources/PHIL1111');
+    });
+
     it('should create a11ylinks that are interdependant', () => {
         const a11yProps1 = a11yProps(1, 'top');
         const a11yReverseProps1 = reverseA11yProps(1, 'top');
@@ -40,6 +62,8 @@ describe('filterProps helper', () => {
 
     it('should extract a subject code from a subject name', () => {
         expect(extractSubjectCodeFromName('CRIM1019 - Introduction to Criminal Justice')).toEqual('CRIM1019');
+        expect(extractSubjectCodeFromName('')).toEqual('');
+        expect(extractSubjectCodeFromName()).toEqual('');
     });
 
     it('should validate paramters correctly', () => {

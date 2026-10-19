@@ -29,6 +29,20 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
     marginTop: '12px',
 }));
 
+export const subjectHeading = course => {
+    // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
+    const title =
+        (!!course.DESCR && `- ${unescapeString(course.DESCR)}`) || // if from account
+        (!!course.title && `- ${unescapeString(course.title)}`) || // if from subject search
+        '';
+    if (title !== '') {
+        // put focus on the tab, for screenreaders
+        const searchResults = document.getElementById('learning-resource-search-results');
+        !!searchResults && searchResults.focus();
+    }
+    return `${course.classnumber} ${title}`;
+};
+
 export const SubjectBody = ({
     subject,
     examList,
@@ -37,23 +51,9 @@ export const SubjectBody = ({
     subjectHeaderLevel = 'h2',
     panelHeadingLevel = 'h3',
 }) => {
-    const coursecode = subject.classnumber || /* istanbul ignore next */ null;
-    const subjectHeading = course => {
-        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
-        const title =
-            (!!course.DESCR && `- ${unescapeString(course.DESCR)}`) || // if from account
-            (!!course.title && `- ${unescapeString(course.title)}`) || // if from subject search
-            '';
-        if (title !== '') {
-            // put focus on the tab, for screenreaders
-            const searchResults = document.getElementById('learning-resource-search-results');
-            !!searchResults && searchResults.focus();
-        }
-        return `${course.classnumber} ${title}`;
-    };
+    const coursecode = subject.classnumber || null;
+    const readingListError = subject.classnumber === readingList.coursecode ? readingList.error : null;
 
-    const readingListError =
-        subject.classnumber === readingList.coursecode ? /* istanbul ignore next */ readingList.error : null;
     return (
         <>
             <StyledHeader component={subjectHeaderLevel} variant={'h5'} data-testid="learning-resource-subject-title">
