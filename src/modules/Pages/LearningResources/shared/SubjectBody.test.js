@@ -85,7 +85,7 @@ describe('SubjectBody component', () => {
         expect(heading.textContent).toBe('FREN1010 - French > English');
         expect(document.activeElement).toBe(searchResults);
 
-        expect(ReadingLists).toHaveBeenCalledWith(
+        expect(ReadingLists.mock.calls[0][0]).toEqual(
             {
                 courseCode: 'FREN1010',
                 readingList: props.readingList.list.FREN1010,
@@ -95,7 +95,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(PastExamPapers).toHaveBeenCalledWith(
+        expect(PastExamPapers.mock.calls[0][0]).toEqual(
             {
                 examList: props.examList.list.FREN1010,
                 examListLoading: false,
@@ -104,7 +104,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(Guides).toHaveBeenCalledWith(
+        expect(Guides.mock.calls[0][0]).toEqual(
             {
                 guideList: props.guideList.list.FREN1010,
                 guideListLoading: false,
@@ -113,7 +113,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(SubjectLinks).toHaveBeenCalledWith(
+        expect(SubjectLinks.mock.calls[0][0]).toEqual(
             {
                 subject: props.subject,
                 headingLevel: 'h4',
@@ -134,7 +134,7 @@ describe('SubjectBody component', () => {
         });
         setup(props);
 
-        expect(ReadingLists).toHaveBeenCalledWith(
+        expect(ReadingLists.mock.calls[0][0]).toEqual(
             {
                 courseCode: null,
                 readingList: [],
@@ -144,7 +144,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(PastExamPapers).toHaveBeenCalledWith(
+        expect(PastExamPapers.mock.calls[0][0]).toEqual(
             {
                 examList: props.examList.list.null,
                 examListLoading: false,
@@ -153,7 +153,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(Guides).toHaveBeenCalledWith(
+        expect(Guides.mock.calls[0][0]).toEqual(
             {
                 guideList: props.guideList.list.null,
                 guideListLoading: false,
@@ -162,7 +162,7 @@ describe('SubjectBody component', () => {
             },
             {},
         );
-        expect(SubjectLinks).toHaveBeenCalledWith(
+        expect(SubjectLinks.mock.calls[0][0]).toEqual(
             {
                 subject: props.subject,
                 headingLevel: 'h3',
