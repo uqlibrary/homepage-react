@@ -199,7 +199,14 @@ test.describe('Art Trail', () => {
                 await expect(page.getByRole('button', { name: 'Stop audio playback' })).toBeVisible();
                 await expect(page.getByRole('button', { name: 'Stop audio playback' })).toBeFocused();
                 await expect(page.getByRole('button', { name: 'Reset audio playback' })).toBeDisabled();
+                await page.waitForTimeout(2000);
                 const audio = page.locator('audio');
+                console.log(await audio.evaluate((el: HTMLAudioElement) => ({
+                    paused: el.paused, ended: el.ended, currentTime: el.currentTime,
+                })));
+                console.log(await page.getByTestId('audio-progress').getAttribute('aria-valuenow'));
+                console.log(await page.getByText(/ of 1:29/).first().textContent());
+                await page.pause(); // Execution stops here
                 await expect
                     .poll(async () => audio.evaluate((el: HTMLAudioElement) => el.currentTime))
                     .toBeGreaterThan(0);
