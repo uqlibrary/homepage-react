@@ -43,6 +43,7 @@ const StyledBodyText = styled(Typography)(() => ({
     fontWeight: 400,
     lineHeight: 1.6,
 }));
+
 const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoading, readingListError }) => {
     const talisUrlPattern = 'https://uq.rl.talis.com/courses/[coursecode].html';
     const talisSubjectUrl = courseCode => talisUrlPattern.replace('[coursecode]', courseCode?.toLowerCase());
@@ -122,19 +123,14 @@ const ReadingLists = ({ courseCode, headingLevel, readingList, readingListLoadin
                         return (
                             <>
                                 <WriteReadingListTeaser />
-                                {listOfReadingLists.length > 1 && (
-                                    <StyledItem size={{ xs: 12 }} data-testid="reading-list-link">
-                                        <a href={talisSubjectUrl(courseCode)}>
-                                            <SpacedArrowForwardIcon />
-                                            <StyledBodyText variant={'span'}>{`${courseCode} (has ${
-                                                listOfReadingLists.length
-                                            } ${_pluralise(
-                                                'reading list',
-                                                listOfReadingLists.length,
-                                            )})`}</StyledBodyText>
-                                        </a>
-                                    </StyledItem>
-                                )}
+                                <StyledItem size={{ xs: 12 }} data-testid="reading-list-link">
+                                    <a href={talisSubjectUrl(courseCode)}>
+                                        <SpacedArrowForwardIcon />
+                                        <StyledBodyText variant={'span'}>{`${courseCode} (has ${
+                                            listOfReadingLists.length
+                                        } ${_pluralise('reading list', listOfReadingLists.length)})`}</StyledBodyText>
+                                    </a>
+                                </StyledItem>
                             </>
                         );
                     } else {
