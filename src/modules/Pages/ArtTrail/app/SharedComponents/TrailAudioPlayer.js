@@ -181,14 +181,6 @@ const TrailAudioPlayer = ({
         };
     }, [stopPlayback]);
 
-    useEffect(() => {
-        resetPlaybackState();
-
-        const audioElement = audioRef.current;
-        const knownDuration = audioElement && Number.isFinite(audioElement.duration) ? audioElement.duration : 0;
-        setDuration(knownDuration);
-    }, [src]);
-
     return (
         <Box
             className={className}
@@ -213,7 +205,11 @@ const TrailAudioPlayer = ({
                     setCurrentTime(event.currentTarget.currentTime || 0);
                 }}
                 onTimeUpdate={event => {
-                    setCurrentTime(event.currentTarget.currentTime || 0);
+                    const el = event.currentTarget;
+                    setCurrentTime(el.currentTime || 0);
+                    if (Number.isFinite(el.duration)) {
+                        setDuration(el.duration);
+                    }
                 }}
                 onPlay={() => {
                     setPlaybackState(PLAYBACK_STATES.PLAYING);
