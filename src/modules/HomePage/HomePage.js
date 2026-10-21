@@ -1,5 +1,5 @@
 /* eslint max-len: 0 */
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import ContentLoader from 'react-content-loader';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -50,6 +50,20 @@ const StyledPortalContainer = styled('div')(() => ({
         paddingTop: 24,
     },
 }));
+
+const SearchPortal = () => {
+    const mountRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const portal = document.createElement('search-portal');
+        portal.setAttribute('theme', 'dark');
+        mountRef.current.appendChild(portal);
+
+        return () => portal.remove();
+    }, []);
+
+    return <div ref={mountRef} />;
+};
 
 const StyledH1 = styled('h1')(({ theme }) => ({
     marginTop: 0,
@@ -226,7 +240,7 @@ export const HomePage = ({
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
                 <StandardPage>
                     <StyledH1>Library</StyledH1>
-                    <search-portal theme="dark" />
+                    <SearchPortal />
                 </StandardPage>
             </StyledPortalContainer>
             <UtilityBar
