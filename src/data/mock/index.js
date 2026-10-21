@@ -96,12 +96,11 @@ import spaces_favourites from './data/records/bookableSpaces/spaces_favourites';
 import archibusTreeSites from './data/records/bookableSpaces/archibusTreeSites';
 import space_notes from './data/records/bookableSpaces/space_notes';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
-
-const moment = require('moment');
+import qs from 'qs';
 
 const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
-export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+export const escapeRegExp = input => input.replaceAll('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
 
 const buildMockSpaceFavourites = () => {
@@ -111,6 +110,7 @@ const buildMockSpaceFavourites = () => {
     return spaces_favourites.data;
 };
 
+const parsedQueryString = qs.parse(window.location.search.slice(1) || window.location.hash.split('?')[1] || '');
 const queryString = new URLSearchParams(window.location.search);
 let user = !!queryString
     ? queryString.get('user')
@@ -616,6 +616,22 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
+mock.onPost(new RegExp(escapeRegExp(routes.FILE_UPLOAD_PRESIGNED().apiUrl))).reply(() => [
+    parsedQueryString?.responseStatus?.presigned || 200,
+    [parsedQueryString?.responseBody?.presigned || ''],
+]);
+
+mock.onPut(/.*s3.*.amazonaws.com\/.*/).reply(() => [
+    parsedQueryString?.responseStatus?.s3 || 200,
+    parsedQueryString?.responseBody?.s3,
+]);
+
+// object files
+mock.onDelete(new RegExp(escapeRegExp(routes.DLOR_OBJECT_FILE_DESTROY_API('.*', '.*').apiUrl))).reply(() => [
+    parsedQueryString?.responseStatus?.dlorObjectFileDestroy || 200,
+    [parsedQueryString?.responseBody?.dlorObjectFileDestroy || ''],
+]);
+
 function getSpecificTeam(teamId) {
     return (
         !!dlor_team_list &&
@@ -635,7 +651,9 @@ function getSpecificDlorObject(dlorId) {
         singleRecord.owner.team_manager = currentTeamDetails.team_manager;
     }
 
-    return singleRecord === null ? [404, {}] : [200, { data: singleRecord }];
+    return singleRecord === null
+        ? [404, {}]
+        : [200, { data: { ...singleRecord, ...JSON.parse(parsedQueryString?.responseBody?.getDlorObject || '{}') } }];
 }
 
 mock.onGet(/dlor\/(public|auth)\/find\/.*/)

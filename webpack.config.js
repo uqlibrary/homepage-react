@@ -17,8 +17,7 @@ const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
 const url = process.env.URL || 'localhost';
-const useMock = !!process.env.USE_MOCK || false;
-const publicPath = '';
+const useMock = !!process.env.USE_MOCK;
 
 module.exports = {
     mode: 'development',
@@ -27,17 +26,18 @@ module.exports = {
     // coverage to source via the instrumentation itself, so no webpack source map is needed under cc.
     devtool: process.env.PW_IS_RUNNING ? false : 'source-map',
     entry: {
-        browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
-        webPackDevServer: 'webpack/hot/only-dev-server',
         index: join(__dirname, 'src', 'index.js'),
+        browserUpdate: {
+            import: join(__dirname, 'public', 'browser-update.js'),
+            runtime: false,
+            dependOn: 'index',
+        },
     },
     output: {
         filename: '[name].js',
-        path: resolve(__dirname),
+        path: resolve(__dirname, 'build'),
         pathinfo: true,
-        publicPath: `http://${url}:${port}/${publicPath}`,
-        // assetModuleFilename: 'images/[hash][ext][query]' // TBD
+        publicPath: `http://${url}:${port}/`,
     },
     devServer: {
         client: {
@@ -48,28 +48,16 @@ module.exports = {
             overlay: !process.env.PW_IS_RUNNING,
         },
         compress: true,
-        // contentBase: __dirname,
-        // devMiddleware: {
-        //     publicPath: '/public', // `/${publicPath}`,
-        //     // stats: 'errors-only',
-        // },
-        headers: { 'X-Custom-Header': 'yes' },
+        headers: {
+            'X-Custom-Header': 'yes',
+        },
         historyApiFallback: true,
         host: url,
-        // hot: true,
         server: {
             type: 'http',
         },
-        // inline: true,
-        // lazy: false,
-        // noInfo: true,
         open: false,
-        port: port,
-        // publicPath: `/${publicPath}`,
-        // quiet: false,
-        // stats: 'errors-only',
-        // watchContentBase: false,
-        // disableHostCheck: true,
+        port,
         proxy: [
             {
                 context: ['/api/staging'],
@@ -81,10 +69,6 @@ module.exports = {
                 },
             },
         ],
-        // static: {
-        //     directory: path.join(__dirname, 'public'),
-        //     watch: false,
-        // },
     },
     module: {
         rules: [
@@ -99,7 +83,7 @@ module.exports = {
                         plugins: [
                             '@babel/plugin-proposal-export-default-from',
                             enableFastRefresh && 'react-refresh/babel',
-                            'babel-plugin-istanbul',
+                            process.env.NODE_ENV === 'test' && 'babel-plugin-istanbul',
                         ].filter(Boolean),
                         sourceMaps: true,
                         inputSourceMap: true,
@@ -160,7 +144,6 @@ module.exports = {
             clear: false,
         }),
         enableFastRefresh && new ReactRefreshWebpackPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
@@ -194,16 +177,6 @@ module.exports = {
         },
         fallback: {
             'process/browser': require.resolve('process/browser'),
-        },
-    },
-    optimization: {
-        splitChunks: {
-            minChunks: 6,
-            cacheGroups: {
-                commons: {
-                    chunks: 'all',
-                },
-            },
         },
     },
 };

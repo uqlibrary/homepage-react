@@ -29,6 +29,12 @@ export const DLOAdd = ({
     dlorAdminNotesLoaded,
     dlorAdminNotesLoadError,
     dlorAdminNotes,
+    dlorObjectFileUploading,
+    dlorObjectFileUploaded,
+    dlorObjectFileUploadError,
+    dlorObjectFileDeleting,
+    dlorObjectFileDeleted,
+    dlorObjectFileDeleteError,
     dlorKeywords,
     dlorKeywordsLoading,
     dlorKeywordsError,
@@ -125,6 +131,12 @@ export const DLOAdd = ({
                         dlorAdminNotesLoadError={dlorAdminNotesLoadError}
                         dlorKeywords={dlorKeywords}
                         dlorAdminNotes={dlorAdminNotes}
+                        dlorObjectFileUploading={dlorObjectFileUploading}
+                        dlorObjectFileUploaded={dlorObjectFileUploaded}
+                        dlorObjectFileUploadError={dlorObjectFileUploadError}
+                        dlorObjectFileDeleting={dlorObjectFileDeleting}
+                        dlorObjectFileDeleted={dlorObjectFileDeleted}
+                        dlorObjectFileDeleteError={dlorObjectFileDeleteError}
                         mode="add"
                     />
                 </section>
