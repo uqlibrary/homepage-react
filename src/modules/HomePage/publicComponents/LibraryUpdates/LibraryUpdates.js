@@ -42,7 +42,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
             <Grid
                 container
                 spacing={4}
-                style={{ marginTop: 0, paddingTop: 0 }}
+                style={{ marginTop: 0, marginLeft: '-32px', paddingTop: 0 }}
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
             >

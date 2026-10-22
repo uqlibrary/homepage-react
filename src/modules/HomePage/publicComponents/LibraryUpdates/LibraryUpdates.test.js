@@ -21,6 +21,7 @@ describe('Library Updates panel', () => {
         };
         const { getByTestId, getByRole, getByText } = setup({ drupalArticleList: [article] });
 
+        expect(getByTestId('library-updates-parent')).toHaveStyle({ marginLeft: '-32px' });
         expect(getByRole('heading', { name: 'Library updates' }).parentElement).toHaveStyle({
             paddingTop: '24px',
             paddingLeft: '32px',
