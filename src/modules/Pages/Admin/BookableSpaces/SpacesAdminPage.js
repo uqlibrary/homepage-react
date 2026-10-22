@@ -62,7 +62,7 @@ export const SpacesAdminPage = ({ pageTitle, currentPageSlug, children, standard
                 justifyContent={'flex-start'}
                 spacing={0}
             >
-                <StyledGrid size="grow" className={'systemTitle'}>
+                <StyledGrid size={12} className={'systemTitle'}>
                     <Typography
                         className={'layoutTitle'}
                         component={'h1'}

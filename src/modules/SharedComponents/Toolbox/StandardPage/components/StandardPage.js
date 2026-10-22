@@ -54,7 +54,7 @@ export const StandardPage = ({ title, children, standardPageId, fullWidth = fals
                 style={fullWidth ? { width: '100%', maxWidth: '100%' } : undefined}
             >
                 {title && (
-                    <StyledGrid size="grow" className={'title'}>
+                    <StyledGrid size={12} className={'title'}>
                         <Typography
                             className={'layoutTitle'}
                             component={'h1'}
