@@ -11,8 +11,8 @@ import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavou
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 
-const StyledFavouritesContainerGrid = styled(Grid)(() => ({
-    marginTop: 0,
+const StyledFavouritesContainerGrid = styled(Grid)(({ theme }) => ({
+    marginTop: theme.spacing(3),
     marginBottom: 0,
     paddingTop: 0,
     paddingBottom: 0,
