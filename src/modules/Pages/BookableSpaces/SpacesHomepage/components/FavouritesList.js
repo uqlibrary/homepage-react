@@ -25,8 +25,8 @@ const StyledFavouritesContainerGrid = styled(Grid)(() => ({
         // position the favourite star at the top left
         position: 'relative',
         '& .topLeft': {
-            top: '3rem',
-            left: '3rem',
+            top: '1.5rem',
+            left: '1.25rem',
         },
         '& h3': {
             paddingLeft: '2rem',
