@@ -11,7 +11,7 @@ exports[`Component Masquerade Should render form as expected 1`] = `
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-grow title css-vqpccx-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 title css-362yd5-MuiGrid-root"
       >
         <h1
           class="MuiTypography-root MuiTypography-h4 layoutTitle css-159lv86-MuiTypography-root"
@@ -110,7 +110,7 @@ exports[`Component Masquerade Should render readonly description 1`] = `
       id="StandardPage"
     >
       <div
-        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-grow title css-vqpccx-MuiGrid-root"
+        class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 title css-362yd5-MuiGrid-root"
       >
         <h1
           class="MuiTypography-root MuiTypography-h4 layoutTitle css-159lv86-MuiTypography-root"
