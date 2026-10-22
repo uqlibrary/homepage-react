@@ -112,7 +112,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
             <StyledWrapper>
                 <Grid container spacing={3} sx={{ paddingBottom: 1.5 }}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_inspect]}>
-                        <Grid size={{ xs: 12 }} className={'flexParent'}>
+                        <Grid size={{ xs: 12, sm: 'grow' }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -149,7 +149,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             )}
                         </Grid>
                     </AuthWrapper>
-                    <Grid size={{ xs: 12 }} className={'flexParent'}>
+                    <Grid size={{ xs: 12, md: 'grow' }} className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"
@@ -247,7 +247,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                             </StandardCard>
                         )}
                     </Grid>
-                    <Grid size={{ xs: 12 }} className={'flexParent'}>
+                    <Grid size={{ xs: 12, md: 'grow' }} className={'flexParent'}>
                         {dashboardConfigLoading && !dashboardConfigError ? (
                             <Skeleton
                                 animation="wave"
@@ -348,7 +348,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                 </Grid>
                 <Grid container spacing={3}>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_see_reports]}>
-                        <Grid size={{ xs: 12 }} className={'flexParent'}>
+                        <Grid size={{ xs: 12, md: 'grow' }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
@@ -411,7 +411,7 @@ const Dashboard = ({ locale, actions, dashboardConfig, dashboardConfigLoading, d
                         requiredPermissions={[PERMISSIONS.can_inspect, PERMISSIONS.can_alter, PERMISSIONS.can_admin]}
                         inclusive={false}
                     >
-                        <Grid size={{ xs: 12 }} className={'flexParent'}>
+                        <Grid size={{ xs: 12, md: 'grow' }} className={'flexParent'}>
                             {dashboardConfigLoading && !dashboardConfigError ? (
                                 <Skeleton
                                     animation="wave"
