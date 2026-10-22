@@ -17,9 +17,10 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             paddingTop: articleindex === 0 ? '24px !important' : '32px !important',
             paddingLeft: '32px !important',
         },
-        'article-container': {
+        '&.article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0 !important',
+                paddingTop: '32px !important',
+                paddingLeft: '32px !important',
             },
         },
     };
