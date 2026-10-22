@@ -21,6 +21,10 @@ describe('Library Updates panel', () => {
         };
         const { getByTestId, getByRole, getByText } = setup({ drupalArticleList: [article] });
 
+        expect(getByRole('heading', { name: 'Library updates' }).parentElement).toHaveStyle({
+            paddingTop: '24px',
+            paddingLeft: '32px',
+        });
         expect(getByTestId('drupal-article-0')).toHaveAttribute('href', article.canonical_url);
         expect(getByRole('img', { name: 'Library news' })).toHaveAttribute('src', article.image);
         expect(getByTestId('article-1-title')).toHaveTextContent(article.title);

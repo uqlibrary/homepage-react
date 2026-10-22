@@ -13,6 +13,8 @@ import { styled } from '@mui/material/styles';
 
 const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
     marginTop: '-32px',
+    paddingTop: '24px',
+    paddingLeft: '32px',
     '& h2': {
         marginTop: '72px',
         fontSize: '32px',
