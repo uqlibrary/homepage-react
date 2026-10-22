@@ -171,6 +171,7 @@ const SingleLinkCard = ({
     showH3 = null,
     followingElement,
     ariaLabel,
+    sx,
 }) => {
     const _showH3 = showH3 === null ? loggedIn : showH3;
     const handleClick = e => {
@@ -191,7 +192,12 @@ const SingleLinkCard = ({
     };
 
     return (
-        <StyledGridItem component={'li'} size={{ xs: 12, uqDsDesktop: 4, uqDsTablet: 6 }} fillContainer={fillContainer}>
+        <StyledGridItem
+            component={'li'}
+            size={{ xs: 12, uqDsDesktop: 4, uqDsTablet: 6 }}
+            fillContainer={fillContainer}
+            sx={sx}
+        >
             <div>
                 <StyledLink
                     border={1}
@@ -238,6 +244,7 @@ SingleLinkCard.propTypes = {
     showH3: PropTypes.any,
     followingElement: PropTypes.any,
     ariaLabel: PropTypes.string,
+    sx: PropTypes.object,
 };
 
 export default SingleLinkCard;
