@@ -13,6 +13,8 @@ import { styled } from '@mui/material/styles';
 
 const StyledHeaderGridItem = styled(Grid)(({ theme }) => ({
     marginTop: '-32px',
+    paddingTop: '24px',
+    paddingLeft: '32px',
     '& h2': {
         marginTop: '72px',
         fontSize: '32px',
@@ -40,7 +42,7 @@ const LibraryUpdates = ({ drupalArticleList, drupalArticlesError, drupalArticles
             <Grid
                 container
                 spacing={4}
-                style={{ marginTop: 0, paddingTop: 0 }}
+                style={{ marginTop: 0, marginLeft: '-32px', paddingTop: 0 }}
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
             >

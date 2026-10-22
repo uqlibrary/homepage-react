@@ -127,6 +127,7 @@ describe('HomePage', () => {
         const { container, getByRole, queryByText } = setup();
 
         expect(getByRole('heading', { name: 'Library', level: 1 })).toBeInTheDocument();
+        expect(container.querySelector('search-portal')).toHaveAttribute('theme', 'dark');
         expect(container).toHaveTextContent('UtilityBar');
         expect(container).toHaveTextContent('NavigationCardWrapper');
         expect(container).toHaveTextContent('LibraryUpdates');

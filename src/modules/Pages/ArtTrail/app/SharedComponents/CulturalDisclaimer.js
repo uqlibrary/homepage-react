@@ -20,7 +20,7 @@ const CulturalDisclaimer = ({ onClose }) => {
             data-testid="culturalDisclaimer"
         >
             <Grid container wrap="nowrap" alignItems="flex-start">
-                <Grid size="grow">
+                <Grid size="12">
                     <IconButton
                         aria-label="Dismiss cultural disclaimer"
                         size="medium"

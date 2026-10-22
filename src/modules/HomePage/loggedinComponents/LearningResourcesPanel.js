@@ -132,7 +132,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid size="grow" id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
+                    <Grid size="12" id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>

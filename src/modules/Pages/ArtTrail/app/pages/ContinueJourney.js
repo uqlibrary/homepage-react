@@ -39,7 +39,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                     />
                 </Grid>
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
-                    <Grid size="grow">
+                    <Grid size="12">
                         <Box component="p">Thank you for exploring the Indigenous Art and Library Discovery Trail.</Box>
                         <Box component="p">
                             If you'd like to get in touch about this project or provide feedback, please contact us via

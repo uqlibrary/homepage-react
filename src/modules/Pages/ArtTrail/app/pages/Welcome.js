@@ -31,7 +31,7 @@ const WelcomePage = ({ mediaStopSignal, handleMediaEvent, handleAccordionChange 
                     />
                 </Grid>
                 <Grid container>
-                    <Grid size="grow">
+                    <Grid size="12">
                         <Box>
                             <p>
                                 Welcome to the Indigenous Art and Library Discovery Trail at The University of
