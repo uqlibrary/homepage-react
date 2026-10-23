@@ -121,7 +121,8 @@ export const SpacesQuickLinks = ({
             </StyledHeaderWithLinkToAllGridItem>
             <Grid
                 container
-                spacing={3}
+                rowSpacing={3}
+                columnSpacing={2}
                 sx={{
                     mt: 0,
                     '& li.MuiGrid-item': { pt: 0 },
