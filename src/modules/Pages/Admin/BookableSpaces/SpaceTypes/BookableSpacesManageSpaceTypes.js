@@ -650,13 +650,13 @@ export const BookableSpacesManageSpaceTypes = ({
                 {(() => {
                     if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                         return (
-                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }} data-testid="space-types-loading">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-loading">
                                 <InlineLoader message="Loading" />
                             </StyledBookableSpaceGridItem>
                         );
                     } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                         return (
-                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }} data-testid="space-types-error">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-error">
                                 <StyledStandardCard fullHeight>
                                     <p>Something went wrong - please try again later.</p>
                                 </StyledStandardCard>
@@ -667,7 +667,7 @@ export const BookableSpacesManageSpaceTypes = ({
                         bookableSpacesRoomList?.data?.locations.length === 0
                     ) {
                         return (
-                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }} data-testid="space-types-no-spaces">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-no-spaces">
                                 <StyledStandardCard fullHeight>
                                     <p>No spaces currently in system - please try again soon.</p>
                                 </StyledStandardCard>
@@ -675,10 +675,7 @@ export const BookableSpacesManageSpaceTypes = ({
                         );
                     } else {
                         return (
-                            <StyledBookableSpaceGridItem
-                                size={{ xs: 12, md: 9 }}
-                                style={{ marginTop: 0, paddingTop: 0 }}
-                            >
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} style={{ marginTop: 0, paddingTop: 0 }}>
                                 {displayListOfBookableSpaceTypes()}
                             </StyledBookableSpaceGridItem>
                         );

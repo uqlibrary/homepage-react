@@ -132,7 +132,8 @@ export const FavouritesList = ({
                 <StyledFavouritesContainerGrid
                     component={'ul'}
                     container
-                    spacing={3}
+                    rowSpacing={3}
+                    columnSpacing={2}
                     data-testid="spaces-homepage-favourites-block"
                 >
                     {favouritesToShow.map((fav, idx) => {
