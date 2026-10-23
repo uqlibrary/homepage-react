@@ -95,7 +95,8 @@ export const BookableSpacesDetailPage = ({
             )}
             <Grid
                 container
-                spacing={4}
+                rowSpacing={4}
+                columnSpacing={4}
                 style={{ marginTop: 0, paddingTop: 0 }}
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
@@ -132,7 +133,7 @@ export const BookableSpacesDetailPage = ({
                         );
                     } else {
                         return (
-                            <Grid>
+                            <Grid sx={{ mt: 4 }}>
                                 <JourneyBreadcrumbs view="details" />
                                 <JourneySpaceDetailsView
                                     actions={actions}
