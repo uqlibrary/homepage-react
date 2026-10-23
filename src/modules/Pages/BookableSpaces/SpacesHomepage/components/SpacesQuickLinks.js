@@ -121,7 +121,7 @@ export const SpacesQuickLinks = ({
             </StyledHeaderWithLinkToAllGridItem>
             <Grid
                 container
-                rowSpacing={3}
+                rowSpacing={0}
                 columnSpacing={2}
                 sx={{
                     mt: 0,
