@@ -67,7 +67,7 @@ export default function EngagementSummary({ data }) {
             <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
                 {metrics.map((m, idx) => (
                     <React.Fragment key={m.label}>
-                        <Grid sx={{ p: 0, m: 0 }}>
+                        <Grid size="grow" sx={{ p: 0, m: 0 }}>
                             <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                                 <Typography
                                     variant="h3"
