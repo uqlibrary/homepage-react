@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import RemoveCircleSharpIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -12,6 +13,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -40,6 +43,34 @@ import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 import { useNavigate } from 'react-router';
 import { breadcrumbs } from 'config/routes';
+
+function SystemTabPanel(props) {
+    const { children, value, index, ...other } = props;
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        </div>
+    );
+}
+SystemTabPanel.propTypes = {
+    children: PropTypes.any.isRequired,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    other: PropTypes.any,
+};
+
+function a11yProps(index, slug = 'system') {
+    return {
+        id: `${slug}-tab-${index}`,
+        'aria-controls': `${slug}-tabpanel-${index}`,
+    };
+}
 
 const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
     // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
@@ -152,6 +183,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             showConfirmation();
         }
     }, [showConfirmation, alertError, alertStatus]);
+
+    const [systemTabValue, setSystemTabValue] = React.useState(0);
+
+    const handleSystemTabChange = (event, newValue) => {
+        setSystemTabValue(newValue);
+    };
 
     const clearForm = () => {
         setValues({
@@ -658,36 +695,94 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </StyledBox>
                 <StyledBox container spacing={2}>
                     <Grid item xs={12}>
-                        <p>{locale.form.labels.systems}</p>
+                        <p>
+                            <strong>System specific alerts:</strong> use these checkboxes to target your alert to
+                            selected systems only. Leave the checkboxes blank to show alert on all systems.
+                        </p>
                     </Grid>
-                    <Grid item xs={12}>
-                        {systemList.map(system => {
-                            const isChecked = values?.systems?.find(s => s === system.slug) || null;
-                            const displayColor = !!system.removed
-                                ? /* istanbul ignore next */ null
-                                : 'rgba(0, 0, 0, 0.87)';
-                            return (
-                                <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
-                                    <Checkbox
-                                        checked={!!isChecked}
-                                        data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
-                                        onChange={handleChange('system')}
-                                        name={system.slug}
-                                        title={
-                                            system.title ||
-                                            /* istanbul ignore next */ system.slug ||
-                                            /* istanbul ignore next */ 'Unknown'
-                                        }
-                                        className={`${
-                                            !system.removed ? 'checkbox' : /* istanbul ignore next */ 'disabledCheckbox'
-                                        }`}
-                                        disabled={!!system.removed}
-                                    />
-                                    {system.title}
-                                </InputLabel>
-                            );
-                        })}
-                    </Grid>
+                    <Box sx={{ width: '100%' }}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <Tabs
+                                value={systemTabValue}
+                                onChange={handleSystemTabChange}
+                                aria-label="basic tabs example"
+                            >
+                                <Tab label="Show on all systems" {...a11yProps(0)} />
+                                <Tab label="Show on some systems" {...a11yProps(1)} />
+                                <Tab label="Hide on some systems" {...a11yProps(2)} />
+                            </Tabs>
+                        </Box>
+
+                        <SystemTabPanel value={systemTabValue} index={0}>
+                            <p>This alert will show on all systems.</p>
+                        </SystemTabPanel>
+                        <SystemTabPanel value={systemTabValue} index={1}>
+                            <Grid item xs={12}>
+                                <p>Select the systems that SHOULD show the alerts.</p>
+                                {systemList.map(system => {
+                                    const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                                    const displayColor = !!system.removed
+                                        ? /* istanbul ignore next */ null
+                                        : 'rgba(0, 0, 0, 0.87)';
+                                    return (
+                                        <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
+                                            <Checkbox
+                                                checked={!!isChecked}
+                                                data-testid={`admin-alerts-form-checkbox-system-on-${system.slug}`}
+                                                onChange={handleChange('system')}
+                                                name={`${system.slug}-on`}
+                                                title={
+                                                    system.title ||
+                                                    /* istanbul ignore next */ system.slug ||
+                                                    /* istanbul ignore next */ 'Unknown'
+                                                }
+                                                className={`${
+                                                    !system.removed
+                                                        ? 'checkbox'
+                                                        : /* istanbul ignore next */ 'disabledCheckbox'
+                                                }`}
+                                                disabled={!!system.removed}
+                                            />
+                                            Show on {system.title}
+                                        </InputLabel>
+                                    );
+                                })}
+                            </Grid>
+                        </SystemTabPanel>
+                        <SystemTabPanel value={systemTabValue} index={2}>
+                            <Grid item xs={12}>
+                                <p>Select the systems this alert should be HIDDEN from.</p>
+                                {systemList.map(system => {
+                                    const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                                    const displayColor = !!system.removed
+                                        ? /* istanbul ignore next */ null
+                                        : 'rgba(0, 0, 0, 0.87)';
+                                    return (
+                                        <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
+                                            <Checkbox
+                                                checked={!!isChecked}
+                                                data-testid={`admin-alerts-form-checkbox-system-off-${system.slug}`}
+                                                onChange={handleChange('system')}
+                                                name={`${system.slug}-off`}
+                                                title={
+                                                    system.title ||
+                                                    /* istanbul ignore next */ system.slug ||
+                                                    /* istanbul ignore next */ 'Unknown'
+                                                }
+                                                className={`${
+                                                    !system.removed
+                                                        ? 'checkbox'
+                                                        : /* istanbul ignore next */ 'disabledCheckbox'
+                                                }`}
+                                                disabled={!!system.removed}
+                                            />
+                                            Hide from {system.title}
+                                        </InputLabel>
+                                    );
+                                })}
+                            </Grid>
+                        </SystemTabPanel>
+                    </Box>
                 </StyledBox>
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
                     <Grid container spacing={2} style={{ marginTop: '1rem' }}>

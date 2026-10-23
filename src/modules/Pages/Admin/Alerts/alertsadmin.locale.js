@@ -1,6 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable max-len */
-/* eslint-disable no-trailing-spaces */
 import React, { Fragment } from 'react';
 
 export default {
@@ -25,12 +23,6 @@ export default {
                     extreme: 'Extreme (red)',
                 },
             },
-            systems: (
-                <Fragment>
-                    <strong>System specific alerts:</strong> use these checkboxes to target your alert to selected
-                    systems only. Leave the checkboxes blank to show alert on all systems.
-                </Fragment>
-            ),
         },
         tooltips: {
             title: 'Alert lead text. Appears in bold. Field length of 100 characters.',
