@@ -81,7 +81,7 @@ const DataTable = ({
 
     return (
         <StyledWrapper {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}>
-            <Box flexGrow={1} id={`${componentId}`} data-testid={`${componentId}`}>
+            <Box flexGrow={1} minWidth={0} id={`${componentId}`} data-testid={`${componentId}`}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
