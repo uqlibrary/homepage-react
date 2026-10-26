@@ -26,7 +26,7 @@ const StyledWrapper = styled(Box)(() => ({
             backgroundSize: '4em 100%,4em 100%,1em 100%,1em 100%',
             backgroundAttachment: 'local,local,scroll,scroll',
         },
-        '& .MuiDataGrid-columnHeaderWrapper': {
+        '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid rgba(224, 224, 224, 1)',
         },
     },
