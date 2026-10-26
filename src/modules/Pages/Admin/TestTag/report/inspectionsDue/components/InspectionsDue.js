@@ -177,7 +177,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                             />
                         </GridWrapper>
                     </Grid>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} mt={1.5}>
                         <AutoLocationPicker
                             id={componentId}
                             actions={actions}
@@ -187,7 +187,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                             locale={locale.pages.general.locationPicker}
                         />
                     </Grid>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} mt={1.5}>
                         <GridWrapper withGrid divisor={2}>
                             <MonthsSelector
                                 id={componentId}
