@@ -26,7 +26,7 @@ const StyledWrapper = styled(Box)(() => ({
             backgroundSize: '4em 100%,4em 100%,1em 100%,1em 100%',
             backgroundAttachment: 'local,local,scroll,scroll',
         },
-        '& .MuiDataGrid-columnHeaderWrapper': {
+        '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid rgba(224, 224, 224, 1)',
         },
     },
@@ -81,7 +81,7 @@ const DataTable = ({
 
     return (
         <StyledWrapper {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}>
-            <Box flexGrow={1} id={`${componentId}`} data-testid={`${componentId}`}>
+            <Box flexGrow={1} minWidth={0} id={`${componentId}`} data-testid={`${componentId}`}>
                 <DataGrid
                     rows={rows}
                     columns={columns}

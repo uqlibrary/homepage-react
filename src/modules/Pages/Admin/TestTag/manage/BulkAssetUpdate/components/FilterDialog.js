@@ -165,7 +165,12 @@ const FilterDialog = ({
                 <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                     {locale?.title}
                 </DialogTitle>
-                <DialogContent sx={{ overflowX: 'hidden' }}>
+                <DialogContent
+                    sx={{
+                        overflowX: 'hidden',
+                        '& > .MuiGrid-container + .MuiGrid-container': { mt: 2 },
+                    }}
+                >
                     <Grid container spacing={3}>
                         <Grid size={{ xs: 12, sm: 3 }}>
                             <TeamSelector

@@ -9,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -160,10 +161,12 @@ export default {
             component: (props, _, __, action, dispatch) => (
                 <Accordion defaultExpanded={action === 'add'}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
-                        {
-                            locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_code
-                                .label
-                        }
+                        <Typography sx={{ fontSize: '1.125rem', fontWeight: 500 }}>
+                            {
+                                locale.pages.manage.printertemplates.placeholderEditor.form.columns
+                                    .printer_template_code.label
+                            }
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <TextField
