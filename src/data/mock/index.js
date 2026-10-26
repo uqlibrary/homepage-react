@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -64,7 +63,6 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 import test_tag_team_list_uql from './data/records/testAndTag/test_tag_team_list_uql';
-import test_tag_team_list_pf from './data/records/testAndTag/test_tag_team_list_pf';
 import test_tag_printer_templates_uql from './data/records/testAndTag/test_tag_printer_templates_uql';
 
 import dlor_all from './data/records/dlor/dlor_all';
@@ -325,38 +323,12 @@ mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb3
     withDelay([500, []]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
-            start: '2021-06-06 00:45:34',
-            end: '2021-06-06 05:00:34',
-            title: 'Sample alert 2:',
-            body: 'Has mock data.',
-            priority_type: 'info',
-            systems: ['primo', 'homepage'],
-            created_by: '?',
-            updated_by: 'uqtest2',
-        },
-    ]),
+    withDelay([200, alertList.find(a => a.id === 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec')]),
 );
 // mock.onAny(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(withDelay([500, {}]));
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2021-06-29 15:00:34',
-            end: '2031-07-02 18:30:34',
-            title: 'Example alert:',
-            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-            priority_type: 'urgent',
-            systems: ['homepage'],
-            created_by: 'uqtest1',
-            updated_by: 'uqtest2',
-        },
-    ]),
+    withDelay([200, alertList.find(a => a.id === '1db618c0-d897-11eb-a27e-df4e46db7245')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
     withDelay([

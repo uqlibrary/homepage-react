@@ -33,7 +33,8 @@ export const setDefaults = ({ alert, isPermanent, message, linkRegex }) => {
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
         minimumDate: getTimeNowFormatted(),
-        systems: alert?.systems || [],
+        systemsShownOn: alert?.systems_shown || [],
+        systemsHiddenFrom: alert?.systems_hidden || [],
     };
 };
 

@@ -35,7 +35,8 @@ export const setDefaults = ({ alert, isPermanent, linkRequired, linkTitle, linkU
         linkUrl: linkUrl,
         type: 'edit',
         minimumDate: getTimeNowFormatted(),
-        systems: alert?.systems || [],
+        systemsShownOn: alert?.systems_shown || [],
+        systemsHiddenFrom: alert?.systems_hidden || [],
         updatedBy: (!!alert && alert.updated_by) || null,
         createdBy: (!!alert && alert.created_by) || '?',
     };

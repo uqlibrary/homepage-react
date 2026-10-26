@@ -94,7 +94,6 @@ const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledBox = styled(Grid)(() => ({
-    border: '1px solid rgb(211, 211, 211)',
     marginTop: '1em',
     paddingBottom: '1em',
 }));
@@ -106,7 +105,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showPreview, setPreviewOpen] = useState(false); // show hide the preview block
 
-    const [values, setValues] = useState(defaults); // the data displayed in the form
+    const [values, setValues1] = useState(defaults); // the data displayed in the form
+    const setValues = v => {
+        // console.log('setValues systemTabValue=', systemTabValue);
+        console.log('setValues ', v);
+        return setValues1(v);
+    };
     const [countSuccess, setSuccessCount] = useState(0); // store the number of success saves to display to the user
     const [dateList, setDateList] = useState([
         // list of details for "another date row" button
@@ -115,6 +119,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             endDate: defaults.endDateDefault,
         },
     ]);
+
+    const FIRST_SYSTEM_PANEL = 0;
+    const SECOND_SYSTEM_PANEL = 1;
+    const THIRD_SYSTEM_PANEL = 2;
+    const [systemTabValue, setSystemTabValue] = React.useState(FIRST_SYSTEM_PANEL);
 
     const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
@@ -132,6 +141,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const validateValues = currentValues => {
+        const testCurrentVals = { ...currentValues };
+        console.log('validateValues:', testCurrentVals);
+        console.log('validateValues alertLoading=', alertLoading);
         const isValid =
             !alertLoading &&
             !isInvalidStartDate(currentValues.startDate, defaults) &&
@@ -141,6 +153,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             currentValues.enteredbody.length > 0 &&
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
+
+        console.log('validateValues isValid=', isValid);
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
         /* istanbul ignore next */
@@ -157,6 +171,19 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!defaults && defaults.type === 'clone') {
             setFormValidity(validateValues(defaults));
         }
+
+        console.log('onload defaults=', defaults);
+        if (defaults?.systemsHiddenFrom?.length > 0) {
+            console.log('show panel 3');
+            setSystemTabValue(THIRD_SYSTEM_PANEL);
+        } else if (defaults?.systemsShownOn?.length > 0) {
+            console.log('show panel 2');
+            setSystemTabValue(SECOND_SYSTEM_PANEL);
+        } else {
+            console.log('show panel 1');
+            setSystemTabValue(FIRST_SYSTEM_PANEL);
+        }
+
         return () => {
             setSuccessCount(0);
         };
@@ -184,9 +211,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     }, [showConfirmation, alertError, alertStatus]);
 
-    const [systemTabValue, setSystemTabValue] = React.useState(0);
-
     const handleSystemTabChange = (event, newValue) => {
+        console.log('handleSystemTabChange newValue=', newValue);
         setSystemTabValue(newValue);
     };
 
@@ -238,6 +264,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const saveAlerts = () => {
         setSuccessCount(0);
+        console.log('### saveAlerts values=', values);
+        console.log('### saveAlerts systemTabValue=', systemTabValue);
         const expandedValues = expandValues(values, defaults);
         setValues(expandedValues);
 
@@ -245,11 +273,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
-            body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
+            body: expandedValues.body, // unsure why this isn't set into `values` by the Set call above
             priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
-            systems: values.systems || /* istanbul ignore next */ [],
+            systemsShownOn:
+                systemTabValue === SECOND_SYSTEM_PANEL ? values.systems_shown || /* istanbul ignore next */ [] : [],
+            systemsHiddenFrom:
+                systemTabValue === THIRD_SYSTEM_PANEL ? values.systems_hidden || /* istanbul ignore next */ [] : [],
         };
 
         if (defaults.type === 'edit') {
@@ -322,22 +353,69 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleChange = prop => event => {
-        if (prop === 'system') {
-            const systems = [...(values.systems || /* istanbul ignore next */ [])];
+        console.log(
+            `handleChange prop=${prop}; event.target.name=${event.target.name}; event.target.checked='${event.target.checked}`,
+        );
+        if (prop === 'system-showon') {
+            const systemsShownOnLocal = [...(values.systemsShownOn || /* istanbul ignore next */ [])];
+            console.log('handleChange systemsShownOnLocal=', systemsShownOnLocal);
             /* istanbul ignore next */
-            if (systems.includes(event.target.name) && !event.target.checked) {
+            if (systemsShownOnLocal?.includes(event.target.name) && !event.target.checked) {
                 // system had been selected and the checkbox has been unchecked. Remove.
-                const index = systems.indexOf(event.target.name);
-                index >= 0 && systems.splice(index, 1);
-            } /* istanbul ignore else */ else if (!systems.includes(event.target.name) && !!event.target.checked) {
-                // system wasnt previously selected and the checkbox has been checked. Add.
-                systems.push(event.target.name);
+                const index = systemsShownOnLocal?.indexOf(event.target.name);
+                index >= 0 && systemsShownOnLocal?.splice(index, 1);
+            } /* istanbul ignore else */ else if (
+                !systemsShownOnLocal?.includes(event.target.name) &&
+                !!event.target.checked
+            ) {
+                // system wasn't previously selected and the checkbox has been checked. Add.
+                console.log('[show] add ', event.target.name, 'to', systemsShownOnLocal);
+
+                systemsShownOnLocal?.push(event.target.name);
             }
             setValues({
                 ...values,
-                systems: systems,
+                systemsShownOn: systemsShownOnLocal,
             });
-            setFormValidity(validateValues(values));
+            setFormValidity(
+                validateValues({
+                    ...values,
+                    systemsShownOn: systemsShownOnLocal,
+                }),
+            );
+
+            console.log('show systems', systemsShownOnLocal);
+            return;
+        }
+        if (prop === 'system-hidefrom') {
+            const systemsHiddenFromLocal = [...(values.systemsHiddenFrom || /* istanbul ignore next */ [])];
+            console.log('handleChange systemsHiddenFromLocal=', systemsHiddenFromLocal);
+            /* istanbul ignore next */
+            if (systemsHiddenFromLocal?.includes(event.target.name) && !event.target.checked) {
+                // system had been selected and the checkbox has been unchecked. Remove.
+                const index = systemsHiddenFromLocal?.indexOf(event.target.name);
+                index >= 0 && systemsHiddenFromLocal?.splice(index, 1);
+            } /* istanbul ignore else */ else if (
+                !systemsHiddenFromLocal?.includes(event.target.name) &&
+                !!event.target.checked
+            ) {
+                // system wasnt previously selected and the checkbox has been checked. Add.
+                console.log('[hide] add ', event.target.name, 'to', systemsHiddenFromLocal);
+
+                systemsHiddenFromLocal?.push(event.target.name);
+            }
+            setValues({
+                ...values,
+                systemsHiddenFrom: systemsHiddenFromLocal,
+            });
+            setFormValidity(
+                validateValues({
+                    ...values,
+                    systemsHiddenFrom: systemsHiddenFromLocal,
+                }),
+            );
+
+            console.log('hide systems', systemsHiddenFromLocal);
             return;
         }
 
@@ -696,31 +774,30 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 <StyledBox container spacing={2}>
                     <Grid item xs={12}>
                         <p>
-                            <strong>System specific alerts:</strong> use these checkboxes to target your alert to
-                            selected systems only. Leave the checkboxes blank to show alert on all systems.
+                            <strong>System specific alerts:</strong> determine which systems the alert will appear on
                         </p>
                     </Grid>
-                    <Box sx={{ width: '100%' }}>
+                    <Box sx={{ width: '100%', marginInline: '1rem' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs
                                 value={systemTabValue}
                                 onChange={handleSystemTabChange}
                                 aria-label="basic tabs example"
                             >
-                                <Tab label="Show on all systems" {...a11yProps(0)} />
-                                <Tab label="Show on some systems" {...a11yProps(1)} />
-                                <Tab label="Hide on some systems" {...a11yProps(2)} />
+                                <Tab label="Show on all systems" {...a11yProps(FIRST_SYSTEM_PANEL)} />
+                                <Tab label="Show on some systems" {...a11yProps(SECOND_SYSTEM_PANEL)} />
+                                <Tab label="Hide on some systems" {...a11yProps(THIRD_SYSTEM_PANEL)} />
                             </Tabs>
                         </Box>
 
-                        <SystemTabPanel value={systemTabValue} index={0}>
+                        <SystemTabPanel value={systemTabValue} index={FIRST_SYSTEM_PANEL}>
                             <p>This alert will show on all systems.</p>
                         </SystemTabPanel>
-                        <SystemTabPanel value={systemTabValue} index={1}>
-                            <Grid item xs={12}>
+                        <SystemTabPanel value={systemTabValue} index={SECOND_SYSTEM_PANEL}>
+                            <Grid item xs={12} style={{ marginLeft: '20ch' }}>
                                 <p>Select the systems that SHOULD show the alerts.</p>
                                 {systemList.map(system => {
-                                    const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                                    const isChecked = values?.systemsShownOn?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
                                         ? /* istanbul ignore next */ null
                                         : 'rgba(0, 0, 0, 0.87)';
@@ -728,12 +805,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
                                             <Checkbox
                                                 checked={!!isChecked}
-                                                data-testid={`admin-alerts-form-checkbox-system-on-${system.slug}`}
-                                                onChange={handleChange('system')}
-                                                name={`${system.slug}-on`}
+                                                data-testid={`admin-alerts-form-checkbox-system-showon-${system.slug}`}
+                                                onChange={handleChange('system-showon')}
+                                                name={`${system.slug}`}
                                                 title={
-                                                    system.title ||
-                                                    /* istanbul ignore next */ system.slug ||
+                                                    `Show on {system.title}` ||
+                                                    /* istanbul ignore next */ `Show on {system.slug}` ||
                                                     /* istanbul ignore next */ 'Unknown'
                                                 }
                                                 className={`${
@@ -749,11 +826,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 })}
                             </Grid>
                         </SystemTabPanel>
-                        <SystemTabPanel value={systemTabValue} index={2}>
-                            <Grid item xs={12}>
+                        <SystemTabPanel value={systemTabValue} index={THIRD_SYSTEM_PANEL}>
+                            <Grid item xs={12} style={{ marginLeft: '45ch' }}>
                                 <p>Select the systems this alert should be HIDDEN from.</p>
                                 {systemList.map(system => {
-                                    const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                                    const isChecked = values?.systemsHiddenFrom?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
                                         ? /* istanbul ignore next */ null
                                         : 'rgba(0, 0, 0, 0.87)';
@@ -761,12 +838,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
                                             <Checkbox
                                                 checked={!!isChecked}
-                                                data-testid={`admin-alerts-form-checkbox-system-off-${system.slug}`}
-                                                onChange={handleChange('system')}
-                                                name={`${system.slug}-off`}
+                                                data-testid={`admin-alerts-form-checkbox-system-hidefrom-${system.slug}`}
+                                                onChange={handleChange('system-hidefrom')}
+                                                name={`${system.slug}`}
                                                 title={
-                                                    system.title ||
-                                                    /* istanbul ignore next */ system.slug ||
+                                                    `Hide from {system.title}` ||
+                                                    /* istanbul ignore next */ `Hide from {system.slug}` ||
                                                     /* istanbul ignore next */ 'Unknown'
                                                 }
                                                 className={`${
@@ -785,7 +862,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Box>
                 </StyledBox>
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
-                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid
+                        container
+                        spacing={2}
+                        style={{
+                            marginTop: '1rem',
+                            borderTop: '1px solid rgb(211, 211, 211)',
+                        }}
+                    >
                         {/* created_by entries before we started recording the creator are marked as '?' */}
                         <Grid item data-testid="admin-alerts-form-created-by">{`Created by: ${values.createdBy}`}</Grid>
                     </Grid>

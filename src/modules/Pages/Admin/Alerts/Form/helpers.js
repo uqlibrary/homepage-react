@@ -30,7 +30,7 @@ export const expandValues = (expandableValues, defaults) => {
         ['linkUrl']: newLinkUrl,
         ['startDate']: newStartDate,
         ['endDate']: newEndDate,
-        ['systems']: expandableValues.systems || [],
+        // ['systems']: expandableValues.systems || [],
     };
 };
 
