@@ -34,7 +34,38 @@ export const expandValues = (expandableValues, defaults) => {
     };
 };
 
-export const postAddConfirmationDetails = (locale, countSuccess) => {
+export const SYSTEM_PANEL_ALL = 0;
+export const SYSTEM_PANEL_SHOW = 1;
+export const SYSTEM_PANEL_HIDE = 2;
+const getSystemConfirmationMessage = (values, systemTabValue) => {
+    const joinSystemNames = systems => {
+        const localSystem = [...(systems || [])];
+        const lastName = localSystem?.pop() || '';
+        let joinedNames;
+        if (localSystem?.length === 0) {
+            joinedNames = lastName;
+        } else {
+            joinedNames = localSystem?.join(', ') + ' and ' + lastName;
+        }
+        return joinedNames;
+    };
+
+    if (systemTabValue === SYSTEM_PANEL_SHOW) {
+        return 'This alert will be displayed on ' + joinSystemNames(values?.systemsShownOn);
+    }
+    if (systemTabValue === SYSTEM_PANEL_HIDE) {
+        return 'This alert will be displayed all systems EXCEPT ' + joinSystemNames(values?.systemsHiddenFrom);
+    }
+    return 'This alert will be displayed on all systems';
+};
+export const editConfirmationDetails = (locale, values, systemTabValue) => {
+    return {
+        ...locale,
+        confirmationMessage: getSystemConfirmationMessage(values, systemTabValue),
+    };
+};
+
+export const postAddConfirmationDetails = (locale, countSuccess, values, systemTabValue) => {
     // update the number of alerts saved if they saved multiple date-sets
     return {
         ...locale,
@@ -42,6 +73,7 @@ export const postAddConfirmationDetails = (locale, countSuccess) => {
             'An alert has',
             countSuccess > 1 ? `${countSuccess} alerts have` : 'An alert has',
         ),
+        confirmationMessage: getSystemConfirmationMessage(values, systemTabValue),
     };
 };
 

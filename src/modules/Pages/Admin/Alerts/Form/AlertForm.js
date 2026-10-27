@@ -23,21 +23,25 @@ import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../alertsadmin.locale';
 import {
+    editConfirmationDetails,
     expandValues,
     isInvalidEndDate,
     isInvalidStartDate,
     postAddCloneDetails,
     postAddConfirmationDetails,
+    SYSTEM_PANEL_SHOW,
+    SYSTEM_PANEL_HIDE,
+    SYSTEM_PANEL_ALL,
 } from './helpers';
 
 import {
     getBody,
     getTimeEndOfDayFormatted,
     getTimeNowFormatted,
+    isValidUrl,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
     systemList,
-    isValidUrl,
 } from '../alerthelpers';
 import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
@@ -164,10 +168,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         },
     ]);
 
-    const FIRST_SYSTEM_PANEL = 0;
-    const SECOND_SYSTEM_PANEL = 1;
-    const THIRD_SYSTEM_PANEL = 2;
-    const [systemTabValue, setSystemTabValue] = React.useState(FIRST_SYSTEM_PANEL);
+    const [systemTabValue, setSystemTabValue] = React.useState(SYSTEM_PANEL_ALL);
 
     const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
@@ -190,12 +191,17 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         console.log('validateValues alertLoading=', alertLoading);
 
         const isValidSystem = () => {
-            if (systemTabValue === SECOND_SYSTEM_PANEL) {
+            if (systemTabValue === SYSTEM_PANEL_SHOW) {
                 return currentValues.systemsShownOn.length > 0;
             }
-            if (systemTabValue === THIRD_SYSTEM_PANEL) {
+            if (systemTabValue === SYSTEM_PANEL_HIDE) {
                 return currentValues.systemsHiddenFrom.length > 0;
             }
+            if (systemTabValue === SYSTEM_PANEL_ALL) {
+                return true;
+            }
+            /* istanbul ignore next */
+            return false;
         };
 
         const isValid =
@@ -230,13 +236,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         console.log('onload defaults=', defaults);
         if (defaults?.systemsHiddenFrom?.length > 0) {
             console.log('show panel 3');
-            setSystemTabValue(THIRD_SYSTEM_PANEL);
+            setSystemTabValue(SYSTEM_PANEL_HIDE);
         } else if (defaults?.systemsShownOn?.length > 0) {
             console.log('show panel 2');
-            setSystemTabValue(SECOND_SYSTEM_PANEL);
+            setSystemTabValue(SYSTEM_PANEL_SHOW);
         } else {
             console.log('show panel 1');
-            setSystemTabValue(FIRST_SYSTEM_PANEL);
+            setSystemTabValue(SYSTEM_PANEL_ALL);
         }
 
         return () => {
@@ -267,8 +273,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     }, [showConfirmation, alertError, alertStatus]);
 
     const handleSystemTabChange = (event, newValue) => {
-        console.log('handleSystemTabChange newValue=', newValue);
+        console.log('handleSystemTabChange newValue=', newValue, values);
         setSystemTabValue(newValue);
+        validateValues(values);
     };
 
     const clearForm = () => {
@@ -319,7 +326,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const saveAlerts = () => {
         setSuccessCount(0);
-        console.log('### saveAlerts values=', values);
+        console.log('### saveAlerts values=', { ...values });
         console.log('### saveAlerts systemTabValue=', systemTabValue);
         const expandedValues = expandValues(values, defaults);
         setValues(expandedValues);
@@ -332,18 +339,20 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
-            systemsShownOn:
-                systemTabValue === SECOND_SYSTEM_PANEL ? values.systems_shown || /* istanbul ignore next */ [] : [],
-            systemsHiddenFrom:
-                systemTabValue === THIRD_SYSTEM_PANEL ? values.systems_hidden || /* istanbul ignore next */ [] : [],
+            systems_shown:
+                systemTabValue === SYSTEM_PANEL_SHOW ? values.systemsShownOn || /* istanbul ignore next */ [] : [],
+            systems_hidden:
+                systemTabValue === SYSTEM_PANEL_HIDE ? values.systemsHiddenFrom || /* istanbul ignore next */ [] : [],
         };
 
         if (defaults.type === 'edit') {
-            actions.saveAlertChange({
+            const newVar = {
                 ...newValues,
                 start: formatDate(dateList[0]?.startDate),
                 end: formatDate(dateList[0]?.endDate),
-            });
+            };
+            console.log('### send to api: updatedvalues=', newVar);
+            actions.saveAlertChange(newVar);
         } else {
             const saveableValues = [];
             dateList.forEach(dateset => {
@@ -354,6 +363,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 });
             });
 
+            console.log('### send to api: saveableValues=', saveableValues);
             actions.createAlert(saveableValues);
         }
 
@@ -576,7 +586,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const ShowWarningOnEmpty = ({ systems }) => {
         return (
             <>
-                {systems.length === 0 && (
+                {systems?.length === 0 && (
                     <p className={'systemWarning'} data-testid="system-show-empty-warning">
                         <span className="infoBadge" aria-hidden="true" />
                         At least one system must be chosen before saving.
@@ -609,7 +619,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
-                        locale={locale.form.edit.editAlertConfirmation}
+                        locale={editConfirmationDetails(locale.form.edit.editAlertConfirmation, values, systemTabValue)}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
@@ -619,7 +629,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={postAddConfirmationDetails(locale.form.add.addAlertConfirmation, countSuccess)}
+                        locale={postAddConfirmationDetails(
+                            locale.form.add.addAlertConfirmation,
+                            countSuccess,
+                            values,
+                            systemTabValue,
+                        )}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
@@ -852,24 +867,16 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 onChange={handleSystemTabChange}
                                 aria-label="System tabs"
                             >
-                                <Tab label="Show on all systems" {...a11yProps(FIRST_SYSTEM_PANEL)} />
-                                <Tab label="Show on some systems" {...a11yProps(SECOND_SYSTEM_PANEL)} />
-                                <Tab label="Hide on some systems" {...a11yProps(THIRD_SYSTEM_PANEL)} />
+                                <Tab label="Show on all systems" {...a11yProps(SYSTEM_PANEL_ALL)} />
+                                <Tab label="Show on some systems" {...a11yProps(SYSTEM_PANEL_SHOW)} />
+                                <Tab label="Hide on some systems" {...a11yProps(SYSTEM_PANEL_HIDE)} />
                             </Tabs>
                         </Box>
 
-                        <SystemTabPanel
-                            className="tabPanel tabPanel1"
-                            value={systemTabValue}
-                            index={FIRST_SYSTEM_PANEL}
-                        >
+                        <SystemTabPanel className="tabPanel tabPanel1" value={systemTabValue} index={SYSTEM_PANEL_ALL}>
                             <p>This alert will show on all systems.</p>
                         </SystemTabPanel>
-                        <SystemTabPanel
-                            className="tabPanel tabPanel2"
-                            value={systemTabValue}
-                            index={SECOND_SYSTEM_PANEL}
-                        >
+                        <SystemTabPanel className="tabPanel tabPanel2" value={systemTabValue} index={SYSTEM_PANEL_SHOW}>
                             <Grid item xs={12}>
                                 <p>Choose one or more systems that SHOULD show the alerts.</p>
                                 {systemList.map(system => {
@@ -903,11 +910,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 <ShowWarningOnEmpty systems={values.systemsShownOn} />
                             </Grid>
                         </SystemTabPanel>
-                        <SystemTabPanel
-                            className="tabPanel tabPanel3"
-                            value={systemTabValue}
-                            index={THIRD_SYSTEM_PANEL}
-                        >
+                        <SystemTabPanel className="tabPanel tabPanel3" value={systemTabValue} index={SYSTEM_PANEL_HIDE}>
                             <Grid item xs={12}>
                                 <p>Choose one or more systems this alert should be HIDDEN from.</p>
                                 {systemList.map(system => {
