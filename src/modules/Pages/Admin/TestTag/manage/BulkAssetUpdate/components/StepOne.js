@@ -146,6 +146,7 @@ const StepOne = ({ id, list, actions, isFilterDialogOpen, setIsFilterDialogOpen,
                             severity="info"
                             id={`${componentIdLower}-count-alert`}
                             data-testid={`${componentIdLower}-count-alert`}
+                            sx={{ mb: 3 }}
                         >
                             {pageLocale.form.alert.alertMessageAssetsChosen(
                                 list.data.length,
