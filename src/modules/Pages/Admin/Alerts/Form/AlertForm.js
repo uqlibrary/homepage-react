@@ -54,8 +54,8 @@ function SystemTabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
+            id={`system-tabpanel-${index}`}
+            aria-labelledby={`system-tab-${index}`}
             {...other}
         >
             {value === index && <Box sx={{ p: 3 }}>{children}</Box>}

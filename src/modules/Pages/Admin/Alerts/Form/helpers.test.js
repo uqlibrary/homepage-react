@@ -35,7 +35,8 @@ describe('helpers', () => {
                     linkUrl: '',
                     startDate: '',
                     endDate: '',
-                    systems: null,
+                    systemsShownOn: [],
+                    systemsHiddenFrom: [],
                 },
                 dateDefaults,
             ),
@@ -48,7 +49,8 @@ describe('helpers', () => {
             linkUrl: '',
             startDate: dateDefaults.startDateDefault,
             endDate: dateDefaults.endDateDefault,
-            systems: [],
+            systemsShownOn: [],
+            systemsHiddenFrom: [],
             body: 'Notice',
         });
     });
@@ -65,7 +67,8 @@ describe('helpers', () => {
                     linkUrl: '/details',
                     startDate: '2030-05-02T09:00',
                     endDate: '2030-05-02T17:00',
-                    systems: ['homepage'],
+                    systemsShownOn: ['homepage'],
+                    systemsHiddenFrom: [],
                 },
                 dateDefaults,
             ),
@@ -78,7 +81,8 @@ describe('helpers', () => {
             linkUrl: '/details',
             startDate: '2030-05-02T09:00',
             endDate: '2030-05-02T17:00',
-            systems: ['homepage'],
+            systemsShownOn: ['homepage'],
+            systemsHiddenFrom: [],
             body: 'Read this[permanent][More details](/details)',
         });
     });
@@ -86,7 +90,7 @@ describe('helpers', () => {
     it('formats add confirmation details for one or more alerts', () => {
         const addLocale = {
             confirmationTitle: 'An alert has been added',
-            confirmationMessage: 'The alert is now live.',
+            confirmationMessage: 'This alert will be displayed on ALL systems.',
         };
 
         expect(postAddConfirmationDetails(addLocale, 1)).toEqual(addLocale);

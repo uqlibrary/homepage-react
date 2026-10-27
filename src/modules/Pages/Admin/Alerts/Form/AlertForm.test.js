@@ -26,7 +26,8 @@ const defaultValues = {
     linkTitle: '',
     linkUrl: '',
     type: 'add',
-    systems: [],
+    systemsShownOn: [],
+    systemsHiddenFrom: [],
 };
 
 function setup(testProps = {}) {
@@ -47,7 +48,8 @@ function setup(testProps = {}) {
         defaults: {
             ...mergedDefaults,
             dateList: mergedDefaults.dateList.map(dateRange => ({ ...dateRange })),
-            systems: [...mergedDefaults.systems],
+            systemsShownOn: [...mergedDefaults.systems],
+            systemsHiddenFrom: [],
         },
         actions,
     };
@@ -153,7 +155,8 @@ describe('AlertForm', () => {
                 priority_type: 'info',
                 start: '2030-05-01 09:00:00',
                 end: '2030-05-01 17:00:00',
-                systems: [],
+                systems_shown: [],
+                systems_hidden: [],
             },
         ]);
     });
@@ -187,7 +190,8 @@ describe('AlertForm', () => {
                 priority_type: 'info',
                 start: '2030-05-01 09:00:00',
                 end: '2030-05-01 17:00:00',
-                systems: [],
+                systems_shown: [],
+                systems_hidden: [],
             },
             {
                 id: null,
@@ -196,7 +200,8 @@ describe('AlertForm', () => {
                 priority_type: 'info',
                 start: formatDate(secondStart),
                 end: formatDate(secondEnd),
-                systems: [],
+                systems_shown: [],
+                systems_hidden: [],
             },
         ]);
     });
@@ -260,7 +265,8 @@ describe('AlertForm', () => {
                 priority_type: 'urgent',
                 start: formatDate(startDate),
                 end: formatDate(endDate),
-                systems: ['homepage', 'primo', 'espace'],
+                systems_shown: ['homepage', 'primo', 'espace'],
+                systems_hidden: [],
             })),
         );
     });
@@ -384,7 +390,8 @@ describe('AlertForm', () => {
                 linkTitle: 'More information',
                 linkUrl: 'https://uq.edu.au',
                 permanentAlert: true,
-                systems: ['homepage'],
+                systemsShownOn: ['homepage'],
+                systemsHiddenFrom: [],
             },
         });
         const standardPage = document.getElementById('StandardPage');
@@ -438,7 +445,8 @@ describe('AlertForm', () => {
                 linkTitle: 'More information',
                 linkUrl: 'https://uq.edu.au',
                 permanentAlert: true,
-                systems: ['homepage'],
+                systemsShownOn: ['homepage'],
+                systemsHiddenFrom: [],
             },
         });
         const standardPage = document.getElementById('StandardPage');
@@ -503,7 +511,8 @@ describe('AlertForm', () => {
                 linkTitle: 'More information',
                 linkUrl: 'https://uq.edu.au',
                 permanentAlert: true,
-                systems: ['homepage'],
+                systemsShownOn: ['homepage'],
+                systemsHiddenFrom: [],
             },
         });
         const standardPage = document.getElementById('StandardPage');
@@ -570,7 +579,8 @@ describe('AlertForm', () => {
             priority_type: 'info',
             start: '2030-05-03 11:00:00',
             end: '2030-05-03 19:00:00',
-            systems: [],
+            systems_shown: [],
+            systems_hidden: [],
         });
     });
 
@@ -630,7 +640,8 @@ describe('AlertForm', () => {
             priority_type: 'extreme',
             start: formatDate(startDate),
             end: formatDate(endDate),
-            systems: ['homepage', 'primo', 'espace'],
+            systems_shown: ['homepage', 'primo', 'espace'],
+            systems_hidden: [],
         });
     });
 

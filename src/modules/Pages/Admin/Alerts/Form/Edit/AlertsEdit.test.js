@@ -20,7 +20,8 @@ const alert = {
     title: 'Example alert',
     body: 'body',
     priority_type: 'urgent',
-    systems: ['homepage'],
+    systems_shown: ['homepage'],
+    systems_hidden: [],
     created_by: 'uqtest1',
     updated_by: 'uqtest2',
 };
@@ -75,7 +76,8 @@ describe('Edit Form Tests', () => {
             priority_type: 'urgent',
             start: '2021-06-29 15:00:00',
             end: '2055-07-02 18:30:00',
-            systems: ['homepage'],
+            systems_shown: ['homepage'],
+            systems_hidden: [],
         });
     });
 
@@ -89,7 +91,8 @@ describe('Edit Form Tests', () => {
                         end: '2031-07-02 18:30:34',
                         title: 'Example alert',
                         priority_type: 'urgent',
-                        systems: ['homepage'],
+                        systems_shown: ['homepage'],
+                        systems_hidden: [],
                         updated_by: 'uqtest2',
                         created_by: 'uqtest1',
                     },
@@ -113,7 +116,8 @@ describe('Edit Form Tests', () => {
                 linkUrl: '/details',
                 type: 'edit',
                 minimumDate: expect.any(String),
-                systems: ['homepage'],
+                systemsShownOn: ['homepage'],
+                systemsHiddenFrom: [],
                 updatedBy: 'uqtest2',
                 createdBy: 'uqtest1',
             });
@@ -143,7 +147,8 @@ describe('Edit Form Tests', () => {
                 linkUrl: '/details',
                 type: 'edit',
                 minimumDate: expect.any(String),
-                systems: [],
+                systemsShownOn: [],
+                systemsHiddenFrom: [],
                 updatedBy: null,
                 createdBy: '?',
             });

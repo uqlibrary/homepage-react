@@ -41,7 +41,8 @@ describe('Form Tests', () => {
             title: 'Example alert:',
             body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'urgent',
-            systems: ['homepage'],
+            systems_shown: ['homepage'],
+            systems_hidden: [],
             created_by: 'uqtest1',
             updated_by: 'uqtest2',
         });
@@ -65,7 +66,8 @@ describe('Form Tests', () => {
                     id: 'alert-123',
                     title: 'Example alert',
                     priority_type: 'urgent',
-                    systems: ['homepage'],
+                    systems_shown: ['homepage'],
+                    systems_hidden: [],
                 },
                 isPermanent: true,
                 message: 'A message',
@@ -91,7 +93,8 @@ describe('Form Tests', () => {
                 linkUrl: 'https://example.com',
                 type: 'clone',
                 minimumDate: expect.any(String),
-                systems: ['homepage'],
+                systemsShownOn: ['homepage'],
+                systemsHiddenFrom: [],
             });
             expect(defaults.dateList[0].startDate).toBe(defaults.startDateDefault);
             expect(defaults.dateList[0].endDate).toBe(defaults.endDateDefault);
@@ -124,7 +127,8 @@ describe('Form Tests', () => {
                 linkUrl: '',
                 type: 'clone',
                 minimumDate: expect.any(String),
-                systems: [],
+                systemsShownOn: [],
+                systemsHiddenFrom: [],
             });
         });
 
@@ -135,7 +139,8 @@ describe('Form Tests', () => {
                         id: '',
                         title: '',
                         priority_type: '',
-                        systems: null,
+                        systems_shown: null,
+                        systems_hidden: null,
                     },
                     isPermanent: false,
                     message: null,
@@ -160,7 +165,8 @@ describe('Form Tests', () => {
                 linkUrl: '',
                 type: 'clone',
                 minimumDate: expect.any(String),
-                systems: [],
+                systemsShownOn: [],
+                systemsHiddenFrom: [],
             });
         });
     });

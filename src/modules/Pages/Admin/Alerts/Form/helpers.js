@@ -51,12 +51,14 @@ const getSystemConfirmationMessage = (values, systemTabValue) => {
     };
 
     if (systemTabValue === SYSTEM_PANEL_SHOW) {
-        return 'This alert will be displayed on ' + joinSystemNames(values?.systemsShownOn);
+        const joinedNames = joinSystemNames(values?.systemsShownOn);
+        return `This alert will ONLY be displayed on ${joinedNames}.`;
     }
     if (systemTabValue === SYSTEM_PANEL_HIDE) {
-        return 'This alert will be displayed all systems EXCEPT ' + joinSystemNames(values?.systemsHiddenFrom);
+        const joinedNames = joinSystemNames(values?.systemsHiddenFrom);
+        return `This alert will be displayed on all systems EXCEPT ${joinedNames}.`;
     }
-    return 'This alert will be displayed on all systems';
+    return 'This alert will be displayed on ALL systems.';
 };
 export const editConfirmationDetails = (locale, values, systemTabValue) => {
     return {

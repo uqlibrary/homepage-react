@@ -298,16 +298,8 @@ mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db72
     withDelay([
         200,
         {
-            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2021-06-29 15:00:34',
-            end: '2031-07-02 18:30:34',
-            title: 'Example alert:',
-            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)',
-            priority_type: 'urgent',
-            systems_shown: [],
+            ...alertList.find(alert => alert.id === '1db618c0-d897-11eb-a27e-df4e46db7245'),
             systems_hidden: ['homepage', 'primo'],
-            created_by: 'uqtest1',
-            updated_by: 'uqtest2',
         },
     ]),
 );
@@ -327,22 +319,22 @@ mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb3
     withDelay([500, []]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
-    withDelay([200, alertList.find(a => a.id === 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec')]),
+    withDelay([200, alertList.find(alert => alert.id === 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec')]),
 );
 // mock.onAny(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(withDelay([500, {}]));
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
-    withDelay([200, alertList.find(a => a.id === '1db618c0-d897-11eb-a27e-df4e46db7245')]),
+    withDelay([200, alertList.find(alert => alert.id === '1db618c0-d897-11eb-a27e-df4e46db7245')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
-    withDelay([200, alertList.find(a => a.id === 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9')]),
+    withDelay([200, alertList.find(alert => alert.id === 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
-    withDelay([200, withDelay([200, alertList.find(a => a.id === '0aa12a30-996a-11eb-b009-3f6ded4fdb35')])]),
+    withDelay([200, withDelay([200, alertList.find(alert => alert.id === '0aa12a30-996a-11eb-b009-3f6ded4fdb35')])]),
 );
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
-    withDelay([200, alertList.find(a => a.id === 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09')]),
+    withDelay([200, alertList.find(alert => alert.id === 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: '232d6880-996a-11eb-8a79-e7fddae87baf' }).apiUrl).reply(withDelay([404, {}]));
 
