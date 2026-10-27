@@ -185,22 +185,23 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setPreviewOpen(showThePreview);
     };
 
-    const validateValues = currentValues => {
+    const validateValues = (currentValues, systemTabValueIN = null) => {
+        const systemTabValueLocal = systemTabValueIN === null ? systemTabValue : systemTabValueIN;
         const testCurrentVals = { ...currentValues };
         console.log('validateValues:', testCurrentVals);
         console.log('validateValues alertLoading=', alertLoading);
+        console.log('validateValues systemTabValueLocal=', systemTabValueLocal);
 
         const isValidSystem = () => {
-            if (systemTabValue === SYSTEM_PANEL_SHOW) {
+            if (systemTabValueLocal === SYSTEM_PANEL_SHOW) {
                 return currentValues.systemsShownOn.length > 0;
             }
-            if (systemTabValue === SYSTEM_PANEL_HIDE) {
+            if (systemTabValueLocal === SYSTEM_PANEL_HIDE) {
                 return currentValues.systemsHiddenFrom.length > 0;
             }
-            if (systemTabValue === SYSTEM_PANEL_ALL) {
+            if (systemTabValueLocal === SYSTEM_PANEL_ALL) {
                 return true;
             }
-            /* istanbul ignore next */
             return false;
         };
 
@@ -272,10 +273,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     }, [showConfirmation, alertError, alertStatus]);
 
-    const handleSystemTabChange = (event, newValue) => {
-        console.log('handleSystemTabChange newValue=', newValue, values);
-        setSystemTabValue(newValue);
-        validateValues(values);
+    const handleSystemTabChange = (event, newSystemTabValue) => {
+        console.log('handleSystemTabChange newSystemTabValue=', newSystemTabValue, values);
+        setSystemTabValue(newSystemTabValue);
+        setFormValidity(validateValues(values, newSystemTabValue));
     };
 
     const clearForm = () => {
@@ -295,7 +296,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     endDate: defaults.endDateDefault,
                 },
             ],
-            ['systems']: [],
+            ['systemsShownOn']: [],
+            ['systemsHiddenFrom']: [],
         });
     };
 
