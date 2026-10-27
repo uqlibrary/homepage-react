@@ -167,7 +167,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                     </Alert>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} mt={3}>
                 <Grid size={{ xs: 12 }}>
                     <AccordionWithCheckbox
                         id="location"
@@ -427,7 +427,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
             </Grid>
 
             <Grid container spacing={3} mt={3}>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, sm: 6 }} sx={{ minHeight: 64, display: 'flex', alignItems: 'center' }}>
                     <FormControlLabel
                         control={
                             <Checkbox
