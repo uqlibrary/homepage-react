@@ -229,7 +229,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.locator('[data-testid="admin-alerts-form-link-url"] input')).not.toBeVisible();
 
             // change to "show on some systems" tab
-            let showOnSomeSystemsTab = page.locator('button#system-tab-1');
+            const showOnSomeSystemsTab = page.locator('button#system-tab-1');
             await expect(showOnSomeSystemsTab).toBeVisible();
             await showOnSomeSystemsTab.click();
 
@@ -274,7 +274,7 @@ test.describe('Alerts Admin Form Pages', () => {
 
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
             await expect(saveButton).not.toBeDisabled();
-            // after fields entered, looks like Primary button
+            // after fields entered, "Save" looks like Primary button
             await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
@@ -296,7 +296,45 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.locator('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
         });
+        test('changing a system tab enables the save button', async ({ page }) => {
+            // this test changes to a different tab
+            const saveButton = page.getByTestId('admin-alerts-form-button-save');
+
+            await expect(saveButton).toBeDisabled();
+
+            // change to "all systems" and save is enabled
+            const showOnAllSystemsTab = page.locator('button#system-tab-0');
+            await expect(showOnAllSystemsTab).toBeVisible();
+            await expect(showOnAllSystemsTab).not.toHaveClass('Mui-selected'); // not current tab
+            showOnAllSystemsTab.click();
+            await expect(showOnAllSystemsTab).toHaveClass(/Mui-selected/); // now is current tab
+
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+
+            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+
+            // select different system-show/hide-tab and select a system
+            const showOnSomeSystemsTab = page.locator('button#system-tab-1');
+            await expect(showOnSomeSystemsTab).toBeVisible();
+            await expect(showOnSomeSystemsTab).not.toHaveClass('Mui-selected'); // not current tab
+            showOnSomeSystemsTab.click();
+            await expect(showOnSomeSystemsTab).toHaveClass(/Mui-selected/); // now is current tab
+
+            await expect(saveButton).toBeDisabled(); // save button disabled
+
+            const showOnHomepageCheckbox = page.locator(
+                '[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input',
+            );
+            await expect(showOnHomepageCheckbox).toBeVisible();
+            await expect(showOnHomepageCheckbox).not.toBeChecked();
+            await showOnHomepageCheckbox.check();
+            await expect(showOnHomepageCheckbox).toBeChecked();
+
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+        });
         test('changing a system enables the save button', async ({ page }) => {
+            // this test just changes the checkboxes in the current tab
             const saveButton = page.getByTestId('admin-alerts-form-button-save');
             const hideFromPrimoCheckbox = page.locator(
                 '[data-testid="admin-alerts-form-checkbox-system-hidefrom-primo"] input',

@@ -153,12 +153,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [showPreview, setPreviewOpen] = useState(false); // show hide the preview block
 
-    const [values, setValues1] = useState(defaults); // the data displayed in the form
-    const setValues = v => {
-        // console.log('setValues systemTabValue=', systemTabValue);
-        console.log('setValues ', v);
-        return setValues1(v);
-    };
+    const [values, setValues] = useState(defaults); // the data displayed in the form
     const [countSuccess, setSuccessCount] = useState(0); // store the number of success saves to display to the user
     const [dateList, setDateList] = useState([
         // list of details for "another date row" button
@@ -186,22 +181,20 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const validateValues = (currentValues, systemTabValueIN = null) => {
-        const systemTabValueLocal = systemTabValueIN === null ? systemTabValue : systemTabValueIN;
-        const testCurrentVals = { ...currentValues };
-        console.log('validateValues:', testCurrentVals);
-        console.log('validateValues alertLoading=', alertLoading);
-        console.log('validateValues systemTabValueLocal=', systemTabValueLocal);
-
+        const systemTabValueLocal =
+            systemTabValueIN === null ? systemTabValue : /* istanbul ignore next */ systemTabValueIN;
         const isValidSystem = () => {
             if (systemTabValueLocal === SYSTEM_PANEL_SHOW) {
-                return currentValues.systemsShownOn.length > 0;
+                return currentValues?.systemsShownOn?.length > 0;
             }
             if (systemTabValueLocal === SYSTEM_PANEL_HIDE) {
-                return currentValues.systemsHiddenFrom.length > 0;
+                return currentValues?.systemsHiddenFrom?.length > 0;
             }
+            /* istanbul ignore else */
             if (systemTabValueLocal === SYSTEM_PANEL_ALL) {
                 return true;
             }
+            /* istanbul ignore next */
             return false;
         };
 
@@ -215,8 +208,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl)) &&
             !!isValidSystem();
-
-        console.log('validateValues isValid=', isValid);
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
         /* istanbul ignore next */
@@ -234,15 +225,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             setFormValidity(validateValues(defaults));
         }
 
-        console.log('onload defaults=', defaults);
         if (defaults?.systemsHiddenFrom?.length > 0) {
-            console.log('show panel 3');
             setSystemTabValue(SYSTEM_PANEL_HIDE);
         } else if (defaults?.systemsShownOn?.length > 0) {
-            console.log('show panel 2');
             setSystemTabValue(SYSTEM_PANEL_SHOW);
         } else {
-            console.log('show panel 1');
             setSystemTabValue(SYSTEM_PANEL_ALL);
         }
 
@@ -274,7 +261,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     }, [showConfirmation, alertError, alertStatus]);
 
     const handleSystemTabChange = (event, newSystemTabValue) => {
-        console.log('handleSystemTabChange newSystemTabValue=', newSystemTabValue, values);
         setSystemTabValue(newSystemTabValue);
         setFormValidity(validateValues(values, newSystemTabValue));
     };
@@ -328,8 +314,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const saveAlerts = () => {
         setSuccessCount(0);
-        console.log('### saveAlerts values=', { ...values });
-        console.log('### saveAlerts systemTabValue=', systemTabValue);
         const expandedValues = expandValues(values, defaults);
         setValues(expandedValues);
 
@@ -348,13 +332,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         };
 
         if (defaults.type === 'edit') {
-            const newVar = {
+            const updatedRecord = {
                 ...newValues,
                 start: formatDate(dateList[0]?.startDate),
                 end: formatDate(dateList[0]?.endDate),
             };
-            console.log('### send to api: updatedvalues=', newVar);
-            actions.saveAlertChange(newVar);
+            actions.saveAlertChange(updatedRecord);
         } else {
             const saveableValues = [];
             dateList.forEach(dateset => {
@@ -365,7 +348,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 });
             });
 
-            console.log('### send to api: saveableValues=', saveableValues);
             actions.createAlert(saveableValues);
         }
 
@@ -420,12 +402,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleChange = prop => event => {
-        console.log(
-            `handleChange prop=${prop}; event.target.name=${event.target.name}; event.target.checked='${event.target.checked}`,
-        );
         if (prop === 'system-showon') {
             const systemsShownOnLocal = [...(values.systemsShownOn || /* istanbul ignore next */ [])];
-            console.log('handleChange systemsShownOnLocal=', systemsShownOnLocal);
             /* istanbul ignore next */
             if (systemsShownOnLocal?.includes(event.target.name) && !event.target.checked) {
                 // system had been selected and the checkbox has been unchecked. Remove.
@@ -436,8 +414,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 !!event.target.checked
             ) {
                 // system wasn't previously selected and the checkbox has been checked. Add.
-                console.log('[show] add ', event.target.name, 'to', systemsShownOnLocal);
-
                 systemsShownOnLocal?.push(event.target.name);
             }
             setValues({
@@ -451,12 +427,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 }),
             );
 
-            console.log('show systems', systemsShownOnLocal);
             return;
         }
         if (prop === 'system-hidefrom') {
             const systemsHiddenFromLocal = [...(values.systemsHiddenFrom || /* istanbul ignore next */ [])];
-            console.log('handleChange systemsHiddenFromLocal=', systemsHiddenFromLocal);
             /* istanbul ignore next */
             if (systemsHiddenFromLocal?.includes(event.target.name) && !event.target.checked) {
                 // system had been selected and the checkbox has been unchecked. Remove.
@@ -466,9 +440,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 !systemsHiddenFromLocal?.includes(event.target.name) &&
                 !!event.target.checked
             ) {
-                // system wasnt previously selected and the checkbox has been checked. Add.
-                console.log('[hide] add ', event.target.name, 'to', systemsHiddenFromLocal);
-
+                // system wasn't previously selected and the checkbox has been checked. Add.
                 systemsHiddenFromLocal?.push(event.target.name);
             }
             setValues({
@@ -482,7 +454,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 }),
             );
 
-            console.log('hide systems', systemsHiddenFromLocal);
             return;
         }
 

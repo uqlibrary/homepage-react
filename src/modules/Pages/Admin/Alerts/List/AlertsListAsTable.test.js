@@ -51,7 +51,8 @@ const createAlert = (overrides = {}) => ({
     startDateLong: 'Wednesday 1 January 2025 9.00am',
     endDateLong: 'Thursday 2 January 2025 10.00am',
     priority_type: 'info',
-    systems: [],
+    systems_shown: [],
+    systems_hidden: [],
     ...overrides,
 });
 
@@ -97,7 +98,7 @@ describe('AlertsListAsTable', () => {
                     message: 'Notice [permanent]',
                     body: 'Notice [permanent][Read more](https://example.com)',
                     priority_type: 'urgent',
-                    systems: ['homepage'],
+                    systems_shown: ['homepage'],
                 }),
             ],
         });
@@ -107,7 +108,7 @@ describe('AlertsListAsTable', () => {
         expect(getByTestId('alert-list-urgent-chip-1')).toHaveTextContent('Urgent');
         expect(getByTestId('alert-list-link-chip-1')).toHaveTextContent('Link');
         expect(getByTestId('alert-list-permanent-chip-1')).toHaveTextContent('Permanent');
-        expect(getByTestId('alert-list-system-chip-1-homepage')).toHaveTextContent('System: Home page');
+        expect(getByTestId('alert-list-system-chip-shown-1-homepage')).toHaveTextContent('Only shows on: Home page');
     });
 
     it('renders the extreme priority chip for extreme alerts', () => {
@@ -121,17 +122,18 @@ describe('AlertsListAsTable', () => {
     it('renders fallback and removed system chip details', () => {
         const { getByTestId } = setup({
             rows: [
-                createAlert({ id: 'unknown-system', systems: ['not-in-system-list'] }),
-                createAlert({ id: 'retired-system', systems: ['retired'] }),
+                createAlert({ id: 'alert1', systems_shown: ['not-in-system-list'] }),
+                createAlert({ id: 'alert2', systems_hidden: ['retired'] }),
             ],
         });
 
-        const unknownSystemChip = getByTestId('alert-list-system-chip-unknown-system-0');
-        const retiredSystemChip = getByTestId('alert-list-system-chip-retired-system-retired');
-
-        expect(unknownSystemChip).toHaveTextContent('System: Unrecognised');
+        const unknownSystemChip = getByTestId('alert-list-system-chip-shown-alert1-0');
+        expect(unknownSystemChip).toHaveTextContent('Only shows on: Unrecognised');
         expect(unknownSystemChip).toHaveAttribute('title', 'This alert is restricted to the Unrecognised system');
-        expect(retiredSystemChip).toHaveTextContent('System: Retired system');
+
+        const retiredSystemChip = getByTestId('alert-list-system-chip-hidden-alert2-retired');
+        expect(retiredSystemChip).toHaveTextContent('Hidden from: Retired system');
+        expect(retiredSystemChip).toHaveAttribute('title', 'This alert is hidden from the Retired system system');
         expect(retiredSystemChip).toHaveClass('removedChip');
     });
 

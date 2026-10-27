@@ -26,8 +26,7 @@ const defaultValues = {
     linkTitle: '',
     linkUrl: '',
     type: 'add',
-    systemsShownOn: [],
-    systemsHiddenFrom: [],
+    systems: [],
 };
 
 function setup(testProps = {}) {
@@ -48,8 +47,7 @@ function setup(testProps = {}) {
         defaults: {
             ...mergedDefaults,
             dateList: mergedDefaults.dateList.map(dateRange => ({ ...dateRange })),
-            systemsShownOn: [...mergedDefaults.systems],
-            systemsHiddenFrom: [],
+            systems: [...mergedDefaults.systems],
         },
         actions,
     };
@@ -233,8 +231,9 @@ describe('AlertForm', () => {
         });
         await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
 
+        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
         for (const system of ['homepage', 'primo', 'espace']) {
-            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-${system}`));
+            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-showon-${system}`));
         }
 
         fireEvent.mouseDown(getByRole('combobox'));
@@ -292,10 +291,14 @@ describe('AlertForm', () => {
         expect(getByTestId('admin-alerts-form-button-save')).toBeEnabled();
     });
 
-    it('adds and removes a selected system', () => {
-        const { getByTestId } = setup();
-        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
+    it('adds and removes a selected system', async () => {
+        const { getByRole, getByTestId } = setup();
 
+        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
+
+        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-showon-homepage').querySelector(
+            'input',
+        );
         fireEvent.click(homepageCheckbox);
         expect(homepageCheckbox).toBeChecked();
 
@@ -390,8 +393,7 @@ describe('AlertForm', () => {
                 linkTitle: 'More information',
                 linkUrl: 'https://uq.edu.au',
                 permanentAlert: true,
-                systemsShownOn: ['homepage'],
-                systemsHiddenFrom: [],
+                systems: ['homepage'],
             },
         });
         const standardPage = document.getElementById('StandardPage');
@@ -404,7 +406,6 @@ describe('AlertForm', () => {
         const linkTitleInput = getByTestId('admin-alerts-form-link-title').querySelector('input');
         const linkUrlInput = getByTestId('admin-alerts-form-link-url').querySelector('input');
         const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
-        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
 
         expect(titleInput).toHaveValue('Library notice');
         expect(bodyInput).toHaveValue('Important message');
@@ -414,7 +415,6 @@ describe('AlertForm', () => {
         expect(linkTitleInput).toHaveValue('More information');
         expect(linkUrlInput).toHaveValue('https://uq.edu.au');
         expect(permanentCheckbox).toBeChecked();
-        expect(homepageCheckbox).toBeChecked();
 
         await userEvent.click(getByTestId('admin-alerts-form-button-cancel'));
 
@@ -426,7 +426,6 @@ describe('AlertForm', () => {
         expect(linkTitleInput).toHaveValue('');
         expect(linkUrlInput).toHaveValue('');
         expect(permanentCheckbox).not.toBeChecked();
-        expect(homepageCheckbox).not.toBeChecked();
         expect(clearAlerts).toHaveBeenCalledTimes(1);
         expect(clearAnAlert).toHaveBeenCalledTimes(1);
         expect(mockNavigate).toHaveBeenCalledWith('/admin/alerts');
@@ -457,7 +456,6 @@ describe('AlertForm', () => {
         const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
         const linkRequiredCheckbox = getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input');
         const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
-        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
 
         expect(titleInput).toHaveValue('Library notice');
         expect(bodyInput).toHaveValue('Important message');
@@ -465,7 +463,6 @@ describe('AlertForm', () => {
         expect(endDateInput).toHaveValue('2030-05-02T18:00');
         expect(linkRequiredCheckbox).toBeChecked();
         expect(permanentCheckbox).toBeChecked();
-        expect(homepageCheckbox).toBeChecked();
 
         await userEvent.click(await findByTestId('confirm-alert-add-save-succeeded'));
 
@@ -475,7 +472,6 @@ describe('AlertForm', () => {
         expect(endDateInput).toHaveValue('2030-05-01T17:00');
         expect(linkRequiredCheckbox).not.toBeChecked();
         expect(permanentCheckbox).not.toBeChecked();
-        expect(homepageCheckbox).not.toBeChecked();
         expect(mockNavigate).not.toHaveBeenCalled();
     });
 
@@ -511,8 +507,6 @@ describe('AlertForm', () => {
                 linkTitle: 'More information',
                 linkUrl: 'https://uq.edu.au',
                 permanentAlert: true,
-                systemsShownOn: ['homepage'],
-                systemsHiddenFrom: [],
             },
         });
         const standardPage = document.getElementById('StandardPage');
@@ -523,7 +517,6 @@ describe('AlertForm', () => {
         const endDateInput = getByTestId('admin-alerts-form-end-date-0').querySelector('input');
         const linkRequiredCheckbox = getByTestId('admin-alerts-form-checkbox-linkrequired').querySelector('input');
         const permanentCheckbox = getByTestId('admin-alerts-form-checkbox-permanent').querySelector('input');
-        const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-homepage').querySelector('input');
 
         await findByTestId('confirm-alert-clone-save-succeeded');
         jest.useFakeTimers().setSystemTime(new Date(2030, 4, 3, 12, 34));
@@ -534,7 +527,6 @@ describe('AlertForm', () => {
         fireEvent.change(endDateInput, { target: { value: '2030-05-02T17:00' } });
         fireEvent.click(linkRequiredCheckbox);
         fireEvent.click(permanentCheckbox);
-        fireEvent.click(homepageCheckbox);
 
         fireEvent.click(getByTestId('confirm-alert-clone-save-succeeded'));
 
@@ -544,7 +536,6 @@ describe('AlertForm', () => {
         expect(endDateInput).toHaveValue('2030-05-03T23:59');
         expect(linkRequiredCheckbox).toBeChecked();
         expect(permanentCheckbox).toBeChecked();
-        expect(homepageCheckbox).toBeChecked();
         expect(standardPage.scrollIntoView).toHaveBeenCalledTimes(1);
     });
 
@@ -617,8 +608,9 @@ describe('AlertForm', () => {
         });
         await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
 
+        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
         for (const system of ['homepage', 'primo', 'espace']) {
-            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-${system}`));
+            await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-showon-${system}`));
         }
 
         fireEvent.mouseDown(getByRole('combobox'));

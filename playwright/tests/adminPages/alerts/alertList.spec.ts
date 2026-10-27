@@ -10,8 +10,9 @@ test.describe('Alert Admin List page', () => {
         await page.setViewportSize({ width: 1300, height: 1200 });
     });
 
-    test('displays a list of alerts to the authorised user', async ({ page }) => {
-        await expect(page.locator('[data-testid="admin-alerts-list-current-list"] tbody tr')).toHaveCount(
+    test('displays a list of alerts', async ({ page }) => {
+        // the "current alerts" block has some entries
+        await expect(page.getByTestId('admin-alerts-list-current-list').locator('tbody tr')).toHaveCount(
             1 + numRowsHiddenAsNoDataInfo,
         );
         await expect(
@@ -21,7 +22,7 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
 
-        // this alert has all 3 chips
+        // this alert has all 3 type chips
         await expect(
             page
                 .getByTestId('alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245')
@@ -38,14 +39,15 @@ test.describe('Alert Admin List page', () => {
                 .first(),
         ).toBeVisible();
 
-        // the system chips display as expected
+        // and this alert has a hide-from-system type chips
         await expect(
             page
-                .getByTestId('alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage')
-                .getByText(/System: Home page/)
+                .getByTestId('alert-list-system-chip-hidden-1db618c0-d897-11eb-a27e-df4e46db7245-homepage')
+                .getByText(/Hidden from: Home page/)
                 .first(),
         ).toBeVisible();
 
+        // the "future" alerts block has content
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tbody')).toBeVisible();
         await expect(
             page
@@ -59,17 +61,32 @@ test.describe('Alert Admin List page', () => {
         ).toHaveCount(5 + numRowsHiddenAsNoDataInfo);
         await expect(page.locator('[data-testid="admin-alerts-list-future-list"] tfoot')).not.toBeVisible();
 
-        // this alert has no chips
+        // this alert has no chips (final future block entry)
         await expect(page.getByTestId('alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
         await expect(page.getByTestId('alert-list-link-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35')).not.toBeVisible();
         await expect(
             page.getByTestId('alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35'),
         ).not.toBeVisible();
 
+        // and there is an alert with a show-on-system chips
+        await expect(
+            page
+                .getByTestId('alert-list-system-chip-shown-d480b250-9cd8-11eb-88c0-a3882cd6c52e-primo')
+                .getByText(/Only shows on: Primo/)
+                .first(),
+        ).toBeVisible();
+        await expect(
+            page
+                .getByTestId('alert-list-system-chip-shown-d480b250-9cd8-11eb-88c0-a3882cd6c52e-homepage')
+                .getByText(/Only shows on: Home page/)
+                .first(),
+        ).toBeVisible();
+
+        // past alerts block is visible
         await expect(
             page
                 .getByTestId('headerRow-count-past')
-                .getByText(/78 alerts/)
+                .getByText(/79 alerts/)
                 .first(),
         ).toBeVisible();
         await page.locator('[data-testid="admin-alerts-list-past-list"] tbody').scrollIntoViewIfNeeded();
@@ -79,13 +96,14 @@ test.describe('Alert Admin List page', () => {
         await expect(
             page
                 .locator('[data-testid="admin-alerts-list-past-list"] tfoot')
-                .getByText(/1–5 of 78/)
+                .getByText(/1–5 of 79/)
                 .first(),
         ).toBeVisible();
 
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('background-color', COLOR_UQPURPLE);
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('border-color', COLOR_UQPURPLE);
-        await expect(page.getByTestId('admin-alerts-add-button')).toHaveCSS('color', 'rgb(255, 255, 255)');
+        const addAlertButton = page.getByTestId('admin-alerts-add-button');
+        await expect(addAlertButton).toHaveCSS('background-color', COLOR_UQPURPLE);
+        await expect(addAlertButton).toHaveCSS('border-color', COLOR_UQPURPLE);
+        await expect(addAlertButton).toHaveCSS('color', 'rgb(255, 255, 255)');
 
         const helpButton = page.getByTestId('admin-alerts-help-button');
         await expect(helpButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');

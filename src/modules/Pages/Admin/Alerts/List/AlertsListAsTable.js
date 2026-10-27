@@ -72,9 +72,14 @@ const StyledTable = styled(Table)(({ theme }) => ({
         backgroundColor: theme.palette.error.main,
         color: '#fff',
     },
-    '& .system': {
+    '& .systemShown': {
         backgroundColor: '#666666',
         color: '#fff',
+    },
+    '& .systemHidden': {
+        backgroundColor: '#fff',
+        color: '#666',
+        border: 'solid 1px #666',
     },
     '& .checkboxCell': {
         '& input[type="checkbox"]:checked + svg': {
@@ -291,7 +296,26 @@ export const AlertsListAsTable = ({
             });
         }
     };
-
+    const writeSystemChip = (
+        alert,
+        ss,
+        index,
+        type = `shown`,
+        labelSubLabel = `Only shows on:`,
+        titleSubTitle = `restricted to`,
+        nameOfClass = `systemShown`,
+    ) => {
+        return (
+            <div key={`system-chip-${type}-${ss?.slug || index}`} style={{ marginLeft: 3, display: 'inline' }}>
+                <Chip
+                    data-testid={`alert-list-system-chip-${type}-${alert.id}-${ss?.slug || index}`}
+                    label={`${labelSubLabel} ${ss?.title || ss?.slug || 'Unrecognised'}`}
+                    title={`This alert is ${titleSubTitle} the ${ss?.title || ss?.slug || 'Unrecognised'} system`}
+                    className={`${nameOfClass} ${!!ss?.removed && /* istanbul ignore next */ 'removedChip'}`}
+                />
+            </div>
+        );
+    };
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -431,30 +455,24 @@ export const AlertsListAsTable = ({
                                                         title="This alert cannot be dismissed"
                                                     />
                                                 )}
-                                                {!!alert.systems &&
-                                                    alert.systems.length > 0 &&
-                                                    alert.systems.map((systemSlug, index) => {
+                                                {!!alert.systems_shown &&
+                                                    alert.systems_shown.length > 0 &&
+                                                    alert.systems_shown.map((systemSlug, index) => {
                                                         const ss = systemList.find(s => s.slug === systemSlug);
-                                                        return (
-                                                            <div
-                                                                key={`alert-list-system-chip-${ss?.slug || index}`}
-                                                                style={{ marginLeft: 3, display: 'inline' }}
-                                                            >
-                                                                <Chip
-                                                                    data-testid={`alert-list-system-chip-${
-                                                                        alert.id
-                                                                    }-${ss?.slug || index}`}
-                                                                    label={`System: ${
-                                                                        ss?.title || ss?.slug || 'Unrecognised'
-                                                                    }`}
-                                                                    title={`This alert is restricted to the ${
-                                                                        ss?.title || ss?.slug || 'Unrecognised'
-                                                                    } system`}
-                                                                    className={`system ${
-                                                                        !!ss?.removed && 'removedChip'
-                                                                    }`}
-                                                                />
-                                                            </div>
+                                                        return writeSystemChip(alert, ss, index);
+                                                    })}
+                                                {!!alert.systems_hidden &&
+                                                    alert.systems_hidden.length > 0 &&
+                                                    alert.systems_hidden.map((systemSlug, index) => {
+                                                        const ss = systemList.find(s => s.slug === systemSlug);
+                                                        return writeSystemChip(
+                                                            alert,
+                                                            ss,
+                                                            index,
+                                                            `hidden`,
+                                                            `Hidden from:`,
+                                                            `hidden from`,
+                                                            `systemHidden`,
                                                         );
                                                     })}
                                             </div>

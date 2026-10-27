@@ -29,7 +29,7 @@ exports[`AlertsListAsTable default values render correctly 1`] = `
   >
     <table
       aria-label="custom pagination table"
-      class="MuiTable-root table css-i991eq-MuiTable-root"
+      class="MuiTable-root table css-1hwt1rs-MuiTable-root"
       style="min-height: 200px;"
     >
       <thead
