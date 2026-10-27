@@ -25,6 +25,8 @@ const StyledDialog = styled(Dialog, {
     '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: fullScreen ? '100%' : '50vh' },
     '& .footerActions': {
         padding: '8px 16px',
+        width: '100%',
+        boxSizing: 'border-box',
     },
     '& .footerMobileMargin': {
         [theme.breakpoints.only('xs')]: {
