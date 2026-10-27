@@ -79,6 +79,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         bottom: 0,
         minHeight: '64px',
         width: 'auto',
+        [theme.breakpoints.down('sm')]: {
+            backgroundColor: 'white',
+        },
     },
     '& .dialogContainer': {
         borderRadius: '6px',
@@ -460,8 +463,8 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-reset-button`}
                                 data-testid={`${componentId}-reset-button`}
-                                color={inView ? 'primary' : 'secondary'}
-                                className={!inView ? 'buttonWhite' : ''}
+                                color={inView || isMobileView ? 'primary' : 'secondary'}
+                                className={!inView && !isMobileView ? 'buttonWhite' : ''}
                             >
                                 {inspectionLocale.form.buttons.reset}
                             </Button>
@@ -474,7 +477,7 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-save-button`}
                                 data-testid={`${componentId}-save-button`}
-                                className={!inView ? 'buttonSuccess' : ''}
+                                className={!inView && !isMobileView ? 'buttonSuccess' : ''}
                             >
                                 {saveInspectionSaving ? (
                                     <CircularProgress
