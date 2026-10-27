@@ -98,9 +98,29 @@ const StyledBox = styled(Grid)(() => ({
     paddingBottom: '1em',
 }));
 
+const warningIcon =
+    'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%233b383e%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%233b383e%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%233b383e%27%3e%3c/circle%3e%3c/svg%3e")';
 const StyledTabWrapperBox = styled(Box)(({ theme }) => ({
     width: '100%',
     marginInline: '1rem',
+    '& .tabPanel p.systemWarning': {
+        backgroundColor: theme.palette.designSystem.alert.warning,
+        padding: '1.1rem',
+        display: 'flex',
+        alignItems: 'center',
+        columnGap: '1rem',
+        maxWidth: '46ch',
+        '& span.infoBadge': {
+            display: 'inline-block',
+            width: '24px',
+            height: '24px',
+            backgroundImage: warningIcon,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            flexShrink: 0,
+        },
+    },
     [theme.breakpoints.up('uqDsTablet')]: {
         // affordance: on desktop, push each panel over to encourage a visual "what sort of system is this?" enhancement
         '& .tabPanel2': {
@@ -168,6 +188,16 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const testCurrentVals = { ...currentValues };
         console.log('validateValues:', testCurrentVals);
         console.log('validateValues alertLoading=', alertLoading);
+
+        const isValidSystem = () => {
+            if (systemTabValue === SECOND_SYSTEM_PANEL) {
+                return currentValues.systemsShownOn.length > 0;
+            }
+            if (systemTabValue === THIRD_SYSTEM_PANEL) {
+                return currentValues.systemsHiddenFrom.length > 0;
+            }
+        };
+
         const isValid =
             !alertLoading &&
             !isInvalidStartDate(currentValues.startDate, defaults) &&
@@ -176,7 +206,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
-            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
+            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl)) &&
+            !!isValidSystem();
 
         console.log('validateValues isValid=', isValid);
 
@@ -542,6 +573,18 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     };
 
+    const ShowWarningOnEmpty = ({ systems }) => {
+        return (
+            <>
+                {systems.length === 0 && (
+                    <p className={'systemWarning'} data-testid="system-show-empty-warning">
+                        <span className="infoBadge" aria-hidden="true" />
+                        At least one system must be chosen before saving.
+                    </p>
+                )}
+            </>
+        );
+    };
     return (
         <Fragment>
             <form>
@@ -828,7 +871,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             index={SECOND_SYSTEM_PANEL}
                         >
                             <Grid item xs={12}>
-                                <p>Select the systems that SHOULD show the alerts.</p>
+                                <p>Choose one or more systems that SHOULD show the alerts.</p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsShownOn?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
@@ -857,6 +900,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <ShowWarningOnEmpty systems={values.systemsShownOn} />
                             </Grid>
                         </SystemTabPanel>
                         <SystemTabPanel
@@ -865,7 +909,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             index={THIRD_SYSTEM_PANEL}
                         >
                             <Grid item xs={12}>
-                                <p>Select the systems this alert should be HIDDEN from.</p>
+                                <p>Choose one or more systems this alert should be HIDDEN from.</p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsHiddenFrom?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
@@ -894,6 +938,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <ShowWarningOnEmpty systems={values.systemsHiddenFrom} />
                             </Grid>
                         </SystemTabPanel>
                     </StyledTabWrapperBox>
