@@ -98,6 +98,30 @@ const StyledBox = styled(Grid)(() => ({
     paddingBottom: '1em',
 }));
 
+const StyledTabWrapperBox = styled(Box)(({ theme }) => ({
+    width: '100%',
+    marginInline: '1rem',
+    [theme.breakpoints.up('uqDsTablet')]: {
+        // affordance: on desktop, push each panel over to encourage a visual "what sort of system is this?" enhancement
+        '& .tabPanel2': {
+            '& > div': {
+                marginLeft: '20ch',
+            },
+        },
+        '& .tabPanel3': {
+            '& > div': {
+                marginLeft: '45ch',
+            },
+        },
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        '& .tabsHeader div[role="tablist"]': {
+            // vertical tabs on tablet and below for visibility
+            flexDirection: 'column',
+        },
+    },
+}));
+
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError }) => {
     const navigate = useNavigate();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -777,12 +801,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             <strong>System specific alerts:</strong> determine which systems the alert will appear on
                         </p>
                     </Grid>
-                    <Box sx={{ width: '100%', marginInline: '1rem' }}>
+                    <StyledTabWrapperBox>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs
+                                className={'tabsHeader'}
                                 value={systemTabValue}
                                 onChange={handleSystemTabChange}
-                                aria-label="basic tabs example"
+                                aria-label="System tabs"
                             >
                                 <Tab label="Show on all systems" {...a11yProps(FIRST_SYSTEM_PANEL)} />
                                 <Tab label="Show on some systems" {...a11yProps(SECOND_SYSTEM_PANEL)} />
@@ -790,11 +815,19 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             </Tabs>
                         </Box>
 
-                        <SystemTabPanel value={systemTabValue} index={FIRST_SYSTEM_PANEL}>
+                        <SystemTabPanel
+                            className="tabPanel tabPanel1"
+                            value={systemTabValue}
+                            index={FIRST_SYSTEM_PANEL}
+                        >
                             <p>This alert will show on all systems.</p>
                         </SystemTabPanel>
-                        <SystemTabPanel value={systemTabValue} index={SECOND_SYSTEM_PANEL}>
-                            <Grid item xs={12} style={{ marginLeft: '20ch' }}>
+                        <SystemTabPanel
+                            className="tabPanel tabPanel2"
+                            value={systemTabValue}
+                            index={SECOND_SYSTEM_PANEL}
+                        >
+                            <Grid item xs={12}>
                                 <p>Select the systems that SHOULD show the alerts.</p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsShownOn?.find(s => s === system.slug) || null;
@@ -826,8 +859,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 })}
                             </Grid>
                         </SystemTabPanel>
-                        <SystemTabPanel value={systemTabValue} index={THIRD_SYSTEM_PANEL}>
-                            <Grid item xs={12} style={{ marginLeft: '45ch' }}>
+                        <SystemTabPanel
+                            className="tabPanel tabPanel3"
+                            value={systemTabValue}
+                            index={THIRD_SYSTEM_PANEL}
+                        >
+                            <Grid item xs={12}>
                                 <p>Select the systems this alert should be HIDDEN from.</p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsHiddenFrom?.find(s => s === system.slug) || null;
@@ -859,7 +896,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 })}
                             </Grid>
                         </SystemTabPanel>
-                    </Box>
+                    </StyledTabWrapperBox>
                 </StyledBox>
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
                     <Grid
