@@ -68,7 +68,7 @@ export default {
                         </span>
                     );
                 },
-                minWidth: 125,
+                minWidth: 150,
             },
         },
         asset_status: { fieldParams: { width: 140 } },
