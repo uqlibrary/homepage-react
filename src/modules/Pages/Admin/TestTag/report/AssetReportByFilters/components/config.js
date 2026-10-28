@@ -52,7 +52,7 @@ export default {
                     const currentDate = moment();
                     const isPastDate = dateObject.isBefore(currentDate);
                     return (
-                        <>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                             {date}
                             {isPastDate && (
                                 <Tooltip
@@ -65,7 +65,7 @@ export default {
                                     <WarningOutlined />
                                 </Tooltip>
                             )}
-                        </>
+                        </span>
                     );
                 },
                 minWidth: 125,
