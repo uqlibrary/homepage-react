@@ -5,7 +5,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
@@ -68,11 +67,11 @@ export const ConfirmationBox = ({
 
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
-            <DialogActions>
-                <Grid container spacing={1} justifyContent="space-between">
-                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        <Grid />
-                    </Box>
+            <DialogActions
+                sx={{ width: '100%', boxSizing: 'border-box', px: 3 }}
+                data-testid={`dialogbox-${confirmationBoxId}-actions`}
+            >
+                <Grid container justifyContent="space-between" sx={{ width: '100%', boxSizing: 'border-box' }}>
                     {!hideActionButton && !!locale.confirmButtonLabel && (
                         <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledPrimaryButton
