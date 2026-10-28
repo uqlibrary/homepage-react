@@ -71,7 +71,12 @@ export const ConfirmationBox = ({
                 sx={{ width: '100%', boxSizing: 'border-box', px: 3 }}
                 data-testid={`dialogbox-${confirmationBoxId}-actions`}
             >
-                <Grid container justifyContent="space-between" sx={{ width: '100%', boxSizing: 'border-box' }}>
+                <Grid
+                    container
+                    justifyContent="space-between"
+                    sx={{ width: '100%', boxSizing: 'border-box', rowGap: 1 }}
+                    data-testid={`dialogbox-${confirmationBoxId}-action-buttons`}
+                >
                     {!hideActionButton && !!locale.confirmButtonLabel && (
                         <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledPrimaryButton
