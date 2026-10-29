@@ -39,5 +39,5 @@
   "chat.tools.terminal.autoApprove": {
     "npx jest": true
   },
-
+  "terminal.integrated.scrollback": 100000
 }

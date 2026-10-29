@@ -439,12 +439,12 @@ export const SpaceOutagePanel = ({
 
     return (
         <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h3'} variant={'h6'}>
                     Closures
                 </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <StyledSummaryBox data-testid="space-outage-summary">
                     <Typography component={'p'}>
                         <strong>Space:</strong> {getSpaceDisplayName()}
@@ -463,7 +463,7 @@ export const SpaceOutagePanel = ({
                     </Typography>
                 </StyledSummaryBox>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl component="fieldset" disabled={!!editingOutageId}>
                     <FormLabel component="legend">Apply closure to</FormLabel>
                     <RadioGroup
@@ -489,7 +489,7 @@ export const SpaceOutagePanel = ({
                     </RadioGroup>
                 </FormControl>
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid size={{ md: 6, xs: 12 }}>
                 <TextField
                     id="space_outage_start"
                     label="Unavailable from"
@@ -505,7 +505,7 @@ export const SpaceOutagePanel = ({
                     InputLabelProps={{ shrink: true }}
                 />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid size={{ md: 6, xs: 12 }}>
                 <TextField
                     id="space_outage_end"
                     label="Unavailable until"
@@ -521,7 +521,7 @@ export const SpaceOutagePanel = ({
                     InputLabelProps={{ shrink: true }}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <TextField
                     id="space_outage_reason"
                     label="Reason"
@@ -541,7 +541,7 @@ export const SpaceOutagePanel = ({
                     </StyledWarningBox>
                 ))}
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -553,7 +553,7 @@ export const SpaceOutagePanel = ({
                     label="Show closure times on the public page"
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Button
                     variant="contained"
                     onClick={handleSave}
@@ -571,9 +571,7 @@ export const SpaceOutagePanel = ({
                     {editingOutageId ? 'Cancel edit' : 'Clear'}
                 </Button>
             </Grid>
-            <Grid item xs={12}>
-                {renderClosureTableSection()}
-            </Grid>
+            <Grid size={{ xs: 12 }}>{renderClosureTableSection()}</Grid>
         </Grid>
     );
 };

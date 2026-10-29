@@ -11,8 +11,9 @@ import { PastExamPaperList } from './PastExamPaperList';
 import { MESSAGE_EXAMCODE_404 } from '../PastExamPaperSearch/pastExamPapers.helpers';
 
 jest.mock('@mui/material/useMediaQuery', () => jest.fn());
-jest.mock('@mui/material/styles/useTheme', () =>
-    jest.fn(() => ({
+jest.mock('@mui/material/styles', () => ({
+    ...jest.requireActual('@mui/material/styles'),
+    useTheme: jest.fn(() => ({
         palette: {
             designSystem: {
                 headingColor: '#000',
@@ -23,7 +24,7 @@ jest.mock('@mui/material/styles/useTheme', () =>
             down: jest.fn(() => 'sm'),
         },
     })),
-);
+}));
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),

@@ -1138,12 +1138,12 @@ export const BookableSpacesManageLocations = ({
                 } else {
                     return (
                         <Grid container spacing={3} style={{ position: 'relative' }}>
-                            <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 8 }} style={{ marginTop: '12px' }}>
                                 <div data-testid="spaces-location-wrapper">
                                     {campusList?.map(campus => showCampusEntry(campus))}
                                 </div>
                             </Grid>
-                            <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                            <Grid size={{ xs: 12, md: 4 }} style={{ paddingTop: 0 }}>
                                 <div style={{ marginLeft: '2rem', marginTop: '2rem', padding: '1rem' }}>
                                     <StyledButton
                                         id="add-new-campus-button"

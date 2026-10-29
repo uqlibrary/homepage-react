@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -39,7 +39,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                     />
                 </Grid>
                 <Grid container wrap="nowrap" justifyContent="space-between" alignItems="flex-start" columnSpacing={1}>
-                    <Grid xs>
+                    <Grid size="12">
                         <Box component="p">Thank you for exploring the Indigenous Art and Library Discovery Trail.</Box>
                         <Box component="p">
                             If you'd like to get in touch about this project or provide feedback, please contact us via
@@ -94,7 +94,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                             </Box>
 
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/uq-blak-history/"
                                         target="_blank"
@@ -106,7 +106,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/uq-blak-history/"
                                         target="_blank"
@@ -125,7 +125,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                 </Grid>
                             </Grid>
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/storying-the-archive/"
                                         target="_blank"
@@ -137,7 +137,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/storying-the-archive/"
                                         target="_blank"
@@ -155,7 +155,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                 </Grid>
                             </Grid>
                             <Grid container columnSpacing={2} mb={2}>
-                                <Grid xs={12} sm={2}>
+                                <Grid size={{ xs: 12, sm: 2 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/languageofrelationships/"
                                         target="_blank"
@@ -167,7 +167,7 @@ const ContinueJourney = ({ mediaStopSignal, handleMediaEvent, handleAccordionCha
                                         />
                                     </a>
                                 </Grid>
-                                <Grid xs={12} sm={10}>
+                                <Grid size={{ xs: 12, sm: 10 }}>
                                     <a
                                         href="https://uq.pressbooks.pub/languageofrelationships/"
                                         target="_blank"

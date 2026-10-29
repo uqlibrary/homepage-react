@@ -473,6 +473,7 @@ export const DLOView = ({
         formValues?.notify,
         navigateToObjectLink,
         formValues?.sendDemographics,
+        formValues?.sendNotify,
     ]);
 
     const deslugify = slug => {
@@ -881,7 +882,7 @@ export const DLOView = ({
                         </Box>
                     ) : (
                         <StyledContentGrid container spacing={4} data-testid="dlor-detailpage">
-                            <Grid item xs={12} md={9}>
+                            <Grid size={{ xs: 12, md: 9 }}>
                                 <LoginPrompt account={account} instyle={{ marginBottom: '12px' }} />
                                 <Box
                                     sx={{
@@ -1030,10 +1031,10 @@ export const DLOView = ({
                                 )}
                                 <StyledHeaderDiv data-testid="dlor-detailpage-description">
                                     <Grid container spacing={1}>
-                                        <Grid item xs={12} sm={8}>
+                                        <Grid size={{ xs: 12, sm: 8 }}>
                                             {!!dlorItem?.object_description && parse(dlorItem.object_description)}
                                         </Grid>
-                                        <Grid item xs={12} sm={4}>
+                                        <Grid size={{ xs: 12, sm: 4 }}>
                                             {/* Demographics and notification buttons */}
                                             <StyledUQActionButton noMargin>
                                                 <Button
@@ -1350,7 +1351,7 @@ export const DLOView = ({
                                     )}
                                 </StyledLayoutBox>
                             </Grid>
-                            <Grid item xs={12} md={3} data-testid="detailpage-metadata">
+                            <Grid size={{ xs: 12, md: 3 }} data-testid="detailpage-metadata">
                                 {(isDlorAdminUser(account) ||
                                     isDlorOwner(account, dlorItem) ||
                                     isInDLOROwningTeam(account, dlorItem, dlorTeamList)) && (

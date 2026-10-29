@@ -65,7 +65,7 @@ const assertHeader = (grid, values, rowIndex = 0) => {
 };
 const assertRow = (grid, values, rowIndex) => {
     const row = within(grid).getAllByRole('row')[rowIndex];
-    const cells = within(row).getAllByRole('cell');
+    const cells = within(row).getAllByRole('gridcell');
     assertRowText(cells, values);
     return cells;
 };

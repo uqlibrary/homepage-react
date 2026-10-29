@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -20,13 +20,7 @@ export const GridWrapper = ({ withGrid = true, divisor = 1, children }) => {
         children: PropTypes.node,
     };
 
-    return withGrid ? (
-        <Grid xs={12} sm={6} md={12 / divisor}>
-            {children}
-        </Grid>
-    ) : (
-        children
-    );
+    return withGrid ? <Grid size={{ xs: 12, sm: 6, md: 12 / divisor }}>{children}</Grid> : children;
 };
 
 export const getBuildingLabel = building => {

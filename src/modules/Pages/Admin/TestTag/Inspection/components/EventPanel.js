@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Collapse from '@mui/material/Collapse';
@@ -93,7 +93,7 @@ const EventPanel = ({
         >
             <Collapse in={eventExpanded} timeout="auto">
                 <Grid container spacing={3}>
-                    <Grid xs={12} sm={6} md={3}>
+                    <Grid size={{ md: 3, sm: 6, xs: 12 }}>
                         <DatePicker
                             {...pageLocale.form.event.date}
                             DialogProps={{
@@ -132,7 +132,7 @@ const EventPanel = ({
                             }}
                         />
                     </Grid>
-                    <Grid xs={12} sm={12}>
+                    <Grid size={{ xs: 12, sm: 12 }}>
                         <Typography component={'h3'} variant={'h6'}>
                             {pageLocale.form.event.location.title}
                         </Typography>

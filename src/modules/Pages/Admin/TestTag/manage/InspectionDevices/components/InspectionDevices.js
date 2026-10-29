@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -259,8 +259,8 @@ const InspectionDevices = ({
                                 rows={row}
                                 columns={columns}
                                 rowId={'device_id'}
-                                components={{
-                                    Toolbar: () => (
+                                slots={{
+                                    toolbar: () => (
                                         <WithExportMenu id={componentId}>
                                             {canManage && (
                                                 <AddButton
