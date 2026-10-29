@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -268,8 +268,8 @@ const Users = ({ actions, userListLoading, userList, userListError, teamListLoad
                             columns={columns}
                             rowId="user_id"
                             loading={userListLoading || teamListLoading}
-                            components={{
-                                Toolbar: () => (
+                            slots={{
+                                toolbar: () => (
                                     <WithExportMenu id={componentId}>
                                         <AddButton
                                             label={pageLocale.form.addButtonLabel}

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import Typography from '@mui/material/Typography';
 
 export class InlineLoader extends React.Component {
@@ -25,10 +24,8 @@ export class InlineLoader extends React.Component {
                     alignItems="center"
                     alignContent={'center'}
                 >
-                    <Hidden smUp>
-                        <Grid item xs />
-                    </Hidden>
-                    <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
+                    <Grid sx={{ display: { xs: 'block', sm: 'none' } }} />{' '}
+                    <Grid size={{ xs: 'auto' }} style={{ textAlign: 'center' }}>
                         <CircularProgress
                             sx={{ color: 'primary.light' }}
                             size={18}
@@ -36,7 +33,7 @@ export class InlineLoader extends React.Component {
                             aria-labelledby="loading-icon"
                         />
                     </Grid>
-                    <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
+                    <Grid size={{ xs: 'auto' }} style={{ textAlign: 'center' }}>
                         <Typography
                             id="loading-icon"
                             sx={{ color: 'primary.light', fontSize: '1.33rem' }}
@@ -46,9 +43,7 @@ export class InlineLoader extends React.Component {
                             {this.props.message}
                         </Typography>
                     </Grid>
-                    <Hidden smUp>
-                        <Grid item xs />
-                    </Hidden>
+                    <Grid sx={{ display: { xs: 'block', sm: 'none' } }} />
                 </Grid>
             </div>
         );

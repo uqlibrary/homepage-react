@@ -27,11 +27,25 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
 }));
 
+const StyledAccordionSummary = styled(AccordionSummary)({
+    minHeight: 64,
+    '&.Mui-expanded': {
+        minHeight: 64,
+    },
+    '& .MuiAccordionSummary-content': {
+        margin: 0,
+        '&.Mui-expanded': {
+            margin: 0,
+        },
+    },
+});
+
 const componentIdLower = 'accordionWithCheckbox';
 
 export const AccordionWithCheckbox = ({ id, children, label, slotProps, disabled = false }) => (
     <StyledAccordion {...slotProps?.accordion} disabled={disabled}>
-        <AccordionSummary
+        <StyledAccordionSummary
+            component="div"
             role={'heading'}
             aria-level={1}
             tabIndex={-1}
@@ -54,7 +68,7 @@ export const AccordionWithCheckbox = ({ id, children, label, slotProps, disabled
                 }}
                 label={label}
             />
-        </AccordionSummary>
+        </StyledAccordionSummary>
         <AccordionDetails {...slotProps?.accordionDetails}>{children}</AccordionDetails>
         {slotProps?.accordionActions && (
             <AccordionActions>

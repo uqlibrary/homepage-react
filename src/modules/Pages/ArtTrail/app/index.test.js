@@ -284,9 +284,23 @@ describe('ArtTrailApp', () => {
 
         await userEvent.keyboard('{Escape}');
 
-        expect(queryByText(/synthetic polymer paint on linen/i)).not.toBeInTheDocument();
+        await waitFor(() => {
+            expect(queryByText(/synthetic polymer paint on linen/i)).not.toBeInTheDocument();
+        });
 
-        await userEvent.click(getByRole('button', { name: 'Location information about Punu Tjukurpa' }));
+        await waitFor(() => {
+            expect(
+                getByRole('button', {
+                    name: 'Location information about Punu Tjukurpa',
+                }),
+            ).toBeInTheDocument();
+        });
+        const locationButton = getByRole('button', {
+            name: 'Location information about Punu Tjukurpa',
+        });
+
+        await userEvent.click(locationButton);
+
         expect(mockTrackInformationDrawerClick).toHaveBeenLastCalledWith({
             click_label: 'Location information for Punu Tjukurpa',
             click_class: analyticsId.location,

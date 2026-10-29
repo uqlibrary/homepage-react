@@ -1352,7 +1352,7 @@ export const EditSpaceForm = ({
     const renderArchibusRoomMappingFields = () => {
         return (
             <>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Autocomplete
                         id="add-space-select-archibus-room"
                         data-testid="add-space-select-archibus-room"
@@ -1375,7 +1375,7 @@ export const EditSpaceForm = ({
                     />
                 </Grid>
                 {!!bookableSpacesArchibusTreeError && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledErrorMessageTypography component={'div'}>
                             Archibus room data could not be loaded. You can still edit and save other space details.
                         </StyledErrorMessageTypography>
@@ -1387,7 +1387,7 @@ export const EditSpaceForm = ({
     const renderCampusBuildingFloorFields = () => {
         return (
             <>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 4 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-select-campus-label" htmlFor="add-space-select-campus-input">
                             Campus *
@@ -1417,7 +1417,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 4 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-select-library-label" htmlFor="add-space-select-library-input">
                             Library *
@@ -1447,7 +1447,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={{ xs: 4 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-select-floor-label" htmlFor="add-space-select-floor-input">
                             Level *
@@ -1498,19 +1498,19 @@ export const EditSpaceForm = ({
     const aboutPanel = () => {
         return (
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         About
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h4'} variant={'subtitle1'}>
                         Archibus room mapping
                     </Typography>
                 </Grid>
                 {renderCampusBuildingFloorFields()}
                 {renderArchibusRoomMappingFields()}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="space_name">Space name *</InputLabel>
                         <Input
@@ -1526,7 +1526,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid size={{ md: 6, xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="add-space-type-label" htmlFor="add-space-type-input">
                             Choose an existing Space type *
@@ -1560,13 +1560,13 @@ export const EditSpaceForm = ({
                 </Grid>
 
                 {!!selectedSpaceTypeDescription && (
-                    <Grid item xs={12} data-testid="selected-space-type-description">
+                    <Grid size={{ xs: 12 }} data-testid="selected-space-type-description">
                         <Typography component={'p'} variant={'body2'}>
                             {selectedSpaceTypeDescription}
                         </Typography>
                     </Grid>
                 )}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -1579,7 +1579,7 @@ export const EditSpaceForm = ({
                     />
                 </Grid>
                 {showSpaceDescriptionCheckbox && (
-                    <Grid item xs={12} data-testid="add-space-description">
+                    <Grid size={{ xs: 12 }} data-testid="add-space-description">
                         <label htmlFor="space_description">
                             Space description
                             <br />
@@ -1603,8 +1603,8 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </Grid>
                 )}
-                <Grid item xs={12}>
-                    <StyledHighlightedGrid item xs={12}>
+                <Grid size={{ xs: 12 }}>
+                    <StyledHighlightedGrid size={{ xs: 12 }}>
                         <FormControlLabel
                             label={bookableCheckboxLabel}
                             data-testid="contains-bookable-checkbox"
@@ -1642,7 +1642,7 @@ export const EditSpaceForm = ({
                         )}
                     </StyledHighlightedGrid>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <div data-testid="capacity-details">
                         <Typography component={'h4'} variant={'p'}>
                             How many people can use this space? (Required field when space is bookable){' '}
@@ -1686,7 +1686,7 @@ export const EditSpaceForm = ({
                         </FormControl>
                     </div>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControlLabel
                         label={
                             <span data-testid="space-highlighted-label">
@@ -1704,7 +1704,7 @@ export const EditSpaceForm = ({
                         }
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControlLabel
                         label={
                             <span data-testid="space-draftmode-label">
@@ -1729,7 +1729,7 @@ export const EditSpaceForm = ({
     const facilityTypePanel = () => {
         return (
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'} style={{ marginBottom: '1rem' }}>
                         Facility types
                     </Typography>
@@ -1741,12 +1741,12 @@ export const EditSpaceForm = ({
     const locationPanel = () => {
         return (
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         Location
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="space_precise">
                             Description of Space placement within the Library
@@ -1778,7 +1778,7 @@ export const EditSpaceForm = ({
                         })}
                     </StyledPrettyLocationDiv>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'p'}>
                         The "About" page for this Library: <span>{reportCurrentLibraryAboutPage(location)}</span>
                     </Typography>
@@ -1796,7 +1796,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <SpaceLocationMap
                         formValues={formValues}
                         setFormValues={setFormValues}
@@ -1805,12 +1805,12 @@ export const EditSpaceForm = ({
                         initialCampus={initialCampus}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         Opening hours
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <StyledSpringshareHouseFormControl variant="standard" fullWidth className="asLoaded">
                         <InputLabel id="add-space-springshare-id-label" htmlFor="add-space-springshare-input">
                             Choose the Springshare Library to use for Opening hours *
@@ -1848,12 +1848,12 @@ export const EditSpaceForm = ({
     const imageryPanel = () => {
         return (
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         Imagery
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <ImageUploadDropzone
                             onAddFile={handleSuppliedFiles}
@@ -1865,7 +1865,7 @@ export const EditSpaceForm = ({
                         </StyledErrorMessageTypography>
                     </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     {/* this WONT be upgraded to CK, because it should just be plain text! */}
                     <TextField
                         id="space_photo_description"
@@ -1886,7 +1886,7 @@ export const EditSpaceForm = ({
                         {reportErrorMessage('space_photo_description')}
                     </StyledErrorMessageTypography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'p'} variant={'p'} sx={{ textAlign: 'right' }}>
                         Required fields are marked with a *
                     </Typography>
@@ -1951,13 +1951,13 @@ export const EditSpaceForm = ({
 
         return (
             <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         Notes
                     </Typography>
                 </Grid>
                 {!formValues?.space_id && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography component={'p'} data-testid="space-notes-requires-save-message">
                             Save the space first, then use this tab to add internal admin notes.
                         </Typography>
@@ -1965,7 +1965,7 @@ export const EditSpaceForm = ({
                 )}
                 {!!formValues?.space_id && (
                     <>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <label htmlFor="space_note_note">New note</label>
                             <RichTextEditor
                                 id="space_note_note"
@@ -1977,7 +1977,7 @@ export const EditSpaceForm = ({
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <StyledPrimaryButton
                                     data-testid="admin-spaces-add-note-button"
@@ -1993,7 +1993,7 @@ export const EditSpaceForm = ({
                                 </StyledErrorMessageTypography>
                             )}
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Typography component={'h4'} variant={'subtitle1'} sx={{ marginBottom: '0.5rem' }}>
                                 Existing notes
                             </Typography>
@@ -2237,7 +2237,7 @@ export const EditSpaceForm = ({
                     <>
                         <form id="spaces-addedit-form">
                             <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Stepper activeStep={activeStep}>
                                         {addModeTabLabels?.map((tabName, tabId) => {
                                             const stepProps = { completed: null };
@@ -2267,7 +2267,7 @@ export const EditSpaceForm = ({
                                     </Stepper>
                                 </Grid>
                                 {!!formValues?.space_draftmode && (
-                                    <Grid item xs={12} data-testid="space-draftmode-notice">
+                                    <Grid size={{ xs: 12 }} data-testid="space-draftmode-notice">
                                         <StyledDraftModeNotice data-testid="space-draftmode-notice-stepper-panel">
                                             <WarningAmberIcon
                                                 style={{ color: theme?.palette.warning.dark }}
@@ -2288,7 +2288,7 @@ export const EditSpaceForm = ({
                                 {activeStep === secondTabId && facilityTypePanel()}
                                 {activeStep === thirdTabId && locationPanel()}
                                 {activeStep === addModeImageryTabId && imageryPanel()}
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Box
                                         id={'button-wrapper'}
                                         sx={{ display: 'flex', flexDirection: 'row', pt: 2, alignItems: 'start' }}
@@ -2322,7 +2322,7 @@ export const EditSpaceForm = ({
                             </Grid>
                         </form>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} style={{ marginTop: '2rem', textAlign: 'center' }}>
+                            <Grid size={{ xs: 12 }} style={{ marginTop: '2rem', textAlign: 'center' }}>
                                 {cancelButton()}
                             </Grid>
                         </Grid>
@@ -2477,18 +2477,14 @@ export const EditSpaceForm = ({
                             </Box>
                         </form>
                         <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                {cancelButton()}
-                            </Grid>
-                            <Grid item xs={6} style={{ textAlign: 'right' }}>
+                            <Grid size={{ xs: 6 }}>{cancelButton()}</Grid>
+                            <Grid size={{ xs: 6 }} style={{ textAlign: 'right' }}>
                                 <Box sx={{ display: 'inline-flex' }}>
                                     {previewButton()}
                                     {saveButton()}
                                 </Box>
                             </Grid>
-                            <Grid item xs={12}>
-                                {renderValidationSummary()}
-                            </Grid>
+                            <Grid size={{ xs: 12 }}>{renderValidationSummary()}</Grid>
                         </Grid>
                     </>
                 )}
