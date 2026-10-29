@@ -16,7 +16,7 @@ A repo for the Library of The University of Queensland website homepage
 - E2E tests: `Playwright`
 - WCAG tests: `@axe-core-npm/playwright`
 
-This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
+This project is using `npm` for dependency management. Make sure `npm` is installed on your machine
 
 ## Installation
 
@@ -224,12 +224,12 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 ### Unit testing
 
-Jest is used as testing tool for unit tests. Any HTMl markup is to be tested with snapshots.
+Jest is used as testing tool for unit tests. 
 
 - install jest `npm install jest -g`
 - run tests `npm test`
 
-Before committing changes, locally run tests and update stapshots (if required). To update snapshots run
+Before committing changes, locally run tests and update any remaining stapshots (if required). To update snapshots run
 `npm run test:unit:update`.
 
 [Code coverage](coverage/jest/index.html) is available (after running `npm test`)
@@ -240,15 +240,43 @@ Before committing changes, locally run tests and update stapshots (if required).
 - [Rendered components](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/README.md#testing)
 - [Reducers](https://github.com/uqlibrary/homepage-react/blob/master/src/reducers/README.md#testing)
 
-### E2E testing
+### Interactive testing
 
-We use [Playwright](https://playwright.dev/docs/writing-tests) for our E2E testing.
+We use [Playwright](https://playwright.dev/docs/writing-tests) for our interactive testing.
 
 To run tests, simply use `npm run test:e2e`.
 
 To run all tests, including unit tests, use `npm run test:all`.\
 Then, to generate a combined code coverage report, use `npm run cc:reportAll`.\
 This workflow is useful for confidently pushing changes upstream.
+
+#### To test data sent to the api is as-expected
+
+In the component, save the sent data to a cookie (only when on localhost), so: just before the call to the action that sends a save request to the api, include code like:
+```javascript
+const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
+    setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+}
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/src/modules/Pages/Admin/BookableSpaces/ManageLocations/BookableSpacesManageLocations.js#L327
+
+Then in the test, start the test function with a setup call
+```javascript
+await setTestDataCookie(context, page);
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/playwright/tests/adminPages/spaces/bookablespacesAddNew.spec.ts#L70
+
+and then test the values you are expecting were what was sent to the api:
+```javascript
+const expectedValues = {
+    space_floor_id: 1,
+    space_name: 'W12343',
+    space_type: 'Computer room',
+};
+await assertExpectedDataSentToServer(page, expectedValues);
+```
+eg https://github.com/uqlibrary/homepage-react/blob/8b9cd9d7902449e45c8285eabf36c0b368a34a4b/playwright/tests/adminPages/spaces/bookablespacesAddNew.spec.ts#L90
 
 #### Parallelism
 
@@ -281,9 +309,11 @@ The above also applies to tests that fail on CI. In this case, the trace files n
 are part of the artifacts uploaded to S3 as the output of each test stage - please refer to the "Artifacts" section on
 the "Build Details" tab in the Build run page.
 
+Instructions on how to download and use the trace files from failed tests on AWS can be found [in our Sharepoint developer docs](https://uq.sharepoint.com/:w:/r/teams/lbf4g4a1/LTSDevelopers%20Documents/How-to/Review%20failed%20AWS%20FE%20test.docx?d=wf59cd41009c94efd8492a59bd4a68df7&csf=1&web=1&e=aYBJlm)
+
 #### Standardised selectors to target elements
 
-- We are following the best practice recommended by playwright to target elements using `data-testid` attribute
+- We are following the best practice recommended by playwright to target elements using `data-testid` attribute where possible
 
 #### Gotchas
 
@@ -303,9 +333,9 @@ To run the complete test suite and get code coverage, run `npm run test:cc`
 
 This will run unit tests (jest) and e2e tests (playwright) and then merge the coverage of the 2 to give complete coverage. Coverage reports are at `coverage/index.html` after the run.
 
-This will wipe previous coverage file.
+This will wipe any previous coverage files.
 
-On the server, coverage is checked on these branches: production, master, staging and any branch whose name includes the string 'coverage'
+On the server, coverage is checked on these branches: production, master, staging and any branch that is listed in the Git Triggers section of pipeline `homepage-development-coverage`.
 
 AWS Coverage checking is split between the different pipelines, both to make the run quicker, and because it reduces test flakiness. The package,json has a group of `!` lines in the nyc exclude section. The `bin/codebuild-test.sh` script will reverse some of these for each pipeline (but they are _not excluded_ in a local run, meaning we can split in pipeline on AWS and still check coverage locally!).
 
@@ -351,8 +381,6 @@ masquerade - on account record (CURRENT_ACCOUNT_API) eg <https://api.library.uq.
 
 admin - on author record (AUTHOR_DETAILS_API) eg <https://api.library.uq.edu.au/staging/authors/details/uqldegro>, is_administrator = 0 or 1
 
-(there is also is_super_administrator, 0 or 1, which gives access to the security tab)
-
 ## Reviewing
 
 A Self-review checklist is [here](https://uq.sharepoint.com/:w:/r/teams/lbf4g4a1/LTSDevelopers%20Documents/Standards/React%20self%20code%20review%20checklist.docx?d=w0b91b7dfd85d4f14bf624da7c4de1821&csf=1&web=1&e=RZs5Ka) in
@@ -386,7 +414,7 @@ Homepage includes GTM (Google Tag Manager). GTM is set at webpack build time in 
 setup as an environmental variable at CI level if required.
 
 GTM is very flexible and easy to configure to track required events. See more details on
-[Google Analytics](https://www.google.com.au/analytics/tag-manager/)
+[Google Analytics](https://www.google.com.au/analytics/tag-manager/).
 
 
 ## To work with api locally

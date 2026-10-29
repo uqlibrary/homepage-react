@@ -23,7 +23,7 @@ import { scrollToTopOfPage } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { useAccountContext } from 'context';
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, TableContainer } from '@mui/material';
-import { ExpandMore, PausePresentation } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -52,8 +52,6 @@ export const DLOTeamForm = ({
     const navigate = useNavigate();
     const { dlorTeamId } = useParams();
     const [cookies, setCookie] = useCookies();
-
-    console.log('Account', account);
 
     const [formValues, setFormValues] = useState({
         team_name: '',
@@ -84,7 +82,8 @@ export const DLOTeamForm = ({
             setFormValues({
                 team_name: formDefaults?.team_name,
                 team_manager: formDefaults?.team_manager,
-                team_admin_username: formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
+                team_admin_username:
+                    formDefaults?.team_admin_username || formDefaults?.team_members?.[0]?.team_admin_username || '',
                 team_email: formDefaults?.team_email,
             });
         }
@@ -189,7 +188,6 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
 
-        console.log('Save edited team member:', editingMember);
         setEditingMemberIdx(null);
         setEditingMember(null);
     };
@@ -224,7 +222,6 @@ export const DLOTeamForm = ({
         !!dlorTeamSaving ||
         !!dlorTeamLoading;
 
-    console.log('Form Values');
     return (
         <Grid container spacing={2}>
             {(() => {
@@ -318,7 +315,9 @@ export const DLOTeamForm = ({
                                         </Grid>
                                         <Grid item xs={12}>
                                             <FormControl variant="standard" fullWidth>
-                                                <InputLabel htmlFor="team_admin_username">Team admin username *</InputLabel>
+                                                <InputLabel htmlFor="team_admin_username">
+                                                    Team admin username *
+                                                </InputLabel>
                                                 <Input
                                                     id="team_admin_username"
                                                     data-testid="admin-dlor-team-form-team-admin-username"

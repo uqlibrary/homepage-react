@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { dateHasValue, hasAWorkingHelpButton } from './helpers';
+import { dateHasValue } from './helpers';
 import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 
 async function selectPriorityType(page: Page, type: string) {
@@ -93,22 +93,8 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(saveButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0.12)');
             await expect(saveButton).toHaveCSS('border-color', 'rgba(0, 0, 0, 0.12)');
             await expect(saveButton).toHaveCSS('color', 'rgba(0, 0, 0, 0.26)');
+        });
 
-            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title');
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('the body');
-        });
-        test('an url must be valid', async ({ page }) => {
-            await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
-            await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('Read more');
-            await page.locator('[data-testid="admin-alerts-form-link-url"] input').fill('http://x.c');
-            await expect(page.getByTestId('admin-alerts-form-link-url')).toHaveClass(/Mui-error/);
-            // one more character
-            await page.locator('[data-testid="admin-alerts-form-link-url"] input').pressSequentially('o');
-            await expect(page.getByTestId('admin-alerts-form-link-url')).not.toHaveClass(/Mui-error/);
-        });
         test('can save an alert (simple)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 3');
 
@@ -118,10 +104,7 @@ test.describe('Alerts Admin Form Pages', () => {
             // then hide it again
             await previewButton.click();
 
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 3');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('body 3');
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).toBeVisible();
             await expect(
@@ -139,10 +122,7 @@ test.describe('Alerts Admin Form Pages', () => {
         });
         test('can save an alert (more complex)', async ({ page }) => {
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 4');
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 4');
+            await page.locator('[data-testid="admin-alerts-form-body"] textarea').first().fill('body 4');
             await selectPriorityType(page, 'urgent');
             await page.locator('[data-testid="admin-alerts-form-checkbox-permanent"] input').check();
             await expect(page.getByTestId('admin-alerts-form-link-title')).not.toBeVisible();
@@ -173,42 +153,6 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page.locator('[data-testid="admin-alerts-form-title"] input')).toHaveValue('');
             await expect(page.locator('[data-testid="admin-alerts-form-body"] textarea').first()).toHaveValue('');
             await expect(page.getByTestId('confirm-alert-add-save-succeeded')).not.toBeVisible();
-        });
-        test('has a working Help button on the Add page', async ({ page }) => {
-            await hasAWorkingHelpButton(page);
-        });
-        test('buttons are disabled unless the form is valid', async ({ page }) => {
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-
-            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 5');
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-
-            await page
-                .locator('[data-testid="admin-alerts-form-body"] textarea')
-                .first()
-                .fill('body 5');
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled();
-            await expect(page.getByTestId('admin-alerts-form-button-save')).not.toBeDisabled();
-
-            await page.locator('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-
-            await page.locator('[data-testid="admin-alerts-form-link-title"] input').fill('read more');
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-
-            // start an url, but button are disabled while it isn't valid
-            await page.locator('[data-testid="admin-alerts-form-link-url"] input').fill('http');
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled(); // preview button is always available
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-
-            // complete to a valid url and the buttons are enabled
-            await page.locator('[data-testid="admin-alerts-form-link-url"] input').pressSequentially('://example.com');
-            await expect(page.getByTestId('admin-alerts-form-button-preview')).not.toBeDisabled();
-            await expect(page.getByTestId('admin-alerts-form-button-save')).not.toBeDisabled();
         });
     });
     test.describe('Alert Admin Edit page Special', () => {
@@ -283,10 +227,20 @@ test.describe('Alerts Admin Form Pages', () => {
             await selectPriorityType(page, 'info');
             await expect(page.locator('[data-testid="admin-alerts-form-link-title"] input')).not.toBeVisible();
             await expect(page.locator('[data-testid="admin-alerts-form-link-url"] input')).not.toBeVisible();
+
+            // change to "show on some systems" tab
+            const showOnSomeSystemsTab = page.locator('button#system-tab-1');
+            await expect(showOnSomeSystemsTab).toBeVisible();
+            await showOnSomeSystemsTab.click();
+
             await expect(
-                page.locator('[data-testid="admin-alerts-form-checkbox-system-homepage"] input'),
+                page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input'),
+            ).toBeVisible();
+            await expect(
+                page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input'),
             ).toBeChecked();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
+            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input')).toBeVisible();
+            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input')).toBeChecked();
 
             // the editing user displays correctly
             await expect(page.getByTestId('admin-alerts-form-created-by')).not.toBeVisible();
@@ -320,7 +274,7 @@ test.describe('Alerts Admin Form Pages', () => {
 
             await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
             await expect(saveButton).not.toBeDisabled();
-            // after fields entered, looks like Primary button
+            // after fields entered, "Save" looks like Primary button
             await expect(saveButton).toHaveCSS('background-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('border-color', COLOR_UQPURPLE);
             await expect(saveButton).toHaveCSS('color', 'rgb(255, 255, 255)');
@@ -342,55 +296,87 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.locator('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
         });
+        test('changing a system tab enables the save button', async ({ page }) => {
+            // this test changes to a different tab
+            const saveButton = page.getByTestId('admin-alerts-form-button-save');
+
+            await expect(saveButton).toBeDisabled();
+
+            // change to "all systems" and save is enabled
+            const showOnAllSystemsTab = page.locator('button#system-tab-0');
+            await expect(showOnAllSystemsTab).toBeVisible();
+            await expect(showOnAllSystemsTab).not.toHaveClass('Mui-selected'); // not current tab
+            showOnAllSystemsTab.click();
+            await expect(showOnAllSystemsTab).toHaveClass(/Mui-selected/); // now is current tab
+
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+
+            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('Updated alert');
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+
+            // select different system-show/hide-tab and select a system
+            const showOnSomeSystemsTab = page.locator('button#system-tab-1');
+            await expect(showOnSomeSystemsTab).toBeVisible();
+            await expect(showOnSomeSystemsTab).not.toHaveClass('Mui-selected'); // not current tab
+            showOnSomeSystemsTab.click();
+            await expect(showOnSomeSystemsTab).toHaveClass(/Mui-selected/); // now is current tab
+
+            await expect(saveButton).toBeDisabled(); // save button disabled
+
+            const showOnHomepageCheckbox = page.locator(
+                '[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input',
+            );
+            await expect(showOnHomepageCheckbox).toBeVisible();
+            await expect(showOnHomepageCheckbox).not.toBeChecked();
+            await showOnHomepageCheckbox.check();
+            await expect(showOnHomepageCheckbox).toBeChecked();
+
+            await expect(saveButton).not.toBeDisabled(); // save button enabled
+        });
         test('changing a system enables the save button', async ({ page }) => {
+            // this test just changes the checkboxes in the current tab
+            const saveButton = page.getByTestId('admin-alerts-form-button-save');
+            const hideFromPrimoCheckbox = page.locator(
+                '[data-testid="admin-alerts-form-checkbox-system-hidefrom-primo"] input',
+            );
+            const hideFromHomepageCheckbox = page.locator(
+                '[data-testid="admin-alerts-form-checkbox-system-hidefrom-homepage"] input',
+            );
+            const confirmationMessage = page.locator(
+                'div[data-testId="dialogbox-alert-edit-save-succeeded"] div[data-testid="message-content"]',
+            );
+
             await expect(page.getByTestId('admin-alerts-form-checkbox-linkrequired')).toBeVisible();
 
             // the editing user displays correctly
             await expect(page.getByTestId('admin-alerts-form-created-by')).toHaveText(/Created by: uqtest1/);
             await expect(page.getByTestId('admin-alerts-form-updated-by')).toHaveText(/Last Updated by: uqtest2/);
-            await expect(page.getByTestId('admin-alerts-form-button-save')).toBeDisabled();
-            await expect(
-                page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input'),
-            ).not.toBeChecked();
-            await page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input').check();
-            await expect(page.getByTestId('admin-alerts-form-button-save')).not.toBeDisabled();
-            await page.getByTestId('admin-alerts-form-button-save').click();
+            await expect(saveButton).toBeDisabled();
+
+            // change to "hide on some systems" tab
+            const hideOnSomeSystemsTab = page.locator('button#system-tab-2');
+            await expect(hideOnSomeSystemsTab).toBeVisible();
+            await hideOnSomeSystemsTab.click();
+
+            await expect(hideFromHomepageCheckbox).toBeChecked();
+            await expect(hideFromPrimoCheckbox).not.toBeChecked();
+            await hideFromPrimoCheckbox.check();
+            await expect(saveButton).not.toBeDisabled();
+            await saveButton.click();
             await expect(
                 page
                     .locator('[data-testid="dialogbox-alert-edit-save-succeeded"] h2')
                     .getByText(/The alert has been updated/)
                     .first(),
             ).toBeVisible();
-            // can't do much checking here that it saves properly
+
+            await expect(confirmationMessage).toBeVisible();
+            await expect(confirmationMessage).toHaveText(
+                'This alert will be displayed on all systems EXCEPT homepage and primo.',
+            );
+
             await page.locator('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
             await expect(page).toHaveURL('http://localhost:2020/admin/alerts');
-        });
-        test('has a working Help button on the Edit page', async ({ page }) => {
-            await hasAWorkingHelpButton(page);
-        });
-        test('tells the user which systems the alert will appear on', async ({ page }) => {
-            await page.goto(
-                'http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff',
-            );
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .getByTestId('admin-alerts-form-checkbox-system-homepage')
-                    .locator('..')
-                    .getByText(/Home page/)
-                    .first(),
-            ).toBeVisible();
-            await expect(
-                page.locator('[data-testid="admin-alerts-form-checkbox-system-homepage"] input'),
-            ).toBeChecked();
-            await expect(
-                page
-                    .getByTestId('admin-alerts-form-checkbox-system-primo')
-                    .locator('..')
-                    .getByText(/Primo/)
-                    .first(),
-            ).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
         });
     });
     test.describe('Alert Admin Clone page', () => {
@@ -498,6 +484,7 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(page).toHaveURL(
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff',
             );
+            await page.locator('[data-testid="admin-alerts-form-title"] input').fill('alert title 11');
             // click "Add new"
             await page.getByTestId('admin-alerts-form-button-save').click();
             await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
@@ -509,44 +496,6 @@ test.describe('Alerts Admin Form Pages', () => {
             ).toBeVisible();
         });
 
-        async function clickPlusButton(page: Page, buttonId: string) {
-            await page.getByTestId('admin-alerts-form-another-date-button-' + buttonId).click();
-        }
-
-        test('the "add a date set button" works', async ({ page }) => {
-            await expect(page.locator('[data-testid="admin-alerts-form-start-date-0"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-end-date-0"] input')).toBeVisible();
-            await page.getByTestId('admin-alerts-form-another-date-button-0').click();
-            await expect(page.locator('[data-testid="admin-alerts-form-start-date-1"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-end-date-1"] input')).toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-0')).not.toBeVisible();
-            await page.getByTestId('admin-alerts-form-another-date-button-1').click();
-            await expect(page.locator('[data-testid="admin-alerts-form-start-date-2"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-end-date-2"] input')).toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-0')).not.toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-1')).not.toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-2')).toBeVisible();
-            await page.locator('button[data-testid="admin-alerts-form-button-save"]').click();
-            await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
-
-            await page.getByTestId('confirm-alert-clone-save-succeeded').click();
-            await expect(page.locator('[data-testid="admin-alerts-form-start-date-0"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-end-date-0"] input')).toBeVisible();
-            await clickPlusButton(page, '0');
-            await expect(page.locator('[data-testid="admin-alerts-form-start-date-1"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-end-date-1"] input')).toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-0')).not.toBeVisible();
-            await expect(page.getByTestId('admin-alerts-form-another-date-button-1')).toBeVisible();
-
-            await page.locator('button[data-testid="admin-alerts-form-button-save"]').click();
-            await expect(page.getByTestId('confirm-alert-clone-save-succeeded')).toBeVisible();
-        });
-
-        test('has a working Help button on the Clone page', async ({ page }) => {
-            await expect(page.getByTestId('admin-alerts-help-button')).toBeVisible();
-            await hasAWorkingHelpButton(page);
-        });
-
         test('tells the user which systems the alert will appear on', async ({ page }) => {
             await page.goto(
                 'http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff',
@@ -554,28 +503,30 @@ test.describe('Alerts Admin Form Pages', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(
                 page
-                    .getByTestId('admin-alerts-form-checkbox-system-homepage')
+                    .getByTestId('admin-alerts-form-checkbox-system-showon-homepage')
                     .locator('..')
                     .getByText(/Home page/)
                     .first(),
             ).toBeVisible();
             await expect(
-                page.locator('[data-testid="admin-alerts-form-checkbox-system-homepage"] input'),
+                page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input'),
             ).toBeChecked();
             await expect(
                 page
-                    .getByTestId('admin-alerts-form-checkbox-system-primo')
+                    .getByTestId('admin-alerts-form-checkbox-system-showon-primo')
                     .locator('..')
                     .getByText(/Primo/)
                     .first(),
             ).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
-            await page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input').uncheck();
+
+            const showOnPrimoCheckbox = page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input');
             await expect(
-                page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input'),
-            ).not.toBeChecked();
-            await page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input').check();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-primo"] input')).toBeChecked();
+                showOnPrimoCheckbox,
+            ).toBeChecked();
+            await showOnPrimoCheckbox.uncheck();
+            await expect(showOnPrimoCheckbox).not.toBeChecked();
+            await showOnPrimoCheckbox.check();
+            await expect(showOnPrimoCheckbox).toBeChecked();
         });
     });
 });

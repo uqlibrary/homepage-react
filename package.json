@@ -35,7 +35,7 @@
         "test:e2e:cc": "cross-env NODE_ENV=cc npm run test:e2e",
         "posttest:e2e:cc": "rm -rf .nyc_output",
         "test:unit": "cross-env NODE_ENV=test FULL_PATH=http://localhost jest",
-        "test:unit:ci": "npm run test:unit -- --ci --silent --no-warnings --testPathIgnorePatterns=\"$(jq -r '.jest.testPathIgnorePatterns | join(\"|\")' package.json)\"",
+        "test:unit:ci": "npm run test:unit -- --ci --silent --no-warnings --maxWorkers=4 --workerIdleMemoryLimit=1024MB --testPathIgnorePatterns=\"$(node -p \"require('./package.json').jest.testPathIgnorePatterns.join('|')\")\"",
         "test:unit:ci:nocoverage": "npm run test:unit:ci -- --no-coverage",
         "test:unit:ci1:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --testPathIgnorePatterns=SharedComponents",
         "test:unit:ci2:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --passWithNoTests SharedComponents",
@@ -87,6 +87,7 @@
         "@types/file-saver": "^2.0.7",
         "@types/jest": "^30.0.0",
         "@types/js-cookie": "^3.0.6",
+        "@types/leaflet": "^1.9.21",
         "@types/material-ui": "^0.21.16",
         "@types/node": "^18.19.0",
         "@types/prop-types": "^15.7.12",
@@ -100,8 +101,8 @@
         "assets-webpack-plugin": "^5.1.2",
         "autoprefixer": "^10.4.16",
         "axe-core": "^4.10.3",
-        "axios": "^1.18.1",
-        "axios-cache-interceptor": "^1.12.0",
+        "axios": "^1.20.0",
+        "axios-cache-interceptor": "^1.12.3",
         "axios-mock-adapter": "^2.1.0",
         "babel-jest": "^30.3.0",
         "babel-loader": "^9.1.3",
@@ -131,8 +132,8 @@
         "nyc": "^18.0.0",
         "postcss-loader": "^7.3.4",
         "prettier": "^3.6.2",
-        "prettier-eslint": "^17.1.0",
-        "prettier-eslint-cli": "^9.2.0",
+        "prettier-eslint": "^17.1.1",
+        "prettier-eslint-cli": "^9.2.1",
         "progress-bar-webpack-plugin": "^2.1.0",
         "react-refresh": "^0.14.0",
         "react-test-renderer": "^18.3.0",
@@ -148,7 +149,8 @@
         "typescript-eslint": "^8.61.1",
         "webpack": "^5.107.2",
         "webpack-cli": "^7.0.3",
-        "webpack-dev-server": "^5.2.6"
+        "webpack-dev-server": "^5.2.6",
+        "launch-editor": "^2.14.2"
     },
     "dependencies": {
         "@babel/runtime": "^7.27.0",
@@ -192,6 +194,7 @@
         "immutable": "^5.1.8",
         "js-cookie": "^3.0.8",
         "jss-preset-default": "^10.10.0",
+        "leaflet": "^1.9.4",
         "lodash": "^4.17.21",
         "match-sorter": "^4.2.1",
         "moment": "^2.30.1",
@@ -210,6 +213,7 @@
         "react-dropzone": "^11.7.1",
         "react-hook-form": "^7.81.0",
         "react-intersection-observer": "^9.8.0",
+        "react-leaflet": "^4.2.1",
         "react-redux": "^7.2.9",
         "react-router": "^7.18.0",
         "redux": "4.2.1",
@@ -219,12 +223,14 @@
         "vendor-copy": "^2.0.1"
     },
     "overrides": {
+        "launch-editor": "^2.14.2",
         "istanbul-lib-instrument": "6.0.3",
         "@istanbuljs/schema": "0.1.3",
         "istanbul-lib-coverage": "3.2.2",
         "postcss": "^8.5.18",
         "browserslist": "^4.28.8",
-        "nanoid": "^3.3.18"
+        "nanoid": "^3.3.18",
+        "follow-redirects": ">=1.16.1"
     },
     "engines": {
         "npm": ">=11.12.1",

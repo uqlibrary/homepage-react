@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { api, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, sessionApi } from 'config';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
@@ -64,7 +63,6 @@ import test_tag_assets_report_assets from './data/records/testAndTag/test_tag_as
 import test_tag_assets_mine from './data/records/testAndTag/test_tag_assets_mine';
 import test_tag_user_list from './data/records/testAndTag/test_tag_user_list';
 import test_tag_team_list_uql from './data/records/testAndTag/test_tag_team_list_uql';
-import test_tag_team_list_pf from './data/records/testAndTag/test_tag_team_list_pf';
 import test_tag_printer_templates_uql from './data/records/testAndTag/test_tag_printer_templates_uql';
 
 import dlor_all from './data/records/dlor/dlor_all';
@@ -87,6 +85,14 @@ import {
 import { vemcountData } from './data/vemcount';
 import dlor_admin_notes from './data/records/dlor/dlor_admin_notes';
 import dlor_keywords from './data/records/dlor/dlor_keywords';
+import bookableSpaces_all from './data/records/bookableSpaces/bookableSpaces_all';
+import hours_weekly from './data/records/bookableSpaces/hours_weekly_2';
+import facilityTypes_all from './data/records/bookableSpaces/facilityTypes_all';
+import location_sites_all from './data/records/bookableSpaces/location_sites_all';
+import newSpace from './data/records/bookableSpaces/newSpace';
+import spaces_favourites from './data/records/bookableSpaces/spaces_favourites';
+import archibusTreeSites from './data/records/bookableSpaces/archibusTreeSites';
+import space_notes from './data/records/bookableSpaces/space_notes';
 import { dlorDashboardSiteUsage } from './data/dlor/dlorDashboardSiteUsage';
 
 const moment = require('moment');
@@ -95,6 +101,13 @@ const mock = new MockAdapter(api, { delayResponse: 1000 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 1000 });
 export const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 const panelRegExp = input => input.replace('.\\*', '.*').replace(/[\-\{\}\+\\\$\|]/g, '\\$&');
+
+const buildMockSpaceFavourites = () => {
+    if (user === 'vanilla') {
+        return [];
+    }
+    return spaces_favourites.data;
+};
 
 const queryString = new URLSearchParams(window.location.search);
 let user = !!queryString
@@ -139,6 +152,41 @@ const withDelay = response => config => {
             resolve(response);
         }, randomTime);
     });
+};
+
+const cloneMockValue = value => JSON.parse(JSON.stringify(value));
+const collectMockSpaceOutages = spaces =>
+    (spaces || []).flatMap(space =>
+        (space?.space_outages || []).map(outage => ({
+            ...cloneMockValue(outage),
+            space_id: outage?.space_id || space?.space_id,
+        })),
+    );
+let mockSpaceOutageRecords = collectMockSpaceOutages(bookableSpaces_all?.data?.locations);
+let mockSpaceNoteRecords = cloneMockValue(space_notes?.data || []);
+const getMockSpaceOutagesForSpace = spaceId =>
+    mockSpaceOutageRecords
+        .filter(outage => String(outage?.space_id) === String(spaceId))
+        .sort((leftOutage, rightOutage) =>
+            String(leftOutage?.space_outage_start).localeCompare(rightOutage?.space_outage_start),
+        );
+const getNextMockSpaceOutageId = () => {
+    const highestKnownId = mockSpaceOutageRecords.reduce((currentHighest, outage) => {
+        return Math.max(currentHighest, Number(outage?.space_outage_id) || 0);
+    }, 9000);
+    return highestKnownId + 1;
+};
+const getMockSpaceNotesForSpace = spaceId =>
+    mockSpaceNoteRecords
+        .filter(note => String(note?.space_note_space_id) === String(spaceId))
+        .sort((leftNote, rightNote) =>
+            String(rightNote?.space_note_created_at).localeCompare(String(leftNote?.space_note_created_at)),
+        );
+const getNextMockSpaceNoteId = () => {
+    const highestKnownId = mockSpaceNoteRecords.reduce((currentHighest, note) => {
+        return Math.max(currentHighest, Number(note?.space_note_id) || 0);
+    }, 1000);
+    return highestKnownId + 1;
 };
 
 mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
@@ -209,16 +257,16 @@ mock.onGet(routes.PRINTING_API().apiUrl)
         return [200, printBalance];
     });
 
-mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
-// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
-//     if (responseType === 'error') {
-//         return [500, {}];
-//     } else if (responseType === 'missing') {
-//         return [404, {}];
-//     } else {
-//         return [200, libHours];
-//     }
-// });
+// mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
+mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(() => {
+    if (responseType === 'libHoursError') {
+        return [500, {}];
+    } else if (responseType === 'libHoursMissing') {
+        return [404, {}];
+    } else {
+        return [200, libHours];
+    }
+});
 
 // mock cant tell the difference between POSSIBLE_RECORDS_API and INCOMPLETE_NTRO_RECORDS_API calls :(
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(() => {
@@ -250,12 +298,8 @@ mock.onPut(`/${routes.ALERT_UPDATE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db72
     withDelay([
         200,
         {
-            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
-            title: 'Updated alert 2',
-            body: 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
-            priority_type: 'info',
+            ...alertList.find(alert => alert.id === '1db618c0-d897-11eb-a27e-df4e46db7245'),
+            systems_hidden: ['homepage', 'primo'],
         },
     ]),
 );
@@ -275,84 +319,22 @@ mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb3
     withDelay([500, []]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
-            start: '2021-06-06 00:45:34',
-            end: '2021-06-06 05:00:34',
-            title: 'Sample alert 2:',
-            body: 'Has mock data.',
-            priority_type: 'info',
-            systems: ['primo', 'homepage'],
-            created_by: '?',
-            updated_by: 'uqtest2',
-        },
-    ]),
+    withDelay([200, alertList.find(alert => alert.id === 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec')]),
 );
 // mock.onAny(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(withDelay([500, {}]));
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2021-06-29 15:00:34',
-            end: '2031-07-02 18:30:34',
-            title: 'Example alert:',
-            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-            priority_type: 'urgent',
-            systems: ['homepage'],
-            created_by: 'uqtest1',
-            updated_by: 'uqtest2',
-        },
-    ]),
+    withDelay([200, alertList.find(alert => alert.id === '1db618c0-d897-11eb-a27e-df4e46db7245')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9',
-            start: '2021-06-28 16:02:54',
-            end: '2021-06-29 15:00:54',
-            title: 'Face masks in the Library:',
-            body: 'Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
-            priority_type: 'extreme',
-            created_by: '?',
-            updated_by: null,
-        },
-    ]),
+    withDelay([200, alertList.find(alert => alert.id === 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35',
-            start: '2031-09-04 02:00:55',
-            end: '2032-09-04 03:00:55',
-            title: 'Example alert:',
-            body: 'This alert will return an error if deleted in mock',
-            priority_type: 'info',
-            created_by: '?',
-            updated_by: null,
-        },
-    ]),
+    withDelay([200, withDelay([200, alertList.find(alert => alert.id === '0aa12a30-996a-11eb-b009-3f6ded4fdb35')])]),
 );
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09',
-            start: '2021-06-27 14:00:57',
-            end: '2021-06-27 14:50:57',
-            title: 'Network outage, Duhig Tower, 2.30-2.45pm today.',
-            body: 'There will be a short network outage in the Duhig Tower this afternoon (Sunday 27 June) for network maintenance. During this time the internet, library computers and printers will be affected. We apologise for any inconvenience.',
-            priority_type: 'extreme',
-            created_by: 'uqtest1',
-            updated_by: 'uqtest2',
-        },
-    ]),
+    withDelay([200, alertList.find(alert => alert.id === 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f09')]),
 );
 mock.onGet(routes.ALERT_BY_ID_API({ id: '232d6880-996a-11eb-8a79-e7fddae87baf' }).apiUrl).reply(withDelay([404, {}]));
 
@@ -735,7 +717,6 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     .onPut(/dlor\/auth\/object\/.*/)
     .reply(() => {
         if (responseType === 'saveError') {
-            console.log('SAVE ERROR? WHY?');
             return [500, {}];
         } else {
             // return [200, { data: getSpecificDlorObject('98j3-fgf95-8j34') }]; //any old id
@@ -976,7 +957,6 @@ mock.onGet(/dlor\/(public|auth)\/find\/.*/)
     })
     .onPost('dlor/auth/favourites')
     .reply(() => {
-        console.log('POST FAVOURITES');
         return [
             200,
             {
@@ -1385,8 +1365,8 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => [200, { status: 'OK' }])
     .onDelete(/test-and-tag\/site|building|floor\/5/)
     .reply(() => [200, { status: 'OK' }])
-    .onDelete(/test-and-tag\/site|building|floor\/.*/)
-    .reply(() => [400, { message: '52 is a test error', status: 'error' }])
+    // .onDelete(/test-and-tag\/site|building|floor\/.*/)
+    // .reply(() => [400, { message: '52 is a test error', status: 'error' }])
     // T&T MANAGE INSPECTION DEVICES
     .onGet(routes.TEST_TAG_INSPECTION_DEVICE_API().apiUrl)
     .reply(() => {
@@ -1729,7 +1709,6 @@ mock.onGet('exams/course/FREN1010/summary')
     //    const params = url.searchParams;
     //    const location = params.has('location_type') ? `${params.get('location_type')}_id` : 'room_id';
     //    const locationId = params.has('location_type') ? parseInt(params.get('location_id'),10) : undefined;
-    //    console.log(config, params.toString(), params.get('asset_type_id'), params.get('inspect_comment'), location, locationId)
 
     //     return [200, {data: test_tag_assets_mine.data.filter(asset=> asset.asset_type_id === (params.get('asset_type_id') ?? asset.asset_type_id) &&
     //         asset[location] === (locationId ?? asset[location]) &&
@@ -1862,9 +1841,12 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         function addFineEntry(_loans, newFine) {
             const newFineObject = { fineAmount: newFine };
-            _loans.fines.push(newFineObject); // (we don't care about all the entries...)
-            _loans.total_fines_count = _loans.fines.length;
-            return _loans;
+            const fineEntries = [...(_loans?.fines || []), newFineObject];
+            return {
+                ..._loans,
+                fines: fineEntries,
+                total_fines_count: fineEntries.length,
+            };
         }
         if (responseType === 'almaError') {
             return [500, {}];
@@ -1881,6 +1863,472 @@ mock.onGet('exams/course/FREN1010/summary')
             default:
                 return [200, { ...loans, fines: [], total_fines_count: 0 }];
         }
+    })
+    .onGet(routes.SPACES_ALL_API().apiUrl)
+    .reply(config => {
+        if (responseType === 'error-spaces') {
+            return [500, {}];
+        } else if (responseType === 'empty-spaces') {
+            return [200, []];
+        } else if (responseType === '404-spaces') {
+            return [404, {}];
+        } else {
+            const includeDrafts =
+                config?.params?.include_drafts === true ||
+                config?.params?.include_drafts === 'true' ||
+                (config?.url || '').includes('include_drafts=true');
+
+            const locations = (bookableSpaces_all?.data?.locations || []).filter(space => !space?.space_deleted);
+
+            if (includeDrafts) {
+                return [
+                    200,
+                    {
+                        ...bookableSpaces_all,
+                        data: {
+                            ...bookableSpaces_all?.data,
+                            locations,
+                        },
+                    },
+                ];
+            }
+
+            return [
+                200,
+                {
+                    ...bookableSpaces_all,
+                    data: {
+                        ...bookableSpaces_all?.data,
+                        locations: locations.filter(space => !space?.space_draftmode),
+                    },
+                },
+            ];
+        }
+    })
+    .onGet(routes.SPACES_ARCHIBUS_TREE_API().apiUrl)
+    .reply(() => {
+        return [
+            200,
+            {
+                status: 'OK',
+                data: {
+                    sites: archibusTreeSites,
+                },
+            },
+        ];
+    })
+    .onGet(/bookable_spaces\/space\/\d+\/outages.*/)
+    .reply(config => {
+        const urlTail = config.url.split('/').slice(-2).join('/');
+        const spaceId = urlTail.split('/')[0];
+        return [200, { status: 'OK', data: getMockSpaceOutagesForSpace(spaceId) }];
+    })
+    .onPost(/bookable_spaces\/space\/\d+\/outages.*/)
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        const urlTail = config.url.split('/').slice(-2).join('/');
+        const spaceId = body?.space_id || urlTail.split('/')[0];
+        const newOutage = {
+            space_outage_id: getNextMockSpaceOutageId(),
+            space_id: Number(spaceId),
+            space_outage_start: body?.space_outage_start,
+            space_outage_end: body?.space_outage_end,
+            space_outage_reason: body?.space_outage_reason || null,
+            space_outage_show_time_public:
+                body?.space_outage_show_time_public === undefined ? true : !!body?.space_outage_show_time_public,
+        };
+        mockSpaceOutageRecords = [...mockSpaceOutageRecords, newOutage];
+        return [200, { status: 'OK', data: newOutage }];
+    })
+    .onPut(/bookable_spaces\/space_outage\/\d+.*/)
+    .reply(config => {
+        const outageId = config.url.split('/').pop().split('?')[0];
+        const body = JSON.parse(config.data);
+        const existingOutage = mockSpaceOutageRecords.find(
+            outage => String(outage?.space_outage_id) === String(outageId),
+        );
+        const updatedOutage = {
+            ...existingOutage,
+            ...body,
+            space_outage_id: Number(outageId),
+            space_id: Number(body?.space_id || existingOutage?.space_id),
+        };
+        mockSpaceOutageRecords = mockSpaceOutageRecords.map(outage =>
+            String(outage?.space_outage_id) === String(outageId) ? updatedOutage : outage,
+        );
+        return [200, { status: 'OK', data: updatedOutage }];
+    })
+    .onDelete(/bookable_spaces\/space_outage\/\d+.*/)
+    .reply(config => {
+        const outageId = config.url.split('/').pop().split('?')[0];
+        mockSpaceOutageRecords = mockSpaceOutageRecords.filter(
+            outage => String(outage?.space_outage_id) !== String(outageId),
+        );
+        return [200, { status: 'OK' }];
+    })
+    .onGet(/bookable_spaces\/admin\/space\/\d+\/notes.*/)
+    .reply(config => {
+        const urlParts = config.url.split('/');
+        const spaceId = urlParts[urlParts.length - 2];
+        return [200, { status: 'OK', data: getMockSpaceNotesForSpace(spaceId) }];
+    })
+    .onPost(/bookable_spaces\/admin\/space\/\d+\/notes.*/)
+    .reply(config => {
+        const body = JSON.parse(config.data || '{}');
+        const urlParts = config.url.split('/');
+        const spaceId = Number(urlParts[urlParts.length - 2]);
+
+        const newNote = {
+            space_note_id: getNextMockSpaceNoteId(),
+            space_note_space_id: Number(body?.space_note_space_id || spaceId),
+            space_note_user: body?.space_note_user || 'uqtest1',
+            space_note_note: body?.space_note_note || '',
+            space_note_created_at: new Date().toISOString(),
+        };
+
+        mockSpaceNoteRecords = [newNote, ...mockSpaceNoteRecords];
+
+        return [200, { status: 'OK', data: newNote }];
+    })
+    // SPACES_SINGLE_API
+    .onGet(/bookable_spaces\/space\/.*/)
+    .reply(config => {
+        const urlparts = config.url.split('/').pop();
+        const spaceUuid = urlparts.split('?')[0]; //strip any params off the url, eg userid
+        if (spaceUuid === 'error') {
+            return [500, { status: 'error', message: 'Server error' }];
+        } else if (spaceUuid === 'missingRecord') {
+            return [200, { status: 'ok', data: {} }]; // empty records are a 200
+        } else if (spaceUuid === '404') {
+            // route missing - unlikely
+            return [404, { status: 'error', message: 'Not Found' }];
+        } else {
+            const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
+            return [200, { data: result }];
+        }
+    })
+    // SPACES_FAVOURITES_API
+    .onGet('bookable_spaces/favourites')
+    .reply(() => {
+        return [200, { data: buildMockSpaceFavourites() }];
+    })
+    .onPost('bookable_spaces/favourites')
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        const favouriteList = buildMockSpaceFavourites();
+        return [
+            200,
+            {
+                data: [
+                    ...favouriteList.filter(favourite => favourite.space_id !== body.space_id),
+                    {
+                        favourite_id: favouriteList.length + 1,
+                        space_id: body.space_id,
+                        favourite_username: user || 'vanilla',
+                    },
+                ],
+            },
+        ];
+    })
+    .onDelete('bookable_spaces/favourites')
+    .reply(config => {
+        const body = JSON.parse(config.data);
+        const favouriteList = buildMockSpaceFavourites();
+        return [
+            200,
+            {
+                data: [...favouriteList.filter(favourite => favourite.space_id !== body.space_id)],
+            },
+        ];
+    })
+    .onGet(routes.WEEKLYHOURS_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'weeklyHoursError') {
+            return [500, {}];
+        } else if (responseType === 'weeklyHoursEmpty') {
+            return [200, []];
+        } else if (responseType === 'weeklyHours404') {
+            return [404, {}];
+        } else {
+            return [200, resetWeeklyHourDatesToBeCurrent(hours_weekly)];
+        }
+    })
+    .onGet(routes.SPACES_FACILITY_TYPE_ALL_API().apiUrl)
+    .reply(() => {
+        const emptyFacilityTypes = {
+            status: 'OK',
+            data: {
+                facility_type_groups: [],
+            },
+        };
+        const singleEntry = {
+            status: 'OK',
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 4,
+                        facility_type_group_name: 'Noise level',
+                        facility_type_group_help: 'Choose the typical noise level for this area.',
+                        facility_type_group_order: 1,
+                        facility_type_group_type: 'choose-one',
+                        facility_type_children: [
+                            {
+                                facility_type_id: 1,
+                                facility_type_name: 'Noise level Low',
+                            },
+                        ],
+                    },
+                ],
+            },
+        };
+        if (responseType === 'facilityTypesAllError') {
+            return [500, {}];
+        } else if (responseType === 'facilityTypesAll404') {
+            return [404, {}];
+        } else if (responseType === 'facilityTypesAllEmpty') {
+            return [200, emptyFacilityTypes];
+        } else if (responseType === 'facilityTypesWithOne') {
+            return [200, singleEntry];
+        } else {
+            return [200, facilityTypes_all];
+        }
+    })
+    .onPost(routes.SPACES_FACILITY_TYPE_CREATE_API().apiUrl)
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else if (responseType === 'randomfailures') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: 'new group name',
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onPost(routes.SPACES_FACILITY_TYPE_GROUP_CREATE_API().apiUrl)
+    .reply(config => {
+        const requestBody = config?.data ? JSON.parse(config.data) : {};
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: requestBody?.facility_type_group_name || 'new group name',
+                facility_type_group_help: requestBody?.facility_type_group_help || null,
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
+    .reply(config => {
+        const requestBody = config?.data ? JSON.parse(config.data) : {};
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else if (responseType === 'randomfailures') {
+            return [404, {}];
+        } else {
+            // some random data
+            const result = {
+                facility_type_group_name: requestBody?.facility_type_group_name || 'edited group name',
+                facility_type_group_help: requestBody?.facility_type_group_help || null,
+                facility_type_group_id: 88,
+                facility_type_group_order: 99,
+                facility_type_group_type: 'choose-many',
+            };
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onPut(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API().apiUrl)))
+    .reply(() => {
+        if (responseType === 'reorderError') {
+            return [500, {}];
+        } else {
+            // some random data
+            const result = [{ facility_type_group_id: 1, facility_type_group_order: 99 }];
+            return [200, { status: 'OK', data: result }];
+        }
+    })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API({ id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onGet(routes.SPACES_SITE_API().apiUrl)
+    .reply(() => {
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, location_sites_all];
+        }
+    })
+
+    // Bookable Spaces (site, library, floor)
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'campus' }).apiUrl)
+    .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        } else if (responseType === 'empty') {
+            return [200, []];
+        } else if (responseType === '404') {
+            return [404, {}];
+        } else {
+            return [200, { status: 'OK' }];
+        }
+    })
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'library' }).apiUrl)
+    .reply(() => [200, { status: 'OK' }])
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'floor' }).apiUrl)
+    .reply(() => {
+        if (responseType === 'floorAddError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK', data: { floor_id: 99, other_fields: '...' } }];
+    })
+    .onPost(routes.SPACES_ADD_LOCATION_API({ type: 'space' }).apiUrl)
+    .reply(() => {
+        if (responseType === 'space-create-error') {
+            return [500, {}];
+        }
+        if (responseType === 'spaceAddError') {
+            return [400, { status: 'error', message: 'space-name is not valid' }];
+        }
+        return [200, { status: 'OK', data: newSpace }];
+    })
+
+    // .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    // .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    .reply(withDelay([200, { status: 'OK' }]))
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'library', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceUpdate500Error') {
+            return [
+                500,
+                {
+                    status: 'error',
+                    message:
+                        'SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for rds failed: Name does not resolve (Connection: rds_db, SQL: select count(*) as aggregate from `facility_type` where `facility_type_id` = 2)',
+                },
+            ];
+        }
+        return [200, { status: 'OK' }];
+    })
+
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'campus', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'library', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'floor', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_MODIFY_LOCATION_API({ type: 'space', id: '.*' }).apiUrl)))
+    .reply(() => [200, { status: 'OK' }])
+    .onPut(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_UPDATE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeCreateError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
+    .onPost(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_CREATE_API().apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeCreateError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
+    .onDelete(new RegExp(panelRegExp(routes.SPACES_SPACETYPE_DELETE_API({ id: '.*' }).apiUrl)))
+    .reply(() => {
+        if (responseType === 'spaceTypeDeleteError') {
+            return [500, {}];
+        }
+        return [200, { status: 'OK' }];
+    })
+    // .onDelete(/bookable_spaces\/campus|library|floor\/.*/)
+    // .reply(() => {
+    //     if (responseType === 'error') {
+    //         return [500, {}];
+    //     }
+    //     return [200, { status: 'OK' }];
+    // })
+    .onPut(new RegExp(panelRegExp(routes.SPACES_BULK_FACILITIES_API({ id: '.*' }).apiUrl)))
+    .reply(
+        withDelay([
+            responseType === 'bulkFacilitiesUpdateError' ? 500 : 200,
+            responseType === 'bulkFacilitiesUpdateError' ? {} : { status: 'OK' },
+        ]),
+    )
+    // SPACES_ADMIN_ALL_API - returns all spaces including drafts/deleted for admin
+    .onGet(/bookable_spaces\/admin\/spaces\/all.*/)
+    .reply(config => {
+        const includeDeleted =
+            config?.params?.include_deleted === true ||
+            config?.params?.include_deleted === 'true' ||
+            (config?.url || '').includes('include_deleted=true');
+        const includeDrafts =
+            config?.params?.include_drafts === true ||
+            config?.params?.include_drafts === 'true' ||
+            (config?.url || '').includes('include_drafts=true');
+        let locations = bookableSpaces_all?.data?.locations || [];
+        if (!includeDrafts) {
+            locations = locations.filter(space => !space?.space_draftmode);
+        }
+        if (!includeDeleted) {
+            locations = locations.filter(space => !space?.space_deleted);
+        }
+        return [200, { ...bookableSpaces_all, data: { ...bookableSpaces_all?.data, locations } }];
+    })
+    // SPACES_ADMIN_SINGLE_API - returns a single space by uuid for admin (includes deleted metadata)
+    .onGet(/bookable_spaces\/admin\/space\/.*/)
+    .reply(config => {
+        const spaceUuid = config.url.split('/').pop().split('?')[0];
+        if (spaceUuid === 'error') {
+            return [500, { status: 'error', message: 'Server error' }];
+        } else if (spaceUuid === '404') {
+            return [404, { status: 'error', message: 'Not Found' }];
+        }
+        const result = bookableSpaces_all.data.locations.find(space => space.space_uuid === spaceUuid) || {};
+        return [200, { data: result }];
+    })
+    // SPACES_MODIFY_LOCATION_API (PUT) - handles soft-delete toggle and other space updates
+    .onPut(/bookable_spaces\/space\/\d+.*/)
+    .reply(config => {
+        const spaceId = Number(config.url.split('/').pop().split('?')[0]);
+        const body = JSON.parse(config.data || '{}');
+        const space = bookableSpaces_all.data.locations.find(s => s.space_id === spaceId);
+        if (!space) {
+            return [404, { message: 'Space not found' }];
+        }
+        Object.assign(space, body);
+        return [200, { status: 'OK', data: space }];
     })
     .onAny()
     .reply(function (config) {
@@ -1914,4 +2362,58 @@ function filterExamPaperListByPattern(data, pattern) {
     });
 
     return filteredData;
+}
+
+function resetWeeklyHourDatesToBeCurrent(data) {
+    const timezone = 'Australia/Brisbane';
+
+    const now = new Date();
+    const dateString = now.toLocaleString('en-US', { timeZone: timezone });
+    const currentDate = new Date(dateString);
+
+    const currentDayOfWeek = currentDate.getDay();
+
+    const startOfWeek = new Date(currentDate);
+    const daysFromMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+    startOfWeek.setDate(currentDate.getDate() - daysFromMonday);
+
+    const dayOffsets = {
+        Monday: 0,
+        Tuesday: 1,
+        Wednesday: 2,
+        Thursday: 3,
+        Friday: 4,
+        Saturday: 5,
+        Sunday: 6,
+    };
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getDateForDay(dayName, weekOffset = 0) {
+        const date = new Date(startOfWeek);
+        const dayOffset = dayOffsets[dayName];
+        date.setDate(startOfWeek.getDate() + dayOffset + weekOffset * 7);
+        return formatDate(date);
+    }
+
+    const updatedData = JSON.parse(JSON.stringify(data)); // don't mutate original
+
+    updatedData.locations.forEach(location => {
+        location.departments?.forEach(department => {
+            department.weeks?.forEach((week, weekIndex) => {
+                Object.keys(week).forEach(dayName => {
+                    if (week[dayName].date) {
+                        week[dayName].date = getDateForDay(dayName, weekIndex);
+                    }
+                });
+            });
+        });
+    });
+
+    return updatedData;
 }

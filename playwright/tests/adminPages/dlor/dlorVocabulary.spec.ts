@@ -79,7 +79,7 @@ test.describe('Digital Learning Hub admin', () => {
             ).toBeVisible();
         });
 
-        
+
 
     });
 });

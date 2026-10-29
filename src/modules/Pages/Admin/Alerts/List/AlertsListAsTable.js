@@ -72,9 +72,14 @@ const StyledTable = styled(Table)(({ theme }) => ({
         backgroundColor: theme.palette.error.main,
         color: '#fff',
     },
-    '& .system': {
+    '& .systemShown': {
         backgroundColor: '#666666',
         color: '#fff',
+    },
+    '& .systemHidden': {
+        backgroundColor: '#fff',
+        color: '#666',
+        border: 'solid 1px #666',
     },
     '& .checkboxCell': {
         '& input[type="checkbox"]:checked + svg': {
@@ -89,6 +94,64 @@ const StyledTable = styled(Table)(({ theme }) => ({
         left: -9999,
     },
 }));
+
+export const reEnableAllCheckboxes = () => {
+    // is tested but coverage failing
+    const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+    checkBoxList.forEach(ii => {
+        ii.disabled = false;
+        ii.parentElement.parentElement.classList.remove('Mui-disabled');
+    });
+};
+
+export const clearAllCheckboxes = () => {
+    // is tested but coverage failing
+    const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+    checkBoxList.forEach(ii => {
+        if (ii.checked) {
+            ii.click();
+        }
+    });
+};
+
+export const getNumberCheckboxesSelected = () => {
+    return document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked').length;
+};
+
+export const getUserRows = (rows, alertOrder, footerDisplayMinLength) => {
+    let userows = rows;
+    if (!!alertOrder && !!rows && rows.length > 0) {
+        // (fake switch to allow istanbul on else if :( )
+        switch (alertOrder) {
+            case 'reverseEnd':
+                userows = rows.sort(
+                    (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            case 'forwardEnd':
+                userows = rows.sort(
+                    (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            case 'forwardStart':
+                userows = rows.sort(
+                    (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            default:
+        }
+    }
+    return { userows, needsPaginator: userows.length > footerDisplayMinLength };
+};
+
+export const confirmDeleteLocale = numberOfCheckedBoxes => {
+    return {
+        ...locale.listPage.confirmDelete,
+        confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
+            .replace('[N]', numberOfCheckedBoxes)
+            .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
+    };
+};
 
 export const AlertsListAsTable = ({
     rows,
@@ -140,31 +203,7 @@ export const AlertsListAsTable = ({
 
     const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
 
-    let userows = rows;
-    if (!!alertOrder && !!rows && rows.length > 0) {
-        // (fake switch to allow istanbul on else if :( )
-        switch (alertOrder) {
-            case 'reverseEnd':
-                userows = rows.sort(
-                    (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
-                );
-                break;
-            /* istanbul ignore next */
-            case 'forwardEnd':
-                userows = rows.sort(
-                    (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
-                );
-                break;
-            /* istanbul ignore next */
-            case 'forwardStart':
-                userows = rows.sort(
-                    (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
-                );
-                break;
-            /* istanbul ignore next */
-            default:
-        }
-    }
+    const { userows, needsPaginator } = getUserRows(rows, alertOrder, footerDisplayMinLength);
 
     if (!!alertsLoading) {
         return (
@@ -199,32 +238,6 @@ export const AlertsListAsTable = ({
         scrollToTopOfPage();
     };
 
-    /* istanbul ignore next */
-    const reEnableAllCheckboxes = () => {
-        // is tested but coverage failing
-        const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            ii.disabled = false;
-            ii.parentElement.parentElement.classList.remove('Mui-disabled');
-        });
-    };
-
-    /* istanbul ignore next */
-    const clearAllCheckboxes = () => {
-        // is tested but coverage failing
-        const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
-        checkBoxList.forEach(ii => {
-            if (ii.checked) {
-                ii.click();
-            }
-        });
-    };
-
-    function getNumberCheckboxesSelected() {
-        return document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked').length;
-    }
-
-    /* istanbul ignore next */
     const handleCheckboxChange = e => {
         // is tested but coverage failing
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
@@ -259,7 +272,6 @@ export const AlertsListAsTable = ({
         );
     };
 
-    /* istanbul ignore next */
     function deleteAlertById(alertID) {
         // this is called, but the coverage isn't happening
         deleteAlert(alertID)
@@ -273,7 +285,6 @@ export const AlertsListAsTable = ({
             });
     }
 
-    /* istanbul ignore next */
     const deleteSelectedAlerts = () => {
         // is tested but coverage failing
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
@@ -285,17 +296,26 @@ export const AlertsListAsTable = ({
             });
         }
     };
-
-    const confirmDeleteLocale = numberOfCheckedBoxes => {
-        return {
-            ...locale.listPage.confirmDelete,
-            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
-                .replace('[N]', numberOfCheckedBoxes)
-                .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
-        };
+    const writeSystemChip = (
+        alert,
+        ss,
+        index,
+        type = `shown`,
+        labelSubLabel = `Only shows on:`,
+        titleSubTitle = `restricted to`,
+        nameOfClass = `systemShown`,
+    ) => {
+        return (
+            <div key={`system-chip-${type}-${ss?.slug || index}`} style={{ marginLeft: 3, display: 'inline' }}>
+                <Chip
+                    data-testid={`alert-list-system-chip-${type}-${alert.id}-${ss?.slug || index}`}
+                    label={`${labelSubLabel} ${ss?.title || ss?.slug || 'Unrecognised'}`}
+                    title={`This alert is ${titleSubTitle} the ${ss?.title || ss?.slug || 'Unrecognised'} system`}
+                    className={`${nameOfClass} ${!!ss?.removed && /* istanbul ignore next */ 'removedChip'}`}
+                />
+            </div>
+        );
     };
-
-    const needsPaginator = userows.length > footerDisplayMinLength;
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -316,7 +336,7 @@ export const AlertsListAsTable = ({
             />
             <StyledHeader
                 data-testid={`headerRow-${tableType}`}
-                className={`${!!deleteActive ? /* istanbul ignore next */ 'headerRowHighlighted' : ''}`}
+                className={`${!!deleteActive ? 'headerRowHighlighted' : ''}`}
             >
                 <div>
                     <h3 style={{ marginBottom: 6 }}>
@@ -331,10 +351,7 @@ export const AlertsListAsTable = ({
                     </h3>
                 </div>
                 {!!deleteActive && (
-                    /* istanbul ignore next */ <span
-                        className="deleteManager"
-                        style={{ marginLeft: 'auto', paddingTop: 8 }}
-                    >
+                    <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
                         <span>{alertNotice}</span>
                         <IconButton
                             onClick={showDeleteConfirmation}
@@ -343,13 +360,7 @@ export const AlertsListAsTable = ({
                             title="Delete alert(s)"
                             size="large"
                         >
-                            <DeleteIcon
-                                className={`${
-                                    !!deleteActive
-                                        ? /* istanbul ignore next */ 'iconHighlighted'
-                                        : /* istanbul ignore next */ ''
-                                }`}
-                            />
+                            <DeleteIcon className="iconHighlighted" />
                         </IconButton>
                         <IconButton
                             onClick={clearAllCheckboxes}
@@ -444,37 +455,24 @@ export const AlertsListAsTable = ({
                                                         title="This alert cannot be dismissed"
                                                     />
                                                 )}
-                                                {!!alert.systems &&
-                                                    alert.systems.length > 0 &&
-                                                    alert.systems.map((systemSlug, index) => {
+                                                {!!alert.systems_shown &&
+                                                    alert.systems_shown.length > 0 &&
+                                                    alert.systems_shown.map((systemSlug, index) => {
                                                         const ss = systemList.find(s => s.slug === systemSlug);
-                                                        return (
-                                                            <div
-                                                                key={`alert-list-system-chip-${
-                                                                    ss?.slug || /* istanbul ignore next */ index
-                                                                }`}
-                                                                style={{ marginLeft: 3, display: 'inline' }}
-                                                            >
-                                                                <Chip
-                                                                    data-testid={`alert-list-system-chip-${
-                                                                        alert.id
-                                                                    }-${ss?.slug || /* istanbul ignore next */ index}`}
-                                                                    label={`System: ${
-                                                                        ss?.title ||
-                                                                        /* istanbul ignore next */ ss?.slug ||
-                                                                        /* istanbul ignore next */ 'Unrecognised'
-                                                                    }`}
-                                                                    title={`This alert is restricted to the ${
-                                                                        ss?.title ||
-                                                                        /* istanbul ignore next */ ss?.slug ||
-                                                                        /* istanbul ignore next */ 'Unrecognised'
-                                                                    } system`}
-                                                                    className={`system ${
-                                                                        !!ss?.removed &&
-                                                                        /* istanbul ignore next */ 'removedChip'
-                                                                    }`}
-                                                                />
-                                                            </div>
+                                                        return writeSystemChip(alert, ss, index);
+                                                    })}
+                                                {!!alert.systems_hidden &&
+                                                    alert.systems_hidden.length > 0 &&
+                                                    alert.systems_hidden.map((systemSlug, index) => {
+                                                        const ss = systemList.find(s => s.slug === systemSlug);
+                                                        return writeSystemChip(
+                                                            alert,
+                                                            ss,
+                                                            index,
+                                                            `hidden`,
+                                                            `Hidden from:`,
+                                                            `hidden from`,
+                                                            `systemHidden`,
                                                         );
                                                     })}
                                             </div>

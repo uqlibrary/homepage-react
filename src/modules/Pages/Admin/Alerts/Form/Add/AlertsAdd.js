@@ -31,7 +31,8 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
         linkUrl: '',
         type: 'add',
         minimumDate: getTimeNowFormatted(),
-        systems: [],
+        systemsShownOn: [],
+        systemsHiddenFrom: [],
     };
     return (
         <Fragment>

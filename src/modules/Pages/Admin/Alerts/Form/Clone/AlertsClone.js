@@ -13,6 +13,31 @@ import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
+export const setDefaults = ({ alert, isPermanent, message, linkRegex }) => {
+    return {
+        id: alert?.id || '',
+        dateList: [
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ],
+        startDateDefault: getTimeNowFormatted(),
+        endDateDefault: getTimeEndOfDayFormatted(),
+        alertTitle: alert?.title || '',
+        enteredbody: message || '',
+        linkRequired: linkRegex?.length === 3,
+        priorityType: (!!alert && alert.priority_type) || 'info',
+        permanentAlert: isPermanent || false,
+        linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
+        linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
+        type: 'clone',
+        minimumDate: getTimeNowFormatted(),
+        systemsShownOn: alert?.systems_shown || [],
+        systemsHiddenFrom: alert?.systems_hidden || [],
+    };
+};
+
 export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
 
@@ -47,27 +72,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         message = message.replace('[permanent]', '');
     }
 
-    const defaults = {
-        id: alertData?.id || '',
-        dateList: [
-            {
-                startDate: getTimeNowFormatted(),
-                endDate: getTimeEndOfDayFormatted(),
-            },
-        ],
-        startDateDefault: getTimeNowFormatted(),
-        endDateDefault: getTimeEndOfDayFormatted(),
-        alertTitle: alertData?.title || '',
-        enteredbody: message || '',
-        linkRequired: linkRegex?.length === 3,
-        priorityType: (!!alertData && alertData.priority_type) || 'info',
-        permanentAlert: isPermanent || false,
-        linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
-        linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
-        type: 'clone',
-        minimumDate: getTimeNowFormatted(),
-        systems: alertData?.systems || [],
-    };
+    const defaults = setDefaults({ alert, isPermanent, message, linkRegex });
 
     return (
         <Fragment>

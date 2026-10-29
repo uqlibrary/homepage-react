@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 import RemoveCircleSharpIcon from '@mui/icons-material/RemoveCircle';
 import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -12,6 +13,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -20,9 +23,22 @@ import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../alertsadmin.locale';
 import {
+    editConfirmationDetails,
+    expandValues,
+    isInvalidEndDate,
+    isInvalidStartDate,
+    postAddCloneDetails,
+    postAddConfirmationDetails,
+    SYSTEM_PANEL_SHOW,
+    SYSTEM_PANEL_HIDE,
+    SYSTEM_PANEL_ALL,
+} from './helpers';
+
+import {
     getBody,
     getTimeEndOfDayFormatted,
     getTimeNowFormatted,
+    isValidUrl,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
     systemList,
@@ -32,7 +48,33 @@ import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton, StyledTe
 import { useNavigate } from 'react-router';
 import { breadcrumbs } from 'config/routes';
 
-const moment = require('moment');
+function SystemTabPanel(props) {
+    const { children, value, index, ...other } = props;
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`system-tabpanel-${index}`}
+            aria-labelledby={`system-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        </div>
+    );
+}
+SystemTabPanel.propTypes = {
+    children: PropTypes.any.isRequired,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    other: PropTypes.any,
+};
+
+function a11yProps(index, slug = 'system') {
+    return {
+        id: `${slug}-tab-${index}`,
+        'aria-controls': `${slug}-tabpanel-${index}`,
+    };
+}
 
 const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
     // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
@@ -56,37 +98,53 @@ const StyledCheckBoxes = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledBox = styled(Grid)(() => ({
-    border: '1px solid rgb(211, 211, 211)',
     marginTop: '1em',
     paddingBottom: '1em',
 }));
 
-export const isValidUrl = testurl => {
-    if (!testurl) {
-        return false;
-    }
-    if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
-        return false;
-    }
-    if (testurl.length < 'http://x.co'.length) {
-        // minimum possible url
-        return false;
-    }
-    // while technically an url doesn't need a TLD - in practice it does
-    if (!testurl.includes('.')) {
-        return false;
-    }
-    try {
-        const url = new URL(testurl);
-        if (url.hostname.length < 'x.co'.length) {
-            return false;
-        }
-    } catch (_) {
-        /* istanbul ignore next */
-        return false;
-    }
-    return true;
-};
+const warningIcon =
+    'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%233b383e%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%233b383e%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%233b383e%27%3e%3c/circle%3e%3c/svg%3e")';
+const StyledTabWrapperBox = styled(Box)(({ theme }) => ({
+    width: '100%',
+    marginInline: '1rem',
+    '& .tabPanel p.systemWarning': {
+        backgroundColor: theme.palette.designSystem.alert.warning,
+        padding: '1.1rem',
+        display: 'flex',
+        alignItems: 'center',
+        columnGap: '1rem',
+        maxWidth: '46ch',
+        '& span.infoBadge': {
+            display: 'inline-block',
+            width: '24px',
+            height: '24px',
+            backgroundImage: warningIcon,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            flexShrink: 0,
+        },
+    },
+    [theme.breakpoints.up('uqDsTablet')]: {
+        // affordance: on desktop, push each panel over to encourage a visual "what sort of system is this?" enhancement
+        '& .tabPanel2': {
+            '& > div': {
+                marginLeft: '20ch',
+            },
+        },
+        '& .tabPanel3': {
+            '& > div': {
+                marginLeft: '45ch',
+            },
+        },
+    },
+    [theme.breakpoints.down('uqDsTablet')]: {
+        '& .tabsHeader div[role="tablist"]': {
+            // vertical tabs on tablet and below for visibility
+            flexDirection: 'column',
+        },
+    },
+}));
 
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError }) => {
     const navigate = useNavigate();
@@ -105,6 +163,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         },
     ]);
 
+    const [systemTabValue, setSystemTabValue] = React.useState(SYSTEM_PANEL_ALL);
+
     const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
@@ -120,26 +180,34 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setPreviewOpen(showThePreview);
     };
 
-    /* istanbul ignore next */
-    function isInvalidStartDate(startDate) {
-        return (startDate !== '' && startDate < defaults.startDateDefault) || !moment(startDate).isValid();
-    }
+    const validateValues = (currentValues, systemTabValueIN = null) => {
+        const systemTabValueLocal =
+            systemTabValueIN === null ? systemTabValue : /* istanbul ignore next */ systemTabValueIN;
+        const isValidSystem = () => {
+            if (systemTabValueLocal === SYSTEM_PANEL_SHOW) {
+                return currentValues?.systemsShownOn?.length > 0;
+            }
+            if (systemTabValueLocal === SYSTEM_PANEL_HIDE) {
+                return currentValues?.systemsHiddenFrom?.length > 0;
+            }
+            /* istanbul ignore else */
+            if (systemTabValueLocal === SYSTEM_PANEL_ALL) {
+                return true;
+            }
+            /* istanbul ignore next */
+            return false;
+        };
 
-    /* istanbul ignore next */
-    function isInvalidEndDate(endDate, startDate) {
-        return (startDate !== '' && endDate <= startDate) || !moment(endDate).isValid();
-    }
-
-    const validateValues = currentValues => {
         const isValid =
             !alertLoading &&
-            !isInvalidStartDate(currentValues.startDate) &&
+            !isInvalidStartDate(currentValues.startDate, defaults) &&
             !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
-            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
+            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl)) &&
+            !!isValidSystem();
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
         /* istanbul ignore next */
@@ -156,6 +224,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (!!defaults && defaults.type === 'clone') {
             setFormValidity(validateValues(defaults));
         }
+
+        if (defaults?.systemsHiddenFrom?.length > 0) {
+            setSystemTabValue(SYSTEM_PANEL_HIDE);
+        } else if (defaults?.systemsShownOn?.length > 0) {
+            setSystemTabValue(SYSTEM_PANEL_SHOW);
+        } else {
+            setSystemTabValue(SYSTEM_PANEL_ALL);
+        }
+
         return () => {
             setSuccessCount(0);
         };
@@ -183,6 +260,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     }, [showConfirmation, alertError, alertStatus]);
 
+    const handleSystemTabChange = (event, newSystemTabValue) => {
+        setSystemTabValue(newSystemTabValue);
+        setFormValidity(validateValues(values, newSystemTabValue));
+    };
+
     const clearForm = () => {
         setValues({
             ['alertTitle']: '',
@@ -200,7 +282,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     endDate: defaults.endDateDefault,
                 },
             ],
-            ['systems']: [],
+            ['systemsShownOn']: [],
+            ['systemsHiddenFrom']: [],
         });
     };
 
@@ -229,52 +312,32 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         scrollToTopOfPage();
     };
 
-    function expandValues(expandableValues) {
-        // because otherwise we see 'false' when we clear the field
-        const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
-
-        const newLinkTitle = expandableValues.linkTitle || '';
-        const newLinkUrl = expandableValues.linkUrl || '';
-
-        const newBody = getBody(expandableValues);
-
-        const newStartDate = expandableValues.startDate || defaults.startDateDefault;
-        const newEndDate = expandableValues.endDate || defaults.endDateDefault;
-
-        return {
-            ...expandableValues,
-            ['alertTitle']: newAlertTitle,
-            ['body']: newBody,
-            ['linkTitle']: newLinkTitle,
-            ['linkUrl']: newLinkUrl,
-            ['startDate']: newStartDate,
-            ['endDate']: newEndDate,
-            ['systems']: expandableValues.systems || /* istanbul ignore next */ [],
-        };
-    }
-
     const saveAlerts = () => {
         setSuccessCount(0);
-        const expandedValues = expandValues(values);
+        const expandedValues = expandValues(values, defaults);
         setValues(expandedValues);
 
         const dateList = expandedValues.dateList;
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
-            body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
+            body: expandedValues.body, // unsure why this isn't set into `values` by the Set call above
             priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
-            systems: values.systems || /* istanbul ignore next */ [],
+            systems_shown:
+                systemTabValue === SYSTEM_PANEL_SHOW ? values.systemsShownOn || /* istanbul ignore next */ [] : [],
+            systems_hidden:
+                systemTabValue === SYSTEM_PANEL_HIDE ? values.systemsHiddenFrom || /* istanbul ignore next */ [] : [],
         };
 
         if (defaults.type === 'edit') {
-            actions.saveAlertChange({
+            const updatedRecord = {
                 ...newValues,
                 start: formatDate(dateList[0]?.startDate),
                 end: formatDate(dateList[0]?.endDate),
-            });
+            };
+            actions.saveAlertChange(updatedRecord);
         } else {
             const saveableValues = [];
             dateList.forEach(dateset => {
@@ -310,7 +373,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
 
         showHidePreview(true);
-        setValues(expandValues(values));
+        setValues(expandValues(values, defaults));
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWebComponent = document.createElement('uq-alert');
@@ -339,22 +402,58 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleChange = prop => event => {
-        if (prop === 'system') {
-            const systems = values.systems || /* istanbul ignore next */ [];
+        if (prop === 'system-showon') {
+            const systemsShownOnLocal = [...(values.systemsShownOn || /* istanbul ignore next */ [])];
             /* istanbul ignore next */
-            if (systems.includes(event.target.name) && !event.target.checked) {
+            if (systemsShownOnLocal?.includes(event.target.name) && !event.target.checked) {
                 // system had been selected and the checkbox has been unchecked. Remove.
-                const index = systems.indexOf(event.target.name);
-                index >= 0 && systems.splice(index, 1);
-            } /* istanbul ignore else */ else if (!systems.includes(event.target.name) && !!event.target.checked) {
-                // system wasnt previously selected and the checkbox has been checked. Add.
-                systems.push(event.target.name);
+                const index = systemsShownOnLocal?.indexOf(event.target.name);
+                index >= 0 && systemsShownOnLocal?.splice(index, 1);
+            } /* istanbul ignore else */ else if (
+                !systemsShownOnLocal?.includes(event.target.name) &&
+                !!event.target.checked
+            ) {
+                // system wasn't previously selected and the checkbox has been checked. Add.
+                systemsShownOnLocal?.push(event.target.name);
             }
             setValues({
                 ...values,
-                systems: systems,
+                systemsShownOn: systemsShownOnLocal,
             });
-            setFormValidity(validateValues(values));
+            setFormValidity(
+                validateValues({
+                    ...values,
+                    systemsShownOn: systemsShownOnLocal,
+                }),
+            );
+
+            return;
+        }
+        if (prop === 'system-hidefrom') {
+            const systemsHiddenFromLocal = [...(values.systemsHiddenFrom || /* istanbul ignore next */ [])];
+            /* istanbul ignore next */
+            if (systemsHiddenFromLocal?.includes(event.target.name) && !event.target.checked) {
+                // system had been selected and the checkbox has been unchecked. Remove.
+                const index = systemsHiddenFromLocal?.indexOf(event.target.name);
+                index >= 0 && systemsHiddenFromLocal?.splice(index, 1);
+            } /* istanbul ignore else */ else if (
+                !systemsHiddenFromLocal?.includes(event.target.name) &&
+                !!event.target.checked
+            ) {
+                // system wasn't previously selected and the checkbox has been checked. Add.
+                systemsHiddenFromLocal?.push(event.target.name);
+            }
+            setValues({
+                ...values,
+                systemsHiddenFrom: systemsHiddenFromLocal,
+            });
+            setFormValidity(
+                validateValues({
+                    ...values,
+                    systemsHiddenFrom: systemsHiddenFromLocal,
+                }),
+            );
+
             return;
         }
 
@@ -395,7 +494,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const newValue = event.target.hasOwnProperty('checked') ? event.target.checked : event.target.value;
         setValues({ ...values, [prop]: newValue });
 
-        const newValues = expandValues({ ...values, [prop]: newValue });
+        const newValues = expandValues({ ...values, [prop]: newValue }, defaults);
         setValues(newValues);
 
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
@@ -457,28 +556,18 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
     };
 
-    function postAddConfirmationDetails() {
-        // update the number of alerts saved if they saved multiple date-sets
-        return {
-            ...locale.form.add.addAlertConfirmation,
-            confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
-                'An alert has',
-                countSuccess > 1 ? /* istanbul ignore next */ `${countSuccess} alerts have` : 'An alert has',
-            ),
-        };
-    }
-
-    function postAddCloneDetails() {
-        // update the number of alerts saved if they saved multiple date-sets
-        return {
-            ...locale.form.clone.cloneAlertConfirmation,
-            confirmationTitle: locale.form.clone.cloneAlertConfirmation.confirmationTitle.replace(
-                'The alert has',
-                countSuccess > 1 ? `${countSuccess} alerts have` : 'The alert has',
-            ),
-        };
-    }
-
+    const ShowWarningOnEmpty = ({ systems }) => {
+        return (
+            <>
+                {systems?.length === 0 && (
+                    <p className={'systemWarning'} data-testid="system-show-empty-warning">
+                        <span className="infoBadge" aria-hidden="true" />
+                        At least one system must be chosen before saving.
+                    </p>
+                )}
+            </>
+        );
+    };
     return (
         <Fragment>
             <form>
@@ -503,7 +592,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
-                        locale={locale.form.edit.editAlertConfirmation}
+                        locale={editConfirmationDetails(locale.form.edit.editAlertConfirmation, values, systemTabValue)}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
@@ -513,7 +602,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={postAddConfirmationDetails()}
+                        locale={postAddConfirmationDetails(
+                            locale.form.add.addAlertConfirmation,
+                            countSuccess,
+                            values,
+                            systemTabValue,
+                        )}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
@@ -522,7 +616,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
                         isOpen={isOpen}
-                        locale={postAddCloneDetails()}
+                        locale={postAddCloneDetails(locale.form.clone.cloneAlertConfirmation, countSuccess)}
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}
@@ -575,7 +669,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         variant="standard"
                                         id={`startDate-${index}`}
                                         data-testid={`admin-alerts-form-start-date-${index}`}
-                                        error={isInvalidStartDate(dateset.startDate)}
+                                        error={isInvalidStartDate(dateset.startDate, defaults)}
                                         InputLabelProps={{ shrink: true }}
                                         label={locale.form.labels.startdate}
                                         onChange={handleChange('startDate')}
@@ -734,39 +828,106 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </StyledBox>
                 <StyledBox container spacing={2}>
                     <Grid item xs={12}>
-                        <p>{locale.form.labels.systems}</p>
+                        <p>
+                            <strong>System specific alerts:</strong> determine which systems the alert will appear on
+                        </p>
                     </Grid>
-                    <Grid item xs={12}>
-                        {systemList.map(system => {
-                            const isChecked = values?.systems?.find(s => s === system.slug) || null;
-                            const displayColor = !!system.removed
-                                ? /* istanbul ignore next */ null
-                                : 'rgba(0, 0, 0, 0.87)';
-                            return (
-                                <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
-                                    <Checkbox
-                                        checked={!!isChecked}
-                                        data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
-                                        onChange={handleChange('system')}
-                                        name={system.slug}
-                                        title={
-                                            system.title ||
-                                            /* istanbul ignore next */ system.slug ||
-                                            /* istanbul ignore next */ 'Unknown'
-                                        }
-                                        className={`${
-                                            !system.removed ? 'checkbox' : /* istanbul ignore next */ 'disabledCheckbox'
-                                        }`}
-                                        disabled={!!system.removed}
-                                    />
-                                    {system.title}
-                                </InputLabel>
-                            );
-                        })}
-                    </Grid>
+                    <StyledTabWrapperBox>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <Tabs
+                                className={'tabsHeader'}
+                                value={systemTabValue}
+                                onChange={handleSystemTabChange}
+                                aria-label="System tabs"
+                            >
+                                <Tab label="Show on all systems" {...a11yProps(SYSTEM_PANEL_ALL)} />
+                                <Tab label="Show on some systems" {...a11yProps(SYSTEM_PANEL_SHOW)} />
+                                <Tab label="Hide on some systems" {...a11yProps(SYSTEM_PANEL_HIDE)} />
+                            </Tabs>
+                        </Box>
+
+                        <SystemTabPanel className="tabPanel tabPanel1" value={systemTabValue} index={SYSTEM_PANEL_ALL}>
+                            <p>This alert will show on all systems.</p>
+                        </SystemTabPanel>
+                        <SystemTabPanel className="tabPanel tabPanel2" value={systemTabValue} index={SYSTEM_PANEL_SHOW}>
+                            <Grid item xs={12}>
+                                <p>Choose one or more systems that SHOULD show the alerts.</p>
+                                {systemList.map(system => {
+                                    const isChecked = values?.systemsShownOn?.find(s => s === system.slug) || null;
+                                    const displayColor = !!system.removed
+                                        ? /* istanbul ignore next */ null
+                                        : 'rgba(0, 0, 0, 0.87)';
+                                    return (
+                                        <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
+                                            <Checkbox
+                                                checked={!!isChecked}
+                                                data-testid={`admin-alerts-form-checkbox-system-showon-${system.slug}`}
+                                                onChange={handleChange('system-showon')}
+                                                name={`${system.slug}`}
+                                                title={
+                                                    `Show on {system.title}` ||
+                                                    /* istanbul ignore next */ `Show on {system.slug}` ||
+                                                    /* istanbul ignore next */ 'Unknown'
+                                                }
+                                                className={`${
+                                                    !system.removed
+                                                        ? 'checkbox'
+                                                        : /* istanbul ignore next */ 'disabledCheckbox'
+                                                }`}
+                                                disabled={!!system.removed}
+                                            />
+                                            Show on {system.title}
+                                        </InputLabel>
+                                    );
+                                })}
+                                <ShowWarningOnEmpty systems={values.systemsShownOn} />
+                            </Grid>
+                        </SystemTabPanel>
+                        <SystemTabPanel className="tabPanel tabPanel3" value={systemTabValue} index={SYSTEM_PANEL_HIDE}>
+                            <Grid item xs={12}>
+                                <p>Choose one or more systems this alert should be HIDDEN from.</p>
+                                {systemList.map(system => {
+                                    const isChecked = values?.systemsHiddenFrom?.find(s => s === system.slug) || null;
+                                    const displayColor = !!system.removed
+                                        ? /* istanbul ignore next */ null
+                                        : 'rgba(0, 0, 0, 0.87)';
+                                    return (
+                                        <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
+                                            <Checkbox
+                                                checked={!!isChecked}
+                                                data-testid={`admin-alerts-form-checkbox-system-hidefrom-${system.slug}`}
+                                                onChange={handleChange('system-hidefrom')}
+                                                name={`${system.slug}`}
+                                                title={
+                                                    `Hide from {system.title}` ||
+                                                    /* istanbul ignore next */ `Hide from {system.slug}` ||
+                                                    /* istanbul ignore next */ 'Unknown'
+                                                }
+                                                className={`${
+                                                    !system.removed
+                                                        ? 'checkbox'
+                                                        : /* istanbul ignore next */ 'disabledCheckbox'
+                                                }`}
+                                                disabled={!!system.removed}
+                                            />
+                                            Hide from {system.title}
+                                        </InputLabel>
+                                    );
+                                })}
+                                <ShowWarningOnEmpty systems={values.systemsHiddenFrom} />
+                            </Grid>
+                        </SystemTabPanel>
+                    </StyledTabWrapperBox>
                 </StyledBox>
                 {defaults.type === 'edit' && values.createdBy !== '?' && (
-                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid
+                        container
+                        spacing={2}
+                        style={{
+                            marginTop: '1rem',
+                            borderTop: '1px solid rgb(211, 211, 211)',
+                        }}
+                    >
                         {/* created_by entries before we started recording the creator are marked as '?' */}
                         <Grid item data-testid="admin-alerts-form-created-by">{`Created by: ${values.createdBy}`}</Grid>
                     </Grid>

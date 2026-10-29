@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router';
 
 import Grid from '@mui/material/Grid';
-import { Link as MuiLink } from '@mui/material';
+import MuiLink from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -41,7 +41,7 @@ const StyledActionsUl = styled('ul')(() => ({
  * ALWAYS refer to espace as "UQ eSpace"
  */
 
-const EspacePossible = ({ recordCount }) => {
+export const EspacePossible = ({ recordCount }) => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
             <MuiLink
@@ -59,7 +59,7 @@ const EspacePossible = ({ recordCount }) => {
         </StyledGridListItem>
     );
 };
-const EspaceUpdateWorks = () => {
+export const EspaceUpdateWorks = () => {
     return (
         <StyledGridItem component={'div'} item xs={12}>
             <MuiLink
@@ -76,7 +76,7 @@ const EspaceUpdateWorks = () => {
     );
 };
 
-const EspaceEditorialAppointments = () => {
+export const EspaceEditorialAppointments = () => {
     return (
         <StyledGridItem component={'div'} item xs={12}>
             <MuiLink
@@ -92,7 +92,7 @@ const EspaceEditorialAppointments = () => {
         </StyledGridItem>
     );
 };
-const EspaceOrcid = () => {
+export const EspaceOrcid = () => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
             <MuiLink
@@ -109,7 +109,7 @@ const EspaceOrcid = () => {
         </StyledGridListItem>
     );
 };
-const EspaceNTROs = ({ recordCount }) => {
+export const EspaceNTROs = ({ recordCount }) => {
     return (
         <StyledGridListItem component={'li'} item xs={12}>
             <MuiLink

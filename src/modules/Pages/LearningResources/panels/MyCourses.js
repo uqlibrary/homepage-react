@@ -40,13 +40,13 @@ export const MyCourses = ({
     const { account } = useAccountContext();
 
     const handleCourseTabChange = (event, subjectTabId) => {
-        /* istanbul ignore next */
-        if (!event.target.innerText) {
-            // we didnt get a course code?
+        const selectedSubject = account?.current_classes?.find(
+            (subject, index) => `${courseTabLabel}-${index}` === subjectTabId,
+        );
+        if (!selectedSubject?.classnumber) {
             return;
         }
-        const coursecode = event.target.innerText;
-        loadSubjectAndFocusOnTab(coursecode, subjectTabId);
+        loadSubjectAndFocusOnTab(selectedSubject.classnumber, subjectTabId);
     };
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);

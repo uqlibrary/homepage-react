@@ -4,36 +4,20 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
-
-import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
-import { pluralise } from 'helpers/general';
-import { breadcrumbs } from 'config/routes';
-import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
-import { set } from 'js-cookie';
-import { setIn } from 'immutable';
-
-import { useAccountContext } from 'context';
 
 export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterListError, dlorFilterList }) => {
-    const { account } = useAccountContext();
-    console.log('actions', actions);
     useEffect(() => {
-        console.log(dlorFilterList, dlorFilterListLoading, dlorFilterListError);
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
@@ -63,6 +47,18 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
         setFacetHelp(event.target.value || /* istanbul ignore next */ '');
     };
 
+    const handleClose = () => {
+        setEditBoxOpened(false);
+        setFormMode('edit');
+        setInputValue('');
+        setFacetOrder(0);
+        setFacetHelp('');
+        setFacetName('');
+        setFacetTypeId(null);
+        setFacet(null);
+        setFacetShowHelp(false);
+    };
+
     const updateFacet = id => {
         const payload = {
             facet_name: inputValue,
@@ -82,26 +78,11 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
             facet_help: facetHelp,
             facet_show_help: facetShowHelp,
         };
-        console.log('THE PAYLOAD IS', payload);
         actions.createFacet(payload).then(handleClose());
     };
 
     const handleDeleteFacet = id => {
-        console.log('delete facet', id);
         actions.deleteFacet(id).then(setConfirmDeleteModal(false));
-    };
-
-    const handleClose = () => {
-        console.log('testing');
-        setEditBoxOpened(false);
-        setFormMode('edit');
-        setInputValue('');
-        setFacetOrder(0);
-        setFacetHelp('');
-        setFacetName('');
-        setFacetTypeId(null);
-        setFacet(null);
-        setFacetShowHelp(false);
     };
 
     const handleEditFacet = facet => {
@@ -188,7 +169,6 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {
-                                                        console.log('Delete facet');
                                                         setFacet(facet);
                                                         setConfirmDeleteModal(true);
                                                         // handleDeleteFacet(facet?.facet_id)
@@ -306,10 +286,8 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                             disabled={!inputValue}
                             onClick={() => {
                                 if (formMode === 'edit') {
-                                    console.log('Confirm', facet.facet_id);
                                     updateFacet(facet.facet_id);
                                 } else {
-                                    console.log('Add new facet');
                                     addNewFacet();
                                 }
                             }}
@@ -339,15 +317,9 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
 
 DLOFilterManage.propTypes = {
     actions: PropTypes.any,
-    dlorSeriesList: PropTypes.array,
-    dlorSeriesListLoading: PropTypes.bool,
-    dlorSeriesListError: PropTypes.any,
-    dlorList: PropTypes.array,
-    dlorListLoading: PropTypes.bool,
-    dlorListError: PropTypes.any,
-    dlorSeriesDeleted: PropTypes.array,
-    dlorSeriesDeleting: PropTypes.bool,
-    dlorSeriesDeleteError: PropTypes.any,
+    dlorFilterListLoading: PropTypes.any,
+    dlorFilterListError: PropTypes.any,
+    dlorFilterList: PropTypes.any,
 };
 
 export default DLOFilterManage;
