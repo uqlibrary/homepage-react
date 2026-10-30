@@ -1,5 +1,4 @@
 const moment = require('moment');
-
 export function getTimeNowFormatted() {
     return moment().format('YYYY-MM-DDTHH:mm');
 }
@@ -135,5 +134,13 @@ export const systemList = [
     {
         slug: 'espace',
         title: 'eSpace',
+    },
+    {
+        slug: 'drupal',
+        title: 'Drupal',
+    },
+    {
+        slug: 'guides',
+        title: 'Guides',
     },
 ];
