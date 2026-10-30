@@ -19,8 +19,9 @@ function setup(testProps = {}) {
 function createMatchMedia(width) {
     return query => ({
         matches: mediaQuery.match(query, { width }),
-        addListener: () => {},
-        removeListener: () => {},
+        // MUI v7 requires these
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
     });
 }
 

@@ -15,8 +15,13 @@ const article = {
 function setup(articleindex = 0, width = 1024) {
     window.matchMedia = query => ({
         matches: mediaQuery.match(query, { width }),
+        media: query,
+        onchange: null,
         addListener: () => {},
         removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
     });
 
     return rtlRender(

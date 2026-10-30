@@ -94,9 +94,7 @@ describe('Field', () => {
         setup();
         expect(screen.getByTestId('probe-input')).toBeInTheDocument();
         expect(lastProps.name).toBe('myField');
-        // decorated by our Controller. React 18 consumes `ref` rather than passing it on as a prop, so the
-        // nulled ref is not visible here - the field's ref is handed over as `inputRef` instead.
-        expect(lastProps.ref).toBeUndefined();
+        expect(lastProps.ref).toBeNull();
         expect(lastProps.inputRef).toEqual(expect.anything());
         expect(lastProps.state).toEqual({ error: undefined, defaultValue: '' });
     });

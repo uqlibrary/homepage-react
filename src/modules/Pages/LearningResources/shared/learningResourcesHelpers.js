@@ -36,8 +36,8 @@ export const _courseLink = (
         const tempUrl = new URL(homepageLink);
         params = tempUrl.search;
 
-        homepageLink = homepageLink.replace(params, '');
-        _url = _url.replace('https://www.library.uq.edu.au/', homepageLink) + params;
+        const _homepageLink = homepageLink.replace(params, '');
+        _url = _url.replace('https://www.library.uq.edu.au/', _homepageLink) + params;
     }
     return _url.replace('[courseCode]', courseCode);
 };

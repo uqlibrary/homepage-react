@@ -29,7 +29,7 @@ export default {
                     const currentDate = moment();
                     const isPastDate = dateObject.isBefore(currentDate);
                     return (
-                        <>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                             {date}
                             {isPastDate && (
                                 <Tooltip
@@ -42,7 +42,7 @@ export default {
                                     <WarningOutlined />
                                 </Tooltip>
                             )}
-                        </>
+                        </span>
                     );
                 },
                 minWidth: 150,
@@ -55,12 +55,12 @@ export default {
                 minWidth: 400,
                 field: 'location',
                 headerName: 'Location',
-                valueGetter: params =>
+                valueGetter: (_, row) =>
                     createLocationString({
-                        site: params.row.site_name,
-                        building: params.row.building_name,
-                        floor: params.row.floor_id_displayed,
-                        room: params.row.room_id_displayed,
+                        site: row.site_name,
+                        building: row.building_name,
+                        floor: row.floor_id_displayed,
+                        room: row.room_id_displayed,
                     }),
                 renderCell: params =>
                     createLocationLink(

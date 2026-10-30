@@ -224,7 +224,7 @@ export const BookableSpacesEditSpace = ({
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <p data-testid="missing-record">There is no Space with ID "{spaceUuid}".</p>
                     </Grid>
                 </Grid>
@@ -241,7 +241,7 @@ export const BookableSpacesEditSpace = ({
     if (!!bookableSpaceGetting || !!bookableSpacesRoomListLoading || !!campusListLoading || isLoadedSpaceMismatched) {
         return (
             <Grid container>
-                <Grid item xs={12} style={{ paddingTop: '5rem' }}>
+                <Grid size={{ xs: 12 }} style={{ paddingTop: '5rem' }}>
                     <InlineLoader message="Loading" />
                 </Grid>
             </Grid>
@@ -257,7 +257,7 @@ export const BookableSpacesEditSpace = ({
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <div data-testid="load-space-form-error">
                             <p>Something went wrong - please try again later.</p>
                             {!!campusListError && <p>Campus-building data had a problem.</p>}
@@ -284,7 +284,7 @@ export const BookableSpacesEditSpace = ({
         return (
             <SpacesAdminPage systemTitle="Spaces" pageTitle={pageTitle} currentPageSlug={currentPageSlug}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <p data-testid="add-space-no-locations">
                             No Libraries currently in system - please{' '}
                             <a href={spacesAdminLink('/admin/spaces/manage/locations', account)}>

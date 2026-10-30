@@ -95,7 +95,8 @@ export const BookableSpacesDetailPage = ({
             )}
             <Grid
                 container
-                spacing={4}
+                rowSpacing={4}
+                columnSpacing={4}
                 style={{ marginTop: 0, paddingTop: 0 }}
                 data-testid="library-updates-parent"
                 key="library-updates-parent"
@@ -103,7 +104,10 @@ export const BookableSpacesDetailPage = ({
                 {(() => {
                     if (bookableSpaceGetting !== false) {
                         return (
-                            <Grid item xs={'auto'} style={{ width: '100px', marginInline: 'auto', marginTop: '2rem' }}>
+                            <Grid
+                                size={{ xs: 'auto' }}
+                                style={{ width: '100px', marginInline: 'auto', marginTop: '2rem' }}
+                            >
                                 <CircularProgress
                                     color="primary"
                                     size={50}
@@ -114,7 +118,7 @@ export const BookableSpacesDetailPage = ({
                         );
                     } else if (bookableSpaceGetError !== false) {
                         return (
-                            <Grid item sx={{ marginInline: 'auto', marginTop: '2rem' }}>
+                            <Grid sx={{ marginInline: 'auto', marginTop: '2rem' }}>
                                 <span>Details of this Space are currently unavailable - please try again later.</span>
                             </Grid>
                         );
@@ -123,13 +127,13 @@ export const BookableSpacesDetailPage = ({
                         !bookableSpaceGetResult?.data?.space_id
                     ) {
                         return (
-                            <Grid item sx={{ marginInline: 'auto', marginTop: '2rem' }}>
+                            <Grid sx={{ marginInline: 'auto', marginTop: '2rem' }}>
                                 <span>That Space does not seem to exist</span>
                             </Grid>
                         );
                     } else {
                         return (
-                            <Grid item>
+                            <Grid sx={{ mt: 4 }}>
                                 <JourneyBreadcrumbs view="details" />
                                 <JourneySpaceDetailsView
                                     actions={actions}

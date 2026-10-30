@@ -1692,16 +1692,13 @@ mock.onGet('exams/course/FREN1010/summary')
             ),
         ),
     )
-    .reply(() => [
-        200,
-        {
-            data: {
-                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
-                    user => user.user_team === 'WSS',
-                ),
-            },
-        },
-    ])
+    .reply(() => {
+        const user_inspections = test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+            user => user.user_team === 'WSS',
+        );
+        const total_inspections = user_inspections.reduce((total, user) => total + user.total_for_user, 0);
+        return [200, { data: { user_inspections, total_inspections } }];
+    })
     .onGet(
         new RegExp(
             escapeRegExp(
@@ -1711,16 +1708,13 @@ mock.onGet('exams/course/FREN1010/summary')
             ),
         ),
     )
-    .reply(() => [
-        200,
-        {
-            data: {
-                user_inspections: test_tag_inspections_by_licenced_user.data.user_inspections.filter(
-                    user => user.user_team === 'SPACES',
-                ),
-            },
-        },
-    ])
+    .reply(() => {
+        const user_inspections = test_tag_inspections_by_licenced_user.data.user_inspections.filter(
+            user => user.user_team === 'SPACES',
+        );
+        const total_inspections = user_inspections.reduce((total, user) => total + user.total_for_user, 0);
+        return [200, { data: { user_inspections, total_inspections } }];
+    })
     .onGet(
         new RegExp(
             escapeRegExp(

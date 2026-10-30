@@ -16,11 +16,6 @@ function setup(testProps = {}) {
     );
 }
 
-beforeAll(() => {
-    delete global.window.location;
-    global.window.location = { href: '', replace: jest.fn(), assign: jest.fn() };
-});
-
 describe('Component Masquerade', () => {
     it('Should render form as expected', () => {
         const { container } = setup();
