@@ -239,8 +239,12 @@ test.describe('Alerts Admin Form Pages', () => {
             await expect(
                 page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-homepage"] input'),
             ).toBeChecked();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input')).toBeVisible();
-            await expect(page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input')).toBeChecked();
+            await expect(
+                page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input'),
+            ).toBeVisible();
+            await expect(
+                page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input'),
+            ).toBeChecked();
 
             // the editing user displays correctly
             await expect(page.getByTestId('admin-alerts-form-created-by')).not.toBeVisible();
@@ -372,7 +376,7 @@ test.describe('Alerts Admin Form Pages', () => {
 
             await expect(confirmationMessage).toBeVisible();
             await expect(confirmationMessage).toHaveText(
-                'This alert will be displayed on all systems EXCEPT homepage and primo.',
+                'This alert will be displayed on all systems EXCEPT Home page and Primo.',
             );
 
             await page.locator('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
@@ -519,10 +523,10 @@ test.describe('Alerts Admin Form Pages', () => {
                     .first(),
             ).toBeVisible();
 
-            const showOnPrimoCheckbox = page.locator('[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input');
-            await expect(
-                showOnPrimoCheckbox,
-            ).toBeChecked();
+            const showOnPrimoCheckbox = page.locator(
+                '[data-testid="admin-alerts-form-checkbox-system-showon-primo"] input',
+            );
+            await expect(showOnPrimoCheckbox).toBeChecked();
             await showOnPrimoCheckbox.uncheck();
             await expect(showOnPrimoCheckbox).not.toBeChecked();
             await showOnPrimoCheckbox.check();

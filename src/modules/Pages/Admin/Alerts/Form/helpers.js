@@ -1,4 +1,4 @@
-import { getBody } from '../alerthelpers';
+import { getBody, systemList } from '../alerthelpers';
 
 const moment = require('moment');
 
@@ -39,14 +39,12 @@ export const SYSTEM_PANEL_HIDE = 2;
 const getSystemConfirmationMessage = (values, systemTabValue) => {
     const joinSystemNames = systems => {
         const localSystem = [...(systems || [])];
-        const lastName = localSystem?.pop() || '';
-        let joinedNames;
-        if (localSystem?.length === 0) {
-            joinedNames = lastName;
-        } else {
-            joinedNames = localSystem?.join(', ') + ' and ' + lastName;
+        const localNames = systemList.filter(s => localSystem.includes(s.slug)).map(s => s.title);
+        const lastName = localNames?.pop() || '';
+        if (localNames?.length === 0) {
+            return lastName;
         }
-        return joinedNames;
+        return localNames?.join(', ') + ' and ' + lastName;
     };
 
     if (systemTabValue === SYSTEM_PANEL_SHOW) {
