@@ -406,7 +406,7 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
     * load <https://homepage-staging.library.uq.edu.au/> (View Source to confirm it is loading the staging reusable file: <https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js">)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
-to URL/Cloudfront restrictions
+to URL/Cloudfront restrictions.
 
 ## Google Analytics integration
 
