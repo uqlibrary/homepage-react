@@ -125,15 +125,7 @@ export function extractFieldsFromBody(content) {
 export const systemList = [
     {
         slug: 'homepage',
-        title: 'Home page',
-    },
-    {
-        slug: 'primo',
-        title: 'Primo',
-    },
-    {
-        slug: 'espace',
-        title: 'eSpace',
+        title: 'Home page systems',
     },
     {
         slug: 'drupal',
@@ -142,5 +134,13 @@ export const systemList = [
     {
         slug: 'guides',
         title: 'Guides',
+    },
+    {
+        slug: 'primo',
+        title: 'Primo',
+    },
+    {
+        slug: 'espace',
+        title: 'UQ eSpace',
     },
 ];
