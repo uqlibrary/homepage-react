@@ -880,6 +880,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <InputLabel>
+                                    <Checkbox
+                                        checked={false}
+                                        title={'Show on other systems'}
+                                        className={`${'disabledCheckbox'}`}
+                                        disabled
+                                    />
+                                    Show on other systems
+                                </InputLabel>
                                 <ShowWarningOnEmpty systems={values.systemsShownOn} />
                             </Grid>
                         </SystemTabPanel>
@@ -914,6 +923,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <InputLabel>
+                                    <Checkbox
+                                        checked
+                                        title={'Hide from other systems'}
+                                        className={`${'disabledCheckbox'}`}
+                                        disabled
+                                    />
+                                    Hide from other systems
+                                </InputLabel>
                                 <ShowWarningOnEmpty systems={values.systemsHiddenFrom} />
                             </Grid>
                         </SystemTabPanel>
