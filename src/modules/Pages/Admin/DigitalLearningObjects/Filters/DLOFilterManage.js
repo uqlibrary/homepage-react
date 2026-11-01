@@ -110,7 +110,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                     dlorFilterList.length > 0 &&
                     dlorFilterList.map(facetType => (
                         <React.Fragment key={facetType.facet_type_name}>
-                            <Grid item xs={11}>
+                            <Grid size={{ xs: 11 }}>
                                 <Typography
                                     component="h3"
                                     sx={{ fontWeight: 'bold' }}
@@ -119,7 +119,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                     {facetType?.facet_type_name}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <IconButton
                                     color="primary"
                                     onClick={() => {
@@ -140,15 +140,13 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                     <React.Fragment key={facet.facet_name}>
                                         <Grid container sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}>
                                             <Grid
-                                                item
-                                                xs={8}
+                                                size={{ xs: 8 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                             >
                                                 <Typography component="p">{facet?.facet_name}</Typography>
                                             </Grid>
                                             <Grid
-                                                item
-                                                xs={2}
+                                                size={{ xs: 2 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                             >
                                                 <Typography component="p">
@@ -156,7 +154,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                                     {facet?.facet_use_count === 1 ? 'object' : 'objects'}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => handleEditFacet(facet)}
@@ -165,7 +163,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {

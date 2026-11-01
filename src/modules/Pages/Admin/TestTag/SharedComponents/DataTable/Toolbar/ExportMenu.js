@@ -8,16 +8,22 @@ import { GridToolbarExport } from '@mui/x-data-grid';
  */
 const ExportMenu = ({ id }) => {
     return (
-        <GridToolbarExport
-            id={`${id}-data-table-toolbar-export-menu`}
-            data-testid={`${id}-data-table-toolbar-export-menu`}
-            style={{ justifyContent: 'flex-end' }}
-            csvOptions={{
-                fileName: id,
-                utf8WithBom: true,
-                allColumns: true,
-            }}
-        />
+        <>
+            <GridToolbarExport
+                slotProps={{
+                    button: {
+                        id: `${id}-data-table-toolbar-export-menu`,
+                        'data-testid': `${id}-data-table-toolbar-export-menu`,
+                    },
+                }}
+                style={{ justifyContent: 'flex-end' }}
+                csvOptions={{
+                    fileName: id,
+                    utf8WithBom: true,
+                    allColumns: true,
+                }}
+            />
+        </>
     );
 };
 

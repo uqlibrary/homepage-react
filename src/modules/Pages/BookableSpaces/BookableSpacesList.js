@@ -1712,7 +1712,7 @@ export const BookableSpacesList = ({
                 if (!!bookableSpacesRoomListLoading || !!facilityTypeListLoading || !!weeklyHoursLoading) {
                     return (
                         <Grid container spacing={3} data-testid="library-spaces">
-                            <StyledBookableSpaceGridItem item xs={12} md={9}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12, md: 9 }}>
                                 <InlineLoader message="Loading" />
                             </StyledBookableSpaceGridItem>
                         </Grid>

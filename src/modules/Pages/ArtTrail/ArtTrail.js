@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';

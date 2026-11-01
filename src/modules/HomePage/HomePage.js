@@ -1,5 +1,5 @@
 /* eslint max-len: 0 */
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import ContentLoader from 'react-content-loader';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -50,6 +50,20 @@ const StyledPortalContainer = styled('div')(() => ({
         paddingTop: 24,
     },
 }));
+
+const SearchPortal = () => {
+    const mountRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const portal = document.createElement('search-portal');
+        portal.setAttribute('theme', 'dark');
+        mountRef.current.appendChild(portal);
+
+        return () => portal.remove();
+    }, []);
+
+    return <div ref={mountRef} />;
+};
 
 const StyledH1 = styled('h1')(({ theme }) => ({
     marginTop: 0,
@@ -226,7 +240,7 @@ export const HomePage = ({
             <StyledPortalContainer id="search-portal-container" data-testid="search-portal-container">
                 <StandardPage>
                     <StyledH1>Library</StyledH1>
-                    <search-portal theme="dark" />
+                    <SearchPortal />
                 </StandardPage>
             </StyledPortalContainer>
             <UtilityBar
@@ -242,7 +256,7 @@ export const HomePage = ({
                     <StyledGridWrapper>
                         <StandardPage>
                             <Grid container spacing={!!verySimplelayout ? 2 : 0}>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <StyledHeading component={'h2'} data-testid="homepage-user-greeting">
                                         Hi, {account.firstName || /* istanbul ignore next */ ''}
                                     </StyledHeading>
@@ -250,9 +264,7 @@ export const HomePage = ({
                                 {!!verySimplelayout ? (
                                     <>
                                         <StyledGridItemLoggedInLeftMost
-                                            item
-                                            xs={12}
-                                            uqDsDesktop={4}
+                                            size={{ xs: 12, uqDsDesktop: 4 }}
                                             data-testid="account-panel"
                                             style={{ paddingTop: 0 }}
                                         >
@@ -267,9 +279,7 @@ export const HomePage = ({
                                         </StyledGridItemLoggedInLeftMost>
                                         {canSeeTrainingPanel(account) && (
                                             <StyledGridItemLoggedInLeftMost
-                                                item
-                                                xs={12}
-                                                uqDsDesktop={4}
+                                                size={{ xs: 12, uqDsDesktop: 4 }}
                                                 data-testid="training-panel"
                                                 style={{ paddingTop: 0 }}
                                             >
@@ -281,9 +291,7 @@ export const HomePage = ({
                                             </StyledGridItemLoggedInLeftMost>
                                         )}
                                         <StyledGridItemLoggedInLeftMost
-                                            item
-                                            xs={12}
-                                            uqDsDesktop={4}
+                                            size={{ xs: 12, uqDsDesktop: 4 }}
                                             data-testid="referencing-panel"
                                             style={{ paddingTop: 0 }}
                                         >
@@ -292,11 +300,10 @@ export const HomePage = ({
                                     </>
                                 ) : (
                                     <>
-                                        <Grid item uqDsDesktop={4} xs={12}>
+                                        <Grid size={{ xs: 12, uqDsDesktop: 4 }}>
                                             <Grid container>
                                                 <StyledGridItemLoggedInLeftMost
-                                                    item
-                                                    xs={12}
+                                                    size={{ xs: 12 }}
                                                     data-testid="account-panel"
                                                 >
                                                     <AccountPanel
@@ -310,8 +317,7 @@ export const HomePage = ({
                                                 </StyledGridItemLoggedInLeftMost>
                                                 {canSeeTrainingPanel(account) && (
                                                     <StyledGridItemLoggedInLeftMost
-                                                        item
-                                                        xs={12}
+                                                        size={{ xs: 12 }}
                                                         data-testid="training-panel"
                                                     >
                                                         <Training
@@ -322,8 +328,7 @@ export const HomePage = ({
                                                     </StyledGridItemLoggedInLeftMost>
                                                 )}
                                                 {/* <StyledGridItemLoggedInLeftMost
-                                                    item
-                                                    xs={12}
+                                                    size={{ xs: 12 }}
                                                     data-testid="espace-links-panel"
                                                 >
                                                     <DigitalLearningHub
@@ -335,39 +340,35 @@ export const HomePage = ({
                                                 </StyledGridItemLoggedInLeftMost> */}
                                             </Grid>
                                         </Grid>
-                                        <Grid item uqDsDesktop={8} xs={12}>
+                                        <Grid size={{ xs: 12, uqDsDesktop: 8 }}>
                                             <Grid container>
                                                 {canSeeLearningResourcesPanel(account) && (
                                                     <StyledGridItemLoggedIn
-                                                        item
-                                                        xs={12}
+                                                        size={{ xs: 12 }}
                                                         data-testid="learning-resources-panel"
                                                     >
                                                         <LearningResourcesPanel account={account} history={history} />
                                                     </StyledGridItemLoggedIn>
                                                 )}
 
-                                                <Grid item uqDsDesktop={6} xs={12}>
+                                                <Grid size={{ xs: 12, uqDsDesktop: 6 }}>
                                                     <Grid container>
                                                         <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
+                                                            size={{ xs: 12 }}
                                                             data-testid="referencing-panel"
                                                         >
                                                             <ReferencingPanel account={account} />
                                                         </StyledGridItemLoggedIn>
                                                         {canSeeReadPublish(account) && (
                                                             <StyledGridItemLoggedIn
-                                                                item
-                                                                xs={12}
+                                                                size={{ xs: 12 }}
                                                                 data-testid="readpublish-panel"
                                                             >
                                                                 <ReadPublish />
                                                             </StyledGridItemLoggedIn>
                                                         )}
                                                         <StyledGridItemLoggedIn
-                                                            item
-                                                            xs={12}
+                                                            size={{ xs: 12 }}
                                                             data-testid="dlor-links-panel"
                                                         >
                                                             <DigitalLearningHub
@@ -379,12 +380,11 @@ export const HomePage = ({
                                                         </StyledGridItemLoggedIn>
                                                     </Grid>
                                                 </Grid>
-                                                <Grid item uqDsDesktop={6} xs={12}>
+                                                <Grid size={{ xs: 12, uqDsDesktop: 6 }}>
                                                     <Grid container>
                                                         {isEspaceAuthor(account, author) && (
                                                             <StyledGridItemLoggedIn
-                                                                item
-                                                                xs={12}
+                                                                size={{ xs: 12 }}
                                                                 data-testid="espace-links-panel"
                                                             >
                                                                 <EspaceLinks

@@ -537,7 +537,7 @@ export const DlorForm = ({
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
                         <Input
@@ -566,7 +566,7 @@ export const DlorForm = ({
                     </FormControl>
                 </Grid>
                 {mode === 'edit' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="object_publishing_user_email">Object owner email</InputLabel>
                             <Input
@@ -580,7 +580,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12} sx={{ minHeight: '95px' }}>
+                <Grid size={{ xs: 12 }} sx={{ minHeight: '95px' }}>
                     <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                     <Select
                         variant="standard"
@@ -624,7 +624,7 @@ export const DlorForm = ({
                     )}
                 </Grid>
                 {showTeamForm !== false && teamSelectRef.current === 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                             <Input
@@ -681,7 +681,7 @@ export const DlorForm = ({
                     </Grid>
                 )}
                 {showTeamForm !== false && teamSelectRef.current !== 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
                             A change here will affect all Objects for this team.
                             <br />
@@ -736,7 +736,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     {mode === 'edit' ? (
                         <>
                             <DatePicker
@@ -776,7 +776,7 @@ export const DlorForm = ({
                 </Grid>
                 {isDlorAdminUser(account) && (
                     <>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                                 <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
                                 <RichTextEditor
@@ -790,7 +790,7 @@ export const DlorForm = ({
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography variant="p">Existing Admin Notes</Typography>
@@ -905,7 +905,7 @@ export const DlorForm = ({
 
     const stepPanelContentDescription = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
@@ -919,7 +919,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
                     <RichTextEditor
@@ -939,7 +939,7 @@ export const DlorForm = ({
                         )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
@@ -990,7 +990,7 @@ export const DlorForm = ({
             </Grid>
             {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <FormLabel id="object_status_label">Object publication status</FormLabel>
                             <RadioGroup
@@ -1022,7 +1022,7 @@ export const DlorForm = ({
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormLabel>Featured object?</FormLabel>
                         <InputLabel>
                             <Checkbox
@@ -1036,7 +1036,7 @@ export const DlorForm = ({
                     </Grid>
                 </>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <FormControl fullWidth>
                     <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
                     <Select
@@ -1063,7 +1063,7 @@ export const DlorForm = ({
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
                     <Checkbox
@@ -1092,7 +1092,7 @@ export const DlorForm = ({
 
     const stepPanelContentLinks = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
@@ -1126,12 +1126,12 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {isDlorAdminUser(account) && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
                         Message advising about link
                     </InputLabel>
                     <Grid container>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl>
                                 <span>&nbsp;</span>
                                 <Select
@@ -1171,7 +1171,7 @@ export const DlorForm = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl sx={{ minWidth: '10em' }}>
                                 {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                     linkInteractionTypeSelectRef.current,
@@ -1210,7 +1210,7 @@ export const DlorForm = ({
                                             </MenuItem>
                                         </Select>
                                         {showFileTypeCreationForm && (
-                                            <Grid item xs={12}>
+                                            <Grid size={{ xs: 12 }}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="new_file_type">
                                                         New File Type (abbrev)
@@ -1228,7 +1228,7 @@ export const DlorForm = ({
                                 )}
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <StyledViewDurationBox>
                                 {!!showLinkTimeForm && (
                                     <>
@@ -1307,7 +1307,7 @@ export const DlorForm = ({
                 </Grid>
             )}
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
@@ -1400,7 +1400,7 @@ export const DlorForm = ({
 
     const stepPanelContentFilters = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Filters
                 </Typography>
@@ -1409,8 +1409,7 @@ export const DlorForm = ({
                 dlorFilterList.map(filterItem => {
                     return (
                         <Grid
-                            item
-                            xs={4}
+                            size={{ xs: 4 }}
                             key={filterItem.facet_type_slug}
                             data-testid={`filter-group-${convertSnakeCaseToKebabCase(filterItem.facet_type_slug)}`}
                         >
@@ -1426,12 +1425,12 @@ export const DlorForm = ({
                         </Grid>
                     );
                 })}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Tags
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
+            <Grid size={{ xs: 12 }} style={{ paddingTop: 20 }}>
                 <FuzzySearch
                     data={dlorKeywords}
                     fuseOptions={fuseOptions}
@@ -1544,7 +1543,7 @@ export const DlorForm = ({
                 </Modal>
             </Grid>
             {mode === 'edit' && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <FormControlLabel
@@ -1893,7 +1892,7 @@ export const DlorForm = ({
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <InlineLoader message="Loading" />
             </Grid>
         );
@@ -1962,7 +1961,7 @@ export const DlorForm = ({
             />
             <form id="dlor-addedit-form">
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Stepper activeStep={activeStep}>
                             {steps.map((step, index) => {
                                 const stepProps = { completed: null };
@@ -1990,7 +1989,7 @@ export const DlorForm = ({
                         </Stepper>
                     </Grid>
                     {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                             <Button
                                 color="inherit"
@@ -2026,7 +2025,7 @@ export const DlorForm = ({
                 </Grid>
             </form>
             <Grid container spacing={2} sx={{ marginTop: '32px' }}>
-                <Grid item xs={3} align="left">
+                <Grid size={{ xs: 3 }} align="left">
                     <Button
                         color="secondary"
                         children="Cancel"
@@ -2035,7 +2034,7 @@ export const DlorForm = ({
                         variant="contained"
                     />
                 </Grid>
-                <Grid item xs={9} align="right" />
+                <Grid size={{ xs: 9 }} align="right" />
             </Grid>
         </>
     );

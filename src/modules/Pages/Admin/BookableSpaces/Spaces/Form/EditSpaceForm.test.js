@@ -886,6 +886,38 @@ describe('EditSpaceForm', () => {
         );
     });
 
+    it('uses the selected Archibus room label in the autocomplete', () => {
+        const archibusTree = {
+            data: {
+                sites: [
+                    {
+                        siteId: 11,
+                        siteName: 'St Lucia',
+                        buildings: [{ buildingId: 12, rooms: [{ id: 904, roomName: 'Room 904' }] }],
+                    },
+                ],
+            },
+        };
+
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 'uqtest1' } }}>
+                <EditSpaceForm
+                    {...buildProps({
+                        bookableSpacesArchibusTree: archibusTree,
+                        formValues: { ...validFormValues, archibus_room_id: 904 },
+                    })}
+                />
+            </AccountContext.Provider>,
+        );
+
+        const roomInput = screen.getByRole('combobox', { name: 'Room ID' });
+        expect(roomInput).toHaveValue('Room 904');
+        fireEvent.mouseDown(roomInput);
+        fireEvent.change(roomInput, { target: { value: 'Room 904' } });
+
+        expect(screen.getByRole('option', { name: 'Room 904' })).toBeInTheDocument();
+    });
+
     it('covers Archibus fallback matching, existing room state, and empty tree data', () => {
         const setFormValues = jest.fn();
         const archibusTree = {

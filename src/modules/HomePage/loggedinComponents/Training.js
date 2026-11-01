@@ -284,7 +284,10 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                     key={index}
                                                     style={{ paddingBlock: 0, marginBlock: 0 }}
                                                 >
-                                                    <Grid item xs={12} style={{ marginRight: '24px', paddingTop: 0 }}>
+                                                    <Grid
+                                                        size={{ xs: 12 }}
+                                                        style={{ marginRight: '24px', paddingTop: 0 }}
+                                                    >
                                                         <Button
                                                             id={`training-event-detail-button-${event.entityId}`}
                                                             data-testid={`training-event-detail-button-${index}`}
@@ -336,9 +339,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             style={{ marginTop: '8px' }}
                         >
                             <Grid container spacing={1} direction="column">
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Grid container spacing={1} className={'detailHeader'}>
-                                        <Grid item xs={'auto'} style={{ opacity: 1 }}>
+                                        <Grid size={{ xs: 'auto' }} style={{ opacity: 1 }}>
                                             <IconButton
                                                 onClick={() => closeEvent(eventDetail.entityId)}
                                                 aria-label="Close event detail"
@@ -349,7 +352,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <CloseIcon fontSize="small" className={'detailIcon'} />
                                             </IconButton>
                                         </Grid>
-                                        <Grid item xs>
+                                        <Grid>
                                             <Typography className={'detailTitle'} variant={'h6'} component={'h3'}>
                                                 {eventDetail.name}
                                             </Typography>
@@ -357,27 +360,25 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     </Grid>
                                     <Grid container spacing={1}>
                                         <Grid
-                                            item
-                                            xs={12}
+                                            size={{ xs: 12 }}
                                             className={'detailSummary'}
                                             data-testid="event-detail-open-summary"
                                         >
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip title="Date" placement="right" TransitionProps={{ timeout: 300 }}>
                                                 <EventIcon />
                                             </Tooltip>
                                         </Grid>
                                         <Grid
-                                            item
-                                            xs={10}
+                                            size={{ xs: 10 }}
                                             className={'detailMeta'}
                                             data-testid={`training-detail-date-range-${eventDetail.entityId}`}
                                         >
                                             {eventTimeLong(eventDetail)}
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -386,12 +387,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <LocationOnIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={'detailMeta'}>
+                                        <Grid size={{ xs: 10 }} className={'detailMeta'}>
                                             {eventDetail.location ||
                                                 eventDetail.venue ||
                                                 /* istanbul ignore next */ eventDetail.offCampusVenue}
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -400,7 +401,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <EventAvailableIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={'detailMeta'}>
+                                        <Grid size={{ xs: 10 }} className={'detailMeta'}>
                                             {bookingText(eventDetail).display}
                                         </Grid>
                                     </Grid>

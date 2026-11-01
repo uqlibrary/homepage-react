@@ -9,6 +9,8 @@ const editorStyles = {
     '& .MuiTiptap-RichTextField-content': {
         '& .ProseMirror': {
             height: '200px',
+            overflowY: 'auto',
+            overflowWrap: 'anywhere',
 
             '& h2': {
                 fontSize: '1.5em',

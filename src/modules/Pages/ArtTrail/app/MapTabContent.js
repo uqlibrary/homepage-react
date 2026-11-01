@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
@@ -160,7 +160,7 @@ const MapTabContent = ({ active, onSelectTrailPage, handleMapEvent }) => {
                 Skip to artwork locations
             </Link>
             <Grid container direction="row" columnSpacing={2.5} data-testid="pageContent">
-                <Grid xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <Box
                         sx={{
                             position: 'relative',
@@ -185,7 +185,7 @@ const MapTabContent = ({ active, onSelectTrailPage, handleMapEvent }) => {
                         )}
                     </Box>
                 </Grid>
-                <Grid xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <TableContainer>
                         <Table
                             ref={artworkTableRef}
