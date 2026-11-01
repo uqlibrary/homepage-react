@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Grid, Paper, Divider, Link } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 function buildFacetSummaryUrl(filterId) {
@@ -34,7 +39,6 @@ export default function FacetSummary({ objectsByFacet }) {
         objects_by_audience = [],
         objects_by_type = [],
         objects_by_format = [],
-        objects_with_cultural_advice = 0,
     } = objectsByFacet || {};
 
     const topTopics = getTopEntries(objects_by_topic);
@@ -45,7 +49,7 @@ export default function FacetSummary({ objectsByFacet }) {
     return (
         <Box sx={{ mt: 2, mb: 2 }}>
             <Grid container spacing={2}>
-                <Grid item xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Topics
@@ -69,7 +73,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Audiences
@@ -96,7 +100,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Types
@@ -123,7 +127,7 @@ export default function FacetSummary({ objectsByFacet }) {
                         ))}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid size={{ xs: 12, md: 3 }}>
                     <Paper sx={{ p: 2 }}>
                         <Typography variant="h6" component="h2" sx={{ mb: 0.05, textAlign: 'center' }}>
                             Top Formats

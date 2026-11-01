@@ -1,5 +1,8 @@
 import React from 'react';
-import { Box, Typography, Grid, Divider } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
@@ -47,7 +50,7 @@ const DLOStatusSummary = ({ data }) => (
         <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
             {statusConfig.map((status, idx) => (
                 <React.Fragment key={status.key}>
-                    <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
+                    <Grid size="grow" sx={{ p: 0, m: 0 }}>
                         <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                             <Typography
                                 variant="h3"

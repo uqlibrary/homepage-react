@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'data/actions';
 
-import BookableSpacesList from './BookableSpacesList';
+import BookableSpacesList from 'modules/Pages/BookableSpaces/BookableSpacesList';
 
 const mapStateToProps = state => {
     return {

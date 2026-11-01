@@ -79,6 +79,22 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         bottom: 0,
         minHeight: '64px',
         width: 'auto',
+        backgroundColor: theme.palette.primary.main,
+        '& .actionButton': {
+            color: theme.palette.primary.main,
+            backgroundColor: 'white',
+            borderColor: theme.palette.primary.main,
+            '&:hover': {
+                backgroundColor: theme.palette.grey[100],
+                borderColor: theme.palette.primary.main,
+            },
+            '&.Mui-disabled': {
+                color: theme.palette.text.disabled,
+                backgroundColor: theme.palette.grey[200],
+                borderColor: theme.palette.grey[400],
+                opacity: 1,
+            },
+        },
     },
     '& .dialogContainer': {
         borderRadius: '6px',
@@ -145,16 +161,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
     '& .addNewLabel': {
         width: '100%',
-    },
-    '& .buttonWhite': {
-        color: 'white',
-        '&:hover': {
-            border: '1px solid white',
-        },
-    },
-    '& .buttonSuccess': {
-        backgroundColor: 'white',
-        color: theme.palette.primary.main,
     },
 }));
 
@@ -460,8 +466,8 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-reset-button`}
                                 data-testid={`${componentId}-reset-button`}
-                                color={inView ? 'primary' : 'secondary'}
-                                className={!inView ? 'buttonWhite' : ''}
+                                color="primary"
+                                className="actionButton"
                             >
                                 {inspectionLocale.form.buttons.reset}
                             </Button>
@@ -474,7 +480,7 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-save-button`}
                                 data-testid={`${componentId}-save-button`}
-                                className={!inView ? 'buttonSuccess' : ''}
+                                className="actionButton"
                             >
                                 {saveInspectionSaving ? (
                                     <CircularProgress

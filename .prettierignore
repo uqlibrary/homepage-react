@@ -1,11 +1,9 @@
 node_modules
-dist
+chrome
 coverage
-custom_modules
+dist
 playwright/.results
 playwright/.cache
 *.json
 **/mock/data/**/*.js
-src/modules/Pages/AlertsList/components/alertsadmin.locale.js
 src/modules/App/components/pages.js
-src/modules/HomePage/components/HomePage.js

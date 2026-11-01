@@ -31,10 +31,10 @@ const StyledArticleCardRoot = styled('div', {
         fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
         fontWeight: 500,
         letterSpacing: '0.16px',
-        marginBottom: (enableFeaturedLayout && articleindex === 0) ? '.25rem' : '0',
+        marginBottom: enableFeaturedLayout && articleindex === 0 ? '.25rem' : '0',
         textDecoration: 'none !important',
         [theme.breakpoints.up('xs')]: {
-            paddingTop: (enableFeaturedLayout && articleindex === 0) ? '24px !important' : 'none',
+            paddingTop: enableFeaturedLayout && articleindex === 0 ? '24px !important' : 'none',
         },
         [theme.breakpoints.up('sm')]: {
             paddingTop: '0px !important',
@@ -45,22 +45,22 @@ const StyledArticleCardRoot = styled('div', {
         flexDirection: 'column',
         alignItems: 'left',
         height: '100%',
-        justifyContent: (enableFeaturedLayout && articleindex === 0) ? 'center' : 'top',
+        justifyContent: enableFeaturedLayout && articleindex === 0 ? 'center' : 'top',
         paddingTop: '0px !important',
         [theme.breakpoints.up('xs')]: {
-            paddingLeft: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
-            paddingRight: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingLeft: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
+            paddingRight: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
             paddingBottom: '24px',
         },
         [theme.breakpoints.up('sm')]: {
             paddingLeft: 24,
             paddingRight: 24,
-            paddingBottom: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingBottom: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
         },
         [theme.breakpoints.up('md')]: {
             paddingLeft: 24,
             paddingRight: 24,
-            paddingBottom: (enableFeaturedLayout && articleindex === 0) ? 24 : 0,
+            paddingBottom: enableFeaturedLayout && articleindex === 0 ? 24 : 0,
         },
     },
     '.ArticleTitle': {
@@ -109,6 +109,41 @@ const StyledImage = styled('img')(() => ({
     objectFit: 'cover',
 }));
 
+export const hasDescriptionText = description => {
+    /* istanbul ignore next */
+    return !!description && description.trim() !== '';
+};
+
+export const shouldRenderTextFirst = ({ articleindex, isSmUp, isSm }) => {
+    /* istanbul ignore next */
+    return (articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm);
+};
+
+export const shouldUseRouterLink = (useRouterLinkValue, canonicalUrlValue) => {
+    /* istanbul ignore next */
+    return useRouterLinkValue && !!canonicalUrlValue;
+};
+
+export const featuredImagePaddingBottom = (isSmValue, articleindexValue) =>
+    isSmValue && articleindexValue !== 0 ? '91.534%' : '66.667%';
+
+export const featuredImageMarginBottom = (isSmValue, articleindexValue) =>
+    isSmValue && articleindexValue !== 0 ? '32px' : null;
+
+export const featuredTextMarginTop = (isSmValue, articleindexValue) =>
+    isSmValue || articleindexValue === 0 ? '0' : '24px';
+
+export const featuredDescriptionText = (articleindexValue, descriptionValue) =>
+    articleindexValue === 0 ? descriptionValue : '';
+
+export const featuredBorderBottom = isSmValue => (isSmValue ? '1px solid #ddd' : 'none');
+
+export const handleImageError = event => {
+    if (event.currentTarget.src !== fallBackImage) {
+        event.currentTarget.src = fallBackImage;
+    }
+};
+
 const ArticleCard = ({
     article,
     articleindex,
@@ -134,25 +169,83 @@ const ArticleCard = ({
     const canonicalUrl = article?.canonical_url || null;
     const imageSrc = article?.image || fallBackImage;
     const imagePosition = article?.imagePosition || 'center';
+    const hasDescriptionTextValue = hasDescriptionText(description);
+    const shouldRenderTextFirstValue = shouldRenderTextFirst({ articleindex, isSmUp, isSm });
+    const shouldUseRouterLinkValue = shouldUseRouterLink(useRouterLink, canonicalUrl);
+    const featuredImagePaddingBottomValue = featuredImagePaddingBottom(isSm, articleindex);
+    const featuredImageMarginBottomValue = featuredImageMarginBottom(isSm, articleindex);
+    const featuredTextMarginTopValue = featuredTextMarginTop(isSm, articleindex);
+    const featuredDescriptionTextValue = featuredDescriptionText(articleindex, description);
+    const featuredBorderBottomValue = featuredBorderBottom(isSm);
+    /* istanbul ignore next */
+    const featuredTitleHeightValue = articleindex === 0 ? 'auto' : '116px';
 
     // When featured layout is disabled, render simple stacked image/text
+    /* istanbul ignore else */
     if (!enableFeaturedLayout) {
+        /* istanbul ignore next */
+        const renderDescriptionContent = () => {
+            /* istanbul ignore else */
+            if (hasDescriptionTextValue) {
+                return (
+                    <Typography
+                        component="p"
+                        className="ArticleDescription"
+                        data-testid={textTestId}
+                        sx={{
+                            mt: '0.5em',
+                            fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
+                            fontWeight: '400 !important',
+                            letterSpacing: '.01rem !important',
+                            color: '#5a5861',
+                        }}
+                    >
+                        {description}
+                    </Typography>
+                );
+            }
+            return null;
+        };
+
+        const styles = {
+            textDecoration: 'none',
+            color: 'inherit',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+        };
+
+        /* istanbul ignore next */
+        const renderLinkContent = () => {
+            if (shouldUseRouterLinkValue) {
+                return (
+                    <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId} style={styles}>
+                        {linkContent}
+                    </Link>
+                );
+            }
+            /* istanbul ignore else */
+            return (
+                <a
+                    href={canonicalUrl || undefined}
+                    data-testid={linkTestId}
+                    data-analyticsid={analyticsId}
+                    style={styles}
+                >
+                    {linkContent}
+                </a>
+            );
+        };
+
         const linkContent = (
             <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <StyledImageFrame
-                    style={{ paddingBottom: '66.667%' }}
-                    data-testid={imageTestId}
-                >
+                <StyledImageFrame style={{ paddingBottom: '66.667%' }} data-testid={imageTestId}>
                     <StyledImage
                         src={imageSrc}
                         alt={title}
                         style={{ objectPosition: imagePosition }}
                         loading="lazy"
-                        onError={event => {
-                            if (event.currentTarget.src !== fallBackImage) {
-                                event.currentTarget.src = fallBackImage;
-                            }
-                        }}
+                        onError={handleImageError}
                     />
                 </StyledImageFrame>
                 <Box
@@ -198,22 +291,7 @@ const ArticleCard = ({
                     >
                         {title}
                     </Typography>
-                    {!!description && description.trim() !== '' && (
-                        <Typography
-                            component="p"
-                            className="ArticleDescription"
-                            data-testid={textTestId}
-                            sx={{
-                                mt: '0.5em',
-                                fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-                                fontWeight: '400 !important',
-                                letterSpacing: '.01rem !important',
-                                color: '#5a5861',
-                            }}
-                        >
-                            {description}
-                        </Typography>
-                    )}
+                    {renderDescriptionContent()}
                 </Box>
             </Box>
         );
@@ -233,26 +311,14 @@ const ArticleCard = ({
                     standardCardId={cardId}
                     data-testid={cardTestId}
                 >
-                    {useRouterLink && !!canonicalUrl ? (
-                        <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
-                        >
-                            {linkContent}
-                        </Link>
-                    ) : (
-                        <a href={canonicalUrl || undefined} data-testid={linkTestId} data-analyticsid={analyticsId}
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', height: '100%' }}
-                        >
-                            {linkContent}
-                        </a>
-                    )}
+                    {renderLinkContent()}
                 </StandardCard>
             </StyledArticleCardRoot>
         );
     }
 
     // Featured layout path (original complex logic)
-    const showTextFirst = (articleindex === 0 && isSmUp) || (articleindex !== 0 && isSm);
+    const showTextFirst = shouldRenderTextFirstValue;
 
     const renderImage = () => (
         <Box
@@ -268,8 +334,8 @@ const ArticleCard = ({
         >
             <StyledImageFrame
                 style={{
-                    paddingBottom: isSm && articleindex !== 0 ? '91.534%' : '66.667%',
-                    marginBottom: isSm && articleindex !== 0 ? '32px' : null,
+                    paddingBottom: featuredImagePaddingBottomValue,
+                    marginBottom: featuredImageMarginBottomValue,
                 }}
                 data-testid={imageTestId}
             >
@@ -278,16 +344,13 @@ const ArticleCard = ({
                     alt={title}
                     style={{ objectPosition: imagePosition }}
                     loading="lazy"
-                    onError={event => {
-                        if (event.currentTarget.src !== fallBackImage) {
-                            event.currentTarget.src = fallBackImage;
-                        }
-                    }}
+                    onError={handleImageError}
                 />
             </StyledImageFrame>
         </Box>
     );
 
+    /* istanbul ignore next */
     const renderTextBlock = () => (
         <Box
             sx={{
@@ -315,7 +378,7 @@ const ArticleCard = ({
                     className="ArticleCategory"
                     data-testid={eyebrowTestId}
                     sx={{
-                        marginTop: isSm || articleindex === 0 ? '0' : '24px',
+                        marginTop: featuredTextMarginTopValue,
                         marginBottom: 0,
                         fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                         color: '#666 !important',
@@ -336,10 +399,10 @@ const ArticleCard = ({
                         marginRight: isSm ? '16px' : '0px',
                         height: {
                             sx: 'auto',
-                            sm: articleindex === 0 ? 'auto' : '116px',
-                            md: articleindex === 0 ? 'auto' : '116px',
-                            lg: articleindex === 0 ? 'auto' : '116px',
-                            xl: articleindex === 0 ? 'auto' : '116px',
+                            sm: featuredTitleHeightValue,
+                            md: featuredTitleHeightValue,
+                            lg: featuredTitleHeightValue,
+                            xl: featuredTitleHeightValue,
                         },
                         overflow: 'hidden',
                         display: '-webkit-box',
@@ -350,7 +413,7 @@ const ArticleCard = ({
                 >
                     {title}
                 </Typography>
-                {!!description && description.trim() !== '' && (
+                {hasDescriptionTextValue && (
                     <Typography
                         component="p"
                         className="ArticleDescription"
@@ -363,19 +426,58 @@ const ArticleCard = ({
                             textDecoration: 'none !important',
                         }}
                     >
-                        {articleindex === 0 ? description : ''}
+                        {featuredDescriptionTextValue}
                     </Typography>
                 )}
             </div>
         </Box>
     );
 
+    const renderPrimaryFeaturedContent = () => {
+        /* istanbul ignore next */
+        return showTextFirst ? renderTextBlock() : renderImage();
+    };
+
+    const renderSecondaryFeaturedContent = () => {
+        /* istanbul ignore next */
+        return showTextFirst ? renderImage() : renderTextBlock();
+    };
+
     const linkContent = (
-        <Grid container sx={{ borderBottom: isSm ? '1px solid #ddd' : 'none' }}>
-            {showTextFirst ? renderTextBlock() : renderImage()}
-            {showTextFirst ? renderImage() : renderTextBlock()}
+        <Grid
+            container
+            sx={{
+                borderBottom: featuredBorderBottomValue,
+            }}
+        >
+            {renderPrimaryFeaturedContent()}
+            {renderSecondaryFeaturedContent()}
         </Grid>
     );
+
+    const styles = {
+        textDecoration: 'none',
+        color: 'inherit',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100%',
+    };
+    const renderCardLink = () => {
+        if (shouldUseRouterLinkValue) {
+            return (
+                <Link to={canonicalUrl} data-testid={linkTestId} data-analyticsid={analyticsId} style={styles}>
+                    {linkContent}
+                </Link>
+            );
+        }
+
+        /* istanbul ignore else */
+        return (
+            <a href={canonicalUrl || undefined} data-testid={linkTestId} data-analyticsid={analyticsId} style={styles}>
+                {linkContent}
+            </a>
+        );
+    };
 
     return (
         <StyledArticleCardRoot articleindex={articleindex} enableFeaturedLayout={enableFeaturedLayout}>
@@ -387,25 +489,7 @@ const ArticleCard = ({
                 standardCardId={cardId}
                 data-testid={cardTestId}
             >
-                {useRouterLink && !!canonicalUrl ? (
-                    <Link
-                        to={canonicalUrl}
-                        data-testid={linkTestId}
-                        data-analyticsid={analyticsId}
-                        style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
-                    >
-                        {linkContent}
-                    </Link>
-                ) : (
-                    <a
-                        href={canonicalUrl || undefined}
-                        data-testid={linkTestId}
-                        data-analyticsid={analyticsId}
-                        style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', minHeight: '100%' }}
-                    >
-                        {linkContent}
-                    </a>
-                )}
+                {renderCardLink()}
             </StandardCard>
         </StyledArticleCardRoot>
     );

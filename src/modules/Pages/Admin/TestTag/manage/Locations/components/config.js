@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { createLocationLink, createLocationString } from '../../../helpers/helpers';
 import { isEmptyStr } from '../../../helpers/helpers';
-import { isValidUrl } from '../../../../Alerts/Form/AlertForm';
+import { isValidUrl } from '../../../../Alerts/alerthelpers';
 
 export default {
     site: {

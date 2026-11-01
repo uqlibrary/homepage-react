@@ -3,7 +3,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import Immutable from 'immutable';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
 import { api, sessionApi } from 'config/axios';

@@ -54,59 +54,47 @@ test.describe('LibraryUpdates', () => {
             await expect(
                 page.getByTestId('drupal-article-1').getByText('Building works at Biological Sciences'),
             ).toBeVisible();
-            await expect(
-                page
-                    .getByTestId('drupal-article-2')
-                    .getByText('Teaching')
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('drupal-article-2').getByText('Teaching').first()).toBeVisible();
             await expect(page.getByTestId('drupal-article-3').getByText('Digital Essentials')).toBeVisible();
 
             await expect(page.locator('[data-testid="library-updates-parent"] > div')).toHaveCount(4 + 1); // 4 news stories and a heading
 
             // at desktop, the articles are laid out like:
             //  /----------------\
-            //  | XXXXXXXXXXXXXX |
+            //  | article 0      |   (full width, on top)
             //  \----------------/
-            //  XXXX   XXXX   XXXX
-            await page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
-            const firstBox = await getBoundingBox(page, 'drupal-article-0', {
-                x: 75.5,
-                y: -525.53125,
-                width: 1134,
-                height: 378,
-            });
-            expect(firstBox.x).toBeLessThan(77);
+            //  a1     a2     a3     (a third each, side by side, below)
+            // Asserted as relative positions rather than fixed pixels, so the layout intent survives
+            // theme/font/chrome changes.
+            const box = async (id: string): Promise<BoundingBox> => {
+                const b = (await page.getByTestId(id).boundingBox()) as BoundingBox;
+                expect(b).toBeTruthy();
+                return b;
+            };
+            const a0 = await box('drupal-article-0');
+            const a1 = await box('drupal-article-1');
+            const a2 = await box('drupal-article-2');
+            const a3 = await box('drupal-article-3');
 
-            const secondBox = await getBoundingBox(page, 'drupal-article-1', {
-                x: 75.5,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
-            expect(secondBox.x).toBe(firstBox.x);
-            expect(secondBox.y).toBeGreaterThan(firstBox.y + firstBox.height);
+            // article 0 spans the full width - wider than two of the columns beneath it
+            expect(a0.width).toBeGreaterThan(a1.width * 2);
 
-            const thirdBox = await getBoundingBox(page, 'drupal-article-2', {
-                x: 464.828125,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
-            expect(thirdBox.y).toBe(secondBox.y);
-            expect(thirdBox.y + thirdBox.height).toBe(secondBox.y + secondBox.height);
-            expect(thirdBox.x).toBeGreaterThan(secondBox.x + secondBox.width);
+            // articles 1, 2 and 3 share one row: same top and height
+            expect(Math.abs(a1.y - a2.y)).toBeLessThan(2);
+            expect(Math.abs(a1.y - a3.y)).toBeLessThan(2);
+            expect(Math.abs(a1.height - a2.height)).toBeLessThan(2);
+            expect(Math.abs(a1.height - a3.height)).toBeLessThan(2);
 
-            const fourthBox = await getBoundingBox(page, 'drupal-article-3', {
-                x: 854.15625,
-                y: -113.53125,
-                width: 355.328125,
-                height: 424.875,
-            });
-            expect(fourthBox.y).toBe(secondBox.y);
-            expect(fourthBox.y + fourthBox.height).toBe(secondBox.y + secondBox.height);
-            expect(fourthBox.x).toBeGreaterThan(thirdBox.x + thirdBox.width);
-            expect(firstBox.x + firstBox.width - (fourthBox.x + fourthBox.width)).toBeLessThan(1);
+            // and that row sits below article 0
+            expect(a1.y).toBeGreaterThan(a0.y + a0.height - 2);
+
+            // left to right they do not overlap: a1 | a2 | a3
+            expect(a2.x).toBeGreaterThanOrEqual(a1.x + a1.width - 2);
+            expect(a3.x).toBeGreaterThanOrEqual(a2.x + a2.width - 2);
+
+            // article 0 is left-aligned with the row and its right edge lines up with article 3's
+            expect(Math.abs(a0.x - a1.x)).toBeLessThan(2);
+            expect(Math.abs(a0.x + a0.width - (a3.x + a3.width))).toBeLessThan(2);
         });
 
         test('loads as expected on tablet', async ({ page }) => {

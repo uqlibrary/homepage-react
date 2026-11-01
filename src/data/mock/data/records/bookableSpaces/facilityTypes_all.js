@@ -65,10 +65,6 @@ export default {
                     "facility_type_name": "Hot\/ Cold Water"
                 },
                 {
-                    "facility_type_id": 3,
-                    "facility_type_name": "Kitchen"
-                },
-                {
                     "facility_type_id": 4,
                     "facility_type_name": "Microwave"
                 },
@@ -135,6 +131,10 @@ export default {
                     "facility_type_name": "Computer"
                 },
                 {
+                    "facility_type_id": 3,
+                    "facility_type_name": "Kitchen"
+                },
+                {
                     "facility_type_id": 42,
                     "facility_type_name": "General Collections"
                 },
@@ -189,6 +189,14 @@ export default {
                 {
                     "facility_type_id": 38,
                     "facility_type_name": "Whiteboard"
+                },
+                {
+                    "facility_type_id": 49,
+                    "facility_type_name": "Low Light"
+                },
+                {
+                    "facility_type_id": 60,
+                    "facility_type_name": "Group study"
                 }
             ]
         },
@@ -206,10 +214,6 @@ export default {
                 {
                     "facility_type_id": 48,
                     "facility_type_name": "Dimmable"
-                },
-                {
-                    "facility_type_id": 49,
-                    "facility_type_name": "Low Light"
                 },
                 {
                     "facility_type_id": 50,
@@ -252,7 +256,7 @@ export default {
                 },
                 {
                     "facility_type_id": 13,
-                    "facility_type_name": "Postgraduate spaces"
+                    "facility_type_name": "Postgraduate only space"
                 },
                 {
                     "facility_type_id": 12,

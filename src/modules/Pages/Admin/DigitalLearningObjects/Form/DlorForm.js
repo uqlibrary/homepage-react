@@ -29,10 +29,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
-
+import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { isValidUrl, scrollToTopOfPage, slugifyName } from 'helpers/general';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -172,8 +169,6 @@ export const DlorForm = ({
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
 
-    const [editorReady, setEditorReady] = useState(false);
-
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [requestedKeywordValues, setRequestedKeywordValues] = useState({});
@@ -191,7 +186,6 @@ export const DlorForm = ({
         actions.requestNewKeyword(requestedKeywordValues).then(() => {
             setRequestedKeywordValues({});
             setIsRequestKeywordOpened(false);
-            console.log('Keyword request sent successfully');
         });
     };
 
@@ -282,29 +276,10 @@ export const DlorForm = ({
         }
     }, [dlorItem, actions]);
 
-    useEffect(() => {
-        if (!editorReady) return;
-        const editable = document.querySelector('.ck-editor__editable');
-        /* istanbul ignore next */
-        if (editable) {
-            const handler = e => {
-                /* istanbul ignore next */
-                if (e.target.tagName === 'A') {
-                    console.log('Link clicked in CKEditor', e.target.href);
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                }
-            };
-            editable.addEventListener('click', handler);
-            return () => editable.removeEventListener('click', handler);
-        }
-    }, [editorReady]);
-
     // these match the values in dlor playwright admin tests
     const titleMinimumLength = 8;
     const descriptionMinimumLength = 100;
     const summaryMinimumLength = 20;
-    const keywordMinimumLength = 4;
     const characterCount = (numCharsCurrent, numCharsMin, fieldName) => {
         const missingCharCount = numCharsMin - numCharsCurrent;
         return (
@@ -321,30 +296,6 @@ export const DlorForm = ({
                     : ''}
             </Box>
         );
-    };
-
-    const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            ],
-        },
-        link: {
-            decorators: {
-                isEditing: {
-                    mode: 'manual',
-                    label: 'Editing',
-                    attributes: {
-                        href: 'javascript:void(0);',
-                    },
-                },
-            },
-        },
-        licenseKey: 'GPL',
     };
 
     const isValidUsername = testUserName => {
@@ -379,6 +330,13 @@ export const DlorForm = ({
             ) {
                 firstPanelErrorCount++;
             }
+            if (
+                currentValues?.team_admin_username_new === undefined ||
+                !currentValues?.team_admin_username_new ||
+                currentValues?.team_admin_username_new?.length < 1
+            ) {
+                firstPanelErrorCount++;
+            }
             (currentValues?.team_email_new === undefined ||
                 !currentValues?.team_email_new ||
                 currentValues?.team_email_new?.length < 1 ||
@@ -386,6 +344,7 @@ export const DlorForm = ({
                 firstPanelErrorCount++;
         } else if (mode === 'edit') {
             currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            currentValues?.team_admin_username_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
             (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
                 firstPanelErrorCount++;
         }
@@ -430,7 +389,6 @@ export const DlorForm = ({
     function validatePanelFiltering(currentValues) {
         let fourthPanelErrorCount = 0;
         // ensure there is at least one keyword selected.
-        console.log('currentValues', currentValues);
         currentValues?.object_keywords?.length < 1 && fourthPanelErrorCount++;
 
         function isDeepStructure(variable) {
@@ -483,7 +441,6 @@ export const DlorForm = ({
     };
 
     const handleDateChange = newValue => {
-        console.log('Date Changed here');
         const formattedDate = moment(newValue).format('YYYY-MM-DD');
         const newValues = { ...formValues, object_review_date_next: formattedDate };
         setFormValues(newValues);
@@ -585,7 +542,7 @@ export const DlorForm = ({
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
                         <Input
@@ -614,7 +571,7 @@ export const DlorForm = ({
                     </FormControl>
                 </Grid>
                 {mode === 'edit' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="object_publishing_user_email">Object owner email</InputLabel>
                             <Input
@@ -628,7 +585,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12} sx={{ minHeight: '95px' }}>
+                <Grid size={{ xs: 12 }} sx={{ minHeight: '95px' }}>
                     <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                     <Select
                         variant="standard"
@@ -672,7 +629,7 @@ export const DlorForm = ({
                     )}
                 </Grid>
                 {showTeamForm !== false && teamSelectRef.current === 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                             <Input
@@ -691,6 +648,25 @@ export const DlorForm = ({
                                 value={formValues?.team_manager_new || ''}
                                 onChange={handleChange('team_manager_new')}
                             />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_new">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username-new"
+                                required
+                                value={formValues?.team_admin_username_new || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_new')}
+                                type="text"
+                                error={!formValues?.team_admin_username_new}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_new && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
@@ -712,7 +688,7 @@ export const DlorForm = ({
                     </Grid>
                 )}
                 {showTeamForm !== false && teamSelectRef.current !== 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
                             A change here will affect all Objects for this team.
                             <br />
@@ -730,6 +706,25 @@ export const DlorForm = ({
                                 value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
                                 onChange={handleChange('team_manager_edit')}
                             />
+                        </FormControl>
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="team_admin_username_edit">Team admin username *</InputLabel>
+                            <Input
+                                id="team_admin_username"
+                                data-testid="dlor-form-team-admin-username_edit"
+                                required
+                                value={formValues?.team_admin_username_edit || /* istanbul ignore next */ ''}
+                                onChange={handleChange('team_admin_username_edit')}
+                                type="text"
+                                error={!formValues?.team_admin_username_edit}
+                            />
+                            {
+                                /* istanbul ignore next */ !formValues?.team_admin_username_edit && (
+                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                        Team admin username is required.
+                                    </StyledErrorMessageBox>
+                                )
+                            }
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
@@ -752,7 +747,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     {mode === 'edit' ? (
                         <>
                             <DatePicker
@@ -792,30 +787,21 @@ export const DlorForm = ({
                 </Grid>
                 {isDlorAdminUser(account) && (
                     <>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                                 <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
-                                <CKEditor
+                                <RichTextEditor
                                     id="object_admin_notes"
-                                    data-testid="object-admin-notes"
-                                    sx={{ width: '100%' }}
-                                    editor={ClassicEditor}
-                                    config={editorConfig}
-                                    data={formValues?.object_admin_notes || ''}
-                                    onReady={editor => {
-                                        setEditorReady(true);
-                                        editor.editing.view.change(writer => {
-                                            writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                                        });
-                                    }}
-                                    onChange={(event, editor) => {
-                                        const htmlData = editor.getData();
+                                    testId="object-admin-notes"
+                                    ariaLabel="Admin Notes"
+                                    value={formValues?.object_admin_notes || ''}
+                                    onChange={htmlData => {
                                         handleAdminNotesEditorChange('object_admin_notes', htmlData);
                                     }}
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography variant="p">Existing Admin Notes</Typography>
@@ -939,7 +925,7 @@ export const DlorForm = ({
 
     const stepPanelContentDescription = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
@@ -953,24 +939,15 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
-                    <CKEditor
+                    <RichTextEditor
                         id="object_description"
-                        data-testid="object-description"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.object_description || ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="object-description"
+                        ariaLabel="Description of Object *"
+                        value={formValues?.object_description || ''}
+                        onChange={htmlData => {
                             handleEditorChange('object_description', htmlData);
                         }}
                     />
@@ -982,7 +959,7 @@ export const DlorForm = ({
                         )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
@@ -1033,7 +1010,7 @@ export const DlorForm = ({
             </Grid>
             {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <FormLabel id="object_status_label">Object publication status</FormLabel>
                             <RadioGroup
@@ -1065,7 +1042,7 @@ export const DlorForm = ({
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormLabel>Featured object?</FormLabel>
                         <InputLabel>
                             <Checkbox
@@ -1079,7 +1056,7 @@ export const DlorForm = ({
                     </Grid>
                 </>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <FormControl fullWidth>
                     <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
                     <Select
@@ -1106,7 +1083,7 @@ export const DlorForm = ({
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
                     <Checkbox
@@ -1135,7 +1112,7 @@ export const DlorForm = ({
 
     const stepPanelContentLinks = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
                     <Input
@@ -1169,12 +1146,12 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {isDlorAdminUser(account) && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
                         Message advising about link
                     </InputLabel>
                     <Grid container>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl>
                                 <span>&nbsp;</span>
                                 <Select
@@ -1214,7 +1191,7 @@ export const DlorForm = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl sx={{ minWidth: '10em' }}>
                                 {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                     linkInteractionTypeSelectRef.current,
@@ -1253,7 +1230,7 @@ export const DlorForm = ({
                                             </MenuItem>
                                         </Select>
                                         {showFileTypeCreationForm && (
-                                            <Grid item xs={12}>
+                                            <Grid size={{ xs: 12 }}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="new_file_type">
                                                         New File Type (abbrev)
@@ -1271,7 +1248,7 @@ export const DlorForm = ({
                                 )}
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <StyledViewDurationBox>
                                 {!!showLinkTimeForm && (
                                     <>
@@ -1350,27 +1327,18 @@ export const DlorForm = ({
                 </Grid>
             )}
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
                         Instructions
                     </InputLabel>
-                    <CKEditor
+                    <RichTextEditor
                         id="download_instructions"
-                        data-testid="download_instructions"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="download_instructions"
+                        ariaLabel="Instructions"
+                        value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
+                        onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
                         }}
                     />
@@ -1452,7 +1420,7 @@ export const DlorForm = ({
 
     const stepPanelContentFilters = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Filters
                 </Typography>
@@ -1461,8 +1429,7 @@ export const DlorForm = ({
                 dlorFilterList.map(filterItem => {
                     return (
                         <Grid
-                            item
-                            xs={4}
+                            size={{ xs: 4 }}
                             key={filterItem.facet_type_slug}
                             data-testid={`filter-group-${convertSnakeCaseToKebabCase(filterItem.facet_type_slug)}`}
                         >
@@ -1478,12 +1445,12 @@ export const DlorForm = ({
                         </Grid>
                     );
                 })}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Tags
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
+            <Grid size={{ xs: 12 }} style={{ paddingTop: 20 }}>
                 <FuzzySearch
                     data={dlorKeywords}
                     fuseOptions={fuseOptions}
@@ -1533,7 +1500,6 @@ export const DlorForm = ({
                                         requested_keyword: e.target.value,
                                         requested_object_uuid: dlorItem?.object_public_uuid,
                                     });
-                                    // console.log('requestedKeywordValues', requestedKeywordValues);
                                 }}
                                 error={
                                     !!requestedKeywordValues?.requested_keyword &&
@@ -1597,7 +1563,7 @@ export const DlorForm = ({
                 </Modal>
             </Grid>
             {mode === 'edit' && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <FormControlLabel
@@ -1669,20 +1635,11 @@ export const DlorForm = ({
                     <Typography sx={{ mt: '2px', color: 'grey', fontSize: '0.8em' }}>
                         Enter the notification details the user will see here:
                     </Typography>
-                    <CKEditor
+                    <RichTextEditor
                         id="notificationText"
-                        sx={{ width: '100%' }}
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={formValues?.notificationText || ''}
-                        onReady={editor => {
-                            setEditorReady(true);
-                            editor.editing.view.change(writer => {
-                                writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
-                            });
-                        }}
-                        onChange={(event, editor) => {
-                            const htmlData = editor.getData();
+                        testId="notificationText"
+                        value={formValues?.notificationText || ''}
+                        onChange={htmlData => {
                             handleEditorChange('notificationText', htmlData);
                         }}
                     />
@@ -1819,16 +1776,19 @@ export const DlorForm = ({
             valuesToSend.team_name = valuesToSend.team_name_new;
             valuesToSend.team_manager = valuesToSend.team_manager_new;
             valuesToSend.team_email = valuesToSend.team_email_new;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_new;
         } else if (formValues?.object_owning_team_id !== formDefaults.object_owning_team_id) {
             // they can only change manager and email for the original team;
             // if they entered this then changed teams, undo
             delete valuesToSend.team_name;
             delete valuesToSend.team_manager;
             delete valuesToSend.team_email;
+            delete valuesToSend.team_admin_username;
         } else {
             valuesToSend.team_name = valuesToSend.team_name_edit;
             valuesToSend.team_manager = valuesToSend.team_manager_edit;
             valuesToSend.team_email = valuesToSend.team_email_edit;
+            valuesToSend.team_admin_username = valuesToSend.team_admin_username_edit;
         }
 
         delete valuesToSend.team_name_new;
@@ -1837,6 +1797,8 @@ export const DlorForm = ({
         delete valuesToSend.team_name_edit;
         delete valuesToSend.team_manager_edit;
         delete valuesToSend.team_email_edit;
+        delete valuesToSend.team_admin_username_new;
+        delete valuesToSend.team_admin_username_edit;
 
         // valuesToSend.object_keywords = splitStringToArrayOnComma(valuesToSend.object_keywords_string);
         delete valuesToSend.object_keywords_string;
@@ -1882,7 +1844,7 @@ export const DlorForm = ({
             mode === 'add'
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
                 : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
-
+        console.log('VALUES TO SEND ARE', valuesToSend);
         return saveDlorPromise.then(() => {
             // Save admin notes after DLO is created or updated
             if (
@@ -1924,7 +1886,7 @@ export const DlorForm = ({
         scrollToTopOfPage();
     };
 
-    const navigateToListPage = isAdmin => {
+    const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
@@ -1946,18 +1908,16 @@ export const DlorForm = ({
     };
 
     const handleNext = () => {
-        setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleBack = () => {
-        setEditorReady(false);
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <InlineLoader message="Loading" />
             </Grid>
         );
@@ -2026,7 +1986,7 @@ export const DlorForm = ({
             />
             <form id="dlor-addedit-form">
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Stepper activeStep={activeStep}>
                             {steps.map((step, index) => {
                                 const stepProps = { completed: null };
@@ -2054,7 +2014,7 @@ export const DlorForm = ({
                         </Stepper>
                     </Grid>
                     {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                             <Button
                                 color="inherit"
@@ -2090,7 +2050,7 @@ export const DlorForm = ({
                 </Grid>
             </form>
             <Grid container spacing={2} sx={{ marginTop: '32px' }}>
-                <Grid item xs={3} align="left">
+                <Grid size={{ xs: 3 }} align="left">
                     <Button
                         color="secondary"
                         children="Cancel"
@@ -2099,7 +2059,7 @@ export const DlorForm = ({
                         variant="contained"
                     />
                 </Grid>
-                <Grid item xs={9} align="right" />
+                <Grid size={{ xs: 9 }} align="right" />
             </Grid>
         </>
     );

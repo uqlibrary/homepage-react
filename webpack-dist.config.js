@@ -222,16 +222,15 @@ const webpackConfig = {
                 },
             },
             {
-                test: /\.css$/,
-                include: [resolve(__dirname, 'node_modules/@ckeditor'), resolve(__dirname, 'node_modules/ckeditor5')],
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
-            },
-            {
                 test: /\.scss/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.(mp3|wav|ogg|m4a)$/i,
                 type: 'asset/resource',
             },
         ],

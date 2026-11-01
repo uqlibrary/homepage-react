@@ -37,7 +37,7 @@ export default {
             fieldParams: {
                 minWidth: 200,
                 flex: 1,
-                valueGetter: params => renderLocation(params.row),
+                valueGetter: (_, row) => renderLocation(row),
                 renderCell: params => createLocationLink(renderLocation(params.row), params.row.floor_plan_url),
             },
         },
@@ -52,7 +52,7 @@ export default {
                     const currentDate = moment();
                     const isPastDate = dateObject.isBefore(currentDate);
                     return (
-                        <>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                             {date}
                             {isPastDate && (
                                 <Tooltip
@@ -65,10 +65,10 @@ export default {
                                     <WarningOutlined />
                                 </Tooltip>
                             )}
-                        </>
+                        </span>
                     );
                 },
-                minWidth: 125,
+                minWidth: 150,
             },
         },
         asset_status: { fieldParams: { width: 140 } },

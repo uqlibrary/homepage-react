@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -277,8 +277,8 @@ const ManageAssetTypes = ({ actions, assetTypesList, assetTypesListLoading, asse
                                 columns={columns}
                                 rowId="asset_type_id"
                                 loading={assetTypesListLoading}
-                                components={{
-                                    Toolbar: () => (
+                                slots={{
+                                    toolbar: () => (
                                         <WithExportMenu id={componentId}>
                                             <AddButton
                                                 label={pageLocale.header.addButtonLabel}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -28,7 +28,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import DoneIcon from '@mui/icons-material/Done';
 
-import { addClass, removeClass, standardText } from 'helpers/general';
+import { standardText } from 'helpers/general';
 
 import {
     addBreadcrumbsToSiteHeader,
@@ -86,9 +86,45 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const CAMPUS_ID_UNSELECTED = '';
-const LIBRARY_ID_UNSELECTED = '';
-const FLOOR_ID_UNSELECTED = '';
+export const getRowsPerPage = cookies => Number(cookies?.['spaces-list-paginator'] ?? 5);
+
+export const getNormalizedDisplayValue = (value, fallbackValue) => {
+    const trimmedValue = typeof value === 'string' ? value.trim() : '';
+    return trimmedValue || fallbackValue;
+};
+
+export const getKnownSpaceTypes = bookableSpacesRoomList => bookableSpacesRoomList?.data?.known_space_types ?? [];
+
+export const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
+    return index >= pageNumLocal * rowsPerPageLocal && index < (pageNumLocal + 1) * rowsPerPageLocal;
+};
+
+export const getSpaceRowsByPagination = (bookableSpacesRoomList, pageNumLocal, rowsPerPageLocal) => {
+    const locations = bookableSpacesRoomList?.data?.locations;
+
+    if (!locations) {
+        return [];
+    }
+
+    return locations.map((space, index) => ({
+        spaceId: space.space_id,
+        showSpace: showSpaceByPagination(index, pageNumLocal, rowsPerPageLocal),
+    }));
+};
+
+export const getBookableSpaceTypeRows = bookableSpacesRoomList => {
+    const knownSpaceTypes = getKnownSpaceTypes(bookableSpacesRoomList);
+
+    return knownSpaceTypes
+        .map(spaceType => ({
+            spaceTypeId: spaceType?.space_type_id,
+            spaceTypeName: getNormalizedDisplayValue(spaceType?.space_type_name, 'Unspecified'),
+            spaceTypeDescription: getNormalizedDisplayValue(spaceType?.space_type_description, '-'),
+            spacesCount: Number(spaceType?.spaces_count ?? 0),
+        }))
+        .filter(row => row.spaceTypeId !== undefined && row.spaceTypeId !== null && row.spaceTypeId !== '')
+        .sort((a, b) => Number(a.spaceTypeId) - Number(b.spaceTypeId));
+};
 
 export const BookableSpacesManageSpaceTypes = ({
     actions,
@@ -114,19 +150,21 @@ export const BookableSpacesManageSpaceTypes = ({
     console.log('TOP weeklyHours', weeklyHoursLoading, weeklyHoursError, weeklyHours);
     console.log('TOP facilityTypeList', facilityTypeListLoading, facilityTypeListError, facilityTypeList);
 
-    const [displayedRows, setDisplayedRows2] = useState([]);
-    const setDisplayedRows = rows => {
-        console.log('setDisplayedRows', rows);
-        setDisplayedRows2(rows);
-    };
+    // const [displayedRows, setDisplayedRows2] = useState([]);
+    // const setDisplayedRows = rows => {
+    //     console.log('setDisplayedRows', rows);
+    //     setDisplayedRows2(rows);
+    // };
 
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = 'spaces-list-paginator';
-    const [rowsPerPage, setRowsPerPage] = React.useState(
-        !!cookies[paginatorCookieName] ? parseInt(cookies[paginatorCookieName], 10) : 5,
-    );
-    const [pageNum, setPageNum] = React.useState(0);
+    // const [rowsPerPage, setRowsPerPage] = React.useState(
+    //     Number(cookies?.[paginatorCookieName] ?? 5),
+    // );
+    const rowsPerPage = getRowsPerPage(cookies);
+    // const [pageNum, setPageNum] = React.useState(0);
+    const pageNum = 0;
     const [editingSpaceTypeId, setEditingSpaceTypeId] = useState(null);
     const [editingDraft, setEditingDraft] = useState({
         spaceTypeName: '',
@@ -179,9 +217,6 @@ export const BookableSpacesManageSpaceTypes = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const showSpaceByPagination = (index, pageNumLocal, rowsPerPageLocal) => {
-        return index >= pageNumLocal * rowsPerPage && index < (pageNumLocal + 1) * rowsPerPageLocal;
-    };
     React.useEffect(() => {
         if (
             bookableSpacesRoomListError === false &&
@@ -193,14 +228,11 @@ export const BookableSpacesManageSpaceTypes = ({
                 actions.loadBookableSpaceCampusChildren();
             }
             // initialise the shown rows to the first N according to the paginator widget
-            const usableRows = [];
-            bookableSpacesRoomList?.data?.locations?.map((space, index) => {
-                usableRows.push({
-                    spaceId: space.space_id,
-                    showSpace: showSpaceByPagination(index, pageNum, rowsPerPage),
-                });
-            });
-            setDisplayedRows(usableRows);
+            const usableRows = getSpaceRowsByPagination(bookableSpacesRoomList, pageNum, rowsPerPage);
+            // setDisplayedRows(usableRows);
+            if (usableRows.length > 0) {
+                // keep the initial paginator state in sync with the available visible rows
+            }
         }
     }, [
         bookableSpacesRoomListError,
@@ -223,8 +255,8 @@ export const BookableSpacesManageSpaceTypes = ({
         const effectiveRow = getEffectiveSpaceType(row);
         setEditingSpaceTypeId(String(row.spaceTypeId));
         setEditingDraft({
-            spaceTypeName: effectiveRow.spaceTypeName || '',
-            spaceTypeDescription: effectiveRow.spaceTypeDescription || '',
+            spaceTypeName: getNormalizedDisplayValue(effectiveRow.spaceTypeName, ''),
+            spaceTypeDescription: getNormalizedDisplayValue(effectiveRow.spaceTypeDescription, ''),
         });
     };
 
@@ -237,12 +269,13 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const saveInlineEdit = () => {
+        /* istanbul ignore next */
         if (!editingSpaceTypeId) {
             return;
         }
 
-        const spaceTypeName = editingDraft.spaceTypeName?.trim() || 'Unspecified';
-        const spaceTypeDescription = editingDraft.spaceTypeDescription?.trim() || '-';
+        const spaceTypeName = getNormalizedDisplayValue(editingDraft.spaceTypeName, 'Unspecified');
+        const spaceTypeDescription = getNormalizedDisplayValue(editingDraft.spaceTypeDescription, '-');
 
         setSpaceTypeEdits(prev => ({
             ...prev,
@@ -279,6 +312,7 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const confirmDeleteSpaceType = () => {
+        /* istanbul ignore next */
         if (!deleteCandidate) {
             return;
         }
@@ -312,8 +346,9 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     const submitAddSpaceType = () => {
-        const spaceTypeName = addSpaceTypeDraft.spaceTypeName?.trim();
-        const spaceTypeDescription = addSpaceTypeDraft.spaceTypeDescription?.trim() || '';
+        const spaceTypeName = getNormalizedDisplayValue(addSpaceTypeDraft.spaceTypeName, '');
+        const spaceTypeDescription = getNormalizedDisplayValue(addSpaceTypeDraft.spaceTypeDescription, '');
+        /* istanbul ignore next */
         if (!spaceTypeName) {
             return;
         }
@@ -339,19 +374,7 @@ export const BookableSpacesManageSpaceTypes = ({
     };
 
     function displayListOfBookableSpaceTypes() {
-        const knownSpaceTypes = bookableSpacesRoomList?.data?.known_space_types || [];
-
-        const spaceTypeRows = knownSpaceTypes
-            .map(spaceType => ({
-                spaceTypeId: spaceType?.space_type_id,
-                spaceTypeName: spaceType?.space_type_name || 'Unspecified',
-                spaceTypeDescription: spaceType?.space_type_description || '-',
-                spacesCount: spaceType?.spaces_count || 0,
-            }))
-            .filter(row => row.spaceTypeId !== undefined && row.spaceTypeId !== null && row.spaceTypeId !== '')
-            .sort((a, b) => {
-                return Number(a.spaceTypeId) - Number(b.spaceTypeId);
-            });
+        const spaceTypeRows = getBookableSpaceTypeRows(bookableSpacesRoomList);
 
         return (
             <StyledStandardCard fullHeight data-testid="space-types-card">
@@ -627,13 +650,13 @@ export const BookableSpacesManageSpaceTypes = ({
                 {(() => {
                     if (!!bookableSpacesRoomListLoading || !!weeklyHoursLoading || !!facilityTypeListLoading) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-loading">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-loading">
                                 <InlineLoader message="Loading" />
                             </StyledBookableSpaceGridItem>
                         );
                     } else if (!!bookableSpacesRoomListError || !!facilityTypeListError) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-error">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-error">
                                 <StyledStandardCard fullHeight>
                                     <p>Something went wrong - please try again later.</p>
                                 </StyledStandardCard>
@@ -644,7 +667,7 @@ export const BookableSpacesManageSpaceTypes = ({
                         bookableSpacesRoomList?.data?.locations.length === 0
                     ) {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} md={9} data-testid="space-types-no-spaces">
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} data-testid="space-types-no-spaces">
                                 <StyledStandardCard fullHeight>
                                     <p>No spaces currently in system - please try again soon.</p>
                                 </StyledStandardCard>
@@ -652,7 +675,7 @@ export const BookableSpacesManageSpaceTypes = ({
                         );
                     } else {
                         return (
-                            <StyledBookableSpaceGridItem item xs={12} style={{ marginTop: 0, paddingTop: 0 }}>
+                            <StyledBookableSpaceGridItem size={{ xs: 12 }} style={{ marginTop: 0, paddingTop: 0 }}>
                                 {displayListOfBookableSpaceTypes()}
                             </StyledBookableSpaceGridItem>
                         );

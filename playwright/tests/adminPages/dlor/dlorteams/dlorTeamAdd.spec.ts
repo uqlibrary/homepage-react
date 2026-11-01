@@ -22,6 +22,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             await expect(page.getByTestId('StandardPage-title')).toHaveText(/Digital Learning Hub - Add a new Team/);
             await expect(page.getByTestId('admin-dlor-team-form-team-name').locator('input')).toBeEmpty();
             await expect(page.getByTestId('admin-dlor-team-form-team-manager').locator('input')).toBeEmpty();
+            await expect(page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input')).toBeEmpty();
             await expect(page.getByTestId('admin-dlor-team-form-team-email').locator('input')).toBeEmpty();
             await expect(page.getByTestId('dlor-breadcrumb-admin-homelink')).toHaveAttribute(
                 'href',
@@ -41,6 +42,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
 
             await expect(teamNameError).toHaveCSS('color', 'rgb(214, 41, 41)');
             await expect(teamEmailError).toHaveCSS('color', 'rgb(214, 41, 41)');
@@ -59,6 +61,9 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             await teamEmailInput.fill('lea@example.com');
             await expect(teamNameError).not.toBeVisible();
             await expect(teamEmailError).not.toBeVisible();
+            await expect(saveButton).toBeDisabled();
+
+            await teamAdminUsernameInput.fill('uqstaff');
             await expect(saveButton).not.toBeDisabled();
 
             await teamManagerInput.fill('valid team manager');
@@ -89,9 +94,11 @@ test.describe('Digital Learning Hub admin Add Team', () => {
         test('saves correctly and starts another add', async ({ page, context }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
             await teamNameInput.fill('Valid Team name');
+            await teamAdminUsernameInput.fill('uqstaff');
             await teamEmailInput.fill('lea@example.com');
             await expect(saveButton).not.toBeDisabled();
             await saveButton.click();
@@ -105,6 +112,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             const expectedValues = {
                 team_name: 'Valid Team name',
                 team_manager: '',
+                team_admin_username: 'uqstaff',
                 team_email: 'lea@example.com',
             };
 
@@ -127,11 +135,13 @@ test.describe('Digital Learning Hub admin Add Team', () => {
         test('saves correctly and navigates to team list', async ({ page, context }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
             await teamNameInput.fill('Valid Team Name');
             await teamManagerInput.fill('Valid Team manager name');
+            await teamAdminUsernameInput.fill('uqstaff');
             await teamEmailInput.fill('lea@example.com');
             await saveButton.click();
 
@@ -145,6 +155,7 @@ test.describe('Digital Learning Hub admin Add Team', () => {
             const expectedValues = {
                 team_name: 'Valid Team Name',
                 team_manager: 'Valid Team manager name',
+                team_admin_username: 'uqstaff',
                 team_email: 'lea@example.com',
             };
             const cookies = await context.cookies();
@@ -171,12 +182,14 @@ test.describe('Digital Learning Hub admin Add Team', () => {
         test('a failed save shows correctly', async ({ page }) => {
             const teamNameInput = page.getByTestId('admin-dlor-team-form-team-name').locator('input');
             const teamManagerInput = page.getByTestId('admin-dlor-team-form-team-manager').locator('input');
+            const teamAdminUsernameInput = page.getByTestId('admin-dlor-team-form-team-admin-username').locator('input');
             const teamEmailInput = page.getByTestId('admin-dlor-team-form-team-email').locator('input');
             const saveButton = page.getByTestId('admin-dlor-team-form-save-button');
 
             await page.goto(`http://localhost:2020/admin/dlor/team/add?user=${DLOR_ADMIN_USER}&responseType=saveError`);
             await teamNameInput.fill('Valid Team Name');
             await teamManagerInput.fill('Valid Team manager name');
+            await teamAdminUsernameInput.fill('uqstaff');
             await teamEmailInput.fill('lea@example.com');
             await saveButton.click();
 

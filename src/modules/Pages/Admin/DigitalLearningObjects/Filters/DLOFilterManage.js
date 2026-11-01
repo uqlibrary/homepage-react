@@ -4,36 +4,20 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 
-import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { ObjectListItem } from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/ObjectListItem';
-
-import { useConfirmationState } from 'hooks';
 import DlorAdminBreadcrumbs from 'modules/Pages/Admin/DigitalLearningObjects//SharedDlorComponents/DlorAdminBreadcrumbs';
-import { pluralise } from 'helpers/general';
-import { breadcrumbs } from 'config/routes';
-import { Button, FormControl, Input, InputLabel, Modal } from '@mui/material';
-import { set } from 'js-cookie';
-import { setIn } from 'immutable';
-
-import { useAccountContext } from 'context';
 
 export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterListError, dlorFilterList }) => {
-    const { account } = useAccountContext();
-    console.log('actions', actions);
     useEffect(() => {
-        console.log(dlorFilterList, dlorFilterListLoading, dlorFilterListError);
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
@@ -63,6 +47,18 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
         setFacetHelp(event.target.value || /* istanbul ignore next */ '');
     };
 
+    const handleClose = () => {
+        setEditBoxOpened(false);
+        setFormMode('edit');
+        setInputValue('');
+        setFacetOrder(0);
+        setFacetHelp('');
+        setFacetName('');
+        setFacetTypeId(null);
+        setFacet(null);
+        setFacetShowHelp(false);
+    };
+
     const updateFacet = id => {
         const payload = {
             facet_name: inputValue,
@@ -82,26 +78,11 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
             facet_help: facetHelp,
             facet_show_help: facetShowHelp,
         };
-        console.log('THE PAYLOAD IS', payload);
         actions.createFacet(payload).then(handleClose());
     };
 
     const handleDeleteFacet = id => {
-        console.log('delete facet', id);
         actions.deleteFacet(id).then(setConfirmDeleteModal(false));
-    };
-
-    const handleClose = () => {
-        console.log('testing');
-        setEditBoxOpened(false);
-        setFormMode('edit');
-        setInputValue('');
-        setFacetOrder(0);
-        setFacetHelp('');
-        setFacetName('');
-        setFacetTypeId(null);
-        setFacet(null);
-        setFacetShowHelp(false);
     };
 
     const handleEditFacet = facet => {
@@ -129,7 +110,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                     dlorFilterList.length > 0 &&
                     dlorFilterList.map(facetType => (
                         <React.Fragment key={facetType.facet_type_name}>
-                            <Grid item xs={11}>
+                            <Grid size={{ xs: 11 }}>
                                 <Typography
                                     component="h3"
                                     sx={{ fontWeight: 'bold' }}
@@ -138,7 +119,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                     {facetType?.facet_type_name}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <IconButton
                                     color="primary"
                                     onClick={() => {
@@ -159,15 +140,13 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                     <React.Fragment key={facet.facet_name}>
                                         <Grid container sx={{ backgroundColor: index % 2 === 0 ? 'white' : '#f0f0f0' }}>
                                             <Grid
-                                                item
-                                                xs={8}
+                                                size={{ xs: 8 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                             >
                                                 <Typography component="p">{facet?.facet_name}</Typography>
                                             </Grid>
                                             <Grid
-                                                item
-                                                xs={2}
+                                                size={{ xs: 2 }}
                                                 sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                                             >
                                                 <Typography component="p">
@@ -175,7 +154,7 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                                     {facet?.facet_use_count === 1 ? 'object' : 'objects'}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => handleEditFacet(facet)}
@@ -184,11 +163,10 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid>
-                                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Grid size={{ xs: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                                                 <IconButton
                                                     color="secondary"
                                                     onClick={() => {
-                                                        console.log('Delete facet');
                                                         setFacet(facet);
                                                         setConfirmDeleteModal(true);
                                                         // handleDeleteFacet(facet?.facet_id)
@@ -306,10 +284,8 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
                             disabled={!inputValue}
                             onClick={() => {
                                 if (formMode === 'edit') {
-                                    console.log('Confirm', facet.facet_id);
                                     updateFacet(facet.facet_id);
                                 } else {
-                                    console.log('Add new facet');
                                     addNewFacet();
                                 }
                             }}
@@ -339,15 +315,9 @@ export const DLOFilterManage = ({ actions, dlorFilterListLoading, dlorFilterList
 
 DLOFilterManage.propTypes = {
     actions: PropTypes.any,
-    dlorSeriesList: PropTypes.array,
-    dlorSeriesListLoading: PropTypes.bool,
-    dlorSeriesListError: PropTypes.any,
-    dlorList: PropTypes.array,
-    dlorListLoading: PropTypes.bool,
-    dlorListError: PropTypes.any,
-    dlorSeriesDeleted: PropTypes.array,
-    dlorSeriesDeleting: PropTypes.bool,
-    dlorSeriesDeleteError: PropTypes.any,
+    dlorFilterListLoading: PropTypes.any,
+    dlorFilterListError: PropTypes.any,
+    dlorFilterList: PropTypes.any,
 };
 
 export default DLOFilterManage;

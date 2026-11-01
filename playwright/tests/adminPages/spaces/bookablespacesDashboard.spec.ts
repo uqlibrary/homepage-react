@@ -24,10 +24,7 @@ const ARMUS7 = '7';
 
 test.describe('Spaces Admin - manage locations', () => {
     test('page has correct data', async ({ page }) => {
-        const visibleSpaces = page
-            .getByTestId('space-table')
-            .locator('tbody')
-            .locator(':scope > tr:not(.hidden)');
+        const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
 
         await page.goto('/admin/spaces?user=libSpaces');
         await page.setViewportSize({ width: 1300, height: 1000 });
@@ -137,7 +134,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${hotColdWater}`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).not.toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${kitchen}`)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${microwave}`)).not.toBeVisible();
@@ -230,7 +227,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${dimmable}`)).not.toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
-        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).not.toBeVisible();
+        await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${lowLight}`)).toBeVisible();
 
         await expect(page.getByTestId(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).toBeVisible();
         await expect(greenTick(`${FORGAN_SMITH_FACILITY_TYPE}-${naturalLight}`)).not.toBeVisible();
@@ -677,10 +674,7 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         });
         test('by locations', async ({ page }) => {
-            const visibleSpaces = page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)');
+            const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
             const lawSpace = page.getByTestId(`edit-space-${FORGEN}-button`);
             const paceSpace = page.getByTestId(`edit-space-${PACE}-button`);
             const liverisSpace = page.getByTestId(`edit-space-${LIVERIS}-button`);
@@ -698,12 +692,9 @@ test.describe('Spaces Admin - manage locations', () => {
             await expect(page.getByTestId('spaces-sort-button')).toContainText('Sort by name');
 
             // initially all first page space rows are visible in name order
-            await expect(
-                page
-                    .getByTestId('space-table')
-                    .locator('tbody')
-                    .locator(':scope > tr'),
-            ).toHaveCount(PAGINATE_TO_SHOW_5);
+            await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr')).toHaveCount(
+                PAGINATE_TO_SHOW_5,
+            );
             await expect(lawSpace).toBeVisible();
             await expect(paceSpace).not.toBeVisible();
             await expect(liverisSpace).not.toBeVisible();
@@ -901,10 +892,7 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(expandButton).toBeVisible();
     });
     test('pagination works', async ({ page }) => {
-        const visibleSpaces = page
-            .getByTestId('space-table')
-            .locator('tbody')
-            .locator(':scope > tr:not(.hidden)');
+        const visibleSpaces = page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)');
 
         const campusSelector = page.getByTestId('filter-by-campus');
         const librarySelector = page.getByTestId('filter-by-library');
@@ -933,15 +921,15 @@ test.describe('Spaces Admin - manage locations', () => {
 
         // paginator shows correct number
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–5 of 16');
+        await expect(pageCountDisplay).toContainText('1–5 of 17');
 
-        // go to next page of pagination, 6-16 of 16
+        // go to next page of pagination, 6-16 of 17
         const paginationBlock = page.getByTestId('pagination-block');
         const nextPaginationButton = paginationBlock.locator('[aria-label="Go to next page"]');
         await expect(nextPaginationButton).toBeVisible();
         await nextPaginationButton.click();
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('6–10 of 16');
+        await expect(pageCountDisplay).toContainText('6–10 of 17');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${ARMUS1}`)).toBeVisible();
         await expect(page.getByTestId(`space-${ARMUS6}`)).toBeVisible();
@@ -949,12 +937,12 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId(`space-${LIVERIS}`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}`)).toBeVisible();
 
-        // go to back to first page of pagination, 1-5 of 16
+        // go to back to first page of pagination, 1-5 of 17
         const previousPaginationButton = paginationBlock.locator('[aria-label="Go to previous page"]');
         await expect(previousPaginationButton).toBeVisible();
         await previousPaginationButton.click();
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–5 of 16');
+        await expect(pageCountDisplay).toContainText('1–5 of 17');
         await expect(visibleSpaces).toHaveCount(PAGINATE_TO_SHOW_5);
         await expect(page.getByTestId(`space-${FORGEN}`)).toBeVisible();
         await expect(page.getByTestId(`space-${PACE}`)).not.toBeVisible();
@@ -1025,14 +1013,11 @@ test.describe('Spaces Admin - manage locations', () => {
         // initally 5 rows showing
         const pageCountDisplay2 = page.locator('.MuiTablePagination-displayedRows');
         await expect(pageCountDisplay2).toBeVisible();
-        await expect(pageCountDisplay2).toContainText('1–5 of 16');
+        await expect(pageCountDisplay2).toContainText('1–5 of 17');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(5);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            5,
+        );
 
         // cookie not present
         const cookies = await context.cookies();
@@ -1043,12 +1028,9 @@ test.describe('Spaces Admin - manage locations', () => {
         await expect(page.getByTestId('admin-spaces-list-paginator-select')).toBeVisible();
         await page.getByTestId('admin-spaces-list-paginator-select').selectOption('10');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(10);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            10,
+        );
 
         // reload page to show number of rows has increased
         await page.goto('/admin/spaces?user=libSpaces');
@@ -1060,14 +1042,11 @@ test.describe('Spaces Admin - manage locations', () => {
         // now 10 rows showing
         const pageCountDisplay = page.locator('.MuiTablePagination-displayedRows');
         await expect(pageCountDisplay).toBeVisible();
-        await expect(pageCountDisplay).toContainText('1–10 of 16');
+        await expect(pageCountDisplay).toContainText('1–10 of 17');
 
-        await expect(
-            page
-                .getByTestId('space-table')
-                .locator('tbody')
-                .locator(':scope > tr:not(.hidden)'),
-        ).toHaveCount(10);
+        await expect(page.getByTestId('space-table').locator('tbody').locator(':scope > tr:not(.hidden)')).toHaveCount(
+            10,
+        );
     });
     test.describe('can bulk manage facility types', () => {
         const changeCheckboxes = async (page: Page) => {
@@ -1153,6 +1132,7 @@ test.describe('Spaces Admin - manage locations', () => {
                 { checked: false, space_id: '11' },
                 { checked: true, space_id: '13' },
                 { checked: true, space_id: '14' },
+                { checked: false, space_id: '176' },
                 { checked: false, space_id: '43534' },
                 { checked: false, space_id: '123456' },
                 { checked: false, space_id: '999999' },

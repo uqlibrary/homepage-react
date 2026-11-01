@@ -59,6 +59,7 @@ const palette = {
         panelBackgroundColor: '#f3f3f4', // $grey-50
         headingColor: '#19151c', // $black
         bodyCopy: '#3b383e', // $grey-900
+        bodySmallFontSize: '14px',
         disabledText: '#d1d0d2', // $grey-300
         fontFamilyH1: 'Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif',
         purple: {
@@ -119,6 +120,12 @@ export const mui1theme = createTheme({
         suppressDeprecationWarnings: true,
         caption: {
             color: '#000',
+        },
+        artTrail: {
+            fontSize: 16,
+            fontWeightHeavy: 500,
+            headingFontFamily: 'Montserrat,Helvetica,Arial,sans-serif',
+            bodyFontFamily: 'Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif',
         },
     },
     overrides: {

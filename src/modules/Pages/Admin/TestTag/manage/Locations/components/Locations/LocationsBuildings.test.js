@@ -68,7 +68,7 @@ const assertHeader = (grid, values, rowIndex = 0) => {
 };
 const assertRow = (grid, values, rowIndex) => {
     const row = within(grid).getAllByRole('row')[rowIndex];
-    const cells = within(row).getAllByRole('cell');
+    const cells = within(row).getAllByRole('gridcell');
     assertRowText(cells, values);
     return cells;
 };
@@ -119,7 +119,7 @@ describe('Locations', () => {
 
         it('handles add action as expected', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -196,7 +196,7 @@ describe('Locations', () => {
 
         it('handles update action as expected', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),
@@ -250,7 +250,7 @@ describe('Locations', () => {
 
         it('handles update action as expected when parent excluded', async () => {
             const updateLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId, getByRole } = setup({
+            const { getByText, getByTestId, findByTestId, getByRole } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),

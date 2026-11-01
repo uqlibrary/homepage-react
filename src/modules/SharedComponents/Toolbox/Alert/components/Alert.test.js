@@ -19,8 +19,9 @@ function setup(testProps = {}) {
 function createMatchMedia(width) {
     return query => ({
         matches: mediaQuery.match(query, { width }),
-        addListener: () => {},
-        removeListener: () => {},
+        // MUI v7 requires these
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
     });
 }
 
@@ -233,7 +234,7 @@ describe('Alert', () => {
 
     it('should fire an action when the kind of type does not exist, as an error', () => {
         const actionFn = jest.fn();
-        const { container, getByText, getByTestId } = setup({
+        const { getByText, getByTestId } = setup({
             message: 'Click me',
             action: actionFn,
             type: 'this_doesnt_exist',

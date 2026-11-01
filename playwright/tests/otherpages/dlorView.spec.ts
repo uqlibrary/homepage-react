@@ -1,7 +1,7 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import moment from 'moment-timezone';
-import { typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { DLOR_NO_EDIT_USER } from '@uq/pw/lib/constants';
 import { setInputValue } from '@uq/pw/lib/helpers';
 
@@ -602,7 +602,7 @@ test.describe('Digital Learning Hub View page', () => {
         });
         test('User can edit the object they own', async ({ page }) => {
             const testData =
-                'This is a test. This information is not used in the real system. This is simply content that is big enough to test the CKEditor - it is at least sufficient characters long for the editor to accept the content.';
+                'This is a test. This information is not used in the real system. This is simply content that is big enough to test the Rich Text Editor - it is at least sufficient characters long for the editor to accept the content.';
             await page.goto(`digital-learning-hub/view/987y-dfgrf4-76gsg-01?user=${DLOR_NO_EDIT_USER}`);
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByText(/Dummy entry/)).toBeVisible({ timeout: 15_000 });
@@ -622,7 +622,7 @@ test.describe('Digital Learning Hub View page', () => {
             // Force a change event
             await page.locator('[data-testid="object-review-date"] input').dispatchEvent('change');
             await page.getByTestId('dlor-form-next-button').click();
-            await typeCKEditor(page, testData);
+            await typeRichTextEditor(page, testData);
             await page.getByTestId('dlor-form-next-button').click();
             await page.getByTestId('dlor-form-next-button').click();
             // select a keyword so we can save

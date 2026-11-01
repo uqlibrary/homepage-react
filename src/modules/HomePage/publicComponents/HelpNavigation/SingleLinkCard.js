@@ -14,7 +14,6 @@ const StyledGridItem = styled(Grid, {
     listStyleType: 'none',
     display: 'flex',
     alignItems: 'stretch',
-    flex: 1,
     '& > div': {
         height: '100%',
         display: 'flex',
@@ -40,7 +39,7 @@ const StyledGridItem = styled(Grid, {
 }));
 const StyledLink = styled(Link, {
     shouldForwardProp: prop => prop !== 'fillContainer',
-})(({ theme, fillContainer }) => ({
+})(({ theme }) => ({
     border: '1px solid hsla(203, 50%, 30%, 0.15)',
     borderRadius: theme.palette.designSystem.borderRadius,
     background: '#FFFFFF',
@@ -166,12 +165,39 @@ const SingleLinkCard = ({
     fillContainer,
     testId,
     onClick,
-    disableHover,
+    onNavigate,
+    onMouseDown,
+    onContextMenu,
     showH3 = null,
+    followingElement,
+    ariaLabel,
+    sx,
 }) => {
     const _showH3 = showH3 === null ? loggedIn : showH3;
+    const handleClick = e => {
+        const hasCustomHandler = typeof onNavigate === 'function' || typeof onClick === 'function';
+
+        /* istanbul ignore else */
+        if (hasCustomHandler) {
+            e.preventDefault();
+        }
+
+        if (typeof onNavigate === 'function') {
+            onNavigate(e);
+        }
+
+        if (typeof onClick === 'function') {
+            onClick(e);
+        }
+    };
+
     return (
-        <StyledGridItem item component={'li'} xs={12} uqDsTablet={6} uqDsDesktop={4} fillContainer={fillContainer}>
+        <StyledGridItem
+            component={'li'}
+            size={{ xs: 12, uqDsDesktop: 4, uqDsTablet: 6 }}
+            fillContainer={fillContainer}
+            sx={sx}
+        >
             <div>
                 <StyledLink
                     border={1}
@@ -179,12 +205,10 @@ const SingleLinkCard = ({
                     to={landingUrl}
                     fillContainer={fillContainer}
                     data-testid={testId}
-                    onClick={e => {
-                        if (typeof onClick === 'function') {
-                            e.preventDefault();
-                            onClick(e);
-                        }
-                    }}
+                    onClick={handleClick}
+                    onMouseDown={onMouseDown}
+                    onContextMenu={onContextMenu}
+                    aria-label={ariaLabel}
                 >
                     <div className={'panelBodyWrapper'}>
                         {!!iconBackgroundImage && paneIcon(iconBackgroundImage)}
@@ -200,6 +224,7 @@ const SingleLinkCard = ({
                     </div>
                 </StyledLink>
             </div>
+            {followingElement}
         </StyledGridItem>
     );
 };
@@ -213,7 +238,13 @@ SingleLinkCard.propTypes = {
     fillContainer: PropTypes.bool,
     testId: PropTypes.string,
     onClick: PropTypes.func,
+    onNavigate: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onContextMenu: PropTypes.func,
     showH3: PropTypes.any,
+    followingElement: PropTypes.any,
+    ariaLabel: PropTypes.string,
+    sx: PropTypes.object,
 };
 
 export default SingleLinkCard;

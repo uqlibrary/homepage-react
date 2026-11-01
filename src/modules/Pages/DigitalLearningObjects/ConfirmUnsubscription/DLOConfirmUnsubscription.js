@@ -18,7 +18,6 @@ import { breadcrumbs } from 'config/routes';
 
 export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpdating, dlorUpdatedItemError }) => {
     const { confirmationId } = useParams();
-    // console.log('confirmationId=', confirmationId);
 
     const [checkBoxChecked, setCheckBoxChecked] = React.useState(false);
 
@@ -41,7 +40,6 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
     };
 
     const sendRequest = () => {
-        // console.log('sendRequest', e);
         actions.loadDlorUnsubscribe(confirmationId);
     };
 
@@ -70,7 +68,7 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
         } else if (!!dlorUpdatedItem && dlorUpdatedItem.response === 'ok') {
             // they have sent the actual unsub request
             return (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Typography variant={'p'} data-testid="dlor-unsubscribe-success">
                         Thank you. You have been unsubscribed from notifications for this title.
                     </Typography>
@@ -80,7 +78,7 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
             // initial load, we should have the object details
             return (
                 <>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography component={'p'} data-testid="dlor-unsubscribe-prompt">
                             Do you wish to unsubscribe from notifications about{' '}
                             <i>{dlorUpdatedItem?.object?.object_title}</i>?
@@ -99,7 +97,7 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
                             label="Yes, please unsubscribe me"
                         />
                     </Grid>
-                    <Grid item xs={2} justifyContent="flex-end">
+                    <Grid size={{ xs: 2 }} justifyContent="flex-end">
                         <Button
                             color="primary"
                             data-testid="dlor-unsubscribe-button"
@@ -119,7 +117,7 @@ export const DLOConfirmUnsubscription = ({ actions, dlorUpdatedItem, dlorItemUpd
         <StandardPage notitle>
             <StandardCard title="Unsubscribing from your Digital Learning Hub notifications">
                 <Grid container>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         {pageContents(dlorItemUpdating, dlorUpdatedItemError, dlorUpdatedItem)}
                     </Grid>
                 </Grid>

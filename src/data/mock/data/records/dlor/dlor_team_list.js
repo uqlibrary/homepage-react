@@ -5,6 +5,7 @@ export default {
             "team_name": "LIB DX Digital Content",
             "team_email": "dlor@library.uq.edu.au",
             "team_manager": "John Smith",
+            "team_admin_username": "uqstaff",
             "objects_count": 21,
             "team_members": [
                 {
@@ -31,18 +32,21 @@ export default {
             "team_name": "Lib train Library Corporate Services",
             "team_email": "train@library.uq.edu",
             "team_manager": "Jane Green",
+            "team_admin_username": "uqstaff",
             "objects_count": 3,
         }, {
             "team_id": 3,
             "team_name": "Library Indigenous Enquiries",
             "team_email": "ind@library.uq.edu.au",
             "team_manager": "Mary Blue",
+            "team_admin_username": "uqtestuser2",
             "objects_count": 0,
         }, {
             "team_id": 4,
             "team_name": "A team to allow test of secondary delete",
             "team_email": "ind@library.uq.edu.au",
             "team_manager": "Someone else",
+            "team_admin_username": "uqstaff",
             "objects_count": 0,
             "team_members": [
                 {

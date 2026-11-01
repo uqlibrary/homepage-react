@@ -17,11 +17,11 @@ printf "\n\n--- INSTALL NYC ---\n"
 echo "$ npm install -g nyc"
 npm install -g nyc
 
-# Copy output artifact test reports into common location
+# Copy output artifact test reports into common location. Pipes 1 and 2 each run one e2e shard;
+# pipe 3 runs jest only (see bin/codebuild-test.sh), so there is no playwright-3 to merge.
 mkdir -p coverage/all
 cp "${CODEBUILD_SRC_DIR_TestArtifact1}/coverage/playwright/coverage-final.json" coverage/all/playwright-1.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact2}/coverage/playwright/coverage-final.json" coverage/all/playwright-2.json
-cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/playwright/coverage-final.json" coverage/all/playwright-3.json
 cp "${CODEBUILD_SRC_DIR_TestArtifact3}/coverage/jest/coverage-final.json" coverage/all/jest.json
 
 # Combine reports into single json file

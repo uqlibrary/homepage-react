@@ -1,5 +1,4 @@
 import { expect, test } from '@uq/pw/test';
-import { COLOR_UQPURPLE } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 import { assertExpectedDataSentToServer, setTestDataCookie } from '@uq/pw/lib/helpers';
 import { assertErrorPopupAppears, assertToastHasMessage } from '@uq/pw/tests/adminPages/spaces/spacesTestHelper';
@@ -37,7 +36,6 @@ test.describe('Spaces Admin - manage facility types page', () => {
 
         const servicesGroup = page.getByTestId('facilitygroup-services');
         const ediaGroup = page.getByTestId('facilitygroup-edia-filters');
-        const spaceTypeGroup = page.getByTestId('facilitygroup-spaceroom-type');
         const floorGroup = page.getByTestId('facilitygroup-on-this-floor');
         const featuresGroup = page.getByTestId('facilitygroup-space-features');
         const lightingGroup = page.getByTestId('facilitygroup-lighting');
@@ -73,8 +71,8 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-21')).toContainText('Hot/ Cold Water');
 
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeVisible();
-        await expect(floorGroup.getByTestId('facilitytype-name-3')).toContainText('Kitchen');
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).toBeHidden();
+        await expect(floorGroup.getByTestId('facilitytype-name-3')).not.toBeVisible();
 
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toBeVisible();
         await expect(floorGroup.getByTestId('facilitytype-name-4')).toContainText('Microwave');
@@ -172,8 +170,9 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-48')).toContainText('Dimmable');
 
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toBeVisible();
-        await expect(lightingGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
+        await expect(lightingGroup.getByTestId('facilitytype-name-49')).not.toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toBeVisible();
+        await expect(featuresGroup.getByTestId('facilitytype-name-49')).toContainText('Low Light');
 
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toBeVisible();
         await expect(lightingGroup.getByTestId('facilitytype-name-50')).toContainText('Natural');
@@ -191,7 +190,7 @@ test.describe('Spaces Admin - manage facility types page', () => {
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-52')).toContainText('Exam Friendly');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toBeVisible();
-        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate spaces');
+        await expect(roomFeatureGroup.getByTestId('facilitytype-name-13')).toContainText('Postgraduate only space');
 
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toBeVisible();
         await expect(roomFeatureGroup.getByTestId('facilitytype-name-12')).toContainText('Power outlets');
@@ -438,32 +437,24 @@ test.describe('Spaces Admin - edit group dialog', () => {
         await expect(cancelButton).not.toBeVisible();
         await expect(saveButton).not.toBeVisible();
     });
-    test('has correct deletion warnings for different groups', async ({ page }) => {
+    test('has correct deletion warnings for groups with no active room usage', async ({ page }) => {
         const cancelButton = page.getByTestId('dialog-cancel-button');
         const dialogMessage = page.getByTestId(`dialogMessage`);
-
-        const noiseLevelGroupEditButton = page.getByTestId('edit-group-5-button');
-        await noiseLevelGroupEditButton.click();
-        await expect(dialogMessage).toBeVisible();
-        await expect(dialogMessage).toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
-        await expect(dialogMessage).toContainText(/Those Spaces will not be deleted\.|The Space will not be deleted\./);
-        await cancelButton.click();
-
-        const unusedGroupEditButton = page.getByTestId('edit-group-9-button');
-        await unusedGroupEditButton.click();
-        await expect(dialogMessage).toBeVisible();
-        await expect(dialogMessage).not.toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
         const warningUnused =
             'This facility group can be deleted - none of its child types are currently showing for any Spaces.';
-        await expect(dialogMessage).toContainText(warningUnused);
-        await cancelButton.click();
 
-        const serviesGroupEditButton = page.getByTestId('edit-group-7-button');
-        await serviesGroupEditButton.click();
-        await expect(dialogMessage).toBeVisible();
-        await expect(dialogMessage).not.toContainText(warningUnused);
-        await expect(dialogMessage).toContainText(/This facility group's child types will be removed from \d+ Spaces?/);
-        await expect(dialogMessage).toContainText(/Those Spaces will not be deleted\.|The Space will not be deleted\./);
+        const groupIds = ['5', '7', '9'];
+
+        for (const groupId of groupIds) {
+            const groupEditButton = page.getByTestId(`edit-group-${groupId}-button`);
+            await groupEditButton.click();
+            await expect(dialogMessage).toBeVisible();
+            await expect(dialogMessage).not.toContainText(
+                /This facility group's child types will be removed from \d+ Spaces?/, 
+            );
+            await expect(dialogMessage).toContainText(warningUnused);
+            await cancelButton.click();
+        }
     });
     test('can save a group name change', async ({ page, context }) => {
         await setTestDataCookie(context, page);
@@ -892,6 +883,34 @@ test.describe('Spaces Admin - adding new facility types', () => {
 
         await page.getByTestId('dialog-cancel-button').click();
         await expect(page.getByTestId('main-dialog')).not.toBeVisible();
+    });
+    test('cancel add dialog clears the form and closes cleanly', async ({ page }) => {
+        await page.getByTestId('add-group-2-button').click();
+        await expect(page.getByTestId('add-facility-type-heading')).toBeVisible();
+
+        const field = page.getByRole('textbox', { name: 'New Facility type for Group' });
+        await field.fill('Temporary type');
+        await page.getByTestId('dialog-cancel-button').click();
+
+        await page.getByTestId('add-group-2-button').click();
+        await expect(field).toHaveValue('');
+    });
+    test('warning text is cleared when reopening a different dialog', async ({ page }) => {
+        const first = page.getByTestId('edit-facility-type-43-button');
+        const second = page.getByTestId('edit-facility-type-39-button');
+
+        await first.click();
+        await expect(
+            page.getByText('This facility type can be deleted - it is not currently showing for any Spaces.'),
+        ).toBeVisible();
+        await page.getByTestId('dialog-cancel-button').click();
+
+        await second.click();
+        await expect(
+            page.getByText(
+                'This facility type will be removed from 4 Spaces if you delete it. Those Spaces will not be deleted.',
+            ),
+        ).toBeVisible();
     });
     test.skip('can drag and drop to update facility type group order', async ({ page, context }) => {
         await setTestDataCookie(context, page);

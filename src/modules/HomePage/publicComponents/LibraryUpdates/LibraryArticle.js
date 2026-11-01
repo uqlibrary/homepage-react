@@ -6,17 +6,6 @@ import { PropTypes } from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ArticleCard } from 'modules/SharedComponents/Toolbox/ArticleCard';
 
-import { Link } from 'react-router';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
-
-const fallBackImage = require('../../../../../public/images/article_placeholder.jpg');
-
-const loadFallbackImage = image => {
-    image.src = fallBackImage;
-};
-
 const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
     return {
         /* Parent */
@@ -28,9 +17,10 @@ const StyledGridItem = styled(Grid)(({ articleindex, theme }) => {
             paddingTop: articleindex === 0 ? '24px !important' : '32px !important',
             paddingLeft: '32px !important',
         },
-        'article-container': {
+        '&.article-container': {
             [theme.breakpoints.down('uqDsTablet')]: {
-                padding: '0 24px 0 !important',
+                paddingTop: '32px !important',
+                paddingLeft: '32px !important',
             },
         },
     };
@@ -41,10 +31,7 @@ const LibraryArticle = ({ article, articleindex }) => {
         <StyledGridItem
             key={articleindex}
             articleindex={articleindex}
-            item
-            xs={12}
-            sm={articleindex === 0 ? 12 : 6}
-            md={articleindex === 0 ? 12 : 4}
+            size={{ xs: 12, sm: articleindex === 0 ? 12 : 6, md: articleindex === 0 ? 12 : 4 }}
             className="article-container"
         >
             <ArticleCard

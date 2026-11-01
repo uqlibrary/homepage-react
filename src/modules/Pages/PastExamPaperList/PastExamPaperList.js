@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 import { useTitle } from 'hooks';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -14,7 +14,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import useTheme from '@mui/material/styles/useTheme';
+import { useTheme } from '@mui/material/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -171,7 +171,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return false;
     };
 
-    // eslint-disable-next-line react/prop-types
     const SimpleLayout = ({ examList, showMobileView, showFullDetails }) => {
         let formatType = showMobileView ? 'mobile' : 'desktop';
         formatType = showFullDetails ? `${formatType}-original` : `${formatType}-sample`;
@@ -251,6 +250,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </StyledSimpleViewWrapper>
         );
     };
+    SimpleLayout.propTypes = {
+        examList: PropTypes.any,
+        showMobileView: PropTypes.bool,
+        showFullDetails: PropTypes.bool,
+    };
 
     const DesktopTableHeader = ({ examList }) => {
         return (
@@ -286,8 +290,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </TableRow>
         );
     };
+    DesktopTableHeader.propTypes = {
+        examList: PropTypes.any,
+    };
 
-    // eslint-disable-next-line react/prop-types
     const DesktopTableCells = ({ examList, examData, courseCode }) => {
         const renderSingleExam = (exam, semesterIndex, examIndex) => {
             return (
@@ -356,8 +362,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </>
         );
     };
-
-    // eslint-disable-next-line react/prop-types
+    DesktopTableCells.propTypes = {
+        examList: PropTypes.any,
+        examData: PropTypes.any,
+        courseCode: PropTypes.any,
+    };
     const DesktopLayout = ({ examList }) => {
         // Process the data to create a mapping of course codes to their papers
         const { courseCodes, examData } = React.useMemo(() => {
@@ -426,6 +435,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
             </TableContainer>
         );
     };
+    DesktopLayout.propTypes = {
+        examList: PropTypes.any,
+    };
 
     return (
         <StandardPage title={listTitle}>
@@ -435,7 +447,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container>
-                                <Grid item xs={'auto'}>
+                                <Grid size={{ xs: 'auto' }}>
                                     <CircularProgress
                                         color="primary"
                                         size={20}
@@ -450,7 +462,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard noHeader>
                             <Grid container spacing={2} className={'searchPanel'} data-testid={'past-exam-paper-error'}>
-                                <Grid item xs={12} sm={12} md className={'searchPanelInfo'}>
+                                <Grid size={{ xs: 12, sm: 12 }} className={'searchPanelInfo'}>
                                     <span>
                                         Past exam paper search is currently unavailable - please try again later
                                     </span>
@@ -470,7 +482,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     return (
                         <StyledStandardCard style={{ marginInline: '-1rem' }} noHeader>
                             <Grid container>
-                                <Grid item xs={12} data-testid="past-exam-paper-missing">
+                                <Grid size={{ xs: 12 }} data-testid="past-exam-paper-missing">
                                     {noResultsFoundBlock(displayedCourseHint, StyledBodyText)}
                                 </Grid>
                             </Grid>

@@ -50,7 +50,7 @@ const dimensionBox = {
 
 export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
     // files is set up as an array, even though we only handle a single file here
-    const [files, setFiles2] = useState(
+    const [files, setFiles] = useState(
         !!currentImage
             ? [
                   {
@@ -60,10 +60,6 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
               ]
             : [],
     );
-    const setFiles = incomingFIles => {
-        console.log('setFiles', incomingFIles);
-        setFiles2(incomingFIles);
-    };
     const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
 
@@ -89,8 +85,8 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
+        multiple: false,
         onDrop: acceptedFiles => {
-            console.log('onDrop', acceptedFiles);
             setFiles(
                 acceptedFiles?.map(file =>
                     Object.assign(file, {
@@ -196,17 +192,17 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
             <section className="container" data-testid="spaces-form-upload-dropzone">
                 {!!files && files?.length > 0 && !!files[0]?.preview ? (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <h4>Preview:</h4>
                         </Grid>
-                        <Grid item xs={10}>
+                        <Grid size={{ xs: 10 }}>
                             {files?.map(file => (
                                 <div style={thumbInner} key={file?.name}>
                                     <img alt="preview of uploaded Spaces photo" src={file?.preview} style={thumbImg} />
                                 </div>
                             ))}
                         </Grid>
-                        <Grid item xs={2} align="center">
+                        <Grid size={{ xs: 2 }} align="center">
                             <IconButton
                                 data-testid="spaces-form-remove-image"
                                 style={deleteButton}
@@ -220,8 +216,7 @@ export function ImageUploadDropzone({ onAddFile, onClearFile, currentImage }) {
                         {/* show the size info & possible warning */}
                         {files?.map(file => (
                             <Grid
-                                item
-                                xs={12}
+                                size={{ xs: 12 }}
                                 key={`${file?.name}-dimensions`}
                                 style={dimensionBox}
                                 data-testid="dropzone-dimension-warning"

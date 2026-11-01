@@ -1,6 +1,6 @@
 import React from 'react';
 import Masquerade from './Masquerade';
-import { render, WithReduxStore, fireEvent } from 'test-utils';
+import { render, WithReduxStore } from 'test-utils';
 
 function setup(testProps = {}) {
     const props = {
@@ -15,11 +15,6 @@ function setup(testProps = {}) {
         </WithReduxStore>,
     );
 }
-
-beforeAll(() => {
-    delete global.window.location;
-    global.window.location = { href: '', replace: jest.fn(), assign: jest.fn() };
-});
 
 describe('Component Masquerade', () => {
     it('Should render form as expected', () => {

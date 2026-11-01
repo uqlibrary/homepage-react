@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Alert from '@mui/material/Alert';
@@ -78,7 +78,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
     return (
         <>
             <Grid container spacing={3}>
-                <Grid item sm={12}>
+                <Grid size={{ sm: 12 }}>
                     <Typography component={'h3'} variant={'h6'}>
                         {pageLocale.form.action.title}
                     </Typography>
@@ -90,7 +90,6 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
                 indicatorColor="primary"
                 textColor="primary"
                 onChange={(e, value) => {
-                    // console.log('test', value);
                     return setSelectedTabValue(value);
                 }}
                 variant={isMobileView ? 'fullWidth' : 'standard'}
@@ -116,12 +115,12 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
             </Tabs>
             <TabPanel id={componentId} value={selectedTabValue} index={0}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Alert severity="warning">{pageLocale.form.action.discard.alertMessage}</Alert>
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" className={'formControl'} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.discard.label}</InputLabel>
                             <Select
@@ -161,7 +160,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" className={'formControl'} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.discard.discardReason}
@@ -194,7 +193,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
             </TabPanel>
             <TabPanel id={componentId} value={selectedTabValue} index={1}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" className={'formControl'} fullWidth={isMobileView}>
                             <InputLabel shrink>{pageLocale.form.action.repair.label}</InputLabel>
                             <Select
@@ -233,7 +232,7 @@ const ActionPanel = ({ formValues, selectedAsset, handleChange, isMobileView, di
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" className={'formControl'} fullWidth required>
                             <TextField
                                 {...pageLocale.form.action.repair.repairerDetails}

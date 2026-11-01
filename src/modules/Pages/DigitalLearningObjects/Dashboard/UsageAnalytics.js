@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Checkbox, FormControlLabel, TextField, Stack, Button, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import { Line } from 'react-chartjs-2';
 
 // This component is dedicated to Jack. Farewell, buddy. Good Boy. I love you - Grandpa.
@@ -260,7 +267,7 @@ export default function UsageAnalytics({ usageData }) {
     return (
         <>
             <Grid container sx={{ boxShadow: '0 2px 8px 0 rgba(120, 90, 200, 0.30)' }}>
-                <Grid item xs={12} md={8}>
+                <Grid size={{ xs: 12, md: 8 }}>
                     <Box
                         sx={{
                             border: '1px solid #eee',
@@ -319,7 +326,7 @@ export default function UsageAnalytics({ usageData }) {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <Box
                         sx={{
                             border: '1px solid #eee',

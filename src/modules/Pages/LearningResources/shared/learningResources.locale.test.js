@@ -1,5 +1,5 @@
 import { default as locale } from './learningResources.locale';
-import { isAString, isAValidLink, isPositiveInteger } from 'modules/testhelpers';
+import { isAString, isPositiveInteger } from 'modules/testhelpers';
 
 describe('learningResourcesLocale', () => {
     it('should have a valid locale', () => {

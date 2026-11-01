@@ -13,6 +13,30 @@ import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
+export const setDefaults = ({ alert, isPermanent, message, linkRegex }) => {
+    return {
+        id: alert?.id || '',
+        dateList: [
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ],
+        startDateDefault: getTimeNowFormatted(),
+        endDateDefault: getTimeEndOfDayFormatted(),
+        alertTitle: alert?.title || '',
+        enteredbody: message || '',
+        linkRequired: linkRegex?.length === 3,
+        priorityType: (!!alert && alert.priority_type) || 'info',
+        permanentAlert: isPermanent || false,
+        linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
+        linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
+        type: 'clone',
+        minimumDate: getTimeNowFormatted(),
+        systems: alert?.systems || [],
+    };
+};
+
 export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus }) => {
     const { alertid } = useParams();
 
@@ -47,32 +71,12 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         message = message.replace('[permanent]', '');
     }
 
-    const defaults = {
-        id: alertData?.id || '',
-        dateList: [
-            {
-                startDate: getTimeNowFormatted(),
-                endDate: getTimeEndOfDayFormatted(),
-            },
-        ],
-        startDateDefault: getTimeNowFormatted(),
-        endDateDefault: getTimeEndOfDayFormatted(),
-        alertTitle: alertData?.title || '',
-        enteredbody: message || '',
-        linkRequired: linkRegex?.length === 3,
-        priorityType: (!!alertData && alertData.priority_type) || 'info',
-        permanentAlert: isPermanent || false,
-        linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
-        linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
-        type: 'clone',
-        minimumDate: getTimeNowFormatted(),
-        systems: alertData?.systems || [],
-    };
+    const defaults = setDefaults({ alert, isPermanent, message, linkRegex });
 
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
+                <Grid id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">

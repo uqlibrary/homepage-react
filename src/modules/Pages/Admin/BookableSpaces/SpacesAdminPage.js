@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -62,7 +62,7 @@ export const SpacesAdminPage = ({ pageTitle, currentPageSlug, children, standard
                 justifyContent={'flex-start'}
                 spacing={0}
             >
-                <StyledGrid item xs className={'systemTitle'}>
+                <StyledGrid size={12} className={'systemTitle'}>
                     <Typography
                         className={'layoutTitle'}
                         component={'h1'}
@@ -72,7 +72,7 @@ export const SpacesAdminPage = ({ pageTitle, currentPageSlug, children, standard
                         {systemTitle}
                     </Typography>
                 </StyledGrid>
-                <Grid item xs={12} style={{ display: 'flex', flexDirection: 'column', rowGap: '2.5rem' }}>
+                <Grid size={{ xs: 12 }} style={{ display: 'flex', flexDirection: 'column', rowGap: '2.5rem' }}>
                     <StyledBox>
                         <StyledTableHeadingTypography
                             component={'h2'}

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, Link as RouterLink, useNavigate } from 'react-router';
@@ -17,6 +18,7 @@ import { styled } from '@mui/material/styles';
 
 import { IconButton } from '@mui/material';
 import { AddCircle, DeleteForever } from '@mui/icons-material';
+
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -32,12 +34,10 @@ import {
 } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { breadcrumbs } from 'config/routes';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { ClassicEditor, Essentials, Heading, Indent, Bold, Italic, Link, List } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import { RichTextEditor } from 'modules/SharedComponents/RichTextEditor';
 import { useAccountContext } from 'context';
 
-const StyledDraggableListItem = styled('li')(({ theme }) => ({
+const StyledDraggableListItem = styled('li')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     // Remove margin and padding
@@ -67,7 +67,7 @@ const StyledErrorMessageBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, handleDelete }) => {
+const DraggableListItem = React.memo(({ item, index, moveItem, handleDelete }) => {
     const ref = React.useRef(null);
     const [, drop] = useDrop({
         accept: 'LIST_ITEM',
@@ -142,6 +142,12 @@ const DraggableListItem = React.memo(({ item, index, moveItem, handleChange, han
         </li>
     );
 });
+DraggableListItem.proptypes = {
+    item: PropTypes.any,
+    index: PropTypes.any,
+    moveItem: PropTypes.any,
+    handleDelete: PropTypes.any,
+};
 
 export const DLOSeriesEdit = ({
     actions,
@@ -156,10 +162,6 @@ export const DLOSeriesEdit = ({
 }) => {
     const { account } = useAccountContext();
     const navigate = useNavigate();
-    const handleEditorChange = (fieldname, newContent) => {
-        const newValues = { ...formValues, [fieldname]: newContent };
-        setFormValues(newValues);
-    };
 
     const { dlorSeriesId } = useParams();
     const [cookies, setCookie] = useCookies();
@@ -176,6 +178,11 @@ export const DLOSeriesEdit = ({
         object_list_unassigned: [],
     });
 
+    const handleEditorChange = (fieldname, newContent) => {
+        const newValues = { ...formValues, [fieldname]: newContent };
+        setFormValues(newValues);
+    };
+
     const moveItem = (fromIndex, toIndex) => {
         const updatedList = [...formValues.object_list_linked];
         const [movedItem] = updatedList.splice(fromIndex, 1);
@@ -187,19 +194,6 @@ export const DLOSeriesEdit = ({
         });
 
         setFormValues({ ...formValues, object_list_linked: updatedList });
-    };
-
-    const editorConfig = {
-        plugins: [Heading, Bold, Italic, Link, List, Indent, Essentials],
-        toolbar: ['heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-        heading: {
-            options: [
-                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                { model: 'heading1', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                { model: 'heading2', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-            ],
-        },
-        licenseKey: 'GPL',
     };
 
     useEffect(() => {
@@ -230,12 +224,10 @@ export const DLOSeriesEdit = ({
     }, []);
 
     useEffect(() => {
-        console.log('DLOR SERIES', dlorSeries);
         if (!dlorListLoading && !dlorListError && (!!dlorList || !!dlorSeries?.series_name)) {
             setConfirmationOpen(false);
             const seriesDetail = (!!dlorList && dlorList?.find(s => s.object_series_id === Number(dlorSeriesId))) || {};
             if (Object.keys(seriesDetail).length === 0) {
-                console.log('Doing the things');
                 seriesDetail.object_series_id = dlorSeriesId;
                 ((seriesDetail.object_series_name = dlorSeries?.series_name),
                     (seriesDetail.object_series_description = dlorSeries?.series_description));
@@ -246,7 +238,6 @@ export const DLOSeriesEdit = ({
                     series_name: seriesDetail?.object_series_name,
                     series_description: seriesDetail?.object_series_description,
                 });
-            console.log('About to set the values', seriesDetail, dlorSeries);
             setFormValues({
                 series_name: seriesDetail?.object_series_name,
                 series_description: seriesDetail?.object_series_description,
@@ -300,7 +291,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleDelete = (index, uuid) => {
-        let newValues;
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const indexToRemove = linked.findIndex(d => d.object_public_uuid === uuid);
@@ -311,10 +301,9 @@ export const DLOSeriesEdit = ({
         }
         thisdlor.object_series_order = null;
         unassigned.push(thisdlor);
-        console.log('index', index, 'uuid', uuid, indexToRemove);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -324,8 +313,6 @@ export const DLOSeriesEdit = ({
     };
 
     const handleAdd = uuid => {
-        let newValues;
-        console.log(uuid);
         let linked = formValues.object_list_linked;
         const unassigned = formValues.object_list_unassigned;
         const thisdlor = unassigned.find(d => d.object_public_uuid === uuid);
@@ -338,7 +325,7 @@ export const DLOSeriesEdit = ({
         linked.push(thisdlor);
         linked = linked.sort((a, b) => a.object_series_order - b.object_series_order);
         unassigned.sort((a, b) => a.object_title.localeCompare(b.object_title));
-        newValues = {
+        const newValues = {
             series_name: formValues.series_name,
             series_description: formValues.series_description,
             object_list_linked: linked,
@@ -349,8 +336,7 @@ export const DLOSeriesEdit = ({
 
     const handleChange = prop => e => {
         const theNewValue = e.target.value;
-        let newValues;
-        newValues = { ...formValues, [prop]: theNewValue };
+        const newValues = { ...formValues, [prop]: theNewValue };
         setFormValues(newValues);
     };
 
@@ -402,7 +388,7 @@ export const DLOSeriesEdit = ({
                     {(() => {
                         if (!!dlorItemUpdating || !!dlorListLoading) {
                             return (
-                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                     <Box sx={{ minHeight: '600sx=' }}>
                                         <InlineLoader message="Loading" />
                                     </Box>
@@ -410,7 +396,7 @@ export const DLOSeriesEdit = ({
                             );
                         } else if (!!dlorListError) {
                             return (
-                                <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                                <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                                     <Typography variant="body1" data-testid="dlor-seriesItem-error">
                                         {dlorListError}
                                     </Typography>
@@ -419,7 +405,7 @@ export const DLOSeriesEdit = ({
                         } else {
                             return (
                                 <>
-                                    <Grid item xs={12} data-testid="dlor-series-item-list">
+                                    <Grid size={{ xs: 12 }} data-testid="dlor-series-item-list">
                                         <Grid container key={`list-series-${originalSeriesDetails.series_id}`}>
                                             <ConfirmationBox
                                                 actionButtonColor="primary"
@@ -442,7 +428,7 @@ export const DLOSeriesEdit = ({
                                                 }
                                             />
                                             <StyledSeriesEditForm id={`dlor-${mode.toLowerCase()}Series-form`}>
-                                                <Grid item xs={12}>
+                                                <Grid size={{ xs: 12 }}>
                                                     <FormControl variant="standard" fullWidth>
                                                         <InputLabel htmlFor="series_name">Series name *</InputLabel>
                                                         <Input
@@ -469,24 +455,12 @@ export const DLOSeriesEdit = ({
                                                         <InputLabel htmlFor="object_description">
                                                             Description of Series
                                                         </InputLabel>
-                                                        <CKEditor
+                                                        <RichTextEditor
                                                             id="object_description"
-                                                            data-testid="object-description"
-                                                            sx={{ width: '100%' }}
-                                                            editor={ClassicEditor}
-                                                            config={editorConfig}
-                                                            data={formValues?.series_description || ''}
-                                                            onReady={editor => {
-                                                                editor.editing.view.change(writer => {
-                                                                    writer.setStyle(
-                                                                        'height',
-                                                                        '200px',
-                                                                        editor.editing.view.document.getRoot(),
-                                                                    );
-                                                                });
-                                                            }}
-                                                            onChange={(event, editor) => {
-                                                                const htmlData = editor.getData();
+                                                            testId="object-description"
+                                                            ariaLabel="Description of Series"
+                                                            value={formValues?.series_description || ''}
+                                                            onChange={htmlData => {
                                                                 handleEditorChange('series_description', htmlData);
                                                             }}
                                                         />
@@ -496,7 +470,7 @@ export const DLOSeriesEdit = ({
                                         </Grid>
                                     </Grid>
 
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <h2>Objects in this series</h2>
                                         <div id="dragLandingAarea">
                                             {formValues?.object_list_linked?.length === 0 && <p>(None yet)</p>}
@@ -517,7 +491,7 @@ export const DLOSeriesEdit = ({
                                         </div>
                                     </Grid>
 
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <details>
                                             <Typography
                                                 component={'summary'}
@@ -579,7 +553,7 @@ export const DLOSeriesEdit = ({
                                         </details>
                                     </Grid>
 
-                                    <Grid item xs={3} align="left">
+                                    <Grid size={{ xs: 3 }} align="left">
                                         <Button
                                             color="secondary"
                                             children="Cancel"
@@ -588,7 +562,7 @@ export const DLOSeriesEdit = ({
                                             variant="contained"
                                         />
                                     </Grid>
-                                    <Grid item xs={9} align="right">
+                                    <Grid size={{ xs: 9 }} align="right">
                                         <Button
                                             color="primary"
                                             data-testid="admin-dlor-series-form-save-button"
@@ -616,6 +590,7 @@ DLOSeriesEdit.propTypes = {
     dlorList: PropTypes.array,
     dlorListLoading: PropTypes.bool,
     dlorListError: PropTypes.any,
+    dlorSeries: PropTypes.any,
     mode: PropTypes.string,
 };
 

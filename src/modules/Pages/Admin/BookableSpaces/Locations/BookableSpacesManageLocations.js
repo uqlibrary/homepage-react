@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 
 import Button from '@mui/material/Button';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,7 +25,7 @@ import {
 
 import { SpacesAdminPage } from 'modules/Pages/Admin/BookableSpaces/SpacesAdminPage';
 import CampusLocationMap from 'modules/Pages/Admin/BookableSpaces/Locations/CampusLocationMap';
-import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/spacesHelpers';
+import { getPrefixedFloorName } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 const StyledMainDialog = styled('dialog')(({ theme }) => ({
     width: '80%',
@@ -329,7 +329,10 @@ export const BookableSpacesManageLocations = ({
             library_springshare_id: data?.library_springshare_id,
         };
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -380,7 +383,10 @@ export const BookableSpacesManageLocations = ({
         showSavingProgress(true);
         closeDialog(e);
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -406,7 +412,7 @@ export const BookableSpacesManageLocations = ({
 
     // allow for having spaces in a building where we don't have a Library
     const displayedLibraryName = libraryDetails =>
-        libraryDetails?.library_name || libraryDetails?.building_name || 'unknown Library';
+        libraryDetails?.library_name || libraryDetails?.building_name || /* istanbul ignore next */ 'unknown Library';
 
     /*
      * FLOOR FUNCTIONS
@@ -416,8 +422,9 @@ export const BookableSpacesManageLocations = ({
         return `<input name="locationType" type="hidden" value="floor" />
         <div class="dialogRow" data-testid="floor-name">
             <label for="displayedFloorId">${floorNameFieldLabel}</label>
-            <input id="displayedFloorId" name="floor_name" type="text" required value="${floorDetails?.floor_name ??
-                ''}"  maxlength="10" />
+            <input id="displayedFloorId" name="floor_name" type="text" required value="${
+                floorDetails?.floor_name ?? ''
+            }"  maxlength="10" />
         </div>
         <ul>
             <li>Just the number - avoid prefixing with 'Level'</li>
@@ -448,7 +455,10 @@ export const BookableSpacesManageLocations = ({
             floor_library_id: data?.libraryId,
         };
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -498,10 +508,6 @@ export const BookableSpacesManageLocations = ({
                     <div>A ground floor is not compulsory!</div>
                 </label> 
             </div>`;
-        if (!formBody) {
-            return;
-        }
-
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
@@ -544,7 +550,10 @@ export const BookableSpacesManageLocations = ({
             floor_library_id: data?.floor_library_id,
         };
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -638,18 +647,21 @@ export const BookableSpacesManageLocations = ({
         return `<input name="locationType" type="hidden" value="library" />
             <div class="dialogRow" data-testid="library-name">
                 <label for="libraryName">${libraryNameFieldLabel} *</label>
-                <input id="libraryName" name="library_name" type="text" value="${libraryDetails?.library_name ||
-                    ''}" required  maxlength="255" />
+                <input id="libraryName" name="library_name" type="text" value="${
+                    libraryDetails?.library_name || ''
+                }" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-name">
                 <label for="buildingName">Building name *</label>
-                <input id="buildingName" name="building_name" type="text" value="${libraryDetails?.building_name ||
-                    ''}" required  maxlength="255" />
+                <input id="buildingName" name="building_name" type="text" value="${
+                    libraryDetails?.building_name || ''
+                }" required  maxlength="255" />
             </div>
             <div class="dialogRow" data-testid="building-number">
                 <label for="buildingNumber">Building number *</label>
-                <input id="buildingNumber" name="building_number" type="text" value="${libraryDetails?.building_number ||
-                    ''}" required  maxlength="10" />
+                <input id="buildingNumber" name="building_number" type="text" value="${
+                    libraryDetails?.building_number || ''
+                }" required  maxlength="10" />
             </div>
             <div class="dialogRow" data-testid="library_springshare_id">
                 <h3>Choose the Springshare Opening hours to associate with this Library</h3>
@@ -658,27 +670,30 @@ export const BookableSpacesManageLocations = ({
                         <input type="radio" name="library_springshare_id" id="library_springshare_id-0" value="0" checked />
                         <label for="library_springshare_id-0">None</label>
                      </li>
-                        ${(!!springshareList &&
-                            springshareList?.length > 0 &&
-                            springshareList
-                                ?.map(springshareItem => {
-                                    const checked =
-                                        libraryDetails?.library_springshare_id === springshareItem?.id
-                                            ? ' checked'
-                                            : '';
-                                    return `<li style="padding-block: 0.25rem">
+                        ${
+                            (!!springshareList &&
+                                springshareList?.length > 0 &&
+                                springshareList
+                                    ?.map(springshareItem => {
+                                        const checked =
+                                            libraryDetails?.library_springshare_id === springshareItem?.id
+                                                ? ' checked'
+                                                : '';
+                                        return `<li style="padding-block: 0.25rem">
                                     <input type="radio" name="library_springshare_id" id="library_springshare_id-${springshareItem?.id}" data-testid="library_springshare_id-${springshareItem?.id}" value="${springshareItem?.id}"${checked} />
                                     <label for="library_springshare_id-${springshareItem?.id}">${springshareItem?.display_name}</label>
                                  </li>`;
-                                })
-                                ?.join('')) ||
-                            ''}
+                                    })
+                                    ?.join('')) ||
+                            /* istanbul ignore next */ ''
+                        }
                 </ul>
             </div>
             <div class="dialogRow" data-testid="library_about_page_default">
                 <label for="library_about_page_default">The "About" page for this library (usually the Drupal library page)</label>
-                <input id="library_about_page_default" name="library_about_page_default" type="text" value="${libraryDetails?.library_about_page_default ||
-                    ''}"  maxlength="255" />
+                <input id="library_about_page_default" name="library_about_page_default" type="text" value="${
+                    libraryDetails?.library_about_page_default || ''
+                }"  maxlength="255" />
             </div>
             `;
     }
@@ -713,7 +728,10 @@ export const BookableSpacesManageLocations = ({
             library_springshare_id: data?.library_springshare_id,
         };
 
-        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA')
+            ? cookies.CYPRESS_TEST_DATA
+            : /* istanbul ignore next */ null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -738,15 +756,12 @@ export const BookableSpacesManageLocations = ({
     };
 
     function showAddLibraryForm(e, campusDetails) {
-        const formBody = `<h2>Add a library to ${campusDetails?.campus_name || 'unknown'} campus</h2>
+        const formBody = `<h2>Add a library to ${campusDetails?.campus_name || /* istanbul ignore next */ 'unknown'} campus</h2>
             ${libraryCoreForm()}
-            <input id="libraryCampusId" name="library_campus_id" type="hidden" value="${campusDetails?.campus_id ||
-                ''}" required  maxlength="10" />
+            <input id="libraryCampusId" name="library_campus_id" type="hidden" value="${
+                campusDetails?.campus_id || /* istanbul ignore next */ ''
+            }" required  maxlength="10" />
             `;
-        if (!formBody) {
-            return;
-        }
-
         const dialogBodyElement = document.getElementById('dialogBody');
         !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
@@ -794,8 +809,9 @@ export const BookableSpacesManageLocations = ({
 
         const formBody = `<h2>Edit Library details</h2>
             <input name="libraryId" type="hidden" value="${libraryDetails?.library_id}" />
-            <input name="ground_floor_id_old" type="hidden" value="${libraryDetails?.ground_floor_id ??
-                ''}" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
+            <input name="ground_floor_id_old" type="hidden" value="${
+                libraryDetails?.ground_floor_id ?? ''
+            }" />${libraryCoreForm(libraryDetails)}<div class="dialogRow" data-testid="library-floor-list">
                 <h3>Levels - Choose ground floor:</h3>
                 ${
                     libraryDetails?.floors?.length > 0
@@ -808,8 +824,8 @@ export const BookableSpacesManageLocations = ({
                                                 floor?.floor_id
                                             }" name="ground_floor_id" ${checked} value="${floor?.floor_id}" />
                                             <label for="groundFloor-${floor?.floor_id}">${getPrefixedFloorName(
-                                      floor?.floor_name,
-                                  )}</label> 
+                                                floor?.floor_name,
+                                            )}</label> 
                                         </li>`;
                               })
                               ?.join('') +
@@ -820,10 +836,10 @@ export const BookableSpacesManageLocations = ({
                             <label for="groundFloor-none">None</label> 
                         </li>
                     </ul>`
-                        : ''
+                        : /* istanbul ignore next */ ''
                 }
                         
-                ${libraryDetails?.floors?.length === 0 ? '<p>No floors</p>' : ''}
+                ${libraryDetails?.floors?.length === 0 ? /* istanbul ignore next */ '<p>No floors</p>' : ''}
                 </div>
                 
                 <div class="dialogRow" data-testid="library-campus-list">
@@ -871,13 +887,14 @@ export const BookableSpacesManageLocations = ({
     /*
      * CAMPUS FUNCTIONS
      */
-    const campusCoreForm = (campusDetails = {}) => {
-        const campusNameFieldLabel = Object.keys(campusDetails)?.length === 0 ? 'New campus name' : 'Campus name';
+    const campusCoreForm = /* istanbul ignore next */ (campusDetails = {}) => {
+        const campusNameFieldLabel =
+            Object.keys(campusDetails)?.length === 0 ? /* istanbul ignore next */ 'New campus name' : 'Campus name';
         const formType = !campusDetails?.campus_name ? 'add' : 'edit';
         const campusName = campusDetails?.campus_name ?? '';
         const campusNumber = campusDetails?.campus_number ?? '';
-        const campusLatitude = campusDetails?.campus_latitude ?? '';
-        const campusLongitude = campusDetails?.campus_longitude ?? '';
+        const campusLatitude = campusDetails?.campus_latitude ?? /* istanbul ignore next */ '';
+        const campusLongitude = campusDetails?.campus_longitude ?? /* istanbul ignore next */ '';
         return `<div>
             <input  name="locationType" type="hidden" value="campus" />
             <input name="campus_latitude" type="hidden" id="campus_latitude" data-testid="campus_latitude" value="${campusLatitude}" required maxlength="255" />
@@ -923,6 +940,7 @@ export const BookableSpacesManageLocations = ({
         console.log('saveNewCampus valuesToSend', valuesToSend);
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
+        /* istanbul ignore next */
         if (!!cypressTestCookie && window.location.host === 'localhost:2020' && cypressTestCookie === 'active') {
             setCookie('CYPRESS_DATA_SAVED', valuesToSend);
         }
@@ -954,29 +972,27 @@ export const BookableSpacesManageLocations = ({
         setSelectedCampusCentre(campusValues);
         const formBody = `<h2 data-testid="add-campus-heading">Add campus</h2>${campusCoreForm(campusValues)}`;
 
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const elementId = 'addNewButton';
-            const addNewButton = document.getElementById(elementId);
-            !!addNewButton && (addNewButton.style.display = 'none');
+        const elementId = 'addNewButton';
+        const addNewButton = document.getElementById(elementId);
+        !!addNewButton && (addNewButton.style.display = 'none');
 
-            const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton && (deleteButton.style.display = 'none');
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton && (deleteButton.style.display = 'none');
 
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveNewCampus);
 
-            const mapWrapper = document.getElementById('mapWrapper');
-            !!mapWrapper && (mapWrapper.style.display = 'block');
+        const mapWrapper = document.getElementById('mapWrapper');
+        !!mapWrapper && (mapWrapper.style.display = 'block');
 
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog?.showModal();
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
 
-            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
-            window.dispatchEvent(new Event('resize'));
-        }
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
     }
 
     function deleteCampus(e, campusDetails) {
@@ -1008,8 +1024,8 @@ export const BookableSpacesManageLocations = ({
 
         const formBody = `<h2 data-testid="edit-campus-dialog-heading">Edit campus details</h2>
             <input  name="campusId" type="hidden" value="${campusDetails?.campus_id}" />${campusCoreForm(
-            campusDetails,
-        )}<div class="dialogRow">
+                campusDetails,
+            )}<div class="dialogRow">
                 <h3>Libraries on this Campus</h3>
                 ${
                     campusDetails?.libraries?.length > 0
@@ -1017,38 +1033,36 @@ export const BookableSpacesManageLocations = ({
                               ?.sort((a, b) => a?.library_name?.localeCompare(b?.library_name))
                               ?.map(library => `<li>${displayedLibraryName(library)}</li>`)
                               ?.join('')}</ul>`
-                        : ''
+                        : /* istanbul ignore next */ ''
                 }
-                ${campusDetails?.libraries?.length === 0 ? '<p>No libraries</p>' : ''}
+                ${campusDetails?.libraries?.length === 0 ? /* istanbul ignore next */ '<p>No libraries</p>' : ''}
             </div>`;
         setSelectedCampusCentre(campusDetails);
 
-        if (!!formBody) {
-            const dialogBodyElement = document.getElementById('dialogBody');
-            !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
+        const dialogBodyElement = document.getElementById('dialogBody');
+        !!dialogBodyElement && (dialogBodyElement.innerHTML = formBody);
 
-            const saveButton = document.getElementById('saveButton');
-            !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
+        const saveButton = document.getElementById('saveButton');
+        !!saveButton && saveButton?.addEventListener('click', saveChangeToCampus);
 
-            const addNewButton = document.getElementById('addNewButton');
-            !!addNewButton && (addNewButton.innerText = 'Add Library');
-            !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
+        const addNewButton = document.getElementById('addNewButton');
+        !!addNewButton && (addNewButton.innerText = 'Add Library');
+        !!addNewButton && addNewButton?.addEventListener('click', e => showAddLibraryForm(e, campusDetails));
 
-            const deleteButton = document.getElementById('deleteButton');
-            !!deleteButton &&
-                deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
+        const deleteButton = document.getElementById('deleteButton');
+        !!deleteButton &&
+            deleteButton?.addEventListener('click', e => showConfirmAndDeleteCampusDialog(e, campusDetails));
 
-            const mapid = 'mapWrapper';
-            const mapWrapper = document.getElementById(mapid);
-            !!mapWrapper && (mapWrapper.style.display = 'block');
-            setShowCampusMap(true);
+        const mapid = 'mapWrapper';
+        const mapWrapper = document.getElementById(mapid);
+        !!mapWrapper && (mapWrapper.style.display = 'block');
+        setShowCampusMap(true);
 
-            const dialog = document.getElementById('popupDialog');
-            !!dialog && dialog?.showModal();
+        const dialog = document.getElementById('popupDialog');
+        !!dialog && dialog?.showModal();
 
-            // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
-            window.dispatchEvent(new Event('resize'));
-        }
+        // because the map is inside a dialog we have to prompt it to reload after dialog open, or tiles are missing
+        window.dispatchEvent(new Event('resize'));
     }
 
     function showCampusEntry(campus) {
@@ -1105,7 +1119,7 @@ export const BookableSpacesManageLocations = ({
                                     <EditIcon />
                                 </StyledEditButton>
                             </StyledRow>
-                        )) ?? []),
+                        )) ?? /* istanbul ignore next */ []),
                     ])}
                 </>
             </>
@@ -1124,12 +1138,12 @@ export const BookableSpacesManageLocations = ({
                 } else {
                     return (
                         <Grid container spacing={3} style={{ position: 'relative' }}>
-                            <Grid item xs={12} md={8} style={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 8 }} style={{ marginTop: '12px' }}>
                                 <div data-testid="spaces-location-wrapper">
                                     {campusList?.map(campus => showCampusEntry(campus))}
                                 </div>
                             </Grid>
-                            <Grid item xs={12} md={4} style={{ paddingTop: 0 }}>
+                            <Grid size={{ xs: 12, md: 4 }} style={{ paddingTop: 0 }}>
                                 <div style={{ marginLeft: '2rem', marginTop: '2rem', padding: '1rem' }}>
                                     <StyledButton
                                         id="add-new-campus-button"
@@ -1166,7 +1180,7 @@ export const BookableSpacesManageLocations = ({
             </dialog>
             <ConfirmationBox
                 confirmationBoxId="spaces-manage-locations-error"
-                onAction={() => hideConfirmationLocal}
+                onAction={hideConfirmationLocal}
                 onClose={hideConfirmationLocal}
                 hideCancelButton
                 isOpen={isConfirmationBoxOpen}

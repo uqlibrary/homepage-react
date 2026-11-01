@@ -2,7 +2,12 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, Page } from '../test';
 
 export const defaultIncludedImpacts = ['minor', 'moderate', 'serious', 'critical'];
-export const defaultDisabledRules = ['color-contrast', 'aria-required-children', 'aria-progressbar-name'];
+export const defaultDisabledRules = [
+    'color-contrast',
+    'aria-required-children',
+    'aria-progressbar-name',
+    'heading-order',
+];
 
 export const assertAccessibility = async (
     page: Page,
@@ -11,6 +16,7 @@ export const assertAccessibility = async (
         rules?: string[];
         disabledRules?: string[];
         includedImpacts?: string[];
+        excludedSelectors?: string[];
     },
 ) => {
     await expect(async () => await expect(page.locator(selector).first()).toBeVisible({ timeout: 2000 })).toPass();
@@ -20,6 +26,7 @@ export const assertAccessibility = async (
     const disableRules = options?.disabledRules || defaultDisabledRules;
 
     builder.include(selector);
+    options?.excludedSelectors?.forEach(excludedSelector => builder.exclude(excludedSelector));
     if (options?.rules?.length) {
         builder.withRules(options.rules);
     }

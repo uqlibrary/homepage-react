@@ -6,13 +6,12 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-import { getCampusByCode } from 'helpers/general';
-import { fullPath } from 'config/routes';
 import { default as locale } from 'modules/Pages/LearningResources/shared/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { SubjectSearchDropdown } from 'modules/SharedComponents/SubjectSearchDropdown';
-import { isLibraryStaff, isLoggedInUser } from 'helpers/access';
+import { isLibraryStaff } from 'helpers/access';
+import { hasClasses, getUrlForLearningResourceSpecificTab } from './helpers';
 
 const StyledHeadingGridItem = styled('div')(() => ({
     marginLeft: '8px',
@@ -56,21 +55,7 @@ const StyledStandardCard = styled(StandardCard)(({ theme }) => ({
     borderRadius: theme.palette.designSystem.borderRadius,
 }));
 
-export const getUrlForLearningResourceSpecificTab = (
-    item,
-    pageLocation,
-    includeFullPath = false,
-    isAccurateCampus = false,
-) => {
-    const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
-    const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-    const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
-    const url =
-        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s1111111
-            : `${prefix}?${learningResourceParams}`;
-    return url;
-};
+const LEARNING_RESOURCE_ID = 'homepage-learningresource';
 
 export const LearningResourcesPanel = ({ account }) => {
     const MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES = 5;
@@ -83,7 +68,7 @@ export const LearningResourcesPanel = ({ account }) => {
         searchUrl => {
             searchUrl !== '' && navigate(searchUrl);
         },
-        [pageLocation],
+        [navigate],
     );
     React.useEffect(() => {
         loadSearchResult(searchUrl);
@@ -102,11 +87,8 @@ export const LearningResourcesPanel = ({ account }) => {
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
 
-    const learningResourceId = 'homepage-learningresource';
-
     let displayedClasses = [];
-    const hasClasses = account =>
-        isLoggedInUser(account) && !!account.current_classes && account.current_classes.length > 0;
+
     if (hasClasses(account)) {
         displayedClasses = account.current_classes;
     } else if (isLibraryStaff(account)) {
@@ -150,7 +132,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid item xs id={`${learningResourceId}-autocomplete2-label`}>
+                    <Grid size="12" id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>
@@ -158,7 +140,7 @@ export const LearningResourcesPanel = ({ account }) => {
         >
             <SubjectSearchDropdown
                 displayType="compact"
-                elementId={learningResourceId}
+                elementId={LEARNING_RESOURCE_ID}
                 navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
 
@@ -186,7 +168,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         marginBottom: '8px',
                     }}
                 >
-                    <StyledHeadingGridItem item xs={12}>
+                    <StyledHeadingGridItem size={{ xs: 12 }}>
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
                     </StyledHeadingGridItem>
                     {displayedClasses.length > 0 && (
@@ -194,9 +176,8 @@ export const LearningResourcesPanel = ({ account }) => {
                             {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
                                 return (
                                     <StyledGridListItem
-                                        item
+                                        size={{ xs: 12 }}
                                         component={'li'}
-                                        xs={12}
                                         data-testid={`hcr-${index}`}
                                         data-analyticsid={`hcr-${index}`}
                                         key={`hcr-${index}`}
@@ -220,7 +201,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     {displayedClasses.length > MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES && (
                         <Grid
                             item
-                            xs={12}
+                            size={{ xs: 12 }}
                             style={{ marginTop: '8px', marginBottom: '22px', paddingLeft: '12px' }}
                             data-testid={'learning-resource-panel-course-multi-footer'}
                         >
