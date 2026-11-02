@@ -209,10 +209,15 @@ describe('JourneySpaceDetailsView', () => {
             <JourneySpaceDetailsView
                 actions={{}}
                 selectedSpace={buildSpace({
+                    space_type_details: {
+                        space_type_name: 'Meeting room',
+                        space_type_description: 'A quiet room for small teams.',
+                    },
+                    space_description: '',
                     space_photo_url: undefined,
-                    space_photo_urls: [],
-                    space_photos: [],
-                    space_images: [],
+                    space_photo_urls: undefined,
+                    space_photos: undefined,
+                    space_images: undefined,
                 })}
                 weeklyHours={{ locations: [] }}
                 showBackButton={false}
@@ -225,5 +230,9 @@ describe('JourneySpaceDetailsView', () => {
         const fallbackImage = screen.getByRole('img');
         expect(fallbackImage).toHaveAttribute('alt', 'Placeholder image for this space');
         expect(fallbackImage).toHaveAttribute('src', 'test-file-stub');
+        expect(screen.getByTestId('spaces-101-details-space-type-description')).toHaveTextContent(
+            'A quiet room for small teams.',
+        );
+        expect(screen.queryByTestId('space-101-details-description')).not.toBeInTheDocument();
     });
 });
