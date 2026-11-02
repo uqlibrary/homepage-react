@@ -7,7 +7,7 @@ import { useAccountUser } from '../../helpers/hooks';
 const AuthWrapper = ({ requiredPermissions = [], inclusive = false, fallback, children }) => {
     const { privilege } = useAccountUser();
     const shouldHaveAccess = hasAccess(privilege, requiredPermissions, inclusive);
-    return shouldHaveAccess ? children : fallback ?? /* istanbul ignore next */ <></>;
+    return shouldHaveAccess ? children : (fallback ?? /* istanbul ignore next */ <></>);
 };
 
 AuthWrapper.propTypes = {

@@ -27,7 +27,7 @@ test.describe('Digital Learning Hub admin filter management', () => {
                     .locator('a[data-testid="dlor-breadcrumb-admin-homelink"]')
                     .getByText(/Digital Learning Hub admin/)
                     .first(),
-            ).toHaveAttribute('href', `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`);
+            ).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
             await expect(
                 page
                     .getByTestId('dlor-breadcrumb-facet-management-label-0')

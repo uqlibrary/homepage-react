@@ -26,6 +26,7 @@ export const useDataTableColumns = ({
     deleteIcon,
     filterKey = null,
     withActions = true,
+    actionPosition = 'end',
     actionDataFieldKeys,
     shouldDisableEdit,
     shouldDisableDelete,
@@ -92,7 +93,10 @@ export const useDataTableColumns = ({
                     });
             });
 
-            withActions && columns && columns.length > 0 && columns.push(actionsCell);
+            withActions &&
+                columns &&
+                columns.length > 0 &&
+                columns.splice(actionPosition === 'start' ? 0 : columns.length, 0, actionsCell);
             return columns;
         }, // eslint-disable-next-line react-hooks/exhaustive-deps
         [handleDeleteClick, handleEditClick, filterKey],

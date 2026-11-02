@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React from 'react';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 /*
@@ -20,7 +19,7 @@ help: {
 - if help is not required, delete help: {} fully (including closing '},')
 
 */
-/* eslint-disable max-len */
+
 export default {
     pages: {
         index: {
@@ -39,6 +38,12 @@ export default {
             masquerade: {
                 title: 'Masquerade',
             },
+            membership: {
+                title: 'Membership administration',
+            },
+            membershipsettings: {
+                title: 'Membership expiry settings',
+            },
             alerts: {
                 title: 'Alerts administration',
                 form: {
@@ -51,6 +56,12 @@ export default {
             testntag: {
                 title: 'Test and Tag',
             },
+            bookablespaces: {
+                title: 'Spaces Management',
+            },
+            bookablespacetypes: {
+                title: 'Space Type Management',
+            },
         },
         learningresources: {
             title: 'Learning resources',
@@ -58,14 +69,26 @@ export default {
         paymentReceipt: {
             title: 'Payment receipt',
         },
-        bookExamBooth: {
-            title: 'Book an exam booth in the UQ Centre',
+        membership: {
+            title: 'UQ Library Membership',
         },
         pastExamPaperSearch: {
             title: 'Search exam papers',
         },
         pastExamPaperList: {
             title: 'View exam papers',
+        },
+        bookablespaces: {
+            title: 'Spaces',
+        },
+        bookablespacetypes: {
+            title: 'Space Types',
+        },
+        artTrailLanding: {
+            title: 'Art Trail Welcome',
+        },
+        artTrail: {
+            title: 'Art Trail',
         },
     },
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -26,7 +26,8 @@ import { useDataTableColumns, useDataTableRow } from '../../../SharedComponents/
 import FooterRow from './FooterRow';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
-import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
 import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
@@ -67,7 +68,9 @@ const InspectionsByLicencedUser = ({
     const [startDateError, setStartDateError] = useState({ error: false, message: '' });
     const [endDateError, setEndDateError] = useState({ error: false, message: '' });
 
-    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     const onCloseConfirmationAlert = () => {
         if (!!userInspectionsError) actions.clearInspectionsError();
@@ -189,19 +192,18 @@ const InspectionsByLicencedUser = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={1}>
-                        <Grid xs={12} md={4}>
-                            {/* Team Picker */}
-                            <SelectField
-                                field={teamSelectFieldName}
+                        <Grid size={{ xs: 12, md: 4 }}>
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={onTeamChange}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={onTeamChange}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <FormControl variant="standard" fullWidth className={'formControl'}>
                                 <InputLabel>Inspector Name</InputLabel>
                                 <Select
@@ -267,7 +269,7 @@ const InspectionsByLicencedUser = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -302,7 +304,7 @@ const InspectionsByLicencedUser = ({
                                 }}
                             />
                         </Grid>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!userInspectionsLoading || !!licencedUsersLoading}
@@ -347,9 +349,9 @@ const InspectionsByLicencedUser = ({
                                 loading={userInspectionsLoading}
                                 disableColumnFilter
                                 disableColumnMenu
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
-                                    Footer: () => (
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
+                                    footer: () => (
                                         <FooterRow count={totalInspections} columns={columns} locale={pageLocale} />
                                     ),
                                 }}

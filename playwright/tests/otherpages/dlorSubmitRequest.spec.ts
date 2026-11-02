@@ -1,5 +1,5 @@
 import { test, expect } from '@uq/pw/test';
-import { typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 
 const REQUIRED_LENGTH_TITLE = 8;
 const REQUIRED_LENGTH_DESCRIPTION = 100;
@@ -100,7 +100,7 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
 
                 await page.locator('[data-testid="object-title"] input').fill('xx'.padEnd(REQUIRED_LENGTH_TITLE, 'x'));
                 await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toHaveText(/2/); // panel invalidity count present
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
 
                 await expect(page.locator('[data-testid="dlor-panel-validity-indicator-1"] span')).toHaveText(/1/); // panel invalidity count present
                 await page
@@ -191,10 +191,10 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-title"] input').pressSequentially('p');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible(); // panel invalidity count no longer present
 
-                await typeCKEditor(page, 'd');
+                await typeRichTextEditor(page, 'd');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).toHaveText(/1/); // panel invalidity count present
 
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await expect(page.getByTestId('dlor-panel-validity-indicator-1')).not.toBeVisible(); // panel invalidity count no longer present
 
                 await page.locator('[data-testid="object-summary"] textarea:first-child').clear();
@@ -214,11 +214,13 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 await page.getByTestId('object-owning-team').click();
                 await page.getByTestId('object-form-teamid-new').click();
 
-                // now that we have chosen "new team" the form is invalid until we enter all 3 fields
-                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/3/); // panel invalidity count present
+                // now that we have chosen "new team" the form is invalid until we enter all 4 fields
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/4/); // panel invalidity count present
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
-                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/2/); // panel invalidity count present
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/3/); // panel invalidity count present
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/2/); // panel invalidity count present
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await expect(page.getByTestId('dlor-panel-validity-indicator-0')).toHaveText(/1/); // panel invalidity count present
                 await expect(page.getByTestId('error-message-team-email-new')).toHaveText(
                     /This email address is not valid\./,
@@ -253,7 +255,7 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                     /at least 5 more characters needed/,
                 );
 
-                await typeCKEditor(page, 'new description');
+                await typeRichTextEditor(page, 'new description');
                 await expect(page.getByTestId('input-characters-remaining-object-description')).toHaveText(
                     /at least 85 more characters needed/,
                 );
@@ -298,7 +300,7 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 // suggestion panel not open
                 await expect(page.getByTestId('admin-dlor-suggest-summary')).not.toBeVisible();
                 // a long description puts the first 150 char, breaking at a word break, into the summary suggestion
-                await typeCKEditor(
+                await typeRichTextEditor(
                     page,
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods. The hunters blew their horns and the hounds bayed and the whole troop followed the fox.',
                 );
@@ -311,7 +313,7 @@ test.describe('Request an object addition to the Digital Learning Hub', () => {
                 // suggestion panel is hidden
                 await expect(page.getByTestId('admin-dlor-suggest-summary')).not.toBeVisible();
                 // suggestion panel picks up first paragraph on carriage return after minimum char count
-                await typeCKEditor(
+                await typeRichTextEditor(
                     page,
                     'The quick brown fox jumped over the lazy yellow dog and ran into the woods.' +
                         'The hunters blew their horns and the hounds bayed and the whole troop followed the fox.' +

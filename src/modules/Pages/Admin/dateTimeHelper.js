@@ -12,20 +12,13 @@ export function getTimeSundayNextFormatted(baseDate = null) {
     // const todayUTC = today.utc();
     const monday = 1;
 
-    return today
-        .isoWeekday(monday)
-        .add(13, 'days')
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
+    return today.isoWeekday(monday).add(13, 'days').endOf('day').format('YYYY-MM-DDTHH:mm');
 }
 
 export function getTimeMondayComing(baseDate = null) {
     const today = baseDate || moment();
     const monday = 1;
-    return today
-        .isoWeekday(monday)
-        .add(1, 'weeks')
-        .hour(9); // 9am
+    return today.isoWeekday(monday).add(1, 'weeks').hour(9); // 9am
 }
 
 export function getTimeMondayMidnightNext(baseDate = null) {

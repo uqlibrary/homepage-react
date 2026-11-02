@@ -10,7 +10,7 @@ test.describe('Test and Tag Manage teams', () => {
 
     test('page is accessible and renders base', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
+        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
         await expect(
@@ -27,7 +27,7 @@ test.describe('Test and Tag Manage teams', () => {
 
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
+        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
 
@@ -60,7 +60,7 @@ test.describe('Test and Tag Manage teams', () => {
 
     test('base page add controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
+        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect((await getFieldValue(page, 'team_display_name', 0)).getByText('Spaces')).toBeVisible();
         // Add.
@@ -106,7 +106,7 @@ test.describe('Test and Tag Manage teams', () => {
 
     test('base page delete controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
-        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle('', 'Library'));
+        await assertTitles(page, locale.pages.manage.teams.header.pageSubtitle(null, 'Library'));
         await forcePageRefresh(page);
         await expect(
             (await getFieldValue(page, 'team_display_name', 2)).getByText('Team to test deletion'),

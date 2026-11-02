@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Icon from '@mui/material/Icon';
 import HomeIcon from '@mui/icons-material/Home';
 

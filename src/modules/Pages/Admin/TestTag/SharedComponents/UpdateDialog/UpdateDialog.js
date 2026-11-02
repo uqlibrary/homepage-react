@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -8,7 +9,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -18,17 +18,22 @@ import { filterComponentProps } from './utils';
 
 const rootId = 'update_dialog';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog, {
+    shouldForwardProp: prop => prop !== 'styles',
+})(({ styles, fullScreen, theme }) => ({
     padding: '6px',
-    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: '50vh' },
+    '& .MuiDialog-paper': { minHeight: '30vh', maxHeight: fullScreen ? '100%' : '50vh' },
     '& .footerActions': {
         padding: '8px 16px',
+        width: '100%',
+        boxSizing: 'border-box',
     },
     '& .footerMobileMargin': {
         [theme.breakpoints.only('xs')]: {
             marginTop: theme.spacing(2),
         },
     },
+    ...styles,
 }));
 
 export const UpdateDialogue = ({
@@ -38,28 +43,35 @@ export const UpdateDialogue = ({
     title,
     id,
     hideActionButton = false,
+    hideAccessoryButton = true,
     hideCancelButton = false,
     onAction,
+    onAccessoryAction,
     onCancelAction,
     onClose,
     noMinContentWidth,
     fields,
     columns,
     row,
+    rows,
     props,
     isBusy = false,
+    styles,
+    disabledState = { actionButton: false, accessoryButton: false, cancelButton: false },
 }) => {
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('md'));
+    const dispatch = useDispatch();
+
     const componentId = `${rootId}-${id}`;
 
     const [dataColumns, setDataColumns] = React.useState({});
     const [dataFields, setDataFields] = React.useState({});
     const [editableFields, setEditableFields] = React.useState([]);
     const [data, setData] = React.useState({});
-    const [isValid, setIsValid] = React.useState(false);
-    const theme = useTheme();
-    const isMobileView = useMediaQuery(theme.breakpoints.only('xs')) || false;
+    const [fieldsValid, setFieldsValid] = React.useState({});
 
-    React.useEffect(() => {
+    useEffect(() => {
         /* istanbul ignore else */
         if (isOpen) {
             setDataColumns(columns);
@@ -68,52 +80,67 @@ export const UpdateDialogue = ({
             setEditableFields(
                 Object.keys(fields).filter(
                     field =>
-                        !!(fields[field]?.fieldParams?.renderInUpdate ?? true) &&
-                        (!!(fields[field]?.fieldParams?.canEdit ?? true) ||
-                            !!(fields[field]?.fieldParams?.canAdd ?? true)),
+                        (action === 'edit' && !!(fields[field]?.fieldParams?.renderInUpdate ?? true)) ||
+                        (action === 'add' && !!(fields[field]?.fieldParams?.renderInAdd ?? true)),
                 ),
             );
         }
-    }, [isOpen, fields, row, columns]);
+    }, [isOpen, fields, row, rows, columns, action]);
 
-    React.useEffect(() => {
-        setIsValid(
-            editableFields.every(field => {
-                return !dataFields[field]?.validate?.(data[field], data) ?? /* istanbul ignore next */ true;
-            }),
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    useEffect(() => {
+        setFieldsValid(() => {
+            const newFieldsValid = {};
+            editableFields.forEach(field => {
+                newFieldsValid[field] =
+                    !dataFields[field]?.validate?.(data[field], data, rows) ?? /* istanbul ignore next */ true;
+            });
+            return newFieldsValid;
+        });
+    }, [data, dataFields, editableFields, rows]);
 
-    const _onAction = () => {
+    const _onAction = useCallback(() => {
         onClose?.();
         onAction?.(data);
-    };
+    }, [onClose, onAction, data]);
 
-    const _onCancelAction = () => {
+    const _onAccessoryAction = useCallback(() => {
+        onClose?.();
+        onAccessoryAction?.(data);
+    }, [onClose, onAccessoryAction, data]);
+
+    const _onCancelAction = useCallback(() => {
         onClose?.();
         onCancelAction?.();
-    };
+    }, [onClose, onCancelAction]);
 
-    const _onClickAction = e => {
+    const _onClickAction = useCallback(e => {
         e.stopPropagation();
-    };
+    }, []);
 
-    const handleChange = (event, value) => {
-        const isCheckbox = event.target.type === 'checkbox';
-        const isOption = event.target.getAttribute?.('role') === 'option';
-        const dataKey = isOption ? event.target.id.split('-')[0] : event.target.name;
-        const optionKey = fields?.[dataKey]?.fieldParams?.optionKey;
-        // eslint-disable-next-line no-nested-ternary
-        const newValue = isOption ? value?.[optionKey] : isCheckbox ? event.target.checked : event.target.value;
+    const fieldHandlers = useMemo(
+        () =>
+            Object.fromEntries(
+                editableFields.map(field => [
+                    field,
+                    (event, value) => {
+                        const isCheckbox = event?.target?.type === 'checkbox';
+                        const newValue = isCheckbox ? event.target.checked : value || event.target.value;
+                        setData(prevState => ({ ...prevState, [field]: newValue }));
+                    },
+                ]),
+            ),
+        [editableFields],
+    );
 
-        setData(prevState => ({
-            ...prevState,
-            [dataKey]: newValue,
-        }));
-    };
+    const isInvalidForm = Object.values(fieldsValid).some(valid => !valid);
     return (
-        <StyledDialog open={isOpen} id={`${componentId}`} data-testid={`${componentId}`}>
+        <StyledDialog
+            open={isOpen}
+            id={`${componentId}`}
+            data-testid={`${componentId}`}
+            styles={styles}
+            fullScreen={isMobileView}
+        >
             <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                 {title}
             </DialogTitle>
@@ -130,7 +157,7 @@ export const UpdateDialogue = ({
                             <React.Fragment key={field}>
                                 {((action === 'edit' && !!(dataFields[field]?.fieldParams?.renderInUpdate ?? true)) ||
                                     (action === 'add' && !!(dataFields[field]?.fieldParams?.renderInAdd ?? true))) && (
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         {((action === 'edit' && !!!(dataFields[field]?.fieldParams?.canEdit ?? true)) ||
                                             (action === 'add' &&
                                                 !!!(dataFields[field]?.fieldParams?.canAdd ?? true))) && (
@@ -141,8 +168,8 @@ export const UpdateDialogue = ({
                                                         ? dataFields[field].computedValue(
                                                               props[dataFields[field].computedValueProp],
                                                           )
-                                                        : dataFields[field]?.valueFormatter?.(data?.[field]) ??
-                                                          data?.[field]}
+                                                        : (dataFields[field]?.valueFormatter?.(data?.[field]) ??
+                                                          data?.[field])}
                                                 </Typography>
                                             </>
                                         )}
@@ -155,9 +182,9 @@ export const UpdateDialogue = ({
                                                         id: `${field}-input`,
                                                         name: field,
                                                         label: dataColumns[field].label,
-                                                        error: dataFields[field]?.validate?.(data?.[field], data),
+                                                        error: !fieldsValid[field],
                                                         checked: !!data?.[field],
-                                                        onChange: handleChange,
+                                                        onChange: fieldHandlers[field],
                                                         onClick: _onClickAction,
                                                         InputLabelProps: {
                                                             shrink: true,
@@ -178,6 +205,8 @@ export const UpdateDialogue = ({
                                                     }),
                                                     data,
                                                     row,
+                                                    action,
+                                                    dispatch,
                                                 )}
                                             </>
                                         )}
@@ -187,52 +216,69 @@ export const UpdateDialogue = ({
                         ))}
                 </Grid>
             </DialogContent>
-            {(!hideCancelButton || !hideActionButton) && (
+            {(!hideCancelButton || !hideAccessoryButton || !hideActionButton) && (
                 <DialogActions id={`${rootId}-actions`} data-testid={`${rootId}-actions`}>
                     <Grid container className={'footerActions'}>
-                        {!hideCancelButton && (
-                            <Grid item xs={12} sm={6}>
-                                <Box justifyContent="flex-start" display={'flex'}>
-                                    <Button
-                                        variant={'outlined'}
-                                        onClick={_onCancelAction}
-                                        id={`${rootId}-cancel-button`}
-                                        data-testid={`${rootId}-cancel-button`}
-                                        fullWidth={isMobileView}
-                                        disabled={isBusy}
-                                    >
-                                        {locale.cancelButtonLabel}
-                                    </Button>
-                                </Box>
-                            </Grid>
-                        )}
-                        {!hideActionButton && (
-                            <Grid item xs={12} sm={6}>
-                                <Box justifyContent="flex-end" display={'flex'} className={'footerMobileMargin'}>
-                                    <Button
-                                        variant="contained"
-                                        autoFocus
-                                        color={'primary'}
-                                        onClick={_onAction}
-                                        id={`${rootId}-action-button`}
-                                        data-testid={`${rootId}-action-button`}
-                                        fullWidth={isMobileView}
-                                        disabled={isBusy || !isValid}
-                                    >
-                                        {isBusy ? (
-                                            <CircularProgress
-                                                color="inherit"
-                                                size={25}
-                                                id={`${rootId}-progress`}
-                                                data-testid={`${rootId}-progress`}
-                                            />
-                                        ) : (
-                                            locale.confirmButtonLabel
-                                        )}
-                                    </Button>
-                                </Box>
-                            </Grid>
-                        )}
+                        <Grid
+                            size={{ xs: 12 }}
+                            display={'flex'}
+                            justifyContent={'space-between'}
+                            flexWrap={'wrap'}
+                            gap={1}
+                            className={'footerMobileMargin'}
+                        >
+                            {!hideCancelButton && (
+                                <Button
+                                    variant={'outlined'}
+                                    onClick={_onCancelAction}
+                                    id={`${rootId}-cancel-button`}
+                                    data-testid={`${rootId}-cancel-button`}
+                                    disabled={isBusy || disabledState?.cancelButton}
+                                    sx={{ justifySelf: 'flex-start', display: 'flex' }}
+                                    fullWidth={isMobileView}
+                                >
+                                    {locale.cancelButtonLabel}
+                                </Button>
+                            )}
+                            {!hideAccessoryButton && (
+                                <Button
+                                    variant="contained"
+                                    color={'secondary'}
+                                    fullWidth={isMobileView}
+                                    sx={{ justifySelf: 'flex-center', display: 'flex' }}
+                                    onClick={_onAccessoryAction}
+                                    id={`${rootId}-accessory-button`}
+                                    data-testid={`${rootId}-accessory-button`}
+                                    disabled={isBusy || isInvalidForm || disabledState?.accessoryButton}
+                                >
+                                    {locale.accessoryButtonLabel}
+                                </Button>
+                            )}
+                            {!hideActionButton && (
+                                <Button
+                                    variant="contained"
+                                    autoFocus
+                                    color={'primary'}
+                                    onClick={_onAction}
+                                    id={`${rootId}-action-button`}
+                                    data-testid={`${rootId}-action-button`}
+                                    fullWidth={isMobileView}
+                                    disabled={isBusy || isInvalidForm || disabledState?.actionButton}
+                                    sx={{ justifySelf: 'flex-end', display: 'flex' }}
+                                >
+                                    {isBusy ? (
+                                        <CircularProgress
+                                            color="inherit"
+                                            size={25}
+                                            id={`${rootId}-progress`}
+                                            data-testid={`${rootId}-progress`}
+                                        />
+                                    ) : (
+                                        locale.confirmButtonLabel
+                                    )}
+                                </Button>
+                            )}
+                        </Grid>
                     </Grid>
                 </DialogActions>
             )}
@@ -248,16 +294,25 @@ UpdateDialogue.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
     row: PropTypes.object,
+    rows: PropTypes.array,
     isOpen: PropTypes.bool,
     noMinContentWidth: PropTypes.bool,
     hideActionButton: PropTypes.bool,
+    hideAccessoryButton: PropTypes.bool,
     hideCancelButton: PropTypes.bool,
     onAction: PropTypes.func,
+    onAccessoryAction: PropTypes.func,
     onCancelAction: PropTypes.func,
     onClose: PropTypes.func,
     props: PropTypes.object,
     fieldProps: PropTypes.object,
     isBusy: PropTypes.bool,
+    styles: PropTypes.object,
+    disabledState: PropTypes.shape({
+        actionButton: PropTypes.bool,
+        accessoryButton: PropTypes.bool,
+        cancelButton: PropTypes.bool,
+    }),
 };
 
 export default React.memo(UpdateDialogue);

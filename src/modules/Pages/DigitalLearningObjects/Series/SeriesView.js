@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 import parse from 'html-react-parser';
 
 import Box from '@mui/material/Box';
@@ -25,11 +25,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { isLibraryStaff, isStaff, isUQOnlyUser } from 'helpers/access';
 
-import {
-    getDlorViewPageUrl,
-    getPathRoot,
-    convertSnakeCaseToKebabCase,
-} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { getDlorViewPageUrl, convertSnakeCaseToKebabCase } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 
 const StyledTitleTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -77,7 +73,7 @@ function getTitleBlock(detailTitle = 'View a series') {
     return (
         <StyledTitleBlockDiv>
             <Typography component={'p'} variant={'h6'} data-testid="dlor-seriespage-sitelabel">
-                <a href={`${getPathRoot()}/digital-learning-hub`}>Find a digital learning object</a>
+                <Link to={'/digital-learning-hub'}>Find a digital learning object</Link>
             </Typography>
             <ArrowForwardIcon />
             <Typography>{detailTitle}</Typography>
@@ -232,10 +228,13 @@ export const SeriesView = ({
             return !!wrapInParam ? /* istanbul ignore next */ `(${facetNames})` : facetNames;
         };
 
+        function navigateToDetailPage(uuid) {
+            window.location.href = getDlorViewPageUrl(uuid);
+        }
+
         return (
             <Grid
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 sx={{
                     // paddingLeft: '16px',
                     paddingBottom: '16px',
@@ -373,16 +372,12 @@ export const SeriesView = ({
         }
     }, [dlorList, dlorListError, dlorListLoading, actions]);
 
-    function navigateToDetailPage(uuid) {
-        window.location.href = getDlorViewPageUrl(uuid);
-    }
-
     return (
         <StandardPage>
             {getTitleBlock()}
             {!!dlorSeries && !dlorSeriesLoading && (
                 <StyledContentGrid container spacing={4} data-testid="dlor-seriespage">
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box sx={{ marginBottom: '12px' }}>
                             <StyledTitleTypography component={'h1'} variant={'h4'}>
                                 {dlorSeries?.series_name}
@@ -395,7 +390,7 @@ export const SeriesView = ({
                         </StyledHeaderDiv>
                         {!!dlorList &&
                             dlorList
-                                .filter(item => item.object_series_id && item.object_series_id == seriesId)
+                                .filter(item => item.object_series_id && String(item.object_series_id) === seriesId)
                                 .sort((a, b) => {
                                     /* istanbul ignore next */
                                     const orderA =

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
 
 class AppErrorBoundary extends React.Component {
     static propTypes = {
@@ -28,11 +28,7 @@ class AppErrorBoundary extends React.Component {
 
     componentDidCatch(error, errorInfo) {
         if (process.env.ENABLE_LOG) {
-            // Raven.captureException(error, { extra: errorInfo });
-            Sentry.withScope(scope => {
-                Object.keys(errorInfo).forEach(key => scope.setExtra(key, errorInfo[key]));
-                Sentry.captureException(error);
-            });
+            Sentry.captureReactException(error, errorInfo);
         }
     }
 

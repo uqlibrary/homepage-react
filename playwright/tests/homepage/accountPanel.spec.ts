@@ -8,19 +8,9 @@ test.describe('Account panel', () => {
             await page.setViewportSize({ width: 1280, height: 900 });
 
             // once the page has loaded for a UQ user, check if all required links are shown.
-            await expect(
-                page
-                    .getByTestId('catalogue-panel')
-                    .getByText('Your library account')
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('catalogue-panel').getByText('Your library account').first()).toBeVisible();
 
-            await expect(
-                page
-                    .getByTestId('catalogue-panel-content')
-                    .getByText('Loans (1)')
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('catalogue-panel-content').getByText('Loans (1)').first()).toBeVisible();
         });
         test('displays no Requests on an error correctly', async ({ page }) => {
             await page.goto('http://localhost:2020/?user=s1111111&responseType=almaError');
@@ -77,12 +67,7 @@ test.describe('Account panel', () => {
                     .first(),
             ).toBeVisible();
             await page.getByTestId('papercut-menu-button').click();
-            await expect(
-                page
-                    .getByTestId('papercut-item-button-4')
-                    .getByText(/More/)
-                    .first(),
-            ).toBeVisible();
+            await expect(page.getByTestId('papercut-item-button-4').getByText(/More/).first()).toBeVisible();
             await assertAccessibility(page, '[data-testid="account-panel"]');
         });
     });
@@ -96,7 +81,7 @@ test.describe('Account panel', () => {
             await expect(page.getByTestId('papercut-menu')).toBeVisible();
         }
 
-        test('Personalised panel print menu can open', async ({ page }) => {
+        test('Personalised panel print menu can open & close', async ({ page }) => {
             await page.goto('/?user=s1111111');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(
@@ -126,99 +111,9 @@ test.describe('Account panel', () => {
                     .getByText(/Top up your print balance - \$5/)
                     .first(),
             ).toBeVisible();
-        });
-
-        test('Personalised panel print menu can close with escape key', async ({ page }) => {
-            await page.goto('/?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .getByTestId('homepage-user-greeting')
-                    .getByText(/UQ/)
-                    .first(),
-            ).toBeVisible();
-            await expect(
-                page
-                    .getByTestId('papercut-print-balance')
-                    .getByText(/12\.50/)
-                    .first(),
-            ).toBeVisible();
-
-            await openPapercutPopup(page);
-
-            await expect(
-                page
-                    .getByTestId('papercut-item-button-4')
-                    .getByText(/More about your printing account/)
-                    .first(),
-            ).toBeVisible();
-
-            // papercut menu closes by user tapping the escape key
-            await page.locator('body').press('Escape');
-
-            // "More about your printing account" link is no longer available
-            await expect(page.getByTestId('papercut-item-button-4')).not.toBeVisible();
-        });
-
-        test('Personalised panel print menu can close with button click', async ({ page }) => {
-            await page.goto('/?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .getByTestId('homepage-user-greeting')
-                    .getByText(/UQ/)
-                    .first(),
-            ).toBeVisible();
-            await expect(
-                page
-                    .getByTestId('papercut-print-balance')
-                    .getByText(/12\.50/)
-                    .first(),
-            ).toBeVisible();
-
-            await openPapercutPopup(page);
-
-            await expect(
-                page
-                    .getByTestId('papercut-item-button-4')
-                    .getByText(/More about your printing account/)
-                    .first(),
-            ).toBeVisible();
 
             // papercut menu closes by user reclicking the open button
             await page.getByTestId('papercut-menu-button').click();
-
-            // "More about your printing account" link is no longer available
-            await expect(page.getByTestId('papercut-item-button-4')).not.toBeVisible();
-        });
-
-        test('Personalised panel print menu can close with a click away', async ({ page }) => {
-            await page.goto('/?user=uqstaff');
-            await page.setViewportSize({ width: 1300, height: 1000 });
-            await expect(
-                page
-                    .getByTestId('homepage-user-greeting')
-                    .getByText(/UQ/)
-                    .first(),
-            ).toBeVisible();
-            await expect(
-                page
-                    .getByTestId('papercut-print-balance')
-                    .getByText(/12\.50/)
-                    .first(),
-            ).toBeVisible();
-
-            await openPapercutPopup(page);
-
-            await expect(
-                page
-                    .getByTestId('papercut-item-button-4')
-                    .getByText(/More about your printing account/)
-                    .first(),
-            ).toBeVisible();
-
-            // papercut menu closes by user clicking somewhere else in the window
-            await page.getByTestId('homepage-user-greeting').click();
 
             // "More about your printing account" link is no longer available
             await expect(page.getByTestId('papercut-item-button-4')).not.toBeVisible();

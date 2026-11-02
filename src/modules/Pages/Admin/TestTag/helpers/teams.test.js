@@ -6,21 +6,12 @@ jest.mock('./hooks', () => ({
     useAccountUser: jest.fn(),
 }));
 
-jest.mock('../SharedComponents/DataTable/Filter/SelectField', () => ({
-    createFilter: jest.fn((field, ids) => ({
-        columnField: field,
-        operatorValue: 'isAnyOf',
-        operator: 'isAnyOf',
-        value: ids.map(v => String(v)),
-    })),
-}));
-
 const mockUser = {
     user_team: 'team-alpha',
     department_teams: [
-        { id: 1, team_slug: 'team-alpha', team_display_name: 'Team Alpha' },
-        { id: 2, team_slug: 'team-beta', team_display_name: 'Team Beta' },
-        { id: 3, team_slug: 'team-gamma', team_display_name: 'Team Gamma' },
+        { id: 1, team_slug: 'team-alpha', team_display_name: 'Team Alpha', team_current_flag: 1 },
+        { id: 2, team_slug: 'team-beta', team_display_name: 'Team Beta', team_current_flag: 1 },
+        { id: 3, team_slug: 'team-gamma', team_display_name: 'Team Gamma', team_current_flag: 0 },
     ],
 };
 
@@ -34,10 +25,10 @@ describe('teams', () => {
             const { result } = renderHook(() => useUserDepartmentTeamList(mockUser));
 
             expect(result.current).toEqual([
-                { id: -1, label: 'All teams' },
-                { id: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { id: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { id: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
@@ -45,16 +36,16 @@ describe('teams', () => {
             const { result } = renderHook(() => useUserDepartmentTeamList(mockUser, false));
 
             expect(result.current).toEqual([
-                { id: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { id: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { id: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
         it('should return only "All teams" when user is null', () => {
             const { result } = renderHook(() => useUserDepartmentTeamList(null));
 
-            expect(result.current).toEqual([{ id: -1, label: 'All teams' }]);
+            expect(result.current).toEqual([{ value: -1, label: 'All teams' }]);
         });
 
         it('should return empty list when user is null and allOption is false', () => {
@@ -66,7 +57,18 @@ describe('teams', () => {
         it('should return only "All teams" when user has no department_teams', () => {
             const { result } = renderHook(() => useUserDepartmentTeamList({}));
 
-            expect(result.current).toEqual([{ id: -1, label: 'All teams' }]);
+            expect(result.current).toEqual([{ value: -1, label: 'All teams' }]);
+        });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            const { result } = renderHook(() => useUserDepartmentTeamList(mockUser, true, false));
+
+            expect(result.current).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
+            ]);
         });
     });
 
@@ -77,10 +79,10 @@ describe('teams', () => {
             const { result } = renderHook(() => useCurrentUserDepartmentTeamList());
 
             expect(result.current).toEqual([
-                { id: -1, label: 'All teams' },
-                { id: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { id: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { id: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
         });
 
@@ -90,124 +92,129 @@ describe('teams', () => {
             const { result } = renderHook(() => useCurrentUserDepartmentTeamList(false));
 
             expect(result.current).toEqual([
-                { id: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { id: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { id: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
+            ]);
+        });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            hooks.useAccountUser.mockReturnValue({ user: mockUser });
+
+            const { result } = renderHook(() => useCurrentUserDepartmentTeamList(true, false));
+
+            expect(result.current).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
             ]);
         });
     });
 
     describe('useUserTeams', () => {
+        it('should use defaults when called with no arguments', () => {
+            const { result } = renderHook(() => useUserTeams());
+
+            expect(result.current.userTeamList).toEqual([{ value: -1, label: 'All teams' }]);
+            expect(result.current.selectedTeam).toBe(-1);
+            expect(result.current.selectedTeamSlug).toBe('');
+        });
+
         it('should return team data with default selected team', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser));
+            const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
             expect(result.current.userTeamList).toEqual([
-                { id: -1, label: 'All teams' },
-                { id: 1, team_slug: 'team-alpha', label: 'Team Alpha' },
-                { id: 2, team_slug: 'team-beta', label: 'Team Beta' },
-                { id: 3, team_slug: 'team-gamma', label: 'Team Gamma' },
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
             ]);
-            expect(result.current.defaultTeamId).toBe(1);
             expect(result.current.teamSelectFieldName).toBe('team_display_name');
-            expect(result.current.selectedTeam).toEqual({
-                items: [
-                    {
-                        columnField: 'team_display_name',
-                        operatorValue: 'isAnyOf',
-                        operator: 'isAnyOf',
-                        value: ['1'],
-                    },
-                ],
-            });
+            expect(result.current.selectedTeam).toBe(1);
             expect(result.current.selectedTeamSlug).toBe('team-alpha');
         });
 
         it('should return empty selection when setDefaultTeam is false', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser, 'team_display_name', false));
+            const { result } = renderHook(() => useUserTeams({ user: mockUser, setDefaultTeam: false }));
 
-            expect(result.current.selectedTeam).toEqual({ items: [] });
+            expect(result.current.selectedTeam).toBe('');
             expect(result.current.selectedTeamSlug).toBe('');
         });
 
         it('should use custom teamSelectFieldName', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser, 'custom_field'));
+            const { result } = renderHook(() => useUserTeams({ user: mockUser, teamSelectFieldName: 'custom_field' }));
 
             expect(result.current.teamSelectFieldName).toBe('custom_field');
-            expect(result.current.selectedTeam.items[0].columnField).toBe('custom_field');
+        });
+
+        it('should pass allTeamsOption to useUserDepartmentTeamList', () => {
+            const { result } = renderHook(() => useUserTeams({ user: mockUser, allTeamsOption: false }));
+
+            expect(result.current.userTeamList).toEqual([
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma (disabled)', current: false },
+            ]);
+        });
+
+        it('should not append "(disabled)" label when includeDisabledLabel is false', () => {
+            const { result } = renderHook(() => useUserTeams({ user: mockUser, includeDisabledLabel: false }));
+
+            expect(result.current.userTeamList).toEqual([
+                { value: -1, label: 'All teams' },
+                { value: 1, team_slug: 'team-alpha', label: 'Team Alpha', current: true },
+                { value: 2, team_slug: 'team-beta', label: 'Team Beta', current: true },
+                { value: 3, team_slug: 'team-gamma', label: 'Team Gamma', current: false },
+            ]);
         });
 
         it('should update selected team via setSelectedTeam', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser));
+            const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
             act(() => {
-                result.current.setSelectedTeam({
-                    items: [
-                        {
-                            columnField: 'team_display_name',
-                            operatorValue: 'isAnyOf',
-                            operator: 'isAnyOf',
-                            value: ['2'],
-                        },
-                    ],
-                });
+                result.current.setSelectedTeam(2);
             });
 
+            expect(result.current.selectedTeam).toBe(2);
             expect(result.current.selectedTeamSlug).toBe('team-beta');
         });
 
         it('should return empty slug when selection is cleared', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser));
+            const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
             act(() => {
-                result.current.setSelectedTeam({ items: [] });
+                result.current.setSelectedTeam('');
             });
 
             expect(result.current.selectedTeamSlug).toBe('');
         });
 
-        it('should provide createDefaultSelectedTeam function', () => {
-            const { result } = renderHook(() => useUserTeams(mockUser));
+        describe('getTeamSlug', () => {
+            it('should return the team slug for a valid team id', () => {
+                const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
-            const creator = result.current.createDefaultSelectedTeam('some_field', 99);
-            expect(typeof creator).toBe('function');
+                expect(result.current.getTeamSlug(2)).toBe('team-beta');
+            });
 
-            const selected = creator();
-            expect(selected).toEqual({
-                items: [
-                    {
-                        columnField: 'some_field',
-                        operatorValue: 'isAnyOf',
-                        operator: 'isAnyOf',
-                        value: ['99'],
-                    },
-                ],
+            it('should return empty string for an invalid team id', () => {
+                const { result } = renderHook(() => useUserTeams({ user: mockUser }));
+
+                expect(result.current.getTeamSlug(999)).toBe('');
             });
         });
 
-        describe('getSelectedTeamSlug', () => {
-            it('should return the team slug for a valid selected team', () => {
-                const { result } = renderHook(() => useUserTeams(mockUser));
+        describe('getTeamIdBySlug', () => {
+            it('should return the team id for a valid slug', () => {
+                const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
-                const slug = result.current.getSelectedTeamSlug({
-                    items: [{ value: ['2'] }],
-                });
-                expect(slug).toBe('team-beta');
+                expect(result.current.getTeamIdBySlug('team-gamma')).toBe(3);
             });
 
-            it('should return empty string when items array is empty', () => {
-                const { result } = renderHook(() => useUserTeams(mockUser));
+            it('should return empty string for an invalid slug', () => {
+                const { result } = renderHook(() => useUserTeams({ user: mockUser }));
 
-                const slug = result.current.getSelectedTeamSlug({ items: [] });
-                expect(slug).toBe('');
-            });
-
-            it('should return undefined when team id does not match any team', () => {
-                const { result } = renderHook(() => useUserTeams(mockUser));
-
-                const slug = result.current.getSelectedTeamSlug({
-                    items: [{ value: ['999'] }],
-                });
-                expect(slug).toBeUndefined();
+                expect(result.current.getTeamIdBySlug('nonexistent')).toBe('');
             });
         });
     });

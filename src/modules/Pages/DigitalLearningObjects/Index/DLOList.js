@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 
 import Box from '@mui/material/Box';
-import { Grid, Pagination } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -16,9 +17,9 @@ import { styled } from '@mui/material/styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Divider } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -45,16 +46,12 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import LoginPrompt from 'modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt';
 import HeroCard from 'modules/Pages/DigitalLearningObjects/SharedComponents/HeroCard';
-import {
-    convertSnakeCaseToKebabCase,
-    getDlorViewPageUrl,
-    slugifyName,
-} from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
-import { isEscapeKeyPressed, isReturnKeyPressed } from 'helpers/general';
+import { convertSnakeCaseToKebabCase, getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
+import { isEscapeKeyPressed, isReturnKeyPressed, slugifyName } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 import { isDlorAdminUser, isLibraryStaff, isUQOnlyUser, isStaff, isADlorTeamMember } from 'helpers/access';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
-import { LocalFireDepartment } from '@mui/icons-material';
+import LocalFireDepartment from '@mui/icons-material/LocalFireDepartment';
 
 import { exportDLORDataToCSV } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 
@@ -601,10 +598,7 @@ export const DLOList = ({
         if (params.has('filters') && params.get('filters').length > 0) {
             filtersFound = true;
             // build the facet ids into facedtypeslug-facetid
-            const facetids = params
-                .get('filters')
-                .split(',')
-                .map(Number);
+            const facetids = params.get('filters').split(',').map(Number);
             const facettypelist = facetids
                 .map(facetId => {
                     for (const facetType of dlorFilterList) {
@@ -815,8 +809,9 @@ export const DLOList = ({
         let result = '';
         /* istanbul ignore else */
         if (!!filterListTrimmed) {
-            result = filterListTrimmed?.filter(f => f?.facet_type_slug === facetTypeSlug)?.pop()
-                ?.facet_type_help_public;
+            result = filterListTrimmed
+                ?.filter(f => f?.facet_type_slug === facetTypeSlug)
+                ?.pop()?.facet_type_help_public;
         }
         return result;
     };
@@ -839,19 +834,19 @@ export const DLOList = ({
         return (
             <>
                 <Grid container data-testid="sidebar-panel-heading">
-                    <Grid item xs={10} md={8}>
+                    <Grid size={{ xs: 12, xs: 10, md: 8 }}>
                         <Typography component={'h2'} variant={'h6'}>
                             Filters
                         </Typography>
                     </Grid>
-                    <Grid item xs={2} md={1}>
+                    <Grid size={{ xs: 2, md: 1 }}>
                         <StyledSidebarFilterIcon id="filterIconHideId" data-testid="sidebar-filter-icon-hide-id">
                             <IconButton aria-label="hide the filters" onClick={() => hideFilters()}>
                                 <CloseIcon />
                             </IconButton>
                         </StyledSidebarFilterIcon>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid size={{ xs: 12, md: 3 }}>
                         <UQActionButton
                             data-testid="sidebar-filter-reset-button"
                             onClick={() => handleResetClick()}
@@ -866,7 +861,6 @@ export const DLOList = ({
                     {filterListTrimmed?.map(facetType => {
                         return (
                             <Grid
-                                item
                                 key={facetType?.facet_type_slug}
                                 sx={{
                                     width: '100%',
@@ -879,7 +873,7 @@ export const DLOList = ({
                                 }}
                             >
                                 <StyledSidebarFilterTypeHeadingGrid container>
-                                    <Grid item md={10} sx={{ position: 'relative' }}>
+                                    <Grid size={{ md: 10 }} sx={{ position: 'relative' }}>
                                         <Typography
                                             component={'h3'}
                                             variant="subtitle1"
@@ -921,7 +915,7 @@ export const DLOList = ({
                                                 parse(facetType.facet_type_help_public)}
                                         </StyledSidebarFilterFacetHelpPopupBox>
                                     </Grid>
-                                    <Grid item md={2}>
+                                    <Grid size={{ md: 2 }}>
                                         <IconButton
                                             aria-label={
                                                 openPanelListContains(facetType?.facet_type_id)
@@ -1110,7 +1104,6 @@ export const DLOList = ({
                     theSearch = theSearch.filter(item => isUserSubmitted(item));
                     break;
                 case 'mine':
-                    console.log('theSearch before mine filter:', theSearch);
                     theSearch = theSearch.filter(item => isMine(item, account?.mail, account?.id));
                     break;
                 case 'popular':
@@ -1252,8 +1245,7 @@ export const DLOList = ({
 
         return (
             <Grid
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 sx={{
                     paddingLeft: '16px',
                     paddingBottom: '16px',
@@ -1269,8 +1261,9 @@ export const DLOList = ({
                     tabIndex={object.isAccessible ? '0' : '-1'}
                     isAccessible={object.isAccessible}
                     aria-disabled={!object.isAccessible}
-                    aria-label={`${object?.object_title} ${!!object?.object_series_name &&
-                        '(Series: ' + object.object_series_name + ')'} ${object?.object_summary}`}
+                    aria-label={`${object?.object_title} ${
+                        !!object?.object_series_name && '(Series: ' + object.object_series_name + ')'
+                    } ${object?.object_summary}`}
                     sx={{
                         cursor: object.isAccessible ? 'pointer' : 'not-allowed',
                     }}
@@ -1442,7 +1435,7 @@ export const DLOList = ({
                 />
                 <StandardPage>
                     <Grid container spacing={2}>
-                        <Grid item md={12}>
+                        <Grid size={{ md: 12 }}>
                             <Box sx={{ minHeight: '600px' }}>
                                 <InlineLoader message="Loading" />
                             </Box>
@@ -1509,7 +1502,7 @@ export const DLOList = ({
                     justifyContent="space-between"
                     sx={{ marginBlock: '2em 1em' }}
                 >
-                    <Grid item xs={11} md="auto">
+                    <Grid size={{ xs: 11, md: 'auto' }}>
                         <Typography component={'p'} sx={{ fontSize: '1.2em', fontWeight: 400 }}>
                             Find out{' '}
                             <a href="https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects">
@@ -1525,7 +1518,7 @@ export const DLOList = ({
                         </Typography>
                     </Grid>
                     {!!(isDlorTeamMember || isDlorAuthor) && (
-                        <Grid item xs={1} md="auto" sx={{ textAlign: 'right' }}>
+                        <Grid size={{ xs: 1, md: 'auto' }} sx={{ textAlign: 'right' }}>
                             <IconButton
                                 color="primary"
                                 aria-controls={menuOpen ? 'team-admin-dlor-menu' : undefined}
@@ -1591,7 +1584,7 @@ export const DLOList = ({
                         </Grid>
                     )}
                     {!!account?.id && !!!isDlorAdminUser(account) && !isDlorTeamMember && !isDlorAuthor && (
-                        <Grid item xs={12} md="auto" sx={{ textAlign: 'right' }}>
+                        <Grid size={{ xs: 12, md: 'auto' }} sx={{ textAlign: 'right' }}>
                             <UqActionLink
                                 data-testid="dlor-homepage-request-new-item"
                                 onClick={handleRequestNewItem}
@@ -1603,12 +1596,12 @@ export const DLOList = ({
                             </UqActionLink>
                         </Grid>
                     )}
-                    <Grid item xs={12} sx={{ marginTop: '20px' }}>
+                    <Grid size={{ xs: 12 }} sx={{ marginTop: '20px' }}>
                         <LoginPrompt account={account} />
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <StyledFilterSidebarGrid item xs={12} md={3} id="filterSidebar" data-testid="filter-sidebar">
+                    <StyledFilterSidebarGrid size={{ xs: 12, md: 3 }} id="filterSidebar" data-testid="filter-sidebar">
                         {(() => {
                             if (!!dlorFilterListError || !filterListTrimmed || filterListTrimmed.length === 0) {
                                 return (
@@ -1632,7 +1625,7 @@ export const DLOList = ({
                             </UQActionButton>
                         )} */}
                     </StyledFilterSidebarGrid>
-                    <Grid item xs={12} md={9}>
+                    <Grid size={{ md: 9, xs: 12 }}>
                         <TextField
                             sx={{
                                 width: 'calc(100% - 24px)',
@@ -1672,7 +1665,7 @@ export const DLOList = ({
                             inputRef={keyWordSearchRef}
                         />
                         {!!viewType && (
-                            <Grid item xs={12} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
+                            <Grid size={{ xs: 12 }} sx={{ marginLeft: '12px', marginBottom: '12px' }}>
                                 Restricting the list view to:
                                 <Chip
                                     data-testid="homepage-view-type-chip"
@@ -1750,7 +1743,7 @@ export const DLOList = ({
                             } else if (!dlorList || dlorList.length === 0) {
                                 return (
                                     <Grid container spacing={3}>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <Typography variant="body1" data-testid="dlor-homepage-noresult">
                                                 We did not find any entries in the system - please try again later.
                                             </Typography>
@@ -1772,8 +1765,8 @@ export const DLOList = ({
                                 if (!dlorData || dlorData.length === 0) {
                                     return (
                                         <Grid container spacing={3}>
-                                            <Grid item xs={1} />
-                                            <Grid item xs={11} data-testid="dlor-homepage-empty">
+                                            <Grid size={{ xs: 1 }} />
+                                            <Grid size={{ xs: 11 }} data-testid="dlor-homepage-empty">
                                                 <p>Can't find what you are looking for?</p>
                                                 <ul>
                                                     <li>Check your search terms and filters are correct.</li>

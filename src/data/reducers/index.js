@@ -1,4 +1,4 @@
-export { default as accountReducer } from './account';
+export { default as accountReducer } from './accountReducer';
 export { default as alertsReducer } from './alertsReducer';
 export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeReducer';
@@ -25,6 +25,10 @@ export { default as testTagBulkAssetUpdateReducer } from './testTagBulkAssetUpda
 export { default as testTagInspectionDetailsUpdateReducer } from './testTagInspectionDetailsUpdateReducer';
 export { default as testTagUserListReducer } from './testTagUserListReducer';
 export { default as testTagTeamListReducer } from './testTagTeamListReducer';
+export {
+    default as testTagPrinterTemplateReducer,
+    testTagPrinterTemplatePasteDataReducer,
+} from './testTagPrinterTemplateReducer';
 export { default as dlorListReducer } from './dlorListReducer';
 export { default as dlorFilterListReducer } from './dlorFilterListReducer';
 export { default as dlorGetSingleReducer } from './dlorGetSingleReducer';
@@ -45,5 +49,15 @@ export { default as dlorFavouritesReducer } from './dlorFavouritesReducer';
 export { default as dlorAdminNotesReducer } from './dlorAdminNotesReducer';
 export { default as dlorKeywordsReducer } from './dlorKeywordsReducer';
 export { default as dlorStatisticsReducer } from './dlorStatisticsReducer';
+export { default as bookableSpacesRoomListReducer } from './bookableSpacesRoomListReducer';
+export { default as bookableSpacesFavouritesReducer } from './bookableSpacesFavouritesReducer';
+export { default as weeklyHoursReducer } from './weeklyHoursReducer';
+export { default as bookablespacesFacilityTypeReducer } from './bookablespacesFacilityTypeReducer';
+export { default as bookableSpaceLocationReducer } from './bookableSpaceLocationReducer';
 export { default as dlorScheduleReducer } from './dlorScheduleReducer';
 export { default as dlorDashboardReducer } from './dlorDashboardReducer';
+export { default as membershipFormDataReducer } from './membershipFormDataReducer';
+export { default as membershipRenewingReducer } from './membershipRenewingReducer';
+export { default as membershipReducer } from './membershipReducer';
+export { default as membershipListReducer } from './membershipListReducer';
+export { default as membershipTypesReducer } from './membershipTypesReducer';

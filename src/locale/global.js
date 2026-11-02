@@ -42,6 +42,10 @@ export default {
         },
         loading: 'Loading',
         errorMessages: {
+            400: {
+                message: 'There was a problem with the input.',
+                status: 400,
+            },
             401: {
                 message:
                     'You are not authorised to access the requested information. Please contact askus@library.uq.edu.au or try again later.',

@@ -5,7 +5,7 @@ import SimpleBackdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 
 /**
@@ -38,7 +38,7 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
     },
 }));
 
-const StyledActionButtonPlacer = styled('div')(({ theme }) => ({
+const StyledActionButtonPlacer = styled('div')(() => ({
     float: 'right',
     marginTop: 16,
     marginRight: 16,
@@ -94,7 +94,7 @@ export const AlertsUtilityArea = ({ actions, helpButtonLabel = 'Help', helpConte
             >
                 <Fade in={lightboxOpen}>
                     <div className={'paper'}>
-                        <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
+                        <h2>{helpContent?.title || 'TBA'}</h2>
                         <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                         <div>
                             <StyledPrimaryButton

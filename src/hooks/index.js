@@ -22,7 +22,6 @@ export const useWidth = () => {
     const keys = [...theme.breakpoints.keys].reverse();
     return (
         keys.reduce((output, key) => {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
             const matches = useMediaQuery(theme.breakpoints.up(key));
             return !output && matches ? key : output;
         }, null) || 'xs'
@@ -31,12 +30,16 @@ export const useWidth = () => {
 
 export function useTitle(title) {
     useEffect(() => {
+        if (!title) {
+            return undefined;
+        }
+
         const prevTitle = document.title;
         document.title = title;
         return () => {
             document.title = prevTitle;
         };
-    });
+    }, [title]);
 }
 
 // from https://stackoverflow.com/a/34425083

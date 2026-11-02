@@ -45,7 +45,12 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDialogueBusy, setConfirmDialogueBusy] = useState(false);
 
-    const { formValues, signature: formValueSignature, resetFormValues, handleChange } = useForm({
+    const {
+        formValues,
+        signature: formValueSignature,
+        resetFormValues,
+        handleChange,
+    } = useForm({
         defaultValues: { ...defaultFormValues },
     });
 
@@ -103,7 +108,6 @@ const BulkAssetUpdate = ({ actions, defaultFormValues }) => {
         setConfirmDialogueBusy(true);
         const clonedData = structuredClone(formValues);
         const request = transformRequest(clonedData);
-        console.log('Bulk Asset Update Request:', request);
         actions
             .bulkAssetUpdate(request)
             .then(() => {

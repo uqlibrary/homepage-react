@@ -39,10 +39,10 @@ export function TablePaginationActions(props) {
     return (
         <StyledWrapper>
             <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page" size="large">
-                {theme.direction === 'rtl' ? /* istanbul ignore next */ <LastPageIcon /> : <FirstPageIcon />}
+                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
             </IconButton>
             <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page" size="large">
-                {theme.direction === 'rtl' ? /* istanbul ignore next */ <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             </IconButton>
             <IconButton
                 onClick={handleNextButtonClick}
@@ -50,7 +50,7 @@ export function TablePaginationActions(props) {
                 aria-label="next page"
                 size="large"
             >
-                {theme.direction === 'rtl' ? /* istanbul ignore next */ <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
             </IconButton>
             <IconButton
                 onClick={handleLastPageButtonClick}
@@ -58,7 +58,7 @@ export function TablePaginationActions(props) {
                 aria-label="last page"
                 size="large"
             >
-                {theme.direction === 'rtl' ? /* istanbul ignore next */ <FirstPageIcon /> : <LastPageIcon />}
+                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
             </IconButton>
         </StyledWrapper>
     );

@@ -172,61 +172,59 @@ test.describe('Test and Tag Page Access', () => {
     const visitInspectionDueReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/inspectionsdue?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitInspectionDevicesRecalibration = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/recalibrationsdue?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitAssetsByFilterReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/assetsbyfilter?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitTestsByLicencedUserReport = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/report/inspectionsbylicenceduser?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitManageAssetTypes = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/assettypes?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitBulkAssetUpdate = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/bulkassetupdate?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitManageInspectionDetails = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/inspectiondetails?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
-        await expect(
-            standardPage.getByText(expectedAllowed ? 'for Work Station Support (Library)' : 'Page unavailable'),
-        ).toBeVisible();
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
     const visitManageLocations = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/locations?user=${user}`);
+        const standardPage = page.getByTestId('StandardPage');
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    };
+
+    const visitManageTeams = async (page: Page, user: string, expectedAllowed = true) => {
+        await page.goto(`/admin/testntag/manage/teams?user=${user}`);
+        const standardPage = page.getByTestId('StandardPage');
+        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    };
+
+    const visitManagePrinterTemplates = async (page: Page, user: string, expectedAllowed = true) => {
+        await page.goto(`/admin/testntag/manage/printertemplates?user=${user}`);
         const standardPage = page.getByTestId('StandardPage');
         await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
@@ -249,6 +247,8 @@ test.describe('Test and Tag Page Access', () => {
         await visitBulkAssetUpdate(page, 'uqtesttag', true);
         await visitManageInspectionDetails(page, 'uqtesttag', true);
         await visitManageLocations(page, 'uqtesttag', true);
+        await visitManageTeams(page, 'uqtesttag', true);
+        await visitManagePrinterTemplates(page, 'uqtesttag', true);
         await visitManageUsers(page, 'uqtesttag', true);
     });
 

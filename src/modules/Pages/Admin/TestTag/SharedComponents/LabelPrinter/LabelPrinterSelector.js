@@ -10,18 +10,7 @@ import Typography from '@mui/material/Typography';
 
 const rootId = 'label_printer_selector';
 
-const LabelPrinterSelector = ({
-    id,
-    list,
-    value,
-    onChange,
-    error,
-    disabled,
-    disableUnknownPrinters,
-    fullWidth = true,
-    classNames,
-    locale,
-}) => {
+const LabelPrinterSelector = ({ id, list, value, onChange, error, disabled, fullWidth = true, classNames, locale }) => {
     const componentId = `${rootId}-${id}`;
     const customPopper = props => (
         <Popper {...props} id={`${componentId}-options`} data-testid={`${componentId}-options`} />
@@ -40,12 +29,7 @@ const LabelPrinterSelector = ({
                 options={list ?? /* istanbul ignore next */ []}
                 value={value ? list?.find(option => option.name === value) : null}
                 onChange={onChange}
-                getOptionLabel={option =>
-                    option.noconfig ? `${option.name} (${locale?.unknownPrinter})` : option.name
-                }
-                {...(disableUnknownPrinters && {
-                    getOptionDisabled: option => option.noconfig === true,
-                })}
+                getOptionLabel={option => option.name}
                 fullWidth={fullWidth}
                 isOptionEqualToValue={(option, value) => option.name === value}
                 autoHighlight
@@ -74,7 +58,7 @@ const LabelPrinterSelector = ({
                                     id: `${componentId}-input`,
                                     'data-testid': `${componentId}-input`,
                                 }}
-                                label="Printer"
+                                label={locale.printerLabel}
                                 error={error}
                             />
                         </Box>
@@ -93,7 +77,6 @@ LabelPrinterSelector.propTypes = {
     onChange: PropTypes.func,
     disabled: PropTypes.bool,
     error: PropTypes.bool,
-    disableUnknownPrinters: PropTypes.bool,
     fullWidth: PropTypes.bool,
     value: PropTypes.string,
     classNames: PropTypes.shape({ formControl: PropTypes.string, autocomplete: PropTypes.string }),

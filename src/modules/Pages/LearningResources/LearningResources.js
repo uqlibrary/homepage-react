@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import locale from './shared/learningResources.locale';
 import global from 'locale/global';
@@ -27,7 +27,7 @@ import { breadcrumbs } from 'config/routes';
 // now lecturers are putting much longer strings into some courses, eg where they have combined courses
 // EDUC1234 / EDUC1235 / EDUC6789 St Lucia
 // assume they are following their instructions and putting the campus on the end
-function getNormalisedCampus(params) {
+export const getNormalisedCampus = params => {
     let found = false;
     Object.values(global.campuses).map(validCampusname => {
         if (!!params.campus && params.campus.includes(validCampusname)) {
@@ -35,7 +35,7 @@ function getNormalisedCampus(params) {
         }
     });
     return found;
-}
+};
 
 export const isValidInput = params => {
     /**
@@ -51,6 +51,7 @@ export const isValidInput = params => {
     let valid = true;
 
     const allowedKeys = ['coursecode', 'campus', 'semester'];
+    /* istanbul ignore else */
     if (window.location.hostname === 'localhost') {
         allowedKeys.push('user');
     }
@@ -92,7 +93,7 @@ export const getQueryParams = qs => {
     const params = {};
 
     let tokens;
-    // eslint-disable-next-line no-cond-assign
+
     while ((tokens = re.exec(qs1))) {
         params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
     }
@@ -346,7 +347,7 @@ export const LearningResources = ({
             <section aria-live="assertive">
                 <StandardCard noPadding noHeader>
                     <Grid container>
-                        <Grid item xs={12} data-testid="learning-resources">
+                        <Grid size={{ xs: 12 }} data-testid="learning-resources">
                             <StyledAppBar
                                 data-analyticsid="learning-resource-top-menu"
                                 data-testid="learning-resource-top-menu"

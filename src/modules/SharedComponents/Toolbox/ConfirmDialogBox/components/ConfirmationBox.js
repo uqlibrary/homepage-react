@@ -6,7 +6,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledTertiaryButton } from 'helpers/general';
 
 export const ConfirmationBox = ({
@@ -68,13 +67,18 @@ export const ConfirmationBox = ({
 
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
-            <DialogActions>
-                <Grid container spacing={1} justifyContent="space-between">
-                    <Hidden smDown>
-                        <Grid item xs />
-                    </Hidden>
-                    {!hideActionButton && (
-                        <Grid item xs={12} sm={'auto'}>
+            <DialogActions
+                sx={{ width: '100%', boxSizing: 'border-box', px: 3 }}
+                data-testid={`dialogbox-${confirmationBoxId}-actions`}
+            >
+                <Grid
+                    container
+                    justifyContent="space-between"
+                    sx={{ width: '100%', boxSizing: 'border-box', rowGap: 1 }}
+                    data-testid={`dialogbox-${confirmationBoxId}-action-buttons`}
+                >
+                    {!hideActionButton && !!locale.confirmButtonLabel && (
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledPrimaryButton
                                 children={locale.confirmButtonLabel}
                                 autoFocus={!!autoFocusPrimaryButton}
@@ -86,9 +90,9 @@ export const ConfirmationBox = ({
                             />
                         </Grid>
                     )}
-                    {showAlternateActionButton && (
+                    {showAlternateActionButton && !!locale.alternateActionButtonLabel && (
                         // an optional middle button that will display in a warning colour
-                        <Grid item xs={12} sm={'auto'}>
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledTertiaryButton
                                 variant={'contained'}
                                 children={locale.alternateActionButtonLabel}
@@ -100,8 +104,8 @@ export const ConfirmationBox = ({
                             />
                         </Grid>
                     )}
-                    {!hideCancelButton && (
-                        <Grid item xs={12} sm={'auto'}>
+                    {!hideCancelButton && !!locale.cancelButtonLabel && (
+                        <Grid size={{ xs: 12, sm: 'auto' }}>
                             <StyledSecondaryButton
                                 variant={'contained'}
                                 children={locale.cancelButtonLabel}

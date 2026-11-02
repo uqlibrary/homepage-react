@@ -15,12 +15,16 @@ export const transformRequest = formValues => {
         formValues.hasAssetStatus = false;
         formValues.hasAssetType = false;
         formValues.monthRange = null;
+        formValues.hasAssetTeam = false;
+    } else if (!!formValues.hasAssetTeam) {
+        formValues.hasDiscardStatus = false;
     } else {
         formValues.hasLocation = false;
         formValues.hasAssetStatus = false;
         formValues.hasDiscardStatus = false;
         formValues.hasAssetType = false;
         formValues.monthRange = null;
+        formValues.hasAssetTeam = false;
     }
 
     return {
@@ -33,6 +37,7 @@ export const transformRequest = formValues => {
         ...(!!formValues.monthRange && formValues.monthRange !== '-1'
             ? { month_range: parseInt(formValues.monthRange, 10) }
             : {}),
+        ...(!!formValues.hasAssetTeam ? { team_slug: formValues.asset_team.team_slug } : {}),
     };
 };
 

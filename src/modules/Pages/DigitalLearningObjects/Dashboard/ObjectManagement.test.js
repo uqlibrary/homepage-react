@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, WithRouter, screen } from '../../../../../utils/test-utils';
 import ObjectManagement from './ObjectManagement';
 
 jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
@@ -16,7 +16,11 @@ describe('ObjectManagement', () => {
     };
 
     it('renders all metrics with correct values', () => {
-        render(<ObjectManagement data={baseData} />);
+        render(
+            <WithRouter>
+                <ObjectManagement data={baseData} />
+            </WithRouter>,
+        );
         expect(screen.getByText('Updated in last 28 days')).toBeInTheDocument();
         expect(screen.getByText('7')).toBeInTheDocument();
         expect(screen.getByText('Due for review in next 28 days')).toBeInTheDocument();
@@ -26,17 +30,29 @@ describe('ObjectManagement', () => {
     });
 
     it('renders 0 for missing or null values', () => {
-        render(<ObjectManagement data={{ object_management_stats: {} }} />);
+        render(
+            <WithRouter>
+                <ObjectManagement data={{ object_management_stats: {} }} />
+            </WithRouter>,
+        );
         expect(screen.getAllByText('0').length).toBe(3);
     });
 
     it('handles missing data prop', () => {
-        render(<ObjectManagement />);
+        render(
+            <WithRouter>
+                <ObjectManagement />
+            </WithRouter>,
+        );
         expect(screen.getAllByText('0').length).toBe(3);
     });
 
     it('links have correct hrefs', () => {
-        render(<ObjectManagement data={baseData} />);
+        render(
+            <WithRouter>
+                <ObjectManagement data={baseData} />
+            </WithRouter>,
+        );
         const links = screen.getAllByRole('link');
         expect(links[0]).toHaveAttribute('href', expect.stringContaining('type=lastupdated28days'));
         expect(links[1]).toHaveAttribute('href', expect.stringContaining('type=duereview28days'));

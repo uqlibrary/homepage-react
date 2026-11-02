@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const rootId = 'months_selector';
@@ -96,9 +96,7 @@ const MonthsSelector = ({
                     {nextDateTextFormatter(
                         currentValue === '-1'
                             ? ''
-                            : moment(fromDate, fromDateFormat)
-                                  .add(currentValue, 'months')
-                                  .format(dateDisplayFormat),
+                            : moment(fromDate, fromDateFormat).add(currentValue, 'months').format(dateDisplayFormat),
                     )}
                 </Typography>
             )}

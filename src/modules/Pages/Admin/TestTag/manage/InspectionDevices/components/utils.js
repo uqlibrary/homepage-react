@@ -14,9 +14,7 @@ export const actionReducer = (_, action) => {
                 row: {
                     device_id: 'auto',
                     device_calibrated_date_last: moment().format(dateFormat),
-                    device_calibration_due_date: moment()
-                        .add(1, 'd')
-                        .format(dateFormat),
+                    device_calibration_due_date: moment().add(1, 'd').format(dateFormat),
                 },
                 title,
                 props: { ...props },

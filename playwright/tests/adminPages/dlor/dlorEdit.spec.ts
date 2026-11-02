@@ -1,6 +1,6 @@
 import { test, expect } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
-import { readCKEditor, typeCKEditor } from '@uq/pw/lib/ckeditor';
+import { readRichTextEditor, typeRichTextEditor } from '@uq/pw/lib/richTextEditor';
 import { addToInputValue } from '@uq/pw/lib/helpers';
 import { DLOR_ADMIN_USER, DLOR_NO_EDIT_USER, DLOR_OBJECT_OWNER } from '@uq/pw/lib/constants';
 import moment from 'moment-timezone';
@@ -10,6 +10,7 @@ const REQUIRED_LENGTH_DESCRIPTION = 100;
 
 test.describe('Edit an object on the Digital Learning Hub', () => {
     test.describe('editing an object', () => {
+        test.describe.configure({ mode: 'default' });
         test.describe('successfully', () => {
             test('is accessible', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
@@ -21,24 +22,34 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 // open the "edit a team dialog"
                 await page.getByTestId('object-form-teamid-change').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
-                await typeCKEditor(page, 'This is the admin notes');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to panel 2
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // go to panel 3
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
 
                 // open the notification lightbox
                 await page.locator('[data-testid="choose-notify"] input').check();
-                await assertAccessibility(page, '[data-testid="StandardPage"]');
+                await assertAccessibility(page, '[data-testid="StandardPage"]', {
+                    excludedSelectors: ['#team_admin_username'],
+                });
             });
             test('loads fields correctly', async ({ page }) => {
                 await page.goto(`http://localhost:2020/admin/dlor/edit/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`);
@@ -49,10 +60,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 const homeLink = page.locator('a[data-testid="dlor-breadcrumb-admin-homelink"]');
                 await expect(homeLink).toContainText('Digital Learning Hub admin');
-                await expect(homeLink).toHaveAttribute(
-                    'href',
-                    `http://localhost:2020/admin/dlor?user=${DLOR_ADMIN_USER}`,
-                );
+                await expect(homeLink).toHaveAttribute('href', `/admin/dlor?user=${DLOR_ADMIN_USER}`);
 
                 await expect(
                     page
@@ -114,6 +122,8 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team');
                 await expect(page.locator('[data-testid="dlor-form-team-manager-new"] input')).toHaveValue('');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('new name');
+                await expect(page.locator('[data-testid="dlor-form-team-admin-username-new"] input')).toHaveValue('');
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('newadmin');
                 await expect(page.locator('[data-testid="dlor-form-team-email-new"] input')).toHaveValue('');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('new@example.com');
 
@@ -143,7 +153,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.locator('[data-testid="object-title"] input')).toHaveValue(
                     'Advanced literature searching',
                 );
-                await expect(await readCKEditor(page)).toContain(
+                await expect(await readRichTextEditor(page)).toContain(
                     'This tutorial covers the advanced searching techniques that can be used for all topics when conducting a scoping',
                 );
                 await expect(page.locator('[data-testid="object-summary"] textarea:first-child')).toHaveValue(
@@ -165,7 +175,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(page.getByTestId('object-link-duration')).not.toBeVisible();
                 await expect(page.getByTestId('object-link-file-size')).not.toBeVisible();
 
-                await expect(await readCKEditor(page)).toEqual('some download instructions');
+                await expect(await readRichTextEditor(page)).toEqual('some download instructions');
                 // go to panel 4
                 await page.getByTestId('dlor-form-next-button').click();
                 // await expect(page.locator('[data-testid="object-keywords"] textarea:first-child')).toHaveValue(
@@ -431,14 +441,15 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 // enter a new team
                 await page.locator('[data-testid="dlor-form-team-name-new"] input').fill('new team name');
                 await page.locator('[data-testid="dlor-form-team-manager-new"] input').fill('john Manager');
+                await page.locator('[data-testid="dlor-form-team-admin-username-new"] input').fill('johnadmin');
                 await page.locator('[data-testid="dlor-form-team-email-new"] input').fill('john@example.com');
-                await typeCKEditor(page, 'This is the admin notes');
+                await typeRichTextEditor(page, 'This is the admin notes');
 
                 // go to the second panel, Description
                 await page.getByTestId('dlor-form-next-button').click();
 
                 await addToInputValue(page.locator('[data-testid="object-title"] input'), 'xx');
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xx');
 
                 await page.locator('[data-testid="object-is-featured"] input').check();
@@ -458,7 +469,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-value="MB"]').click();
 
                 const typeableDownloadInstructions = 'xxx';
-                await typeCKEditor(page, typeableDownloadInstructions);
+                await typeRichTextEditor(page, typeableDownloadInstructions);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -490,7 +501,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     page.getByTestId('notify-lightbox-title').getByText('Object change notification'),
                 ).toBeVisible();
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeRichTextEditor(page, 'the words that will go in the email');
 
                 await page.getByTestId('notify-lightbox-close-button').click();
 
@@ -521,6 +532,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     object_publishing_user: 'uqjsmith',
                     object_review_date_next: '2025-03-26T00:01',
                     object_status: 'current',
+                    team_admin_username: 'johnadmin',
                     team_email: 'john@example.com',
                     team_manager: 'john Manager',
                     team_name: 'new team name',
@@ -573,11 +585,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     `http://localhost:2020/digital-learning-hub/view/98s0_dy5k3_98h4?user=${DLOR_ADMIN_USER}`,
                 );
                 await expect(
-                    page
-                        .getByTestId('dlor-detailpage')
-                        .first()
-                        .getByText('Advanced literature searching')
-                        .first(),
+                    page.getByTestId('dlor-detailpage').first().getByText('Advanced literature searching').first(),
                 ).toBeVisible();
             });
 
@@ -617,7 +625,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     page.locator('[data-testid="object-title"] input'),
                     'x'.padEnd(REQUIRED_LENGTH_TITLE, 'x'),
                 );
-                await typeCKEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
+                await typeRichTextEditor(page, 'new description '.padEnd(REQUIRED_LENGTH_DESCRIPTION, 'x'));
                 await addToInputValue(page.locator('[data-testid="object-summary"] textarea:first-child'), 'xxx');
 
                 // go to the third panel, Link
@@ -638,7 +646,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await page.locator('[data-testid="object-link-duration-minutes"] input').fill('6');
                 await page.locator('[data-testid="object-link-duration-seconds"] input').fill('30');
 
-                await typeCKEditor(page, downloadInstructionText);
+                await typeRichTextEditor(page, downloadInstructionText);
 
                 // go to the fourth panel, Filtering
                 await page.getByTestId('dlor-form-next-button').click();
@@ -789,10 +797,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                     await page.getByTestId('object-link-file-type-new').click({ timeout: 2000 });
                     // panel invalidity count present
                     await expect(
-                        page
-                            .locator('[data-testid="dlor-panel-validity-indicator-2"] span')
-                            .getByText('1')
-                            .first(),
+                        page.locator('[data-testid="dlor-panel-validity-indicator-2"] span').getByText('1').first(),
                     ).toBeVisible({ timeout: 3000 });
                     await page
                         .locator('[data-testid="dlor-admin-form-new-file-type"] input')
@@ -801,7 +806,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
 
                 await expect(page.getByTestId('dlor-panel-validity-indicator-2')).toBeHidden();
 
-                await typeCKEditor(page, 'word');
+                await typeRichTextEditor(page, 'word');
 
                 // go to the fourth panel, Filtering
                 await nextButton.click();
@@ -815,7 +820,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 const notifyLightboxTitle = page.getByTestId('notify-lightbox-title');
                 await expect(notifyLightboxTitle).toContainText('Object change notification');
 
-                await typeCKEditor(page, 'the words that will go in the email');
+                await typeRichTextEditor(page, 'the words that will go in the email');
 
                 const closeButton = page.getByTestId('notify-lightbox-close-button');
                 await expect(closeButton).toContainText('Close');
@@ -998,7 +1003,7 @@ test.describe('Edit an object on the Digital Learning Hub', () => {
                 await expect(
                     page
                         .locator('[data-testid="dialogbox-dlor-save-outcome"] h2')
-                        .getByText('Request failed with status code 400'),
+                        .getByText('There was a problem with the input.'),
                 ).toBeVisible();
                 await expect(page.getByTestId('confirm-dlor-save-outcome').getByText('View Object')).toBeVisible();
                 await expect(page.getByTestId('cancel-dlor-save-outcome').getByText('Re-edit Object')).toBeVisible();

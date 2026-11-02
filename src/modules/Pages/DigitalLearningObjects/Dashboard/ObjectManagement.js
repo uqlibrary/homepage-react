@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Grid, Divider } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { Link } from 'react-router';
 
 export function buildObjectManagementUrl(param) {
     const baseUrl = '/digital-learning-hub';
@@ -58,7 +62,7 @@ export default function ObjectManagement({ data }) {
             <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
                 {metrics.map((m, idx) => (
                     <React.Fragment key={m.label}>
-                        <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
+                        <Grid size="grow" sx={{ p: 0, m: 0 }}>
                             <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                                 <Typography
                                     variant="h6"
@@ -71,15 +75,15 @@ export default function ObjectManagement({ data }) {
                                         p: 0,
                                     }}
                                 >
-                                    <a
-                                        href={buildObjectManagementUrl(m.param)}
+                                    <Link
+                                        to={buildObjectManagementUrl(m.param)}
                                         style={{ textDecoration: 'none', color: m.color }}
                                         aria-label={`View ${m.label}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         {m.value}
-                                    </a>
+                                    </Link>
                                 </Typography>
                                 <Typography
                                     variant="caption"

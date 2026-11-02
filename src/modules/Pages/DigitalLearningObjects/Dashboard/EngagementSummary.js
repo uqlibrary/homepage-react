@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Grid, Divider } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { getUserPostfix } from '../../Admin/DigitalLearningObjects/dlorAdminHelpers';
+import { Link } from 'react-router';
 
 export default function EngagementSummary({ data }) {
     const metrics = [
@@ -25,7 +29,7 @@ export default function EngagementSummary({ data }) {
         },
         {
             label: 'Popular objects',
-            value: Array.isArray(data.popular_objects) ? data.popular_objects.length : data.popular_objects ?? 0,
+            value: Array.isArray(data.popular_objects) ? data.popular_objects.length : (data.popular_objects ?? 0),
             color: '#ef4444',
             param: 'popular',
         },
@@ -63,7 +67,7 @@ export default function EngagementSummary({ data }) {
             <Grid container spacing={0.5} alignItems="center" justifyContent="center" wrap="nowrap">
                 {metrics.map((m, idx) => (
                     <React.Fragment key={m.label}>
-                        <Grid item xs zeroMinWidth sx={{ p: 0, m: 0 }}>
+                        <Grid size="grow" sx={{ p: 0, m: 0 }}>
                             <Box sx={{ textAlign: 'center', p: 0, m: 0 }}>
                                 <Typography
                                     variant="h3"
@@ -77,15 +81,15 @@ export default function EngagementSummary({ data }) {
                                         p: 0,
                                     }}
                                 >
-                                    <a
-                                        href={buildEngagementUrl(m.param)}
+                                    <Link
+                                        to={buildEngagementUrl(m.param)}
                                         style={{ textDecoration: 'none', color: m.color }}
                                         aria-label={`View ${m.label}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         {m.value}
-                                    </a>
+                                    </Link>
                                 </Typography>
                                 <Typography
                                     variant="caption"

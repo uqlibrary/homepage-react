@@ -6,7 +6,6 @@ import {
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
 } from 'repositories/routes';
-import { throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
     return dispatch => {
@@ -90,9 +89,7 @@ export function loadReadingLists(coursecode, campus, semester) {
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
-        return fetch(LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword }).apiUrl)
-            .then(throwFetchErrors)
-            .then(response => response.json())
+        return get(LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword }))
             .then(data => {
                 /* istanbul ignore next */
                 if (keyword.length === 0) {

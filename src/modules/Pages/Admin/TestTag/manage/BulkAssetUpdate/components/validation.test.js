@@ -9,6 +9,7 @@ describe('validation', () => {
                 hasAssetType: false,
                 hasClearNotes: false,
                 hasAssetStatus: false,
+                hasAssetTeam: false,
             };
 
             expect(validateFormValues(formValues)).toBe(false);
@@ -21,6 +22,7 @@ describe('validation', () => {
                 hasAssetType: false,
                 hasClearNotes: true,
                 hasAssetStatus: false,
+                hasAssetTeam: false,
             };
 
             expect(validateFormValues(formValues)).toBe(true);
@@ -35,6 +37,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(true);
@@ -48,6 +51,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -61,6 +65,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -76,6 +81,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(true);
@@ -89,6 +95,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -104,6 +111,7 @@ describe('validation', () => {
                     asset_type: { asset_type_id: 1 },
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(true);
@@ -117,6 +125,7 @@ describe('validation', () => {
                     asset_type: { asset_type_id: -1 },
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -130,6 +139,7 @@ describe('validation', () => {
                     asset_type: {},
                     hasClearNotes: false,
                     hasAssetStatus: false,
+                    hasAssetTeam: false,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -144,6 +154,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: true,
+                    hasAssetTeam: false,
                     asset_status: { value: 'INSTORAGE' },
                 };
 
@@ -157,6 +168,7 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: true,
+                    hasAssetTeam: false,
                     asset_status: { value: 'CURRENT' },
                 };
 
@@ -170,7 +182,66 @@ describe('validation', () => {
                     hasAssetType: false,
                     hasClearNotes: false,
                     hasAssetStatus: true,
+                    hasAssetTeam: false,
                     asset_status: {},
+                };
+
+                expect(validateFormValues(formValues)).toBe(false);
+            });
+        });
+
+        describe('asset team validation', () => {
+            it('should return true when hasAssetTeam is true with valid team', () => {
+                const formValues = {
+                    hasLocation: false,
+                    hasDiscardStatus: false,
+                    hasAssetType: false,
+                    hasClearNotes: false,
+                    hasAssetStatus: false,
+                    hasAssetTeam: true,
+                    asset_team: { team_id: 1, team_slug: 'team-1', team_display_name: 'Team 1' },
+                };
+
+                expect(validateFormValues(formValues)).toBe(true);
+            });
+
+            it('should return false when hasAssetTeam is true with invalid team', () => {
+                const formValues = {
+                    hasLocation: false,
+                    hasDiscardStatus: false,
+                    hasAssetType: false,
+                    hasClearNotes: false,
+                    hasAssetStatus: false,
+                    hasAssetTeam: true,
+                    asset_team: 'invalid',
+                };
+
+                expect(validateFormValues(formValues)).toBe(false);
+            });
+
+            it('should return false when hasAssetTeam is true with empty team object', () => {
+                const formValues = {
+                    hasLocation: false,
+                    hasDiscardStatus: false,
+                    hasAssetType: false,
+                    hasClearNotes: false,
+                    hasAssetStatus: false,
+                    hasAssetTeam: true,
+                    asset_team: {},
+                };
+
+                expect(validateFormValues(formValues)).toBe(false);
+            });
+
+            it('should return false when hasAssetTeam is true with missing team object', () => {
+                const formValues = {
+                    hasLocation: false,
+                    hasDiscardStatus: false,
+                    hasAssetType: false,
+                    hasClearNotes: false,
+                    hasAssetStatus: false,
+                    hasAssetTeam: true,
+                    asset_team: undefined,
                 };
 
                 expect(validateFormValues(formValues)).toBe(false);
@@ -187,6 +258,7 @@ describe('validation', () => {
                 asset_type: { asset_type_id: 1 },
                 hasClearNotes: false,
                 hasAssetStatus: false,
+                hasAssetTeam: false,
             };
 
             expect(validateFormValues(formValues)).toBe(true);

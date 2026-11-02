@@ -6,6 +6,16 @@ if (process.env.JEST_PREVIEW_ON_FAILURE) {
     jestPreviewConfigure({ autoPreview: true });
 }
 
+jest.mock('@yudiel/react-qr-scanner', () => {
+    const React = require('react');
+    return {
+        __esModule: true,
+        prepareZXingModule: jest.fn(),
+        useDevices: jest.fn(() => [{ deviceId: 'mock-device-1', label: 'Mock Camera 1' }]),
+        Scanner: () => <span style={{ display: 'none' }}>ReactQRScanner mock</span>,
+    };
+});
+
 const extensions = {
     toHaveDispatchedActions: (actions, expectedActions) => {
         let pass = actions.length === expectedActions.length;

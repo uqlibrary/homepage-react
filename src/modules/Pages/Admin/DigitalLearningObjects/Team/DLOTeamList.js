@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
 
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -39,6 +40,7 @@ export const DLOTeamList = ({
     dlorTeamDeleteError,
 }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const DELETION_STEP_NULL = null;
     const DELETION_STEP_ONE_CONFIRM = 1;
     const DELETION_STEP_TWO_HAPPENING = 2;
@@ -76,7 +78,7 @@ export const DLOTeamList = ({
     }, [dlorTeamDeleting, dlorTeamDeleted, dlorTeamDeleteError, deleteStep]);
 
     const navigateToAddPage = () => {
-        window.location.href = dlorAdminLink('/team/add', account);
+        navigate(dlorAdminLink('/team/add', account));
     };
 
     const deleteADlorTeam = teamId => {
@@ -102,7 +104,7 @@ export const DLOTeamList = ({
     };
 
     const navigateToTeamEditPage = teamId => {
-        window.location.href = dlorAdminLink(`/team/edit/${teamId}`, account);
+        navigate(dlorAdminLink(`/team/edit/${teamId}`, account));
     };
     const deletionConfirmationBoxLocale = {
         confirmItMessage: {
@@ -170,7 +172,7 @@ export const DLOTeamList = ({
             />
             {isDlorAdminUser(account) && (
                 <Grid container spacing={2} sx={{ marginBottom: '25px' }}>
-                    <Grid item xs={12} sx={{ textAlign: 'right' }}>
+                    <Grid size={{ xs: 12 }} sx={{ textAlign: 'right' }}>
                         <Button
                             children="Add team"
                             color="primary"
@@ -185,15 +187,15 @@ export const DLOTeamList = ({
                 {(() => {
                     if (!!dlorTeamListLoading || !!dlorTeamDeleting) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
-                                <div sx={{ minHeight: '600px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
+                                <div style={{ minHeight: '600px' }}>
                                     <InlineLoader message="Loading" />
                                 </div>
                             </Grid>
                         );
                     } else if (!!dlorTeamListError) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-error">
                                     {dlorTeamListError}
                                 </Typography>
@@ -201,17 +203,16 @@ export const DLOTeamList = ({
                         );
                     } else if (!dlorTeamList || dlorTeamList.length === 0) {
                         return (
-                            <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                            <Grid size={{ xs: 12, md: 9 }} sx={{ marginTop: '12px' }}>
                                 <Typography variant="body1" data-testid="dlor-teamlist-noresult">
                                     We did not find any entries in the system - please try again later.
                                 </Typography>
                             </Grid>
                         );
                     } else {
-                        console.log('dlorTeamList', dlorTeamList, account);
                         return (
                             <>
-                                <Grid item sx={{ width: '100%' }} data-testid="dlor-teamlist-list">
+                                <Grid sx={{ width: '100%' }} data-testid="dlor-teamlist-list">
                                     {(() => {
                                         const visibleTeams =
                                             dlorTeamList?.filter(team => {
@@ -226,8 +227,6 @@ export const DLOTeamList = ({
                                                 );
                                             }) || /* istanbul ignore next */ [];
 
-
-                                        console.log('visibleTeams', visibleTeams, account);    
                                         if (visibleTeams.length === 0) {
                                             return (
                                                 <Typography variant="body1" data-testid="dlor-teamlist-no-access">
@@ -241,13 +240,12 @@ export const DLOTeamList = ({
                                             <div key={`list-team-${team?.team_id}`}>
                                                 <Grid container alignItems="center">
                                                     <Grid
-                                                        item
-                                                        xs={10}
+                                                        size={{ xs: 10 }}
                                                         data-testid={`dlor-teamlist-panel-${team?.team_id}`}
                                                     >
                                                         <Typography variant="body1">{team?.team_name}</Typography>
                                                     </Grid>
-                                                    <Grid item xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         {team?.objects_count === 0 && (
                                                             <IconButton
                                                                 data-testid={`dlor-teamlist-delete-${team?.team_id}`}
@@ -259,7 +257,7 @@ export const DLOTeamList = ({
                                                             </IconButton>
                                                         )}
                                                     </Grid>
-                                                    <Grid item xs={1}>
+                                                    <Grid size={{ xs: 1 }}>
                                                         <IconButton
                                                             data-testid={`dlor-teamlist-edit-${team?.team_id}`}
                                                             onClick={() => navigateToTeamEditPage(team?.team_id)}
@@ -267,7 +265,9 @@ export const DLOTeamList = ({
                                                                 !(
                                                                     isDlorAdminUser(account) ||
                                                                     (Array.isArray(team.team_members) &&
-                                                                        team.team_members.some(m => m.team_admin_username === account.id))
+                                                                        team.team_members.some(
+                                                                            m => m.team_admin_username === account.id,
+                                                                        ))
                                                                 )
                                                             }
                                                         >
@@ -276,7 +276,7 @@ export const DLOTeamList = ({
                                                     </Grid>
                                                 </Grid>
                                                 <Grid container>
-                                                    <Grid item xs={12} sx={{ marginBottom: '24px' }}>
+                                                    <Grid size={{ xs: 12 }} sx={{ marginBottom: '24px' }}>
                                                         {!dlorTeamListLoading &&
                                                             !dlorListError &&
                                                             !!dlorList &&

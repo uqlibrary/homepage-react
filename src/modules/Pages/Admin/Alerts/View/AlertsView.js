@@ -1,8 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 
-import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -29,47 +28,47 @@ import { formatDate } from 'modules/Pages/Admin/dateTimeHelper';
 import { scrollToTopOfPage, StyledPrimaryButton, StyledSecondaryButton } from 'helpers/general';
 import { breadcrumbs } from 'config/routes';
 
+export const displayPreview = thisAlert => {
+    const alertWrapper = document.getElementById('previewWrapper');
+    !!alertWrapper && (alertWrapper.innerHTML = '');
+
+    // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
+    const alertWebComponent = document.createElement('uq-alert');
+
+    if (!alertWebComponent) {
+        return null;
+    }
+
+    const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(thisAlert?.body);
+
+    alertWebComponent.setAttribute('id', 'alert-preview');
+    alertWebComponent.setAttribute('alerttitle', thisAlert.title);
+    alertWebComponent.setAttribute('priorityType', thisAlert.priority_type);
+    const body =
+        !!thisAlert.body &&
+        getBody({
+            permanentAlert: isPermanent,
+            linkRequired: linkRequired,
+            linkTitle: linkTitle,
+            linkUrl: linkUrl,
+            enteredbody: message,
+        });
+    if (!!isPermanent) {
+        manuallyMakeWebComponentBePermanent(alertWebComponent, body);
+    } else {
+        alertWebComponent.setAttribute('alertmessage', body);
+    }
+    if (!!linkRequired) {
+        makePreviewActionButtonJustNotifyUser({ ...thisAlert, linkUrl: linkUrl });
+    }
+    alertWrapper.appendChild(alertWebComponent);
+
+    return null;
+};
+
 export const AlertsView = ({ actions, alert, alertStatus }) => {
     const { alertid } = useParams();
     const navigate = useNavigate();
-
-    const displayPreview = thisAlert => {
-        const alertWrapper = document.getElementById('previewWrapper');
-        !!alertWrapper && (alertWrapper.innerHTML = '');
-
-        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
-        const alertWebComponent = document.createElement('uq-alert');
-        /* istanbul ignore next */
-        if (!alertWebComponent) {
-            return null;
-        }
-
-        const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
-
-        alertWebComponent.setAttribute('id', 'alert-preview');
-        alertWebComponent.setAttribute('alerttitle', thisAlert.title);
-        alertWebComponent.setAttribute('priorityType', thisAlert.priority_type);
-        const body =
-            !!thisAlert.body &&
-            getBody({
-                permanentAlert: isPermanent,
-                linkRequired: linkRequired,
-                linkTitle: linkTitle,
-                linkUrl: linkUrl,
-                enteredbody: message,
-            });
-        if (!!isPermanent) {
-            manuallyMakeWebComponentBePermanent(alertWebComponent, body);
-        } else {
-            alertWebComponent.setAttribute('alertmessage', body);
-        }
-        if (!!linkRequired) {
-            makePreviewActionButtonJustNotifyUser({ ...thisAlert, linkUrl: linkUrl });
-        }
-        alertWrapper.appendChild(alertWebComponent);
-
-        return null;
-    };
 
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -89,7 +88,6 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
         if (!!alert) {
             displayPreview(alert);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alert]);
 
     if (alertStatus === 'loading') {
@@ -144,14 +142,14 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
-                <Grid item id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
+                <Grid id="previewWrapper" sx={{ transition: 'visibility 0s, opacity 10s ease-out' }} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertsUtilityArea actions={actions} helpContent={locale.view.help} />
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <FormControl variant="standard" fullWidth title={locale.form.tooltips.title}>
                                     <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                                     <Input
@@ -165,7 +163,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <FormControl variant="standard" fullWidth title={locale.form.tooltips.message}>
                                     <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                         {locale.form.labels.message}
@@ -183,7 +181,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} style={{ marginTop: 12 }}>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <InputLabel htmlFor="startDate">{locale.form.labels.startdate}</InputLabel>
                                 <Input
                                     id="startDate"
@@ -194,7 +192,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     type="datetime-local"
                                 />
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <InputLabel htmlFor="endDate">{locale.form.labels.startdate}</InputLabel>
                                 <Input
                                     id="endDate"
@@ -212,7 +210,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                             style={{ minHeight: '4rem', paddingTop: '1rem' }}
                             className={'checkboxes'}
                         >
-                            <Grid item sm={4} xs={12}>
+                            <Grid size={{ sm: 4, xs: 12 }}>
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.link.checkbox}>
                                     <Checkbox
                                         checked={values.linkRequired}
@@ -223,7 +221,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     {locale.form.labels.link.checkbox}
                                 </InputLabel>
                             </Grid>
-                            <Grid item sm={4} xs={12}>
+                            <Grid size={{ sm: 4, xs: 12 }}>
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.permanent}>
                                     <Checkbox
                                         data-testid="admin-alerts-view-checkbox-permanent"
@@ -235,7 +233,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     {locale.form.labels.permanent}
                                 </InputLabel>
                             </Grid>
-                            <Grid item sm={4} xs={12}>
+                            <Grid size={{ sm: 4, xs: 12 }}>
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.priority.title}>
                                     {locale.form.labels.priority.title}
                                     <Select
@@ -267,7 +265,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                 display: values.linkRequired ? 'flex' : 'none',
                             }}
                         >
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                                     <Input
@@ -280,7 +278,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <FormControl variant="standard" fullWidth>
                                     <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                                     <Input
@@ -298,10 +296,10 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                         <Grid container spacing={2} data-testid="admin-alerts-view-systems">
                             {values?.systems?.length > 0 ? (
                                 <Fragment>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <p>This alert only appeared on...</p>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         {values.systems.map(system => {
                                             const thisSystem = systemList.find(s => s.slug === system);
                                             return (
@@ -324,7 +322,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     </Grid>
                                 </Fragment>
                             ) : (
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <p>This alert appeared on all systems</p>
                                 </Grid>
                             )}
@@ -352,7 +350,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                             spacing={2}
                             style={{ marginTop: '1rem' }}
                         >
-                            <Grid item xs={3} align="left">
+                            <Grid size={{ xs: 3 }} align="left">
                                 <StyledSecondaryButton
                                     color="secondary"
                                     children="Cancel"
@@ -361,7 +359,7 @@ export const AlertsView = ({ actions, alert, alertStatus }) => {
                                     variant="contained"
                                 />
                             </Grid>
-                            <Grid item xs={9} align="right">
+                            <Grid size={{ xs: 9 }} align="right">
                                 <StyledPrimaryButton
                                     color="primary"
                                     data-testid="admin-alerts-view-button-save"

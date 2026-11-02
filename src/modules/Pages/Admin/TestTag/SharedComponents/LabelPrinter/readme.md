@@ -76,10 +76,14 @@ For the MVP first version of this component, it was not expected that there woul
 
 Printers, in the coding sense, are defined as functions. Each printer must return an expected set of properties and functions in order to be useable to the calling code base. See the definition of printers/ZebraClass for more information. They are enumerated in to a collection of known printers called a "printer registry", which also defines which method exported from the printer class to instantiate. 
 
-For Zebra printers, a 3rd party wrapper package [zebra-browser-print-wrapper-https](https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https) has been used to simplify communication to an underlying series of printer protocols.
+~~For Zebra printers, a 3rd party wrapper package [zebra-browser-print-wrapper-https](https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https) has been used to simplify communication to an underlying series of printer protocols.~~
 
-> Note: the use of `zebra-browser-print-wrapper-https` is to enable communication between a website running under https, as in this scenario all communications to the Browser Print app will also be made over https.
-If your site is not running under https, you may need to use an alternative package [zebra-browser-print-wrapper-https](https://github.com/lhilario/zebra-browser-print-wrapper), which will require some changes to this component.
+~~Note: the use of `zebra-browser-print-wrapper-https` is to enable communication between a website running under https, as in this scenario all communications to the Browser Print app will also be made over https.
+If your site is not running under https, you may need to use an alternative package [zebra-browser-print-wrapper](https://github.com/lhilario/zebra-browser-print-wrapper), which will require some changes to this component.~~ 
+
+> **Update May 2026**
+>
+> Due to issues upgrading Node to v24 caused by https://github.com/PavelKaraivanov/zebra-browser-print-wrapper-https (specifically an incompatible dependency in the package.json), and due to the package having not been updated in over 5 years, we have since moved the code of the core repo zebra-browser-print-wrapper (also not updated in 5 years) directly in to our repo, and removed the npm dependencies. The code can be found in the `./printers/webInterface/ZebraBrowserPrintWrapper` folder.
 
  While this wrapper returns functions after instantiation, the Printer Registry has been designed to also allow hook-based 3rd party libraries to be used. At the time of writing, this custom hook has been declared as "useCreatePrinter" and defined within each printer class, but the printer functionality could also be used directly without this hook if desired.
 
@@ -87,20 +91,22 @@ In addition to Zebra, a bare-bones "Emulator" printer class has also been includ
 
 #### Templates
 
-This component makes no assumptions over which printer language is to be used, but for this MVP implementation, all templates are written in ZPL commands with variances included for different model requirements.
+Templates are defined in the Management -> Printer Templates section of Test and Tag. Each template is given a descriptive name, one or more "identifiers", zero or more "user variables", and the template code itself.
 
-> Note: it is up to you to define the expected printer model names and the templates each should use. These are not provided by this component, however you may wish to refer to the Test and Tag code for an example implementation.
+> Note: "identifiers" represent the names of each printer as reported by the webInterface in use. These names can differ across operating systems, even for the physically same printers, which is why the TnT system allows multiple names to be defined. 
 
-When a printer has been selected and is ready to print, use a print "template" to define your label output. Export this template, and any others, as a collection "store", keyed on the name of the printer or model as it will be detected by the Browser Printer app.
+Although the user is free to create any sort of template, typically a template will require some dynamic content in order to represent the asset being tested. We use two types of "placeholders" in template code in order to substitute dynamic data, system and user.
 
-> Note: the actual names of detected printers, even the physically same printers, can differ across operating systems. Ensure you account for these variations when creating your own templates. Include an "emulator" template if you'll be testing it locally.
+System placeholders are placeholders that your code will substitute at print time for dynamic content related to the current action, such as having performed an inspection of an asset. These are defined in your template code with the format `{*PLACEHOLDER*}`.
 
-A template defines variable placeholders using the string format `{{PLACEHOLDER}}` (must be upper-case). It is important to remember that the name of the placeholders you use *must* match a key for the value it will be replaced with, or it will not be replaced at all. For example, when passing in data to transform a template to the `getLabelPrinterTemplate` method of the `useLabelPrinterTemplate` hook:
+User placeholders are placeholders that are substituted as soon as the template is added or updated in the Printer Management page. These placeholders are designed to make quick adjustments to template code a little easier, and are therefore typically applied to X/Y positions of various label aspects, such as text and barcodes. These are defined in your template code with the format `{{PLACEHOLDER}}`. It is important to remember that user placeholders will only be substituted if a corresponding user variable has been defined for the template with the same name, and any user variable defined *must* be present in the template.
 
-Template:
+For Test and Tag specifically, it is important to remember that the name of the system placeholders you use *must* match a key for the value it will be replaced with, or it will not be replaced at all. For example, when passing in data to transform a template to the `getLabelPrinterFormattedTemplate` method of the `useLabelPrinterTemplate` hook:
+
+Example Zpl snippet
 
 ```javascript
-export default `some zpl code here {{UQLID}}`
+`some zpl code here {{UQLID}}`
 ```
 
 The data object supplied should include a matching placeholder key:
@@ -112,30 +118,9 @@ The data object supplied should include a matching placeholder key:
 
 otherwise the {{UQLID}} key will remain verbatim.
 
-##### Template Store
-
-The template store only needs to be an object with keys that match the expected printer names, with each key value containing the actual template content.
-Where you may have multiple templates, it is advised to export each template in a separate file, then export all templates as a single "store" object, for example:
-
-```Javascript
-export { default as emulator } from './emulator';
-export { default as gk420t } from './gk420t';
-export { default as _29j120602579 } from './gk420t';
-export { default as gk888t } from './gk888t';
-export { default as _19j153101586 } from './gk888t';
-```
-
-This approach neatly defines where template code is located, as well as providing an importable object encapsulating all tempaltes as key/value pairs when imported as:
-
-```Javascript
-import * as labelPrintertemplates from './labelPrinterTemplates';
-```
-
-> Important: do note that any printer name starting with a numerical character should be prepended in the template store with an underscore. The code will account for this when matching with available printers.
-
 ### Hooks
 
-Two hooks are provided by this component. Their intended usage is as follows:
+Four hooks are provided by this component. Their intended usage is as follows:
 
 1. `useLabelPrinter`: The core custom hook for utilising label printing. Use this hook to instantiate the relevant printer library you're using, set the template store, and set flags that control if printers with no names are removed, or those that do not have a defined template are disabled, in the returned availablePrinters object.
 
@@ -144,25 +129,43 @@ Two hooks are provided by this component. Their intended usage is as follows:
     ```javascript
     const { printer, availablePrinters } = useLabelPrinter({
         printerCode: 'zebra',
-        templateStore: myTemplateStore,
         shouldOverridePrinterDevEnv: true, // will force use of Emulator printer in localhost envs
     });
     ```
-
-1. `useLabelPrinterTemplate`: handles the transformation of a template using provided data, and provides a function to determine if a given printer name has a template available.
+1. `useLabelPrinterTemplateStore`: handles loading and transformation of template data from the database.
 
     Example usage:
 
     ```javascript
-    const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
+    const { printerTemplateList } = useLabelPrinterTemplateStore(actions);
+    // 'actions' are the usual Redux actions used throughout TnT
+    // printerTemplateList is used in the useLabelPrinterTemplate hook
+
+    ```
+
+1. `useLabelPrinterTemplate`: handles the transformation of a template using provided data.
+
+    Example usage:
+
+    ```javascript
+    const { getLabelPrinterFormattedTemplate } = useLabelPrinterTemplate(printerTemplateList);
     // etc
-    const template = getLabelPrinterTemplate('emulator', {
+    const template = getLabelPrinterFormattedTemplate('emulator', {
         userId: '1234',
         assetId: 'UQABC123',
         // etc.
     });
     ```
 
+1. `useLabelPrinterPreference`: used to read and set printer and template choice to a local cookie
+
+    Example usage:
+
+    ```javascript
+    const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
+
+    ```
+    
 ### UI Components
 
 1. `LabelPrinterSelector`: a basic UI component that wraps an AutoComplete. Use to allow the user to select a printer from a provided list:
@@ -197,8 +200,41 @@ Two hooks are provided by this component. Their intended usage is as follows:
         version: 0,
     }}
     onChange={_onPrinterSelectionChange}
-    disableUnknownPrinters={true}
     locale={locale}
     error={true}
 />
 ```
+
+2. `LabelPrinterTemplateSelector`: a basic UI component that wraps an AutoComplete. Use to allow the user to select a template that matches an identifier to the selected printer (printer should be chosen first).
+
+```html
+<LabelPrinterTemplateSelector
+    id={'mySelector'}
+    list={[
+    {
+        "id": 1,
+        "name": "UQL Standard Template",
+        "code": "...",
+        "printers": [
+            "PRINTER_01",
+            "PRINTER_02",
+            "Emulator"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Zebra GK420t",
+        "code": "...",
+        "printers": [
+            "29j113900302",
+            "29j120602579",
+            "gk420t",
+            "Emulator"
+        ]
+    }]}
+    value={2}
+    onChange={_onPrinterSelectionChange}
+    error={true}
+/>
+```
+

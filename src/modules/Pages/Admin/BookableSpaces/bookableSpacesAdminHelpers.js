@@ -1,0 +1,294 @@
+import { breadcrumbs, fullPath } from 'config/routes';
+import { isSpacesAdminUser } from 'helpers/access';
+import { ASKUS_SPRINGSHARE_ID } from 'config/locale';
+import { addClass } from 'helpers/general';
+
+export const getPathRoot = () => {
+    /* istanbul ignore next */
+    if (fullPath === 'https://homepage-production.library.uq.edu.au') {
+        return 'https://www.library.uq.edu.au';
+    }
+    return fullPath;
+};
+
+/**
+ * extract the username from the url
+ * return prefixed by the correct character, which should be either '?' or '&'
+ * @param appendType
+ * @returns {string}
+ */
+export function getUserPostfix(appendType = '?') {
+    let userString = '';
+    /* istanbul ignore next */
+    if (window.location.hostname === 'localhost') {
+        const queryString = new URLSearchParams(
+            window.location.search || window.location.hash.substring(location.hash.indexOf('?')),
+        );
+
+        // Get user from query string
+        const user = !!queryString && queryString.get('user');
+        userString = !!user ? `${appendType}user=${user}` : '';
+    }
+    return userString;
+}
+
+export const spacesAdminLink = (spacesPath, account) => {
+    /* istanbul ignore next */
+    const path = spacesPath || '';
+    /* istanbul ignore next */
+    const userAccount = account || null;
+
+    const userString = getUserPostfix();
+    if (isSpacesAdminUser(userAccount)) {
+        return `${getPathRoot()}${path}${userString}`;
+    }
+    return '';
+};
+
+export function addBreadcrumbsToSiteHeader(localChildren) {
+    const awaitSiteHeader = setInterval(() => {
+        const siteHeader = document.querySelector('uq-site-header');
+        const siteHeaderShadowRoot = siteHeader?.shadowRoot;
+
+        if (!!siteHeaderShadowRoot) {
+            clearInterval(awaitSiteHeader);
+
+            const breadcrumbParent = !!siteHeaderShadowRoot && siteHeaderShadowRoot?.getElementById('breadcrumb_nav');
+            if (breadcrumbParent?.children?.length > 2) {
+                return; // already added
+            }
+
+            !!siteHeader && siteHeader?.setAttribute('secondleveltitle', breadcrumbs?.bookablespaces?.title);
+            !!siteHeader && siteHeader?.setAttribute('secondLevelUrl', breadcrumbs?.bookablespaces?.pathname);
+
+            const listItems = [
+                `<li class="uq-breadcrumb__item">
+                     <a class="uq-breadcrumb__link" id="secondlevel-site-breadcrumb-link" data-testid="secondlevel-site-title" href="/admin/spaces">Admin</a>
+                 </li>`,
+                ...localChildren,
+            ];
+            !!listItems &&
+                listItems?.length > 0 &&
+                listItems?.forEach(item => {
+                    breadcrumbParent?.insertAdjacentHTML('beforeend', item);
+                });
+        }
+    }, 100);
+}
+
+const TOAST_STYLE_ID = 'bookable-spaces-toast-styles';
+
+function applyToastStyles() {
+    if (document.getElementById(TOAST_STYLE_ID)) {
+        return;
+    }
+
+    const style = document.createElement('style');
+    style.id = TOAST_STYLE_ID;
+    style.textContent = `
+        .bookable-spaces-toast-container {
+            position: fixed;
+            top: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2147483647;
+        }
+
+        .bookable-spaces-toast {
+            color: #fff;
+            padding: 0.5rem 1rem 0.5rem 3rem;
+            inline-size: fit-content;
+            max-width: min(24rem, calc(100vw - 1rem));
+            border-radius: 0.5rem;
+            transition: opacity 500ms ease-out;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+            margin-left: auto;
+            margin-right: auto;
+            background-repeat: no-repeat;
+            background-size: 1.5rem;
+            background-position: 0.75rem center;
+        }
+
+        .bookable-spaces-toast.is-hidden {
+            opacity: 0;
+        }
+
+        .bookable-spaces-toast--success {
+            background-color: #4aa74e;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27%23fff%27 viewBox=%270 0 16 16%27%3E%3Cg stroke=%27%23fff%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%27.75%27%3E%3Cpath fill=%27none%27 d=%27M9.258 10.516h-.43A.829.829 0 0 1 8 9.687V7.602c0-.23-.2-.43-.43-.43h-.425%27/%3E%3Cpath d=%27M7.8 5.059a.194.194 0 0 0-.198.199c0 .113.085.199.199.199a.195.195 0 0 0 .199-.2.195.195 0 0 0-.2-.198zm0 0%27/%3E%3Cpath fill=%27none%27 d=%27M8 1.715c3.457 0 6.285 2.828 6.285 6.285 0 3.457-2.828 6.285-6.285 6.285-3.457 0-6.285-2.828-6.285-6.285 0-3.457 2.828-6.285 6.285-6.285zm0 0%27/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .bookable-spaces-toast--error {
+            background-color: #D62929;
+            background-image: url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%23fff%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%23fff%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%23fff%27%3e%3c/circle%3e%3c/svg%3e");
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function createToast(message, variant, hideDelay) {
+    const messageLocal = !!message && !message?.startsWith('<') ? `<p>${message}</p>` : message;
+    const toastContainer = document.getElementById('locations-toast-container') || document.createElement('div');
+
+    if (!document.getElementById('locations-toast-container')) {
+        toastContainer.id = 'locations-toast-container';
+        toastContainer.setAttribute('data-testid', 'locations-toast-container');
+        toastContainer.className = 'bookable-spaces-toast-container';
+        document.body.appendChild(toastContainer);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast bookable-spaces-toast bookable-spaces-toast--${variant}`;
+    toast.dataset.testid = 'toast-message';
+    toast.innerHTML = messageLocal;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('is-hidden');
+    }, hideDelay);
+
+    setTimeout(() => {
+        toast.remove();
+        if (toastContainer.children.length === 0) {
+            toastContainer.remove();
+        }
+    }, hideDelay + 1000);
+}
+
+export function displayToastMessage(message) {
+    applyToastStyles();
+    createToast(message, 'success', 3000);
+}
+
+export function displayToastErrorMessage(message) {
+    applyToastStyles();
+    createToast(message, 'error', window.location.hostname !== 'localhost' ? /* istanbul ignore next */ 10000 : 3000);
+}
+export const springshareLocations = weeklyHours => {
+    if (!weeklyHours?.locations || weeklyHours?.locations?.length === 0) {
+        return [];
+    }
+
+    const result = [];
+
+    const locations =
+        !!weeklyHours?.locations &&
+        weeklyHours?.locations?.length > 0 &&
+        weeklyHours?.locations
+            ?.filter(l => l?.lid !== ASKUS_SPRINGSHARE_ID)
+            ?.sort((a, b) => a?.display_name?.localeCompare(b?.display_name));
+
+    for (const library of locations) {
+        const nonAskUsDepts = library.departments.filter(dept => !dept.name.toLowerCase().includes('askus desk'));
+
+        for (const dept of nonAskUsDepts) {
+            const items = {
+                id: dept.lid,
+                display_name: `${library.display_name} - ${dept.name}`,
+            };
+            result.push(items);
+        }
+    }
+
+    return result;
+};
+
+export function removeAnyListeners(element) {
+    if (!element) {
+        return false;
+    }
+    // we cant actually generically remove listeners - but we can start from scratch
+    const clonedElement = element?.cloneNode(true);
+    element?.replaceWith(clonedElement);
+    return clonedElement;
+}
+
+export function closeDeletionConfirmation() {
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog?.close();
+
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = '');
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    removeAnyListeners(confirmationCancelButton);
+
+    const confirmationOKButton = document.getElementById('confDialogOkButton');
+    removeAnyListeners(confirmationOKButton);
+}
+
+export function showGenericConfirmAndDeleteDialog(line1, /* istanbul ignore next */ line2 = '') {
+    const confirmationMessageElement = document.getElementById('confDialogMessage');
+    let innerHTML = `<p>${line1}</p>`;
+    !!line2 && (innerHTML += `<p>${line2}</p>`);
+    !!confirmationMessageElement && (confirmationMessageElement.innerHTML = innerHTML);
+
+    const confirmationCancelButton = document.getElementById('confDialogCancelButton');
+    !!confirmationCancelButton && confirmationCancelButton?.addEventListener('click', closeDeletionConfirmation);
+
+    const dialog = document.getElementById('confirmationDialog');
+    !!dialog && dialog?.showModal();
+}
+
+export function closeDialog(e = null) {
+    const dialog = !e ? document.getElementById('popupDialog') : e?.target?.closest('dialog');
+    !!dialog && dialog?.close();
+
+    const dialogMessageElement = document.getElementById('dialogMessageContent');
+    !!dialogMessageElement && (dialogMessageElement.innerHTML = '');
+
+    const warningIcon = document.getElementById('warning-icon');
+    addClass(warningIcon, 'hidden');
+
+    const dialogWarningText = document.getElementById('warningtext');
+    !!dialogWarningText && /* istanbul ignore next */ dialogWarningText?.remove();
+
+    const dialogBodyElement = document.getElementById('dialogBody');
+    !!dialogBodyElement && (dialogBodyElement.innerHTML = '');
+
+    const addNewButton = document.getElementById('addNewButton');
+    !!addNewButton && (addNewButton.innerText = 'Add new');
+    !!addNewButton && (addNewButton.style.display = 'inline');
+    !!addNewButton && removeAnyListeners(addNewButton);
+
+    const deleteButton = document.getElementById('deleteButton');
+    !!deleteButton && (deleteButton.style.display = 'inline');
+    !!deleteButton && removeAnyListeners(deleteButton);
+
+    const cancelButton = document.getElementById('cancelButton');
+    !!cancelButton && removeAnyListeners(cancelButton);
+
+    const saveButton = document.getElementById('saveButton');
+    removeAnyListeners(saveButton);
+
+    const mapWrapper = document.getElementById('mapWrapper');
+    !!mapWrapper && (mapWrapper.style.display = 'none');
+}
+export const weeklyHoursLoaded = (weeklyHoursLoading, weeklyHoursError, weeklyHours) => {
+    return (
+        weeklyHoursLoading === false &&
+        weeklyHoursError === false &&
+        Array.isArray(weeklyHours?.locations) &&
+        weeklyHours?.locations?.length > 0
+    );
+};
+export const initialisedSpringshareList = (locale, weeklyHours) => [
+    locale?.unselectedSpringshareOption,
+    ...springshareLocations(weeklyHours),
+];
+
+export const validCampusList = campusList =>
+    campusList?.filter(c => c?.libraries?.length > 0) || /* istanbul ignore next */ [];
+export const safeCampusIndex = (campusList, campusId) => {
+    if (!Array.isArray(campusList)) {
+        return -1;
+    }
+    return campusList.findIndex(c => c?.campus_id === campusId);
+};
+export const validLibraryList = libraryList =>
+    libraryList?.filter(l => l?.floors.length > 0) || /* istanbul ignore next */ [];

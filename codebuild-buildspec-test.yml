@@ -13,11 +13,7 @@ env:
     SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
 phases:
   install:
-    runtime-versions:
-      nodejs: 22
     commands:
-      - n 22.22.2
-      - set
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
       - sysctl fs.inotify.max_user_watches

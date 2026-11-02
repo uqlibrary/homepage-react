@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { mui1theme } from 'config';
 import DLOList from './DLOList';
@@ -8,6 +8,7 @@ import DLOList from './DLOList';
 jest.mock('../../../../../public/images/digital-learning-hub-hero-shot-wide.png', () => 'mock-hero-image');
 
 jest.mock('modules/SharedComponents/Toolbox/StandardPage', () => ({
+    // eslint-disable-next-line react/prop-types
     StandardPage: ({ children }) => <div data-testid="standard-page">{children}</div>,
 }));
 

@@ -7,8 +7,8 @@ import TextField from '@mui/material/TextField';
 
 import { isEmptyStr } from '../../../helpers/helpers';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
-import { WarningOutlined } from '@mui/icons-material';
-import { Tooltip } from '@mui/material';
+import WarningOutlined from '@mui/icons-material/WarningOutlined';
+import Tooltip from '@mui/material/Tooltip';
 const dateFormat = locale.config.format.dateFormatNoTime;
 
 /**
@@ -44,9 +44,7 @@ const makeNextCalibrateDateField = () => {
                 {...props}
                 inputProps={{
                     ...props.inputProps,
-                    min: moment()
-                        .add(1, 'd')
-                        .format(dateFormat),
+                    min: moment().add(1, 'd').format(dateFormat),
                 }}
                 required
             />
@@ -63,9 +61,7 @@ const makeNextCalibrateDateField = () => {
                 if (deviceId === 'auto') {
                     // new entries valid date range: BETWEEN [now] AND [+1 year, +1 day]
                     upperRange.add(1, 'day');
-                    initialValue = moment()
-                        .add(1, 'day')
-                        .format(dateFormat);
+                    initialValue = moment().add(1, 'day').format(dateFormat);
                 }
             }
             return !(
@@ -83,7 +79,7 @@ const makeNextCalibrateDateField = () => {
                 const currentDate = moment();
                 const isPastDate = dateObject.isBefore(currentDate);
                 return (
-                    <>
+                    <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                         {date}
                         {isPastDate && (
                             <Tooltip
@@ -93,7 +89,7 @@ const makeNextCalibrateDateField = () => {
                                 <WarningOutlined />
                             </Tooltip>
                         )}
-                    </>
+                    </span>
                 );
             },
         },

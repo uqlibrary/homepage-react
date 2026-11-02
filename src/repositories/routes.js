@@ -1,24 +1,31 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
-import { API_URL } from '../config';
 
+const getMillisecondCacheBuster = () => {
+    return `${new Date().getTime()}`;
+};
+const getMinuteCachebuster = () => {
+    return `${Math.floor(Date.now() / 60000)}`;
+};
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMillisecondCacheBuster() } },
 });
-export const CURRENT_AUTHOR_API = () => ({ apiUrl: 'fez-authors' });
-export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}` });
+export const CURRENT_AUTHOR_API = () => ({
+    apiUrl: 'fez-authors',
+    options: { params: { ts: getMillisecondCacheBuster() } },
+});
 
 // Training API
 export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
-    // default, see TRAINING_FILTER_GENERAL
+    // default 104: see TRAINING_FILTER_GENERAL
     apiUrl: 'training_events',
-    options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
+    options: { params: { take: numEvents, 'filterIds[]': filterId } },
 });
 
 // Papercut balance API
 export const PRINTING_API = () => ({
     apiUrl: 'papercut/balance',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
 
 // eSpace Possible records
@@ -54,13 +61,14 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
 });
 
 export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
-    apiUrl: API_URL + 'learning_resources/suggestions?hint=' + keyword,
+    apiUrl: 'learning_resources/suggestions',
+    options: { params: { hint: keyword } },
 });
 
 // Library hours
 export const LIB_HOURS_API = () => ({
     apiUrl: 'library_hours/day',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
 
 // file uploading apis
@@ -111,7 +119,9 @@ export const TEST_TAG_ROOM_API = id => ({
 export const TEST_TAG_ADD_LOCATION_API = type => ({ apiUrl: `test-and-tag/${type}` });
 export const TEST_TAG_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `test-and-tag/${type}/${id}` });
 
-export const TEST_TAG_ASSETS_API = pattern => ({ apiUrl: `/test-and-tag/asset/search/current/${pattern}` });
+export const TEST_TAG_ASSETS_API = pattern => {
+    return { apiUrl: `/test-and-tag/asset/search/current/${pattern}` };
+};
 export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const urlParams = {
         ...(filter?.status?.discarded === false ? { without_discards: 1 } : {}),
@@ -121,16 +131,16 @@ export const TEST_TAG_ASSETS_FILTERED_API = (pattern, filter) => {
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
     const apiUrl = `test-and-tag/asset/search/current/${pattern}${hasParams ? `?${qs.toString()}` : ''}`;
-
     return {
         apiUrl,
     };
 };
-export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId, textSearch }) => {
+export const TEST_TAG_ASSETS_MINE_API = ({ locationId, locationType, assetTypeId, textSearch, teamSlug }) => {
     const urlParams = {
         ...(!!locationId && !!locationType ? { location_id: locationId, location_type: locationType } : {}),
         ...(!!assetTypeId ? { asset_type_id: assetTypeId } : {}),
         ...(!!textSearch ? { inspect_comment: textSearch } : {}),
+        ...(!!teamSlug ? { team_slug: teamSlug } : {}),
     };
     const qs = new URLSearchParams(urlParams);
     const hasParams = [...qs].length > 0;
@@ -230,6 +240,12 @@ export const TEST_TAG_UPDATE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${
 export const TEST_TAG_ADD_TEAM_API = () => ({ apiUrl: 'test-and-tag/team' });
 export const TEST_TAG_DELETE_TEAM_API = team => ({ apiUrl: `test-and-tag/team/${team}` });
 
+/* printer template management */
+export const TEST_TAG_PRINTER_TEMPLATE_LIST_API = () => ({ apiUrl: 'test-and-tag/printer-template/current/mine' });
+export const TEST_TAG_ADD_PRINTER_TEMPLATE_API = () => ({ apiUrl: 'test-and-tag/printer-template' });
+export const TEST_TAG_UPDATE_PRINTER_TEMPLATE_API = id => ({ apiUrl: `test-and-tag/printer-template/${id}` });
+export const TEST_TAG_DELETE_PRINTER_TEMPLATE_API = id => ({ apiUrl: `test-and-tag/printer-template/${id}` });
+
 export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is admin in staging
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
@@ -308,5 +324,163 @@ export const JOURNAL_SEARCH_API = () => ({ apiUrl: 'https://api.library.uq.edu.a
 // Loans API
 export const LOANS_API = () => ({
     apiUrl: 'account/loans',
-    options: { params: { ts: `${new Date().getTime()}` } },
+    options: { params: { ts: getMinuteCachebuster() } },
 });
+
+// Spaces APIs
+export const SPACES_ALL_API = ({ includeDrafts } = {}) => ({
+    apiUrl: 'bookable_spaces/spaces/all',
+    options: {
+        params: {
+            ...(includeDrafts === true ? { include_drafts: true } : {}),
+            ts: `${new Date().getTime()}`,
+        },
+    },
+});
+export const SPACES_ADMIN_ALL_API = ({ includeDrafts, includeDeleted } = {}) => ({
+    apiUrl: 'bookable_spaces/admin/spaces/all',
+    options: {
+        params: {
+            ...(includeDrafts === true ? { include_drafts: true } : {}),
+            ...(includeDeleted === true ? { include_deleted: true } : {}),
+            ts: `${new Date().getTime()}`,
+        },
+    },
+});
+export const SPACES_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/space/${uuid}` });
+export const SPACES_ADMIN_SINGLE_API = ({ uuid }) => ({ apiUrl: `bookable_spaces/admin/space/${uuid}` });
+export const SPACES_ADMIN_NOTES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/admin/space/${spaceId}/notes` });
+export const SPACES_OUTAGES_API = ({ spaceId }) => ({ apiUrl: `bookable_spaces/space/${spaceId}/outages` });
+export const SPACES_OUTAGE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_outage/${id}` });
+export const SPACES_FLOOR_OUTAGES_API = ({ floorId }) => ({ apiUrl: `bookable_spaces/floor/${floorId}/outages` });
+export const SPACES_LIBRARY_OUTAGES_API = ({ libraryId }) => ({
+    apiUrl: `bookable_spaces/library/${libraryId}/outages`,
+});
+export const SPACES_CAMPUS_OUTAGES_API = ({ campusId }) => ({ apiUrl: `bookable_spaces/campus/${campusId}/outages` });
+
+export const WEEKLYHOURS_API = () => {
+    return {
+        apiUrl: 'library_hours/week',
+        options: { params: { weeks: 2, ts: `${new Date().getTime()}` } },
+    };
+};
+
+export const SPACES_FACILITY_TYPE_ALL_API = () => ({ apiUrl: 'bookable_spaces/facility_types/all' });
+
+export const SPACES_FACILITY_TYPE_GROUP_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_groups' });
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_SINGLE_API = ({ id }) => ({
+    apiUrl: `bookable_spaces/facility_groups/${id}`,
+});
+export const SPACES_FACILITY_TYPE_GROUP_UPDATE_LIST_API = () => ({
+    apiUrl: 'bookable_spaces/facility_groups',
+});
+
+export const SPACES_FACILITY_TYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/facility_types' });
+export const SPACES_FACILITY_TYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/facility_types/${id}` });
+
+// locations: type = campus, building, floor or space; id = unique record id
+// ie:
+// bookable_spaces/campus || bookable_spaces/campus/999
+// bookable_spaces/building || bookable_spaces/building/999
+// bookable_spaces/floor || bookable_spaces/floor/999
+// bookable_spaces/space || bookable_spaces/space/999
+export const SPACES_ADD_LOCATION_API = ({ type }) => ({ apiUrl: `bookable_spaces/${type}` });
+export const SPACES_MODIFY_LOCATION_API = ({ type, id }) => ({ apiUrl: `bookable_spaces/${type}/${id}` });
+
+export const SPACES_SITE_API = () => ({ apiUrl: 'bookable_spaces/campus/all' });
+export const SPACES_ARCHIBUS_TREE_API = () => ({ apiUrl: 'bookable_spaces/archibus/tree' });
+export const SPACES_SPACETYPE_CREATE_API = () => ({ apiUrl: 'bookable_spaces/space_type' });
+export const SPACES_SPACETYPE_UPDATE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_SPACETYPE_DELETE_API = ({ id }) => ({ apiUrl: `bookable_spaces/space_type/${id}` });
+export const SPACES_FAVOURITES_API = () => ({ apiUrl: 'bookable_spaces/favourites' });
+export const SPACES_BULK_FACILITIES_API = ({ id }) => ({ apiUrl: `bookable_spaces/bulkFacilityTypes/${id}` });
+/** MEMBERSHIP **/
+// The membership form and landing chooser are built from this response: account_types, titles, hospital.* and
+// reciprocal.*
+export const MEMBERSHIP_FORM_DATA_API = () => ({ apiUrl: 'membership' });
+
+// Submit a new membership application.
+export const MEMBERSHIP_CREATE_API = () => ({ apiUrl: 'membership' });
+
+// Read a single application back by id — the received page falls back to this on a reload.
+export const MEMBERSHIP_BY_ID_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
+// Record a payment against an application, from the gateway's return leg.
+export const MEMBERSHIP_PAYMENT_API = ({ id }) => ({ apiUrl: `membership/${id}/payment` });
+
+// Read an application via a renewal link, which authenticates on the id + code pair rather than a session.
+export const MEMBERSHIP_BY_CODE_API = ({ id, code }) => ({ apiUrl: `membership/${id}/${code}` });
+
+// Submit a renewal, authenticated by the same id + code from the link.
+export const MEMBERSHIP_RENEW_API = ({ id, code }) => ({ apiUrl: `membership/${id}/${code}/renew` });
+
+// Upload a supporting document for an application.
+export const MEMBERSHIP_FILE_UPLOAD_API = () => ({ apiUrl: 'file/membership' });
+
+// Get a temporary signed URL for one of an application's stored supporting documents, addressed by its key. The
+// admin download reads this to open the file: the URL is signed and short-lived, so it is fetched per file when
+// the admin asks for it rather than held on the record. The endpoint answers with the URL as the sole element
+// of an array.
+export const MEMBERSHIP_FILE_URL_API = ({ key }) => ({ apiUrl: `file/membership/${encodeURIComponent(key)}` });
+
+// Confirm an application, turning it into an issued library account. The backend posts to Alma and Prism, and
+// reports a rejection in a 200 body rather than as an error status.
+export const MEMBERSHIP_CONFIRM_API = ({ id }) => ({ apiUrl: `membership/${id}/confirm` });
+
+// Delete an application - the same address as reading one by id, reached with the DELETE method. Used to clear
+// invalid, spam or duplicate requests from the queue.
+export const MEMBERSHIP_DELETE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
+// Update an application - the same address as reading one by id, reached with POST. Used to correct an issued
+// account's expiry and barcode from the admin queue.
+export const MEMBERSHIP_UPDATE_API = ({ id }) => ({ apiUrl: `membership/${id}` });
+
+// Resend the renewal email for a renewing application. The endpoint answers with whether it sent, rather than
+// with an error, so a member who lost their emailed link can be sent it again.
+export const MEMBERSHIP_RESEND_EMAIL_API = ({ id }) => ({ apiUrl: `membership/${id}/mail` });
+
+// The admin listing of applications - a searched, filtered, ordered page at a time, since the queue holds
+// thousands. Name and type search as `filter[name]` / `filter[type]`; `status` filters to one bucket unless it
+// is `all`; the sort maps to the submitted date; page and per_page ask for one page. The response is an
+// envelope: `{ data, pagination, counts }`.
+export const MEMBERSHIPS_LIST_API = ({
+    name = '',
+    type = '',
+    status = '',
+    sort = 'newest',
+    page = 1,
+    perPage = 20,
+} = {}) => {
+    const params = {
+        ts: getMillisecondCacheBuster(),
+        page,
+        per_page: perPage,
+        'orderBy[submitted_on]': sort === 'oldest' ? 'ASC' : 'DESC',
+    };
+
+    if (name) {
+        params['filter[name]'] = name;
+    }
+    if (type) {
+        params['filter[type]'] = type;
+    }
+    if (status && status !== 'all') {
+        params['filter[status]'] = status;
+    }
+
+    return { apiUrl: 'memberships', options: { params } };
+};
+
+export const MEMBERSHIP_CHECK_RENEWING_API = () => ({
+    apiUrl: 'membership/check/renewing',
+    options: { params: { ts: getMillisecondCacheBuster() } },
+});
+
+// The membership types and their default expiry, read and written by the admin settings screen. Each type is
+// saved on its own, addressed by its value.
+export const MEMBERSHIP_TYPES_API = () => ({
+    apiUrl: 'membership_types',
+    options: { params: { ts: getMillisecondCacheBuster() } },
+});
+
+export const MEMBERSHIP_TYPE_UPDATE_API = ({ name }) => ({ apiUrl: `membership_type/${name}` });

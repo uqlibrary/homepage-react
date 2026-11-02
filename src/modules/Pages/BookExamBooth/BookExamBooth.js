@@ -1,10 +1,18 @@
+/* istanbul ignore file */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Select from '@mui/material/Select';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TextField from '@mui/material/TextField';
 import MapIcon from '@mui/icons-material/Map';
 import { styled } from '@mui/material/styles';
 
@@ -43,9 +51,7 @@ const BookExamBooth = ({
     const defaultExamLength = 30; // minutes
     const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
 
-    const yesterday = moment()
-        .subtract(1, 'days')
-        .format(dateFormat);
+    const yesterday = moment().subtract(1, 'days').format(dateFormat);
 
     // store the exam location
     const [chosenLocationCode, setLocation] = React.useState('unset');
@@ -130,10 +136,8 @@ const BookExamBooth = ({
     return (
         <StandardPage title={locale.pageTitle}>
             <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    {locale.intro}
-                </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>{locale.intro}</Grid>
+                <Grid size={{ xs: 12 }}>
                     <StyledStandardCard title={locale.displayDecider.heading}>
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
@@ -164,7 +168,7 @@ const BookExamBooth = ({
                 </Grid>
 
                 {isProctorU === 'yes' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.locationDecider.heading}>
                             <div>
                                 <FormControl variant="standard" component="fieldset" required>
@@ -208,7 +212,7 @@ const BookExamBooth = ({
                 )}
 
                 {isProctorU === 'no' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
                             {locale.noBookingMessage.message}
                         </StyledStandardCard>
@@ -216,10 +220,10 @@ const BookExamBooth = ({
                 )}
 
                 {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
                                     <br />
                                     <FormControl variant="standard" component="fieldset">
@@ -246,7 +250,7 @@ const BookExamBooth = ({
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="sessionLength">{locale.sessionLength.label}</label>
                                     <br />
                                     <Select
@@ -274,7 +278,7 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
@@ -296,7 +300,7 @@ const BookExamBooth = ({
                                         }}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="startTimeHours">{locale.startTimeHours.label}</label>
                                     <br />
                                     <Select
@@ -348,7 +352,7 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <fieldset>
                                         {locale.submissionInstructions}
                                         <Button

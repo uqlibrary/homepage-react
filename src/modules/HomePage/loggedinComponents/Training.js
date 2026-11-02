@@ -18,31 +18,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { linkToDrupal } from 'helpers/general';
+import { eventTimeLong, eventDateRange, bookingText, filterStandardisedTrainingEvents } from './helpers';
 
-const MyLoader = props => (
-    <ContentLoader
-        speed={2}
-        uniqueKey="training"
-        width={'100%'}
-        height={'100%'}
-        viewBox="0 0 365 300"
-        backgroundColor="#f3f3f3"
-        foregroundColor="#e2e2e2"
-        {...props}
-    >
-        <rect x="5%" y="15" rx="3" ry="3" width="50%" height="14" />
-        <rect x="5%" y="40" rx="3" ry="3" width="40%" height="10" />
-        <rect x="0" y="65" rx="3" ry="3" width="100%" height="1" />
-
-        <rect x="5%" y="80" rx="3" ry="3" width="42%" height="14" />
-        <rect x="5%" y="110" rx="3" ry="3" width="45%" height="10" />
-        <rect x="0" y="135" rx="3" ry="3" width="100%" height="1" />
-
-        <rect x="5%" y="150" rx="3" ry="3" width="75%" height="14" />
-        <rect x="5%" y="175" rx="3" ry="3" width="41%" height="10" />
-        <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
-    </ContentLoader>
-);
 const StyledHeaderGridItem = styled(Grid)(() => ({
     display: 'flex',
     textAlign: 'center',
@@ -183,8 +160,35 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
+export const MyLoader = props => (
+    <ContentLoader
+        speed={2}
+        uniqueKey="training"
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 365 300"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="5%" y="15" rx="3" ry="3" width="50%" height="14" />
+        <rect x="5%" y="40" rx="3" ry="3" width="40%" height="10" />
+        <rect x="0" y="65" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="80" rx="3" ry="3" width="42%" height="14" />
+        <rect x="5%" y="110" rx="3" ry="3" width="45%" height="10" />
+        <rect x="0" y="135" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="150" rx="3" ry="3" width="75%" height="14" />
+        <rect x="5%" y="175" rx="3" ry="3" width="41%" height="10" />
+        <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
+    </ContentLoader>
+);
+
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
+    moment.tz.setDefault('Australia/Brisbane');
     const [eventDetail, setEventDetail] = useState(null);
+
     const showEventDetail = (event, value = null) => {
         setEventDetail(value ?? event);
         setTimeout(() => {
@@ -192,77 +196,16 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
             !!closeButton && closeButton.focus();
         }, 300);
     };
-    const closeEvent = entityId => {
+    const closeEvent = () => {
         setEventDetail(null);
     };
-    moment.tz.setDefault('Australia/Brisbane');
-    const eventTimeLong = eventInternals => {
-        const calendarOptions = {
-            sameDay: '[Today,] dddd D MMMM [at] h.mma',
-            nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
-            nextWeek: 'dddd D MMMM [at] h.mma',
-            lastDay: '[Yesterday]  D MMMM [at] h.mma',
-            lastWeek: '[Last] dddd  D MMMM [at] h.mma',
-            sameElse: 'D MMMM [at] h.mma',
-        };
-        let dateString = moment(eventInternals.start)
-            .calendar(null, calendarOptions)
-            .replace('.00', '');
-        const startDate = moment(eventInternals.start).format('MMDD');
-        const endDate = moment(eventInternals.end).format('MMDD');
-        if (startDate !== endDate) {
-            dateString +=
-                ' - ' +
-                moment(eventInternals.end)
-                    .calendar(null, calendarOptions)
-                    .replace('.00', '');
-        }
-        return dateString;
-    };
-    const eventDateRange = eventInternals => {
-        let response = moment(eventInternals.start).format('D MMMM');
-        const startDate = moment(eventInternals.start).format('MMDD');
-        const endDate = moment(eventInternals.end).format('MMDD');
-        if (startDate !== endDate) {
-            if (moment(eventInternals.start).format('MM') === moment(eventInternals.end).format('MM')) {
-                response =
-                    moment(eventInternals.start).format('D') + ' - ' + moment(eventInternals.end).format('D MMMM');
-            } else {
-                response += ' - ' + moment(eventInternals.end).format('D MMMM');
-            }
-        }
-        return response;
-    };
-    const bookingText = ev => {
-        /*
-          if bookingSettings is null then bookings are not required
-          if bookingSettings has a placesRemaining child *and it is > 0" then there are places still available
-          if bookingSettings has a placesRemaining child *and it is zero* then the course is fully booked
-         */
-        const placesRemainingText = { display: 'Booking is not required', button: 'Log in for more details' };
-        if (ev.bookingSettings !== null) {
-            if (ev.bookingSettings.placesRemaining > 0) {
-                placesRemainingText.display = 'Places still available';
-                placesRemainingText.button = 'Log in and book now';
-            } else {
-                placesRemainingText.display = 'Event is fully booked';
-                placesRemainingText.button = 'Log in to join wait list';
-            }
-        }
-        return placesRemainingText;
-    };
-    // there is something strange happening that sometimes the api sends us an object and sometimes an array
-    // convert to an array when it happens
-    const filterStandardisedTrainingEvents = () => {
-        const list =
-            !trainingEventsLoading && !trainingEventsError && !!trainingEvents && typeof trainingEvents === 'object'
-                ? Object.keys(trainingEvents).map(key => {
-                      return trainingEvents[key];
-                  })
-                : trainingEvents;
-        return !!list && list.length > 0 ? list.slice(0, 3) : [];
-    };
-    const filteredTrainingEvents = filterStandardisedTrainingEvents();
+
+    const filteredTrainingEvents = filterStandardisedTrainingEvents(
+        trainingEvents,
+        trainingEventsLoading,
+        trainingEventsError,
+    );
+
     return (
         <StandardCard subCard primaryHeader noPadding standardCardId="training-panel-display" noHeader>
             <Grid container padding={3} style={{ paddingBottom: 0 }}>
@@ -341,7 +284,10 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                     key={index}
                                                     style={{ paddingBlock: 0, marginBlock: 0 }}
                                                 >
-                                                    <Grid item xs={12} style={{ marginRight: '24px', paddingTop: 0 }}>
+                                                    <Grid
+                                                        size={{ xs: 12 }}
+                                                        style={{ marginRight: '24px', paddingTop: 0 }}
+                                                    >
                                                         <Button
                                                             id={`training-event-detail-button-${event.entityId}`}
                                                             data-testid={`training-event-detail-button-${index}`}
@@ -393,9 +339,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             style={{ marginTop: '8px' }}
                         >
                             <Grid container spacing={1} direction="column">
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Grid container spacing={1} className={'detailHeader'}>
-                                        <Grid item xs={'auto'} style={{ opacity: 1 }}>
+                                        <Grid size={{ xs: 'auto' }} style={{ opacity: 1 }}>
                                             <IconButton
                                                 onClick={() => closeEvent(eventDetail.entityId)}
                                                 aria-label="Close event detail"
@@ -406,7 +352,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <CloseIcon fontSize="small" className={'detailIcon'} />
                                             </IconButton>
                                         </Grid>
-                                        <Grid item xs>
+                                        <Grid>
                                             <Typography className={'detailTitle'} variant={'h6'} component={'h3'}>
                                                 {eventDetail.name}
                                             </Typography>
@@ -414,27 +360,25 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                     </Grid>
                                     <Grid container spacing={1}>
                                         <Grid
-                                            item
-                                            xs={12}
+                                            size={{ xs: 12 }}
                                             className={'detailSummary'}
                                             data-testid="event-detail-open-summary"
                                         >
                                             <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip title="Date" placement="right" TransitionProps={{ timeout: 300 }}>
                                                 <EventIcon />
                                             </Tooltip>
                                         </Grid>
                                         <Grid
-                                            item
-                                            xs={10}
+                                            size={{ xs: 10 }}
                                             className={'detailMeta'}
                                             data-testid={`training-detail-date-range-${eventDetail.entityId}`}
                                         >
                                             {eventTimeLong(eventDetail)}
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -443,12 +387,12 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <LocationOnIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={'detailMeta'}>
+                                        <Grid size={{ xs: 10 }} className={'detailMeta'}>
                                             {eventDetail.location ||
                                                 eventDetail.venue ||
                                                 /* istanbul ignore next */ eventDetail.offCampusVenue}
                                         </Grid>
-                                        <Grid item xs={1} className={'detailMeta'}>
+                                        <Grid size={{ xs: 1 }} className={'detailMeta'}>
                                             <Tooltip
                                                 title="Location"
                                                 placement="right"
@@ -457,7 +401,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                 <EventAvailableIcon />
                                             </Tooltip>
                                         </Grid>
-                                        <Grid item xs={10} className={'detailMeta'}>
+                                        <Grid size={{ xs: 10 }} className={'detailMeta'}>
                                             {bookingText(eventDetail).display}
                                         </Grid>
                                     </Grid>

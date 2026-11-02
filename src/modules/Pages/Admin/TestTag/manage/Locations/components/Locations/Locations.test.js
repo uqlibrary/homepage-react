@@ -67,7 +67,7 @@ describe('Locations', () => {
         jest.setTimeout(30000);
         it('handles closing of dialog', async () => {
             const addLocationFn = jest.fn(() => Promise.resolve());
-            const { getByText, getByTestId, findByTestId, queryByTestId } = setup({
+            const { getByText, getByTestId, findByTestId } = setup({
                 isOpen: true,
                 actions: {
                     loadSites: jest.fn(),

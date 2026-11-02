@@ -20,7 +20,7 @@ import AssetPanel from './AssetPanel';
 
 import { statusEnum } from '../utils/helpers';
 import { scrollToTopOfPage } from 'helpers/general';
-import { useValidation, useLabelPrinterPreference } from '../utils/hooks';
+import { useValidation } from '../utils/hooks';
 import { useLocation, useForm, useConfirmationAlert, useAccountUser } from '../../helpers/hooks';
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 import { transformer } from '../utils/transformers';
@@ -30,12 +30,15 @@ import { PERMISSIONS } from '../../config/auth';
 import { useConfirmationState } from 'hooks';
 import { breadcrumbs } from 'config/routes';
 
-import LabelLogo from './LabelLogo';
 import InspectionSuccessPrintDialog from './InspectionSuccessPrintDialog';
-import { useLabelPrinter, useLabelPrinterTemplate } from '../../SharedComponents/LabelPrinter';
-import * as labelPrintertemplates from './labelPrinterTemplates';
+import {
+    useLabelPrinter,
+    useLabelPrinterTemplate,
+    useLabelPrinterTemplateStore,
+    useLabelPrinterPreference,
+} from '../../SharedComponents/LabelPrinter';
 import { getDeptLabelPrintingEnabled, getDefaultDeptPrinter } from '../../helpers/labelPrinting';
-import { COOKIE_PRINTER_PREFERENCE } from './config';
+import { COOKIE_PRINTER_PREFERENCE } from '../../config/labelPrinting';
 
 const componentId = 'inspection';
 
@@ -76,6 +79,22 @@ const StyledWrapper = styled('div')(({ theme }) => ({
         bottom: 0,
         minHeight: '64px',
         width: 'auto',
+        backgroundColor: theme.palette.primary.main,
+        '& .actionButton': {
+            color: theme.palette.primary.main,
+            backgroundColor: 'white',
+            borderColor: theme.palette.primary.main,
+            '&:hover': {
+                backgroundColor: theme.palette.grey[100],
+                borderColor: theme.palette.primary.main,
+            },
+            '&.Mui-disabled': {
+                color: theme.palette.text.disabled,
+                backgroundColor: theme.palette.grey[200],
+                borderColor: theme.palette.grey[400],
+                opacity: 1,
+            },
+        },
     },
     '& .dialogContainer': {
         borderRadius: '6px',
@@ -143,16 +162,6 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     '& .addNewLabel': {
         width: '100%',
     },
-    '& .buttonWhite': {
-        color: 'white',
-        '&:hover': {
-            border: '1px solid white',
-        },
-    },
-    '& .buttonSuccess': {
-        backgroundColor: 'white',
-        color: theme.palette.primary.main,
-    },
 }));
 
 const Inspection = ({
@@ -176,23 +185,22 @@ const Inspection = ({
     const { user } = useAccountUser();
     const deptPrinterDefault = getDefaultDeptPrinter(user?.user_department);
     const deptPrintingEnabled = getDeptLabelPrintingEnabled(user?.user_department);
+    const { printerTemplateList } = useLabelPrinterTemplateStore(actions, deptPrintingEnabled);
+
     const { printer, availablePrinters } = useLabelPrinter({
+        printingEnabled: deptPrintingEnabled,
         printerCode: deptPrinterDefault,
-        templateStore: labelPrintertemplates,
         shouldOverridePrinterDevEnv: true,
     });
     const [printerPreference, setPrinterPreference] = useLabelPrinterPreference(COOKIE_PRINTER_PREFERENCE);
-    const { getLabelPrinterTemplate } = useLabelPrinterTemplate(labelPrintertemplates);
+    const { getLabelPrinterFormattedTemplate } = useLabelPrinterTemplate(printerTemplateList);
 
     const inspectionLocale = locale.pages.inspect;
 
     const [selectedAsset, setSelectedAsset] = useState({});
     const [isSaveSuccessOpen, showSaveSuccessConfirmation, hideSaveSuccessConfirmation] = useConfirmationState();
-    const [
-        isPrinterSaveSuccessDialogOpen,
-        showPrinterSaveSuccessDialog,
-        hidePrinterSaveSuccessDialog,
-    ] = useConfirmationState();
+    const [isPrinterSaveSuccessDialogOpen, showPrinterSaveSuccessDialog, hidePrinterSaveSuccessDialog] =
+        useConfirmationState();
     const [successDialogLocale, setSuccessDialogLocale] = useState({});
 
     const errorMessageFormatter = useMemo(() => locale.config.alerts.error, []);
@@ -225,7 +233,8 @@ const Inspection = ({
                 inspection_device_id:
                     formValues?.inspection_device_id !== undefined
                         ? formValues?.inspection_device_id
-                        : inspectionConfig?.inspection_devices?.[0]?.device_id ?? /* istanbul ignore next */ undefined,
+                        : (inspectionConfig?.inspection_devices?.[0]?.device_id ??
+                          /* istanbul ignore next */ undefined),
             };
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -319,27 +328,29 @@ const Inspection = ({
             return;
         }
         try {
-            const selectedPrinter = availablePrinters.find(printer => printer.name === printerPreference.name);
+            const selectedPrinter = availablePrinters.find(printer => printer?.name === printerPreference.name);
             /* istanbul ignore next */
             if (!selectedPrinter) {
                 console.error('Selected printer not found in available printers', selectedPrinter, availablePrinters);
                 showAlert(locale.pages.general.labelPrinting.error.noPrinterSelected);
                 return;
             }
+
             printer
                 ?.setPrinter(selectedPrinter)
                 .then(() => {
                     printer.getConnectionStatus().then(status => {
                         if (status.ready) {
-                            const template = getLabelPrinterTemplate(printerPreference.shortName, {
-                                logo: LabelLogo,
+                            const template = getLabelPrinterFormattedTemplate(printerPreference.templateId, {
                                 userId: successData.user_licence_number,
                                 assetId: successData.asset_id_displayed,
                                 testDate: successData.action_date,
                                 dueDate: successData.asset_next_test_due_date,
                             });
                             if (!template?.formattedTemplate) {
-                                console.error('No template found for printer:', printerPreference.shortName);
+                                console.error(
+                                    `Selected template ${printerPreference.templateId} was not available for printer ${printerPreference.name}`,
+                                );
                                 showAlert(locale.pages.general.labelPrinting.error.noLabelTemplate);
                                 return;
                             }
@@ -347,7 +358,7 @@ const Inspection = ({
                                 .print(template.formattedTemplate)
                                 .then(() => {
                                     showAlert(
-                                        locale.pages.general.labelPrinting.printJobSent(printerPreference.name),
+                                        locale.pages.general.labelPrinting.printJobSent(selectedPrinter.name),
                                         'info',
                                     );
                                 })
@@ -369,7 +380,7 @@ const Inspection = ({
             console.error('Printing error:', error);
             showAlert(locale.pages.general.labelPrinting.error.uncaughtException);
         }
-    }, [availablePrinters, getLabelPrinterTemplate, printer, printerPreference, showAlert, successData]);
+    }, [availablePrinters, getLabelPrinterFormattedTemplate, printer, printerPreference, showAlert, successData]);
 
     return (
         <StandardAuthPage
@@ -399,10 +410,10 @@ const Inspection = ({
                     onClose={hideSuccessMessage}
                     isOpen={isPrinterSaveSuccessDialogOpen}
                     locale={successDialogLocale}
-                    shouldDisableUnknownPrinters
-                    printerPreference={printerPreference?.name}
-                    onPrinterSelectionChange={setPrinterPreference}
+                    printerPreference={printerPreference}
+                    onPrinterTemplateSelectionChange={setPrinterPreference}
                     availablePrinters={availablePrinters}
+                    templateStore={printerTemplateList}
                     noMinContentWidth={isMobileView}
                 />
                 <EventPanel
@@ -455,8 +466,8 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-reset-button`}
                                 data-testid={`${componentId}-reset-button`}
-                                color={inView ? 'primary' : 'secondary'}
-                                className={!inView ? 'buttonWhite' : ''}
+                                color="primary"
+                                className="actionButton"
                             >
                                 {inspectionLocale.form.buttons.reset}
                             </Button>
@@ -469,7 +480,7 @@ const Inspection = ({
                                 fullWidth={isMobileView}
                                 id={`${componentId}-save-button`}
                                 data-testid={`${componentId}-save-button`}
-                                className={!inView ? 'buttonSuccess' : ''}
+                                className="actionButton"
                             >
                                 {saveInspectionSaving ? (
                                     <CircularProgress

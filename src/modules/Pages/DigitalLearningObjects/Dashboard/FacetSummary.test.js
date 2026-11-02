@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import FacetSummary from './FacetSummary';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 jest.mock('../../Admin/DigitalLearningObjects/dlorAdminHelpers', () => ({
     getUserPostfix: jest.fn(() => ''),

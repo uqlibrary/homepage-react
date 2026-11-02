@@ -291,6 +291,7 @@ export default {
                 "team_email": "team1@uq.edu.au",
                 "team_manager": "Steve Lancaster"
             },
+            "object_publishing_user_email": "library@library.uq.edu.au",
             "object_link_interaction_type": "none",
             "object_is_featured": 1,
             "object_series": [

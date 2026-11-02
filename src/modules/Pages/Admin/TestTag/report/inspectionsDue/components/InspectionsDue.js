@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -25,6 +25,7 @@ import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
 import * as _ from 'lodash';
 import { GridWrapper } from '../../../SharedComponents/LocationPicker/LocationPicker';
 import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import { useUserTeams } from '../../../helpers/teams';
 
@@ -88,16 +89,10 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     const qsPeriodValue = new URLSearchParams(window.location.search)?.get('period');
     const [monthRange, setMonthRange] = useState(qsPeriodValue ?? config.defaults.monthsPeriod);
 
-    const {
-        userTeamList,
-        selectedTeam,
-        selectedTeamSlug,
-        teamSelectFieldName,
-        setSelectedTeam,
-        getSelectedTeamSlug,
-    } = useUserTeams(user);
-
-    // const prevSearchRef = useRef({ locationStr: '', monthRange, selectedTeamSlug });
+    const { userTeamList, selectedTeam, selectedTeamSlug, teamSelectFieldName, getTeamSlug, setSelectedTeam } =
+        useUserTeams({
+            user,
+        });
 
     const [filterModel, setFilterModel] = useState({ items: [] });
 
@@ -142,13 +137,12 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
     );
 
     const handleSelectedTeam = useCallback(
-        updater => {
-            const newState = updater(selectedTeam);
-            setSelectedTeam(newState);
-            const newSlug = getSelectedTeamSlug(newState);
-            getInspectionsDue({ teamSlug: newSlug });
+        optionValue => {
+            const newTeamSlug = getTeamSlug(optionValue);
+            setSelectedTeam(optionValue);
+            getInspectionsDue({ teamSlug: newTeamSlug });
         },
-        [selectedTeam, setSelectedTeam, getSelectedTeamSlug, getInspectionsDue],
+        [setSelectedTeam, getTeamSlug, getInspectionsDue],
     );
     const handleSelectedLocation = useCallback(
         value => {
@@ -174,16 +168,16 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                 <StandardCard title={pageLocale.form.title}>
                     <Grid container spacing={3}>
                         <GridWrapper withGrid divisor={2}>
-                            <SelectField
-                                field={teamSelectFieldName}
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={handleSelectedTeam}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={handleSelectedTeam}
                             />
                         </GridWrapper>
                     </Grid>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} mt={1.5}>
                         <AutoLocationPicker
                             id={componentId}
                             actions={actions}
@@ -193,7 +187,7 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                             locale={locale.pages.general.locationPicker}
                         />
                     </Grid>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} mt={1.5}>
                         <GridWrapper withGrid divisor={2}>
                             <MonthsSelector
                                 id={componentId}
@@ -237,8 +231,8 @@ const InspectionsDue = ({ actions, inspectionsDue, inspectionsDueLoading, inspec
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
                                 }}
                             />
                         </Grid>

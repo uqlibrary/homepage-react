@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,10 +18,12 @@ import AutoLocationPicker from '../../../SharedComponents/LocationPicker/AutoLoc
 import AssetTypeSelector from '../../../SharedComponents/AssetTypeSelector/AssetTypeSelector';
 import ConfirmationAlert from '../../../SharedComponents/ConfirmationAlert/ConfirmationAlert';
 import DebouncedTextField from '../../../SharedComponents/DebouncedTextField/DebouncedTextField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
 import { transformFilterRow } from './transformers';
-import { useConfirmationAlert } from '../../../helpers/hooks';
+import { useConfirmationAlert, useAccountUser } from '../../../helpers/hooks';
+import { useUserTeams } from '../../../helpers/teams';
 
 const rootId = 'filter-dialog';
 const rootIdLower = 'filter_dialog';
@@ -42,6 +44,8 @@ const FilterDialog = ({
     onAction,
 }) => {
     const componentId = `${rootIdLower}-${id}`;
+    const { user } = useAccountUser();
+
     const { row, setRow } = useDataTableRow([], transformFilterRow);
     const [assetTypeId, setAssetTypeId] = useState('');
     const [searchNotes, setSearchNotes] = useState('');
@@ -67,12 +71,23 @@ const FilterDialog = ({
         store: locationStore,
         condition: () => isOpen,
     });
-    const searchParamsRef = React.useRef({ lastSelectedLocation, location: '{}', searchNotes, assetTypeId });
+    const searchParamsRef = React.useRef({
+        lastSelectedLocation,
+        location: '{}',
+        searchNotes,
+        assetTypeId,
+        selectedTeamSlug: '',
+    });
     const { columns } = useDataTableColumns({
         config,
         locale: locale.form.columns,
         withActions: false,
     });
+
+    const { userTeamList, teamSelectFieldName, selectedTeamSlug, selectedTeam, setSelectedTeam } = useUserTeams({
+        user,
+    });
+
     useEffect(() => {
         /* istanbul ignore else */
         if (!assetsMineListLoading && isOpen) {
@@ -89,11 +104,18 @@ const FilterDialog = ({
                 searchParamsRef.current.lastSelectedLocation === lastSelectedLocation &&
                 searchParamsRef.current.location === locationStr &&
                 searchParamsRef.current.searchNotes === searchNotes &&
-                searchParamsRef.current.assetTypeId === assetTypeId
+                searchParamsRef.current.assetTypeId === assetTypeId &&
+                searchParamsRef.current.selectedTeamSlug === selectedTeamSlug
             ) {
                 return;
             }
-            searchParamsRef.current = { lastSelectedLocation, location: locationStr, searchNotes, assetTypeId };
+            searchParamsRef.current = {
+                lastSelectedLocation,
+                location: locationStr,
+                searchNotes,
+                assetTypeId,
+                selectedTeamSlug,
+            };
             actions.loadAssetsMine({
                 ...((lastSelectedLocation === 'floor' && location.floor !== -1) ||
                 (lastSelectedLocation === 'room' && location.room !== -1) ||
@@ -106,9 +128,10 @@ const FilterDialog = ({
                     : {}),
                 ...(!!assetTypeId ? { assetTypeId } : {}),
                 textSearch: searchNotes,
+                teamSlug: selectedTeamSlug !== '' ? selectedTeamSlug : null,
             });
         }
-    }, [lastSelectedLocation, location, assetTypeId, searchNotes, isOpen, isBusy, actions]);
+    }, [lastSelectedLocation, location, assetTypeId, searchNotes, selectedTeamSlug, isOpen, isBusy, actions]);
 
     const handleCancelAction = () => {
         onCancel?.();
@@ -142,7 +165,23 @@ const FilterDialog = ({
                 <DialogTitle id={`${componentId}-title`} data-testid={`${componentId}-title`}>
                     {locale?.title}
                 </DialogTitle>
-                <DialogContent sx={{ overflowX: 'hidden' }}>
+                <DialogContent
+                    sx={{
+                        overflowX: 'hidden',
+                        '& > .MuiGrid-container + .MuiGrid-container': { mt: 2 },
+                    }}
+                >
+                    <Grid container spacing={3}>
+                        <Grid size={{ xs: 12, sm: 3 }}>
+                            <TeamSelector
+                                id={teamSelectFieldName}
+                                options={userTeamList}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={setSelectedTeam}
+                            />
+                        </Grid>
+                    </Grid>
                     <Grid container spacing={3}>
                         <AutoLocationPicker
                             id={rootId}
@@ -154,7 +193,7 @@ const FilterDialog = ({
                         />
                     </Grid>
                     <Grid container spacing={3}>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                             <AssetTypeSelector
                                 id={rootId}
                                 locale={assetTypeLocale}
@@ -170,7 +209,7 @@ const FilterDialog = ({
                                 disableClearable={false}
                             />
                         </Grid>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
                             <DebouncedTextField
                                 id={`${componentId}-search-notes`}
                                 inputProps={{
@@ -213,14 +252,14 @@ const FilterDialog = ({
                                 loading={!!assetsMineListLoading}
                                 checkboxSelection
                                 disableRowSelectionOnClick
-                                onSelectionModelChange={handleAssetSelectionChange}
+                                onRowSelectionModelChange={handleAssetSelectionChange}
                                 disableSelectionOnClick={false}
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={4} className={'actionButtons'}>
-                        <Grid xs={12} sm={6} container justifyContent="flex-start">
+                        <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-start">
                             <Button
                                 variant="outlined"
                                 onClick={handleCancelAction}
@@ -231,7 +270,7 @@ const FilterDialog = ({
                                 {locale.button.cancel}
                             </Button>
                         </Grid>
-                        <Grid xs={12} sm={6} container justifyContent="flex-end">
+                        <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-end">
                             <Button
                                 variant="contained"
                                 color="primary"

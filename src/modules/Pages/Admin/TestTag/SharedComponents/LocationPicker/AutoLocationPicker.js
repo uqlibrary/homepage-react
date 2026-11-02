@@ -13,7 +13,7 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
         () =>
             !!hasAllOption
                 ? [{ site_id: -1, site_name: locale.site.labelAll }, ...(siteList ?? [])]
-                : siteList ?? /* istanbul ignore next */ [],
+                : (siteList ?? /* istanbul ignore next */ []),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [hasAllOption, siteList],
     );
@@ -27,7 +27,7 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
         () =>
             !!hasAllOption
                 ? [{ floor_id: -1, floor_id_displayed: locale.floor.labelAll }, ...(floorList?.floors ?? [])]
-                : floorList?.floors ?? [],
+                : (floorList?.floors ?? []),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [floorList, hasAllOption],
     );
@@ -36,7 +36,7 @@ const AutoLocationPicker = ({ hasAllOption = false, locale, location, ...props }
         () =>
             !!hasAllOption
                 ? [{ room_id: -1, room_id_displayed: locale.room.labelAll }, ...(roomList?.rooms ?? [])]
-                : roomList?.rooms ?? [],
+                : (roomList?.rooms ?? []),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [roomList, hasAllOption],
     );

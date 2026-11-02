@@ -72,9 +72,7 @@ const outputLastCommitHashes = ({
 };
 
 // get last commit hash, and use in output filenames.
-const currentCommitHash = execSync('git rev-parse --short HEAD')
-    .toString()
-    .trim();
+const currentCommitHash = execSync('git rev-parse --short HEAD').toString().trim();
 
 /** */
 
@@ -84,7 +82,7 @@ const webpackConfig = {
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
         main: resolve(__dirname, './src/index.js'),
-        vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
+        vendor: ['react', 'react-dom', 'redux', 'react-redux', 'moment'],
     },
     // Where you want the output to go
     output: {
@@ -98,6 +96,9 @@ const webpackConfig = {
         compress: true,
         port: port,
         host: '0.0.0.0',
+        client: {
+            overlay: false,
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -119,6 +120,10 @@ const webpackConfig = {
                 {
                     from: resolve(__dirname, 'public', '404.js'),
                     to: resolve(__dirname, './dist/', config.basePath),
+                },
+                {
+                    from: resolve(__dirname, 'public', 'vendor', 'mazemap'),
+                    to: resolve(__dirname, './dist/', config.basePath, 'vendor', 'mazemap'),
                 },
             ],
         }),
@@ -151,6 +156,8 @@ const webpackConfig = {
             ),
             'process.env.TITLE_SUFFIX': JSON.stringify(config.titleSuffix),
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
+            'process.env.BARCODE_SCANNER_WASM_PATH': JSON.stringify(process.env.BARCODE_SCANNER_WASM_PATH),
+            'process.env.HASH_ROUTER': JSON.stringify(!!config.hashRouter),
         }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^\.\/locale$/,
@@ -220,6 +227,10 @@ const webpackConfig = {
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.(mp3|wav|ogg|m4a)$/i,
                 type: 'asset/resource',
             },
         ],

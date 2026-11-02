@@ -11,18 +11,19 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getDlorViewPageUrl } from 'modules/Pages/DigitalLearningObjects/dlorHelpers';
 import { dlorAdminLink } from 'modules/Pages/Admin/DigitalLearningObjects/dlorAdminHelpers';
 import { useAccountContext } from 'context';
-import { isDlorAdminUser } from 'helpers/access';
+import { Link, useNavigate } from 'react-router';
 
 export const ObjectListItem = ({ object, listParentName = 'team' }) => {
     const { account } = useAccountContext();
+    const navigate = useNavigate();
     const navigateToDlorEditPage = uuid => {
-        window.location.href = dlorAdminLink(`/edit/${uuid}`, account)
+        navigate(dlorAdminLink(`/edit/${uuid}`, account));
     };
 
     return (
         <Grid container key={`${listParentName}-object-${object.object_id}`}>
-            <Grid item xs={1} />
-            <Grid item xs={8}>
+            <Grid size={{ xs: 1 }} />
+            <Grid size={{ xs: 8 }}>
                 <div>
                     <Typography component={'h2'} variant={'h6'}>
                         {object?.object_title}
@@ -33,15 +34,15 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     </Typography>
                 </div>
             </Grid>
-            <Grid item xs={1}>
-                <a
+            <Grid size={{ xs: 1 }}>
+                <Link
                     data-testid={`dlor-${listParentName}-object-list-item-view-${object?.object_id}`}
-                    href={getDlorViewPageUrl(object?.object_public_uuid)}
+                    to={getDlorViewPageUrl(object?.object_public_uuid)}
                 >
                     <VisibilityIcon sx={{ color: 'black', marginTop: '8px' }} />
-                </a>
+                </Link>
             </Grid>
-            <Grid item xs={1}>
+            <Grid size={{ xs: 1 }}>
                 <IconButton
                     data-testid={`dlor-${listParentName}-object-list-item-${object?.object_id}`}
                     onClick={() => navigateToDlorEditPage(object?.object_public_uuid)}
@@ -50,7 +51,7 @@ export const ObjectListItem = ({ object, listParentName = 'team' }) => {
                     <EditIcon />
                 </IconButton>
             </Grid>
-            <Grid item xs={1} />
+            <Grid size={{ xs: 1 }} />
         </Grid>
     );
 };

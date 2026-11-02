@@ -47,7 +47,12 @@ describe('Backend routes method', () => {
     it('should construct url for LEARNING_RESOURCES_COURSE_SUGGESTIONS_API', () => {
         const keyword = 'cows';
         expect(routes.LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword })).toEqual({
-            apiUrl: 'https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=cows',
+            apiUrl: 'learning_resources/suggestions',
+            options: {
+                params: {
+                    hint: 'cows',
+                },
+            },
         });
     });
 
@@ -102,7 +107,7 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.LIB_HOURS_API()).toEqual({
             apiUrl: 'library_hours/day',
-            options: { params: { ts: '1577836800000' } },
+            options: { params: { ts: '26297280' } },
         });
         MockDate.reset();
     });
@@ -113,12 +118,13 @@ describe('Backend routes method', () => {
         });
     });
 
-    it('should construct url for AUTHOR_API', () => {
-        expect(routes.AUTHOR_API({ authorId: '12345' })).toEqual({ apiUrl: 'fez-authors/12345' });
-    });
-
     it('should construct url for CURRENT_AUTHOR_API', () => {
-        expect(routes.CURRENT_AUTHOR_API()).toEqual({ apiUrl: 'fez-authors' });
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.CURRENT_AUTHOR_API()).toEqual({
+            apiUrl: 'fez-authors',
+            options: { params: { ts: '1577836800000' } },
+        });
     });
 
     it('should construct url for CURRENT_ACCOUNT_API', () => {
@@ -136,9 +142,81 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.LOANS_API()).toEqual({
             apiUrl: 'account/loans',
+            options: { params: { ts: '26297280' } },
+        });
+        MockDate.reset();
+    });
+
+    it('should construct url for SPACES_ALL_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.SPACES_ALL_API()).toEqual({
+            apiUrl: 'bookable_spaces/spaces/all',
             options: { params: { ts: '1577836800000' } },
         });
         MockDate.reset();
+    });
+
+    it('should construct url for SPACES_ADMIN_ALL_API with and without parameters', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+
+        expect(routes.SPACES_ADMIN_ALL_API()).toEqual({
+            apiUrl: 'bookable_spaces/admin/spaces/all',
+            options: { params: { ts: '1577836800000' } },
+        });
+
+        expect(routes.SPACES_ADMIN_ALL_API({ includeDrafts: true, includeDeleted: true })).toEqual({
+            apiUrl: 'bookable_spaces/admin/spaces/all',
+            options: { params: { include_drafts: true, include_deleted: true, ts: '1577836800000' } },
+        });
+
+        MockDate.reset();
+    });
+
+    it('should construct url for SPACES_OUTAGES_API', () => {
+        expect(routes.SPACES_OUTAGES_API({ spaceId: 123 })).toEqual({
+            apiUrl: 'bookable_spaces/space/123/outages',
+        });
+    });
+
+    it('should construct url for floor, library and campus outages APIs', () => {
+        expect(routes.SPACES_FLOOR_OUTAGES_API({ floorId: 12 })).toEqual({
+            apiUrl: 'bookable_spaces/floor/12/outages',
+        });
+        expect(routes.SPACES_LIBRARY_OUTAGES_API({ libraryId: 34 })).toEqual({
+            apiUrl: 'bookable_spaces/library/34/outages',
+        });
+        expect(routes.SPACES_CAMPUS_OUTAGES_API({ campusId: 56 })).toEqual({
+            apiUrl: 'bookable_spaces/campus/56/outages',
+        });
+    });
+
+    it('should construct url for SPACES_BULK_FACILITIES_API', () => {
+        expect(routes.SPACES_BULK_FACILITIES_API({ id: 123456 })).toEqual({
+            apiUrl: 'bookable_spaces/bulkFacilityTypes/123456',
+        });
+    });
+
+    it('should construct url for SPACES_OUTAGE_API', () => {
+        expect(routes.SPACES_OUTAGE_API({ id: 456 })).toEqual({
+            apiUrl: 'bookable_spaces/space_outage/456',
+        });
+    });
+
+    it('should construct url for WEEKLYHOURS_API', () => {
+        const MockDate = require('mockdate');
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        expect(routes.WEEKLYHOURS_API()).toEqual({
+            apiUrl: 'library_hours/week',
+            options: { params: { weeks: 2, ts: '1577836800000' } },
+        });
+        MockDate.reset();
+    });
+
+    it('should construct url for SPACES_FACILITY_TYPE_ALL_API', () => {
+        const AllAPIRequest = routes.SPACES_FACILITY_TYPE_ALL_API(false);
+        expect(AllAPIRequest.apiUrl).toEqual('bookable_spaces/facility_types/all');
     });
 
     it('should construct url for PRINTING_API', () => {
@@ -146,7 +224,7 @@ describe('Backend routes method', () => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
         expect(routes.PRINTING_API()).toEqual({
             apiUrl: 'papercut/balance',
-            options: { params: { ts: '1577836800000' } },
+            options: { params: { ts: '26297280' } },
         });
         MockDate.reset();
     });
@@ -260,6 +338,7 @@ describe('Backend routes method', () => {
         reportByFilters = routes.TEST_TAG_ASSET_REPORT_BY_FILTERS_LIST(testFilter);
         expect(reportByFilters.apiUrl).toEqual('test-and-tag/asset/search/mine');
     });
+
     describe('coverage', () => {
         it('should return valid path for routes', () => {
             expect(routes.TEST_TAG_SAVE_ASSETTYPE_API(100)).toEqual({ apiUrl: 'test-and-tag/asset-type/100' });
@@ -300,6 +379,16 @@ describe('Backend routes method', () => {
             expect(routes.TEST_TAG_ADD_TEAM_API()).toEqual({ apiUrl: 'test-and-tag/team' });
             expect(routes.TEST_TAG_UPDATE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
             expect(routes.TEST_TAG_DELETE_TEAM_API('WSS')).toEqual({ apiUrl: 'test-and-tag/team/WSS' });
+            expect(routes.TEST_TAG_PRINTER_TEMPLATE_LIST_API()).toEqual({
+                apiUrl: 'test-and-tag/printer-template/current/mine',
+            });
+            expect(routes.TEST_TAG_ADD_PRINTER_TEMPLATE_API()).toEqual({ apiUrl: 'test-and-tag/printer-template' });
+            expect(routes.TEST_TAG_UPDATE_PRINTER_TEMPLATE_API(5)).toEqual({
+                apiUrl: 'test-and-tag/printer-template/5',
+            });
+            expect(routes.TEST_TAG_DELETE_PRINTER_TEMPLATE_API(5)).toEqual({
+                apiUrl: 'test-and-tag/printer-template/5',
+            });
             expect(routes.TEST_TAG_REPORT_UTILITY_LICENCED_USERS()).toEqual({
                 apiUrl: 'test-and-tag/report/licenced-inspectors',
             });
@@ -327,6 +416,27 @@ describe('Backend routes method', () => {
             });
 
             expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/auth/demographics' });
+            expect(routes.DLOR_AUTHENTICATED_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/auth/find/100' });
+            expect(routes.DLOR_OWNED_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/auth/object/100' });
+            expect(routes.DLOR_SERIES_LOAD_API(100)).toEqual({ apiUrl: 'dlor/public/series/find/100' });
+            expect(routes.DLOR_FAVOURITES_API()).toEqual({ apiUrl: 'dlor/auth/favourites' });
+            expect(routes.DLOR_CREATE_FACET_API()).toEqual({ apiUrl: 'dlor/admin/facet' });
+            expect(routes.DLOR_UPDATE_FACET_API(100)).toEqual({ apiUrl: 'dlor/admin/facet/100' });
+            expect(routes.DLOR_DELETE_FACET_API(100)).toEqual({ apiUrl: 'dlor/admin/facet/100' });
+            expect(routes.DLOR_DEMOGRAPHICS_REPORT_API()).toEqual({ apiUrl: 'dlor/admin/demographics/all' });
+            expect(routes.DLOR_FAVOURITES_REPORT_API()).toEqual({ apiUrl: 'dlor/admin/favourites' });
+            expect(routes.DLOR_ADMIN_NOTES_API('uuid-123')).toEqual({ apiUrl: 'dlor/admin/object/notes/uuid-123' });
+            expect(routes.DLOR_CREATE_TEAM_ADMIN_API()).toEqual({ apiUrl: 'dlor/auth/teammember' });
+            expect(routes.DLOR_EDIT_TEAM_ADMIN_API(100)).toEqual({ apiUrl: 'dlor/auth/teammember/100' });
+            expect(routes.DLOR_DELETE_TEAM_ADMIN_API(100)).toEqual({ apiUrl: 'dlor/auth/teammember/100' });
+            expect(routes.DLOR_KEYWORDS_API()).toEqual({ apiUrl: 'dlor/public/keywords/list' });
+            expect(routes.DLOR_KEYWORDS_UPDATE_API()).toEqual({ apiUrl: 'dlor/admin/keywords' });
+            expect(routes.DLOR_KEYWORDS_DESTROY_API()).toEqual({ apiUrl: 'dlor/admin/keywords/delete' });
+            expect(routes.DLOR_STATISTICS_API()).toEqual({ apiUrl: 'dlor/auth/stats' });
+            expect(routes.DLOR_SCHEDULE_API()).toEqual({ apiUrl: 'dlor/admin/schedule' });
+            expect(routes.DLOR_SCHEDULE_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/schedule/100' });
+            expect(routes.DLOR_REQUEST_KEYWORD_API()).toEqual({ apiUrl: 'dlor/auth/keywords/request' });
+            expect(routes.DLOR_DASHBOARD_API()).toEqual({ apiUrl: 'dlor/auth/dashboard' });
 
             expect(routes.DLOR_CREATE_API()).toEqual({ apiUrl: 'dlor/admin/object' });
             expect(routes.DLOR_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/admin/object/100' });
@@ -371,5 +481,80 @@ describe('Backend routes method', () => {
                 apiUrl: 'https://assets.library.uq.edu.au/reusable-webcomponents/api/homepage/headcount.json',
             });
         });
+    });
+});
+
+describe('membership routes', () => {
+    const MockDate = require('mockdate');
+    const frozenTimestamp = '1577836800000';
+
+    beforeEach(() => {
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+    });
+
+    afterEach(() => {
+        MockDate.reset();
+    });
+
+    it('should construct url for MEMBERSHIP_FORM_DATA_API', () => {
+        expect(routes.MEMBERSHIP_FORM_DATA_API()).toEqual({ apiUrl: 'membership' });
+    });
+
+    it('should construct url for MEMBERSHIP_CREATE_API', () => {
+        expect(routes.MEMBERSHIP_CREATE_API()).toEqual({ apiUrl: 'membership' });
+    });
+
+    it('should construct url for MEMBERSHIP_CHECK_RENEWING_API', () => {
+        expect(routes.MEMBERSHIP_CHECK_RENEWING_API()).toEqual({
+            apiUrl: 'membership/check/renewing',
+            options: { params: { ts: frozenTimestamp } },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API defaults to page 1, the default page size and newest-first', () => {
+        expect(routes.MEMBERSHIPS_LIST_API()).toEqual({
+            apiUrl: 'memberships',
+            options: { params: { ts: frozenTimestamp, page: 1, per_page: 20, 'orderBy[submitted_on]': 'DESC' } },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API carries the search, type, status, sort and page', () => {
+        expect(
+            routes.MEMBERSHIPS_LIST_API({
+                name: 'smith',
+                type: 'community',
+                status: 'renewing',
+                sort: 'oldest',
+                page: 3,
+                perPage: 25,
+            }),
+        ).toEqual({
+            apiUrl: 'memberships',
+            options: {
+                params: {
+                    ts: frozenTimestamp,
+                    page: 3,
+                    per_page: 25,
+                    'orderBy[submitted_on]': 'ASC',
+                    'filter[name]': 'smith',
+                    'filter[type]': 'community',
+                    'filter[status]': 'renewing',
+                },
+            },
+        });
+    });
+
+    it('MEMBERSHIPS_LIST_API leaves the status filter off when it is "all"', () => {
+        const params = routes.MEMBERSHIPS_LIST_API({ status: 'all' }).options.params;
+
+        expect(params['filter[status]']).toBeUndefined();
+        expect(params['orderBy[submitted_on]']).toBe('DESC');
+    });
+
+    it('MEMBERSHIP_FILE_URL_API addresses a stored document by its key, encoded', () => {
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'abc-123.pdf' })).toEqual({
+            apiUrl: 'file/membership/abc-123.pdf',
+        });
+        expect(routes.MEMBERSHIP_FILE_URL_API({ key: 'a b/c.pdf' }).apiUrl).toBe('file/membership/a%20b%2Fc.pdf');
     });
 });

@@ -1,4 +1,4 @@
-import ZebraBrowserPrintWrapper from 'zebra-browser-print-wrapper-https';
+import ZebraBrowserPrintWrapper from './webInterface/ZebraBrowserPrintWrapper';
 
 /**
  * A Zebra label printer class to use with Zebra Browser Print wrapper.
@@ -65,7 +65,6 @@ export const createPrinter = () => {
 
     const print = async data => {
         try {
-            console.log('Sending print data to printer...');
             await printer.print(data);
         } catch (error) {
             console.error('Failed to print:', error.message);

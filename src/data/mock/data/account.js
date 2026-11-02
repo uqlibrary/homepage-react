@@ -41,6 +41,25 @@ export const accounts = {
         "blocked": false,
         "user_group": "LIBRARYSTAFFB",
     },
+    libSpaces: { // Library staff who is part of Barnaby's Spaces team - can do Spaces admin, AD group lib_libapi_SpacesAdmin
+        "id": "libSpaces",
+        "class": ["libstaff", "IS_CURRENT"],
+        "type": 18,
+        "homeLib": "St Lucia",
+        "firstName": "Aiden",
+        "lastName": "Cattle",
+        "name": "Aiden Cattle",
+        "mail": "uqacattl@example.uq.edu.au",
+        "barcode": "111111111171111",
+        "groups": ["DC=uq","DC=edu","DC=au","CN=lib_libapi_SpacesAdmin,OU=lib-libapi-groups,OU=LIB-groups,OU=University of Queensland Library,OU=Deputy Vice-Chancellor (Academic),OU=Vice-Chancellor,DC=uq,DC=edu,DC=au"],
+        "classes": [],
+        "expiryDate": "31-12-19",
+        "hasSession": true,
+        "tokenBased": false,
+        'canMasquerade': false,
+        "blocked": false,
+        "user_group": "LIBRARYSTAFFB",
+    },
     dloradmn: {
         "id": "dloradmn",
         "class": ["libstaff", "IS_CURRENT"],
@@ -97,8 +116,9 @@ export const accounts = {
                 "can_see_reports": 1
             },
             "department_teams": [
-                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
-                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+                { 'id': 1, 'team_slug': 'WSS', 'team_display_name': 'Work Station Support', 'team_current_flag': 1 },
+                { 'id': 2, 'team_slug': 'SPACES', 'team_display_name': 'Spaces', 'team_current_flag': 1 },
+                { 'id': 3, 'team_slug': 'DISABLED', 'team_display_name': 'Disabled Team', 'team_current_flag': 0 },
             ],
         },
     },
@@ -139,7 +159,7 @@ export const accounts = {
                 "can_see_reports": 0
             },
             "department_teams": [
-                {"id":1, "team_slug": 'PF', "team_display_name": 'Property and Facilities'}, 
+                {"id":1, "team_slug": 'PF', "team_display_name": 'Property and Facilities', 'team_current_flag': 1}, 
             ],
         },
     },
@@ -180,8 +200,9 @@ export const accounts = {
                 "can_see_reports": 0
             },
             "department_teams": [
-                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
-                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+                { 'id': 1, 'team_slug': 'WSS', 'team_display_name': 'Work Station Support', 'team_current_flag': 1 },
+                { 'id': 2, 'team_slug': 'SPACES', 'team_display_name': 'Spaces', 'team_current_flag': 1 },
+                { 'id': 3, 'team_slug': 'DISABLED', 'team_display_name': 'Disabled Team', 'team_current_flag': 0 },
             ],
         },
     },
@@ -222,8 +243,9 @@ export const accounts = {
                 "can_see_reports": 1
             },
             "department_teams": [
-                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
-                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+                { 'id': 1, 'team_slug': 'WSS', 'team_display_name': 'Work Station Support', 'team_current_flag': 1 },
+                { 'id': 2, 'team_slug': 'SPACES', 'team_display_name': 'Spaces', 'team_current_flag': 1 },
+                { 'id': 3, 'team_slug': 'DISABLED', 'team_display_name': 'Disabled Team', 'team_current_flag': 0 },
             ],
         },
     },
@@ -264,8 +286,9 @@ export const accounts = {
                 "can_see_reports": 0
             },
             "department_teams": [
-                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
-                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+                { 'id': 1, 'team_slug': 'WSS', 'team_display_name': 'Work Station Support', 'team_current_flag': 1 },
+                { 'id': 2, 'team_slug': 'SPACES', 'team_display_name': 'Spaces', 'team_current_flag': 1 },
+                { 'id': 3, 'team_slug': 'DISABLED', 'team_display_name': 'Disabled Team', 'team_current_flag': 0 },
             ],
         },
     },
@@ -306,8 +329,9 @@ export const accounts = {
                 "can_see_reports": 0
             },
             "department_teams": [
-                {"id":1, "team_slug": 'WSS', "team_display_name": 'Work Station Support'}, 
-                {"id":2, "team_slug": 'SPACES', "team_display_name": 'Spaces'}
+                { 'id': 1, 'team_slug': 'WSS', 'team_display_name': 'Work Station Support', 'team_current_flag': 1 },
+                { 'id': 2, 'team_slug': 'SPACES', 'team_display_name': 'Spaces', 'team_current_flag': 1 },
+                { 'id': 3, 'team_slug': 'DISABLED', 'team_display_name': 'Disabled Team', 'team_current_flag': 0 },
             ],
         },
     },

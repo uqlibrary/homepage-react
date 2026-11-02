@@ -110,8 +110,7 @@ describe('Alert actions', () => {
                     start: '2022-10-12 09:58:02',
                     end: '2022-11-22 09:58:02',
                     title: 'Test urgent alert 2',
-                    body:
-                        '[urgent link description](http://www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                    body: '[urgent link description](http://www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                     urgent: 1,
                 });
 

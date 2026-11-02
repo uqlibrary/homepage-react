@@ -40,8 +40,7 @@ export const AlertSplitButton = ({
     };
 
     const handleClose = event => {
-        /* istanbul ignore next */
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        if (anchorRef.current.contains(event.target)) {
             return;
         }
 
@@ -59,7 +58,7 @@ export const AlertSplitButton = ({
                 locale={confirmDeleteLocale(1)}
             />
             <Grid container direction="column" alignItems="center">
-                <Grid item xs={12} sx={{ position: 'relative', minHeight: 50 }}>
+                <Grid size={{ xs: 12 }} sx={{ position: 'relative', minHeight: 50 }}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <StyledPrimaryButton
                             children={mainButtonLabel}

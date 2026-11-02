@@ -14,6 +14,7 @@ export const DLOTeamAdd = ({ actions, dlorItemCreating, dlorCreatedItemError, dl
         team_name: '',
         team_email: '',
         team_manager: '',
+        team_admin_username: '',
     };
     const { account } = useAccountContext();
     React.useEffect(() => {

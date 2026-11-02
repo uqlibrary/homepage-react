@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -20,7 +20,8 @@ import config from './config';
 import { PERMISSIONS } from '../../../config/auth';
 import { breadcrumbs } from 'config/routes';
 import { WithExportMenu } from '../../../SharedComponents/DataTable/Toolbar';
-import SelectField from '../../../SharedComponents/DataTable/Filter/SelectField';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
+
 import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
@@ -65,7 +66,9 @@ const AssetReportByFilters = ({
     const [selectedEndDate, setSelectedEndDate] = React.useState({ date: null, error: null });
     const [statusType, setStatusType] = React.useState(0);
 
-    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams(user);
+    const { userTeamList, teamSelectFieldName, selectedTeam, selectedTeamSlug, setSelectedTeam } = useUserTeams({
+        user,
+    });
 
     const buildingList = useMemo(() => {
         /* istanbul ignore else */
@@ -157,7 +160,6 @@ const AssetReportByFilters = ({
         !!siteHeader && siteHeader.setAttribute('secondLevelUrl', breadcrumbs.testntag.pathname);
 
         actions.loadTaggedBuildingList();
-        // buildPayload();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -198,20 +200,18 @@ const AssetReportByFilters = ({
             <StyledWrapper>
                 <StandardCard title={pageLocale.form.title} id={componentId}>
                     <Grid container spacing={1}>
-                        <Grid xs={12} md={6} lg={3}>
-                            {/* Team Picker */}
-                            <SelectField
-                                field={teamSelectFieldName}
+                        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
+                            <TeamSelector
+                                id={teamSelectFieldName}
                                 options={userTeamList}
-                                locale={{ all: 'All teams', label: 'Team' }}
-                                filterModel={selectedTeam}
-                                setFilterModel={setSelectedTeam}
+                                label={'Team'}
+                                currentValue={selectedTeam}
+                                onChange={setSelectedTeam}
                             />
                         </Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                        <Grid xs={12} md={6} lg={3}>
-                            {/* Status Picker */}
+                        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                             <AssetStatusSelector
                                 id={componentId}
                                 label={pageLocale.form.filterStatusLabel}
@@ -221,8 +221,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid xs={12} md={6} lg={3}>
-                            {/* Building Picker */}
+                        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                             <LocationPicker
                                 id={componentIdLower}
                                 locale={{
@@ -238,8 +237,7 @@ const AssetReportByFilters = ({
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
                             />
                         </Grid>
-                        <Grid xs={12} md={6} lg={3}>
-                            {/* Start Date */}
+                        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
@@ -278,7 +276,7 @@ const AssetReportByFilters = ({
                                 }}
                             />
                         </Grid>
-                        <Grid xs={12} md={6} lg={3}>
+                        <Grid size={{ xs: 12, md: 6, lg: 3 }}>
                             <DatePicker
                                 format={locale.config.format.dateFormatNoTime}
                                 disabled={!!taggedBuildingListLoading || !!assetListLoading}
@@ -333,8 +331,8 @@ const AssetReportByFilters = ({
                                         : ''
                                 }
                                 {...(config.sort ?? /* istanbul ignore next */ {})}
-                                components={{
-                                    Toolbar: () => <WithExportMenu id={componentId} />,
+                                slots={{
+                                    toolbar: () => <WithExportMenu id={componentId} />,
                                 }}
                             />
                         </Grid>

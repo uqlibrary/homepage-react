@@ -1,12 +1,13 @@
 import React from 'react';
 import { default as AlertsClone } from './AlertsCloneContainer';
+import { setDefaults } from './AlertsClone';
 import { render, userEvent, WithReduxStore, waitForElementToBeRemoved } from 'test-utils';
 import * as routes from 'repositories/routes';
 
 const mockUseNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => mockUseNavigate,
     useParams: jest.fn(() => ({ alertid: '1db618c0-d897-11eb-a27e-df4e46db7245' })),
 }));
@@ -38,8 +39,7 @@ describe('Form Tests', () => {
             start: '2021-06-29 15:00:34',
             end: '2031-07-02 18:30:34',
             title: 'Example alert:',
-            body:
-                'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            body: 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'urgent',
             systems: ['homepage'],
             created_by: 'uqtest1',
@@ -56,5 +56,112 @@ describe('Form Tests', () => {
         await waitForElementToBeRemoved(() => getByText('Loading'));
 
         expect(getByText('2 alerts have been cloned')).toBeEnabled();
+    });
+
+    describe('setDefaults', () => {
+        it('uses alert and form values when building clone defaults', () => {
+            const defaults = setDefaults({
+                alert: {
+                    id: 'alert-123',
+                    title: 'Example alert',
+                    priority_type: 'urgent',
+                    systems: ['homepage'],
+                },
+                isPermanent: true,
+                message: 'A message',
+                linkRegex: ['[Read more](https://example.com)', 'Read more', 'https://example.com'],
+            });
+
+            expect(defaults).toEqual({
+                id: 'alert-123',
+                dateList: [
+                    {
+                        startDate: expect.any(String),
+                        endDate: expect.any(String),
+                    },
+                ],
+                startDateDefault: expect.any(String),
+                endDateDefault: expect.any(String),
+                alertTitle: 'Example alert',
+                enteredbody: 'A message',
+                linkRequired: true,
+                priorityType: 'urgent',
+                permanentAlert: true,
+                linkTitle: 'Read more',
+                linkUrl: 'https://example.com',
+                type: 'clone',
+                minimumDate: expect.any(String),
+                systems: ['homepage'],
+            });
+            expect(defaults.dateList[0].startDate).toBe(defaults.startDateDefault);
+            expect(defaults.dateList[0].endDate).toBe(defaults.endDateDefault);
+        });
+
+        it('uses empty and default values when alert details are absent', () => {
+            expect(
+                setDefaults({
+                    alert: null,
+                    isPermanent: false,
+                    message: '',
+                    linkRegex: null,
+                }),
+            ).toEqual({
+                id: '',
+                dateList: [
+                    {
+                        startDate: expect.any(String),
+                        endDate: expect.any(String),
+                    },
+                ],
+                startDateDefault: expect.any(String),
+                endDateDefault: expect.any(String),
+                alertTitle: '',
+                enteredbody: '',
+                linkRequired: false,
+                priorityType: 'info',
+                permanentAlert: false,
+                linkTitle: '',
+                linkUrl: '',
+                type: 'clone',
+                minimumDate: expect.any(String),
+                systems: [],
+            });
+        });
+
+        it('uses fallbacks for empty fields and an incomplete link match', () => {
+            expect(
+                setDefaults({
+                    alert: {
+                        id: '',
+                        title: '',
+                        priority_type: '',
+                        systems: null,
+                    },
+                    isPermanent: false,
+                    message: null,
+                    linkRegex: ['[incomplete link'],
+                }),
+            ).toEqual({
+                id: '',
+                dateList: [
+                    {
+                        startDate: expect.any(String),
+                        endDate: expect.any(String),
+                    },
+                ],
+                startDateDefault: expect.any(String),
+                endDateDefault: expect.any(String),
+                alertTitle: '',
+                enteredbody: '',
+                linkRequired: false,
+                priorityType: 'info',
+                permanentAlert: false,
+                linkTitle: '',
+                linkUrl: '',
+                type: 'clone',
+                minimumDate: expect.any(String),
+                systems: [],
+            });
+        });
     });
 });

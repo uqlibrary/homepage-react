@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useSelector } from 'react-redux';
@@ -23,17 +23,19 @@ import AssetStatusSelector from '../../../SharedComponents/AssetStatusSelector/A
 import MonthsSelector from '../../../SharedComponents/MonthsSelector/MonthsSelector';
 import AuthWrapper from '../../../SharedComponents/AuthWrapper/AuthWrapper';
 import { useLocation, useSelectLocation } from '../../../SharedComponents/LocationPicker/LocationPickerHooks';
+import TeamSelector from '../../../SharedComponents/Teams/TeamSelector';
 
 import locale from 'modules/Pages/Admin/TestTag/testTag.locale';
 
 import { isValidAssetTypeId } from '../../../Inspection/utils/helpers';
-import { isEmptyStr } from '../../../helpers/helpers';
 import { PERMISSIONS } from '../../../config/auth';
 import { AccordionWithCheckbox } from './AccordionWithCheckbox';
-import { FormContext } from '../../../helpers/hooks';
 import { makeAssetExcludedMessage } from './utils';
 import { validateFormValues, validateAssetLists } from './validation';
 import { assetStatusOptionExcludes } from './rules';
+import { isEmptyStr } from '../../../helpers/helpers';
+import { useAccountUser, FormContext } from '../../../helpers/hooks';
+import { useUserTeams } from '../../../helpers/teams';
 
 const moment = require('moment');
 
@@ -45,6 +47,7 @@ const validAssetStatusWithLocationOptions =
 const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep, onSubmit }) => {
     const componentId = `${id}-step-two`;
     const componentIdLower = componentId.replace(/-/g, '_');
+    const { user } = useAccountUser();
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('md')) || false;
@@ -72,6 +75,11 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         condition: () => !isFilterDialogOpen,
     });
 
+    const { userTeamList, selectedTeam, setSelectedTeam } = useUserTeams({
+        user,
+        allTeamsOption: false,
+    });
+
     // Validate and update lists when formValueSignature changes
     useEffect(() => {
         const { validAssets, excludedAssets } = validateAssetLists(formValues, list.data, excludedList.data);
@@ -95,9 +103,14 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
 
     const isLocationDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
     const isAssetStatusDisabled = formValues.hasAssetType || formValues.hasDiscardStatus;
+    const isAssetTeamDisabled = formValues.hasDiscardStatus;
     const isAssetTypeDisabled = formValues.hasLocation || formValues.hasDiscardStatus || formValues.hasAssetStatus;
     const isDiscardedDisabled =
-        formValues.hasAssetType || formValues.hasLocation || formValues.hasClearNotes || formValues.hasAssetStatus;
+        formValues.hasAssetType ||
+        formValues.hasLocation ||
+        formValues.hasClearNotes ||
+        formValues.hasAssetStatus ||
+        formValues.hasAssetTeam;
     const isClearNotesDisabled =
         isLocationDisabled && isAssetStatusDisabled && isAssetTypeDisabled && isDiscardedDisabled;
 
@@ -127,10 +140,16 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
         handleChange(e.target.name)(checked);
     };
 
+    const handleTeamChange = teamId => {
+        setSelectedTeam(teamId);
+        const teamObject = userTeamList.find(t => t.value === teamId);
+        handleChange('asset_team')(teamObject);
+    };
+
     return (
         <StandardCard title={stepTwoLocale.title} standardCardId={`standard_card-${componentId}-step-2`}>
             <Grid container spacing={3}>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Alert
                         severity="warning"
                         id={`${componentIdLower}-summary-alert`}
@@ -148,8 +167,8 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                     </Alert>
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
-                <Grid xs={12}>
+            <Grid container spacing={3} mt={3}>
+                <Grid size={{ xs: 12 }}>
                     <AccordionWithCheckbox
                         id="location"
                         label={stepTwoLocale.checkbox.location}
@@ -219,7 +238,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                                     },
                                 }}
                             />
-                            <Grid xs={12} sm={4}>
+                            <Grid size={{ xs: 12, sm: 4 }}>
                                 <MonthsSelector
                                     id={componentId}
                                     disabled={isLocationDisabled}
@@ -244,6 +263,36 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                     </AccordionWithCheckbox>
                     <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
                         <AccordionWithCheckbox
+                            id="assetTeam"
+                            label={stepTwoLocale.checkbox.assetTeam}
+                            disabled={isAssetTeamDisabled}
+                            slotProps={{
+                                accordion: {
+                                    expanded: formValues.hasAssetTeam,
+                                },
+                                checkbox: {
+                                    name: 'hasAssetTeam',
+                                    checked: formValues.hasAssetTeam,
+                                    onClick: handleCheckboxChange,
+                                },
+                            }}
+                        >
+                            <Grid container spacing={3}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TeamSelector
+                                        id={componentId}
+                                        options={userTeamList}
+                                        label={'Team'}
+                                        currentValue={selectedTeam}
+                                        onChange={handleTeamChange}
+                                        disabled={!formValues.hasAssetTeam}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </AccordionWithCheckbox>
+                    </AuthWrapper>
+                    <AuthWrapper requiredPermissions={[PERMISSIONS.can_alter]}>
+                        <AccordionWithCheckbox
                             id="assetStatus"
                             label={stepTwoLocale.checkbox.assetStatus}
                             disabled={isAssetStatusDisabled}
@@ -266,13 +315,13 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             }}
                         >
                             <Grid container spacing={3}>
-                                <Grid xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Typography variant="body2">
                                         Selecting this option will exclude any chosen assets with status:{' '}
                                         {assetStatusOptionExcludes.join(', ')}
                                     </Typography>
                                 </Grid>
-                                <Grid xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <AssetStatusSelector
                                         id={componentId}
                                         options={
@@ -315,7 +364,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                             }}
                         >
                             <Grid container>
-                                <Grid xs={12} sm={6}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <AssetTypeSelector
                                         id={componentId}
                                         locale={pageLocale.form.assetType}
@@ -378,7 +427,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
             </Grid>
 
             <Grid container spacing={3} mt={3}>
-                <Grid xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }} sx={{ minHeight: 64, display: 'flex', alignItems: 'center' }}>
                     <FormControlLabel
                         control={
                             <Checkbox
@@ -397,7 +446,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
             </Grid>
 
             <Grid container spacing={4} padding={2} className={'actionButtons'}>
-                <Grid xs={12} sm={6} container justifyContent="flex-start">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-start">
                     <Button
                         variant="outlined"
                         onClick={handlePrevStep}
@@ -408,7 +457,7 @@ const StepTwo = ({ id, actions, list, excludedList, isFilterDialogOpen, prevStep
                         {pageLocale.form.step.button.previous}
                     </Button>
                 </Grid>
-                <Grid xs={12} sm={6} container justifyContent="flex-end">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent="flex-end">
                     <Button
                         variant="contained"
                         color="primary"

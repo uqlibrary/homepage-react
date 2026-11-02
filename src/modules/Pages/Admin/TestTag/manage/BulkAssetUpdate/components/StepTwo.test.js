@@ -27,7 +27,7 @@ const defaultList = [
         asset_next_test_due_date: '2023-08-06',
         asset_barcode: 'UQL000001',
         asset_room_id_last_seen: 1,
-        asset_department_owned_by: 'UQL',
+        asset_team_owned_by: 'WSS',
         asset_status: 'AWAITINGTEST',
         created_at: '2023-08-01T05:39:04.000000Z',
         updated_at: '2023-08-01T05:39:04.000000Z',
@@ -59,7 +59,7 @@ const defaultList = [
         asset_next_test_due_date: '2022-08-16',
         asset_barcode: 'UQL000002',
         asset_room_id_last_seen: 1,
-        asset_department_owned_by: 'UQL',
+        asset_team_owned_by: 'WSS',
         asset_status: 'CURRENT',
         created_at: '2023-08-01T05:39:04.000000Z',
         updated_at: '2023-08-01T05:39:04.000000Z',
@@ -186,12 +186,14 @@ const assertCheckboxCheckedStatus = expected => {
         hasAssetType: DEFAULT_FORM_VALUES.hasAssetType,
         hasDiscardStatus: DEFAULT_FORM_VALUES.hasDiscardStatus,
         hasClearNotes: DEFAULT_FORM_VALUES.hasClearNotes,
+        hasAssetTeam: DEFAULT_FORM_VALUES.hasAssetTeam,
         ...expected,
     };
     assertCheckboxStatus('accordionWithCheckbox-location-checkbox', mergeExpected.hasLocation);
     assertCheckboxStatus('accordionWithCheckbox-assetStatus-checkbox', mergeExpected.hasAssetStatus);
     assertCheckboxStatus('accordionWithCheckbox-assetType-checkbox', mergeExpected.hasAssetType);
     assertCheckboxStatus('accordionWithCheckbox-discardStatus-checkbox', mergeExpected.hasDiscardStatus);
+    assertCheckboxStatus('accordionWithCheckbox-assetTeam-checkbox', mergeExpected.hasAssetTeam);
     assertCheckboxStatus('test_step_two-notes-checkbox', mergeExpected.hasClearNotes);
 };
 const assertCheckboxesEnabled = (expected = {}) => {
@@ -201,12 +203,14 @@ const assertCheckboxesEnabled = (expected = {}) => {
         hasAssetType: false,
         hasDiscardStatus: false,
         hasClearNotes: false,
+        hasAssetTeam: false,
         ...expected,
     };
     assertCheckboxEnabled('accordionWithCheckbox-location-checkbox', mergeExpected.hasLocation);
     assertCheckboxEnabled('accordionWithCheckbox-assetStatus-checkbox', mergeExpected.hasAssetStatus);
     assertCheckboxEnabled('accordionWithCheckbox-assetType-checkbox', mergeExpected.hasAssetType);
     assertCheckboxEnabled('accordionWithCheckbox-discardStatus-checkbox', mergeExpected.hasDiscardStatus);
+    assertCheckboxEnabled('accordionWithCheckbox-assetTeam-checkbox', mergeExpected.hasAssetTeam);
     assertCheckboxEnabled('test_step_two-notes-checkbox', mergeExpected.hasClearNotes);
 };
 
@@ -225,6 +229,7 @@ const assertOptions = (expected, has = true) => {
 const assertAssetStatus = expected => assertInputValue('asset_status_selector-test-step-two-input', expected);
 const assertAssetType = expected => assertInputValue('asset_type_selector-test-step-two-input', expected);
 const assertDiscardReason = expected => assertInputValue('test_step_two-discard-reason-input', expected);
+const assertAssetTeam = expected => assertInputValue('team_selector-test-step-two-input', expected);
 
 const assertFormSubmitEnabled = (expected = true) => {
     const submitButton = screen.getByTestId('test_step_two-submit-button');
@@ -290,6 +295,8 @@ describe('StepTwo', () => {
         expect(getByTestId('test_step_two-discard-reason-input')).toHaveAttribute('disabled');
         // clear test notes
         expect(getByTestId('test_step_two-notes-checkbox')).not.toHaveClass('Mui-checked');
+        // asset team
+        expect(getByTestId('accordionWithCheckbox-assetTeam-checkbox')).not.toHaveClass('Mui-checked');
         // submit button
         expect(getByTestId('test_step_two-submit-button')).toHaveAttribute('disabled');
     });
@@ -363,7 +370,7 @@ describe('StepTwo', () => {
         await assertClearButton('location', 'location', handleChangeFn, handleChangeInnerFn, expected);
     });
 
-    it('location options with asset status', async () => {
+    it('location options with asset status and team', async () => {
         const loadAssetsMineFn = jest.fn();
         const loadSitesFn = jest.fn();
         const list = renderHook(() => useObjectList(defaultList)).result;
@@ -386,17 +393,19 @@ describe('StepTwo', () => {
                     monthRange: '12',
                     hasAssetStatus: true,
                     asset_status: { label: 'IN STORAGE', value: 'INSTORAGE' },
+                    hasAssetTeam: true,
+                    asset_team: { id: 2, team_slug: 'SPACES', team_display_name: 'Spaces' },
                 },
             },
         });
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
 
-        assertCheckboxCheckedStatus({ hasLocation: true, hasAssetStatus: true });
+        assertCheckboxCheckedStatus({ hasLocation: true, hasAssetStatus: true, hasAssetTeam: true });
         assertMonthRange('12');
         assertLocation({ site: 'St Lucia', building: '0001 - Forgan Smith Building', floor: '2', room: 'W212' });
         assertAssetStatus('IN STORAGE');
-
+        assertAssetTeam('1');
         await userEvent.click(screen.getByTestId('asset_status_selector-test-step-two-input'));
         assertOptions(['IN STORAGE']);
         assertOptions(['MISSING'], false); // MISSING option should not be present with location
@@ -481,12 +490,65 @@ describe('StepTwo', () => {
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
         assertCheckboxCheckedStatus({ hasLocation: false, hasAssetType: true });
         assertAssetType('PowerBoard');
-        assertCheckboxesEnabled({ hasLocation: false, hasAssetType: true, hasClearNotes: true });
+        assertCheckboxesEnabled({ hasLocation: false, hasAssetType: true, hasClearNotes: true, hasAssetTeam: true });
         // form submit should be enabled
         assertFormSubmitEnabled();
 
         // test clear button
         await assertClearButton('asset-type', 'asset_type', handleChangeFn, handleChangeInnerFn);
+    });
+
+    it('asset team', async () => {
+        const loadAssetsMineFn = jest.fn();
+        const loadSitesFn = jest.fn();
+        const handleChangeInnerFn = jest.fn();
+        const handleChangeFn = jest.fn(() => handleChangeInnerFn);
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
+
+        const { getByText } = setup({
+            isFilterDialogOpen: true,
+            list: list.current,
+            excludedList: excludedList.current,
+            actions: {
+                loadAssetsMine: loadAssetsMineFn,
+                loadSites: loadSitesFn,
+                clearRooms: jest.fn(),
+                clearAssetsMine: jest.fn(),
+            },
+            formContextValue: {
+                formValues: {
+                    hasLocation: false,
+                    hasAssetTeam: true,
+                    asset_team: { id: 2, team_slug: 'SPACES', team_display_name: 'Spaces' },
+                },
+                handleChange: handleChangeFn,
+            },
+        });
+
+        expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
+        assertCheckboxCheckedStatus({
+            hasLocation: false,
+            hasAssetType: false,
+            hasAssetStatus: false,
+            hasAssetTeam: true,
+        });
+
+        assertAssetTeam('1');
+
+        assertCheckboxesEnabled({
+            hasLocation: true,
+            hasAssetType: true,
+            hasAssetStatus: true,
+            hasAssetTeam: true,
+            hasClearNotes: true,
+        });
+
+        await userEvent.click(screen.getByTestId('team_selector-test-step-two-select'));
+        assertOptions(['Work Station Support', 'Spaces']);
+
+        // form submit should be enabled
+        assertFormSubmitEnabled();
     });
 
     it('discard status', async () => {
@@ -520,7 +582,12 @@ describe('StepTwo', () => {
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
         assertCheckboxCheckedStatus({ hasLocation: false, hasDiscardStatus: true });
         assertDiscardReason('test');
-        assertCheckboxesEnabled({ hasLocation: false, hasDiscardStatus: true, hasClearNotes: true });
+        assertCheckboxesEnabled({
+            hasLocation: false,
+            hasDiscardStatus: true,
+            hasClearNotes: true,
+            hasAssetTeam: false,
+        });
         // form submit should be enabled
         assertFormSubmitEnabled();
 
@@ -561,6 +628,7 @@ describe('StepTwo', () => {
             hasAssetStatus: true,
             hasAssetType: true,
             hasClearNotes: true,
+            hasAssetTeam: true,
         });
         // form submit should be enabled
         assertFormSubmitEnabled();
@@ -594,7 +662,8 @@ describe('StepTwo', () => {
 
         expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
         assertCheckboxCheckedStatus({ hasLocation: true, hasAssetType: true });
-        assertCheckboxesEnabled(); // all should be disbaled as this is an invalid combination
+        // all except teams should be disabled as this is an invalid combination
+        assertCheckboxesEnabled({ hasAssetTeam: true });
         assertFormSubmitEnabled(false);
     });
     it('invalid options 2', () => {
@@ -628,8 +697,41 @@ describe('StepTwo', () => {
         // checkboxes will be checked
         assertCheckboxCheckedStatus({ hasLocation: true, hasAssetStatus: true });
         // and enabled
-        assertCheckboxesEnabled({ hasLocation: true, hasAssetStatus: true, hasClearNotes: true });
+        assertCheckboxesEnabled({ hasLocation: true, hasAssetStatus: true, hasAssetTeam: true, hasClearNotes: true });
         // but form submit should be disabled
+        assertFormSubmitEnabled(false);
+    });
+
+    it('invalid options 3', () => {
+        const loadAssetsMineFn = jest.fn();
+        const loadSitesFn = jest.fn();
+        const list = renderHook(() => useObjectList(defaultList)).result;
+        const excludedList = renderHook(() => useObjectList([])).result;
+
+        const { getByText } = setup({
+            isFilterDialogOpen: true,
+            list: list.current,
+            excludedList: excludedList.current,
+            actions: {
+                loadAssetsMine: loadAssetsMineFn,
+                loadSites: loadSitesFn,
+                clearRooms: jest.fn(),
+                clearAssetsMine: jest.fn(),
+            },
+            formContextValue: {
+                formValues: {
+                    hasLocation: false,
+                    hasAssetTeam: true,
+                    asset_team: { id: 2, team_slug: 'SPACES', team_display_name: 'Spaces' },
+                    hasDiscardStatus: true,
+                },
+            },
+        });
+
+        expect(getByText('Step 2: Choose bulk update actions')).toBeInTheDocument();
+        assertCheckboxCheckedStatus({ hasLocation: false, hasAssetTeam: true, hasDiscardStatus: true });
+
+        assertCheckboxesEnabled(); // all should be disbaled as this is an invalid combination
         assertFormSubmitEnabled(false);
     });
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
@@ -35,20 +36,20 @@ export const DigitalLearningHub = ({
             title={title}
         >
             <Grid container padding={3} spacing={2}>
-                <Grid item xs={12}>
-                    <a href="/digital-learning-hub">Digital Learning Hub</a>
+                <Grid size={{ xs: 12 }}>
+                    <Link to="/digital-learning-hub">Digital Learning Hub</Link>
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>{subText}</StyledBodyCopyDiv>
                     {hasStatistics && (
                         <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                            <a href="/digital-learning-hub?type=favourite">
+                            <Link to="/digital-learning-hub?type=favourite">
                                 Your favourites ({dlorStatistics?.my_favourites})
-                            </a>
+                            </Link>
                         </StyledBodyCopyDiv>
                     )}
                     <StyledBodyCopyDiv style={{ marginTop: '8px' }}>
-                        <a href="/digital-learning-hub?type=featured">
+                        <Link to="/digital-learning-hub?type=featured">
                             Featured objects ({dlorStatistics?.featured_objects})
-                        </a>
+                        </Link>
                     </StyledBodyCopyDiv>
                 </Grid>
             </Grid>
