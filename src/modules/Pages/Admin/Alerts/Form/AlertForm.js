@@ -102,13 +102,13 @@ const StyledBox = styled(Grid)(() => ({
     paddingBottom: '1em',
 }));
 
-const warningIcon =
-    'url("data:image/svg+xml,%3csvg viewBox=%270 0 24 24%27 fill=%27none%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M20.127 18.545a1.18 1.18 0 0 1-1.055 1.706H4.929a1.18 1.18 0 0 1-1.055-1.706l7.072-14.143a1.179 1.179 0 0 1 2.109 0l7.072 14.143Z%27 stroke=%27%233b383e%27 stroke-width=%271.5%27%3e%3c/path%3e%3cpath d=%27M12 9v4%27 stroke=%27%233b383e%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2711.9%27 cy=%2716.601%27 r=%271.1%27 fill=%27%233b383e%27%3e%3c/circle%3e%3c/svg%3e")';
+const infoIcon =
+    'url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27%3e%3ccircle cx=%2712%27 cy=%2712%27 r=%279.25%27 transform=%27rotate(-180 12 12)%27 stroke=%27%233b383e%27 stroke-width=%271.5%27%3e%3c/circle%3e%3cpath d=%27M12 16.2v-4%27 stroke=%27%233b383e%27 stroke-width=%271.5%27 stroke-linecap=%27round%27%3e%3c/path%3e%3ccircle cx=%2712%27 cy=%278.4%27 r=%271.1%27 transform=%27rotate(-180 12 8.4)%27 fill=%27%233b383e%27%3e%3c/circle%3e%3c/svg%3e")';
 const StyledTabWrapperBox = styled(Box)(({ theme }) => ({
     width: '100%',
     marginInline: '1rem',
     '& .tabPanel p.systemWarning': {
-        backgroundColor: theme.palette.designSystem.alert.warning,
+        backgroundColor: theme.palette.designSystem.alert.info,
         padding: '1.1rem',
         display: 'flex',
         alignItems: 'center',
@@ -118,24 +118,11 @@ const StyledTabWrapperBox = styled(Box)(({ theme }) => ({
             display: 'inline-block',
             width: '24px',
             height: '24px',
-            backgroundImage: warningIcon,
+            backgroundImage: infoIcon,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             flexShrink: 0,
-        },
-    },
-    [theme.breakpoints.up('uqDsTablet')]: {
-        // affordance: on desktop, push each panel over to encourage a visual "what sort of system is this?" enhancement
-        '& .tabPanel2': {
-            '& > div': {
-                marginLeft: '20ch',
-            },
-        },
-        '& .tabPanel3': {
-            '& > div': {
-                marginLeft: '45ch',
-            },
         },
     },
     [theme.breakpoints.down('uqDsTablet')]: {
@@ -562,7 +549,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 {systems?.length === 0 && (
                     <p className={'systemWarning'} data-testid="system-show-empty-warning">
                         <span className="infoBadge" aria-hidden="true" />
-                        At least one system must be chosen before saving.
+                        Select at least one system to save.
                     </p>
                 )}
             </>
@@ -828,9 +815,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </StyledBox>
                 <StyledBox container spacing={2}>
                     <Grid item xs={12}>
-                        <p>
-                            <strong>System specific alerts:</strong> determine which systems the alert will appear on
-                        </p>
+                        <p>Select a tab to choose systems where your alert will display</p>
                     </Grid>
                     <StyledTabWrapperBox>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -841,17 +826,21 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 aria-label="System tabs"
                             >
                                 <Tab label="Show on all systems" {...a11yProps(SYSTEM_PANEL_ALL)} />
-                                <Tab label="Show on some systems" {...a11yProps(SYSTEM_PANEL_SHOW)} />
-                                <Tab label="Hide on some systems" {...a11yProps(SYSTEM_PANEL_HIDE)} />
+                                <Tab label="Show on selected systems" {...a11yProps(SYSTEM_PANEL_SHOW)} />
+                                <Tab label="Exclude from selected systems" {...a11yProps(SYSTEM_PANEL_HIDE)} />
                             </Tabs>
                         </Box>
 
                         <SystemTabPanel className="tabPanel tabPanel1" value={systemTabValue} index={SYSTEM_PANEL_ALL}>
-                            <p>This alert will show on all systems.</p>
+                            <p>This alert will show on all our sites that can display web alerts.</p>
+                            <p>
+                                This includes home page systems, Drupal, guides, Library Search (Primo) and UQ eSpace.
+                            </p>
                         </SystemTabPanel>
                         <SystemTabPanel className="tabPanel tabPanel2" value={systemTabValue} index={SYSTEM_PANEL_SHOW}>
                             <Grid item xs={12}>
-                                <p>Choose one or more systems that SHOULD show the alerts.</p>
+                                <p>The alert will display on the selected systems only.</p>
+                                <p>Select all systems that should show this alert (choose at least one): </p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsShownOn?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
@@ -880,12 +869,22 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <InputLabel>
+                                    <Checkbox
+                                        checked={false}
+                                        title={'Show on other systems'}
+                                        className={`${'disabledCheckbox'}`}
+                                        disabled
+                                    />
+                                    All other systems
+                                </InputLabel>
                                 <ShowWarningOnEmpty systems={values.systemsShownOn} />
                             </Grid>
                         </SystemTabPanel>
                         <SystemTabPanel className="tabPanel tabPanel3" value={systemTabValue} index={SYSTEM_PANEL_HIDE}>
                             <Grid item xs={12}>
-                                <p>Choose one or more systems this alert should be HIDDEN from.</p>
+                                <p>The alert will display on all systems that you have not excluded.</p>
+                                <p>Select all the systems that should not show this alert (choose at least one):</p>
                                 {systemList.map(system => {
                                     const isChecked = values?.systemsHiddenFrom?.find(s => s === system.slug) || null;
                                     const displayColor = !!system.removed
@@ -914,6 +913,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         </InputLabel>
                                     );
                                 })}
+                                <InputLabel>
+                                    <Checkbox
+                                        checked
+                                        title={'Hide from other systems'}
+                                        className={`${'disabledCheckbox'}`}
+                                        disabled
+                                    />
+                                    All other systems
+                                </InputLabel>
                                 <ShowWarningOnEmpty systems={values.systemsHiddenFrom} />
                             </Grid>
                         </SystemTabPanel>
