@@ -19,7 +19,7 @@ test.describe('Test and Tag Manage Users', () => {
     test('base page edit controls function correctly', async ({ page }) => {
         await page.setViewportSize({ width: 1300, height: 1000 });
         await assertTitles(page, locale.pages.manage.users.header.pageSubtitle('Work Station Support', 'Library'));
-        await forcePageRefresh(page);
+        await expect(page.getByTestId('user-management-data-table-toolbar-add-button')).toBeEnabled();
         await expect((await getFieldValue(page, 'user_uid', 0)).getByText('uqjsmit')).toBeVisible();
         await expect(page.getByTestId('user-management-data-table-toolbar-add-button')).toBeEnabled();
 
@@ -57,8 +57,8 @@ test.describe('Test and Tag Manage Users', () => {
         await page.getByTestId('user_uid-input').clear();
         await page.getByTestId('user_uid-input').fill('test');
 
-        await page.getByTestId('user_team-input').click({ clickCount: 2 }); // bug:in edit mode the autocomplete auto closes on first click
-        await page.locator('#user_team-input-option-0').click();
+        await page.getByTestId('user_team-input').fill('Spaces');
+        await page.getByRole('option', { name: 'Spaces', exact: true }).click();
         await expect(page.getByTestId('user_team-input')).toHaveValue('Spaces');
 
         await page.getByTestId('update_dialog-action-button').click();
