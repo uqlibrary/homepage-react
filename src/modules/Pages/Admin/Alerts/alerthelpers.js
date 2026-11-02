@@ -126,21 +126,26 @@ export const systemList = [
     {
         slug: 'homepage',
         title: 'Home page systems (www.library.uq.edu.au)',
+        shortTitle: 'Home page',
     },
     {
         slug: 'drupal',
         title: 'Drupal (web.library.uq.edu.au)',
+        shortTitle: 'Drupal',
     },
     {
         slug: 'guides',
         title: 'Guides (guides.library.uq.edu.au)',
+        shortTitle: 'Guides',
     },
     {
         slug: 'primo',
         title: 'Library Search (Primo) (search.library.uq.edu.au)',
+        shortTitle: 'Library Search',
     },
     {
         slug: 'espace',
         title: 'UQ eSpace (espace.library.uq.edu.au)',
+        shortTitle: 'UQ eSpace',
     },
 ];

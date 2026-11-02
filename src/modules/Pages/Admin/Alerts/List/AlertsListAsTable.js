@@ -309,8 +309,8 @@ export const AlertsListAsTable = ({
             <div key={`system-chip-${type}-${ss?.slug || index}`} style={{ marginLeft: 3, display: 'inline' }}>
                 <Chip
                     data-testid={`alert-list-system-chip-${type}-${alert.id}-${ss?.slug || index}`}
-                    label={`${labelSubLabel} ${ss?.title || ss?.slug || 'Unrecognised'}`}
-                    title={`This alert is ${titleSubTitle} the ${ss?.title || ss?.slug || 'Unrecognised'} system`}
+                    label={`${labelSubLabel} ${ss?.shortTitle || ss?.slug || 'Unrecognised'}`}
+                    title={`This alert is ${titleSubTitle} the ${ss?.shortTitle || ss?.slug || 'Unrecognised'} system`}
                     className={`${nameOfClass} ${!!ss?.removed && /* istanbul ignore next */ 'removedChip'}`}
                 />
             </div>

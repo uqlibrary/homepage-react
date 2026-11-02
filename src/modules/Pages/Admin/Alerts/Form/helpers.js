@@ -39,7 +39,7 @@ export const SYSTEM_PANEL_HIDE = 2;
 const getSystemConfirmationMessage = (values, systemTabValue) => {
     const joinSystemNames = systems => {
         const localSystem = [...(systems || [])];
-        const localNames = systemList.filter(s => localSystem.includes(s.slug)).map(s => s.title);
+        const localNames = systemList.filter(s => localSystem.includes(s.slug)).map(s => s.shortTitle);
         const lastName = localNames?.pop() || '';
         if (localNames?.length === 0) {
             return lastName;

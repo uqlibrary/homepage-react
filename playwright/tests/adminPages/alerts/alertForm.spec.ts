@@ -376,7 +376,7 @@ test.describe('Alerts Admin Form Pages', () => {
 
             await expect(confirmationMessage).toBeVisible();
             await expect(confirmationMessage).toHaveText(
-                'This alert will be displayed on all systems EXCEPT Home page and Primo.',
+                'This alert will be displayed on all systems EXCEPT Home page and Library Search.',
             );
 
             await page.locator('button[data-testid="confirm-alert-edit-save-succeeded"]').click();

@@ -13,7 +13,10 @@ jest.mock('../alerthelpers', () => {
     const actual = jest.requireActual('../alerthelpers');
     return {
         ...actual,
-        systemList: [...actual.systemList, { slug: 'retired', title: 'Retired system', removed: true }],
+        systemList: [
+            ...actual.systemList,
+            { slug: 'retired', title: 'Retiring system', shortTitle: 'Retired', removed: true },
+        ],
     };
 });
 
@@ -132,8 +135,8 @@ describe('AlertsListAsTable', () => {
         expect(unknownSystemChip).toHaveAttribute('title', 'This alert is restricted to the Unrecognised system');
 
         const retiredSystemChip = getByTestId('alert-list-system-chip-hidden-alert2-retired');
-        expect(retiredSystemChip).toHaveTextContent('Hidden from: Retired system');
-        expect(retiredSystemChip).toHaveAttribute('title', 'This alert is hidden from the Retired system system');
+        expect(retiredSystemChip).toHaveTextContent('Hidden from: Retired');
+        expect(retiredSystemChip).toHaveAttribute('title', 'This alert is hidden from the Retired system');
         expect(retiredSystemChip).toHaveClass('removedChip');
     });
 

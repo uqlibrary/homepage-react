@@ -72,7 +72,7 @@ test.describe('Alert Admin List page', () => {
         await expect(
             page
                 .getByTestId('alert-list-system-chip-shown-d480b250-9cd8-11eb-88c0-a3882cd6c52e-primo')
-                .getByText(/Only shows on: Primo/)
+                .getByText(/Only shows on: Library Search/)
                 .first(),
         ).toBeVisible();
         await expect(

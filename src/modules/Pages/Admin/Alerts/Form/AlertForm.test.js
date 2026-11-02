@@ -231,7 +231,7 @@ describe('AlertForm', () => {
         });
         await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
 
-        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
+        await userEvent.click(getByRole('tab', { name: 'Show on selected systems' }));
         for (const system of ['homepage', 'primo', 'espace']) {
             await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-showon-${system}`));
         }
@@ -294,7 +294,7 @@ describe('AlertForm', () => {
     it('adds and removes a selected system', async () => {
         const { getByRole, getByTestId } = setup();
 
-        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
+        await userEvent.click(getByRole('tab', { name: 'Show on selected systems' }));
 
         const homepageCheckbox = getByTestId('admin-alerts-form-checkbox-system-showon-homepage').querySelector(
             'input',
@@ -608,7 +608,7 @@ describe('AlertForm', () => {
         });
         await userEvent.click(getByTestId('admin-alerts-form-checkbox-permanent'));
 
-        await userEvent.click(getByRole('tab', { name: 'Show on some systems' }));
+        await userEvent.click(getByRole('tab', { name: 'Show on selected systems' }));
         for (const system of ['homepage', 'primo', 'espace']) {
             await userEvent.click(getByTestId(`admin-alerts-form-checkbox-system-showon-${system}`));
         }
