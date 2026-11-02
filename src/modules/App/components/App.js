@@ -141,6 +141,7 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
+    /* istanbul ignore next */
     const insertAlertList = () => {
         if (!!isAdminPage) {
             return null; // admins don't need to see this (enough to use up the space)
@@ -151,7 +152,7 @@ export const App = ({ account, actions }) => {
             return null; // already created
         }
 
-        const html = '<alert-list id="alert-list" system="espace" />';
+        const html = '<alert-list id="alert-list" system="homepage" />';
         const alertTemplate = document.createElement('template');
         alertTemplate.innerHTML = html;
         const alertBlock = document.getElementById('espace-alerts-area');
