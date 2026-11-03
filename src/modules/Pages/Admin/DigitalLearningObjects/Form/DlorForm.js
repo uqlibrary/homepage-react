@@ -1822,14 +1822,13 @@ export const DlorForm = ({
                 ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
                 : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
         console.log('VALUES TO SEND ARE', valuesToSend);
-        return saveDlorPromise.then(() => {
+        return saveDlorPromise.then(savedItem => {
             // Save admin notes after DLO is created or updated
             if (
                 isDlorAdminUser(account) &&
                 formValues.object_admin_notes !== (mode === 'edit' ? dlorItem?.object_admin_notes : '')
             ) {
-                const objectUuid =
-                    mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
+                const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : savedItem?.data?.object_public_uuid;
                 const noteContent = formValues.object_admin_notes;
                 !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
             }

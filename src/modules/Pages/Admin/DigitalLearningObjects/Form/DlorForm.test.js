@@ -1125,11 +1125,6 @@ describe('DlorForm', () => {
 
     it('saves a new object with custom team, deep facets and admin note data', async () => {
         const actions = renderForm({
-            dlorSavedItem: {
-                data: {
-                    object_public_uuid: 'new-object-uuid',
-                },
-            },
             formDefaults: {
                 ...validFormDefaults,
                 object_owning_team_id: 'new',
