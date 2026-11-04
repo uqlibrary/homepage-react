@@ -1,3 +1,8 @@
+/**
+ * @jest-environment jsdom
+ * @jest-environment-options {"url":"http://localhost:2020"}
+ */
+
 import React from 'react';
 import { rtlRender, screen, fireEvent, waitFor, WithRouter, cleanup } from '../../../../../../utils/test-utils';
 import { useCookies } from 'react-cookie';
@@ -213,6 +218,23 @@ describe('DlorForm', () => {
         );
     });
 
+    it('sets the active Cypress test cookie when a new object is saved locally', async () => {
+        const setCookie = jest.fn();
+        useCookies.mockReturnValue([{ CYPRESS_TEST_DATA: 'active' }, setCookie]);
+        const actions = renderForm();
+
+        advanceToStep(3);
+        fireEvent.click(screen.getByTestId('admin-dlor-save-button-submit'));
+
+        await waitFor(() => {
+            expect(setCookie).toHaveBeenCalledWith(
+                'CYPRESS_DATA_SAVED',
+                expect.objectContaining({ object_title: 'A valid title' }),
+            );
+            expect(actions.createDlor).toHaveBeenCalled();
+        });
+    });
+
     it('lets a user select a filter facet before saving', async () => {
         const actions = renderForm();
 
@@ -340,6 +362,37 @@ describe('DlorForm', () => {
         await waitFor(() => {
             expect(getFieldInput('object-summary').value).toEqual(expect.any(String));
         });
+    });
+
+    it('shows and clears character minimum prompts for title, description, and summary', () => {
+        renderForm();
+        advanceToStep(1);
+
+        fireEvent.change(getFieldInput('object-title'), { target: { value: 'Short' } });
+        fireEvent.change(screen.getByTestId('object-description'), { target: { value: 'Short description' } });
+        fireEvent.change(getFieldInput('object-summary'), { target: { value: 'Short summary' } });
+
+        expect(screen.getByTestId('input-characters-remaining-object-title')).toHaveTextContent(
+            'at least 3 more characters needed',
+        );
+        expect(screen.getByTestId('input-characters-remaining-object-description')).toHaveTextContent(
+            'at least 83 more characters needed',
+        );
+        expect(screen.getByTestId('input-characters-remaining-object-summary')).toHaveTextContent(
+            'at least 7 more characters needed',
+        );
+
+        fireEvent.change(getFieldInput('object-title'), { target: { value: 'A long enough title' } });
+        fireEvent.change(screen.getByTestId('object-description'), {
+            target: { value: 'x'.repeat(100) },
+        });
+        fireEvent.change(getFieldInput('object-summary'), {
+            target: { value: 'This summary is long enough.' },
+        });
+
+        expect(screen.getByTestId('input-characters-remaining-object-title')).toBeEmptyDOMElement();
+        expect(screen.getByTestId('input-characters-remaining-object-description')).toBeEmptyDOMElement();
+        expect(screen.getByTestId('input-characters-remaining-object-summary')).toBeEmptyDOMElement();
     });
 
     it('closes the summary suggestion when its close control is clicked', async () => {
@@ -1072,11 +1125,6 @@ describe('DlorForm', () => {
 
     it('saves a new object with custom team, deep facets and admin note data', async () => {
         const actions = renderForm({
-            dlorSavedItem: {
-                data: {
-                    object_public_uuid: 'new-object-uuid',
-                },
-            },
             formDefaults: {
                 ...validFormDefaults,
                 object_owning_team_id: 'new',
@@ -1252,7 +1300,7 @@ describe('DlorForm', () => {
 
     it('keeps notification text when sending an update and removes link types from the payload', async () => {
         const setCookie = jest.fn();
-        useCookies.mockReturnValue([{ CYPRESS_TEST_DATA: 'active' }, setCookie]);
+        useCookies.mockReturnValue([{ CYPRESS_TEST_DATA: 'inactive' }, setCookie]);
 
         const actions = renderForm({
             mode: 'edit',
