@@ -14,6 +14,10 @@ env:
 phases:
   install:
     commands:
+      - command -v node
+      - node -p "process.execPath"
+      - node -v
+      - npm -v
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
       - sysctl fs.inotify.max_user_watches
