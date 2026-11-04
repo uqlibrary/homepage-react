@@ -120,10 +120,12 @@ const webpackConfig = {
                 {
                     from: resolve(__dirname, 'public', '404.js'),
                     to: resolve(__dirname, './dist/', config.basePath),
+                    toType: 'dir',
                 },
                 {
                     from: resolve(__dirname, 'public', 'vendor', 'mazemap'),
                     to: resolve(__dirname, './dist/', config.basePath, 'vendor', 'mazemap'),
+                    toType: 'dir',
                 },
             ],
         }),
