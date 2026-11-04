@@ -14,6 +14,8 @@ env:
 phases:
   install:
     commands:
+      - npm install --global n
+      - n 24.15.0
       - command -v node
       - node -p "process.execPath"
       - node -v
