@@ -13,10 +13,11 @@ env:
     SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
 phases:
   install:
-    runtime-versions:
-      nodejs: 24
     commands:
-      - n 24.15.0
+      - command -v node
+      - node -p "process.execPath"
+      - node -v
+      - npm -v
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
       - sysctl fs.inotify.max_user_watches
