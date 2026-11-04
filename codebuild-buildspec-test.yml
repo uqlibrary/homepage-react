@@ -18,6 +18,8 @@ phases:
       - node -p "process.execPath"
       - node -v
       - npm -v
+      - dpkg-query -S /usr/bin/node
+      - dpkg-query -W nodejs
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
       - sysctl fs.inotify.max_user_watches
