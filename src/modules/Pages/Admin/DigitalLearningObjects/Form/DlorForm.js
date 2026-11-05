@@ -213,9 +213,7 @@ export const DlorForm = ({
     useEffect(() => {
         // map the keywords from the keyword string BACK into the selectedKeywords structure
         if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
-            const keywordStrings = splitStringToArrayOnPipe(
-                formValues.object_keywords_string || /* istanbul ignore next */ '',
-            );
+            const keywordStrings = splitStringToArrayOnPipe(formValues.object_keywords_string);
 
             const newKeywordsArray = keywordStrings.map((keyword, index) => {
                 return {
@@ -236,7 +234,7 @@ export const DlorForm = ({
     function getFacetIds(slug) {
         const facetType = dlorFilterList?.find(item => item.facet_type_slug === slug);
 
-        return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
+        return facetType?.facet_list?.map(facet => facet.facet_id);
     }
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -272,7 +270,7 @@ export const DlorForm = ({
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !!dlorTeamList && dlorTeamList.length > 0) {
             if (mode === 'add') {
-                const firstTeam = dlorTeamList?.filter((t, index) => index === 0) || /* istanbul ignore next */ [];
+                const firstTeam = dlorTeamList.filter((t, index) => index === 0);
                 teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
@@ -351,8 +349,8 @@ export const DlorForm = ({
                 !isValidEmail(currentValues?.team_email_new)) &&
                 firstPanelErrorCount++;
         } else if (mode === 'edit') {
-            currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
-            currentValues?.team_admin_username_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            currentValues?.team_manager_edit?.length < 1 && firstPanelErrorCount++;
+            currentValues?.team_admin_username_edit?.length < 1 && firstPanelErrorCount++;
             (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
                 firstPanelErrorCount++;
         }
@@ -515,10 +513,7 @@ export const DlorForm = ({
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
         }
-        /* istanbul ignore next */
-        if (prop === 'object_description') {
-            setSummarySuggestionOpen(true);
-        }
+
         if (prop === 'object_link_file_type') {
             linkFileTypeSelectRef.current = theNewValue;
             setShowFileTypeCreationForm(theNewValue === 'new');
@@ -541,8 +536,8 @@ export const DlorForm = ({
 
         const newValues = {
             ...formValues,
-            team_manager_edit: !!formValues ? formValues.team_manager_edit : /* istanbul ignore next */ '',
-            team_email_edit: !!formValues ? formValues.team_email_edit : /* istanbul ignore next */ '',
+            team_manager_edit: formValues?.team_manager_edit || '',
+            team_email_edit: formValues?.team_email_edit || '',
         };
         setFormValues(newValues);
     };
@@ -663,18 +658,16 @@ export const DlorForm = ({
                                 id="team_admin_username"
                                 data-testid="dlor-form-team-admin-username-new"
                                 required
-                                value={formValues?.team_admin_username_new || /* istanbul ignore next */ ''}
+                                value={formValues?.team_admin_username_new || ''}
                                 onChange={handleChange('team_admin_username_new')}
                                 type="text"
                                 error={!formValues?.team_admin_username_new}
                             />
-                            {
-                                /* istanbul ignore next */ !formValues?.team_admin_username_new && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
-                                        Team admin username is required.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!formValues?.team_admin_username_new && (
+                                <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                    Team admin username is required.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
@@ -711,7 +704,7 @@ export const DlorForm = ({
                                 id="team_manager_edit"
                                 data-testid="dlor-form-team-manager-edit"
                                 required
-                                value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_manager_edit || ''}
                                 onChange={handleChange('team_manager_edit')}
                             />
                         </FormControl>
@@ -721,18 +714,16 @@ export const DlorForm = ({
                                 id="team_admin_username"
                                 data-testid="dlor-form-team-admin-username_edit"
                                 required
-                                value={formValues?.team_admin_username_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_admin_username_edit || ''}
                                 onChange={handleChange('team_admin_username_edit')}
                                 type="text"
                                 error={!formValues?.team_admin_username_edit}
                             />
-                            {
-                                /* istanbul ignore next */ !formValues?.team_admin_username_edit && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
-                                        Team admin username is required.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!formValues?.team_admin_username_edit && (
+                                <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                    Team admin username is required.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
@@ -740,18 +731,16 @@ export const DlorForm = ({
                                 id="team_email_edit"
                                 data-testid="dlor-form-team-email-edit"
                                 required
-                                value={formValues?.team_email_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_email_edit || ''}
                                 onChange={handleChange('team_email_edit')}
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {
-                                /* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                        This email address is not valid.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!isValidEmail(formValues?.team_email_edit) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                     </Grid>
                 )}
@@ -892,18 +881,14 @@ export const DlorForm = ({
             return plainSummary.substring(0, lastCarriageReturnIndex).trim();
         }
 
-        /* istanbul ignore else */
         if (plainSummary?.length <= requiredLength) {
             return plainSummary;
         }
 
-        /* istanbul ignore next */
         const trimmedString = plainSummary?.slice(0, requiredLength + 1);
 
-        /* istanbul ignore next */
         const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
 
-        /* istanbul ignore next */
         return slice;
     };
 
@@ -922,11 +907,6 @@ export const DlorForm = ({
         let newVar = '';
         if (!!formValues?.object_summary) {
             newVar = characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary');
-        } else {
-            /* istanbul ignore next */
-            if (!!summaryContent) {
-                newVar = characterCount(summaryContent?.length, summaryMinimumLength, 'object_summary');
-            }
         }
         return newVar;
     };
@@ -1366,7 +1346,7 @@ export const DlorForm = ({
                         id="download_instructions"
                         testId="download_instructions"
                         ariaLabel="Instructions"
-                        value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
+                        value={formValues?.object_download_instructions || ''}
                         onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
                         }}
@@ -1382,7 +1362,7 @@ export const DlorForm = ({
         };
 
         let result = <></>;
-        /* istanbul ignore else */
+
         if (filterItem?.facet_type_number === 'one-or-more' || filterItem?.facet_type_number === 'zero-or-more') {
             result =
                 !!filterItem.facet_list &&
@@ -1733,15 +1713,14 @@ export const DlorForm = ({
     const [activeStep, setActiveStep] = useState(0);
 
     useEffect(() => {
-        /* istanbul ignore else */
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
             actions.loadOwningTeams();
         }
-        /* istanbul ignore else */
+
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        /* istanbul ignore else */
+
         if (mode === 'add' && !dlorFileTypeListError && !dlorFileTypeListLoading && !dlorFileTypeList) {
             actions.loadFileTypeList();
         }
@@ -1750,7 +1729,6 @@ export const DlorForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* istanbul ignore next */
     useEffect(() => {
         const isFileTypeSet =
             [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
@@ -1778,7 +1756,7 @@ export const DlorForm = ({
         // 2. Owner of the object
         if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
         // 3. In the team that owns the object
-        /* istanbul ignore else */
+
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
             if (
@@ -1842,7 +1820,6 @@ export const DlorForm = ({
             valuesToSend.notificationText = '';
         }
 
-        /* istanbul ignore else */
         if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
@@ -1876,42 +1853,22 @@ export const DlorForm = ({
                 ...(fileToBeUploaded ? { newFile: fileToBeUploaded } : {}),
             });
         }
-
-        let objectId;
-        if (mode === 'add') {
-            objectId = await actions.createDlor(valuesToSend, isDlorAdminUser(account));
-        } else {
-            objectId = await actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
-        }
-
-        // bail if object's object id is not returned by create/update action
-        if (!objectId) return;
-
-        // Save admin notes after DLO is created or updated
-        if (
-            isDlorAdminUser(account) &&
-            formValues.object_admin_notes !==
-                (mode === 'edit' ? dlorItem?.object_admin_notes : /* istanbul ignore next */ '')
-        ) {
-            const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
-            const noteContent = formValues.object_admin_notes;
-            !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
-        }
-
-        // handles file deletion
-        if (
-            mode === 'edit' &&
-            !!existingFile?.name &&
-            existingFile.markedForDeletion &&
-            !(await actions.deleteObjectFile(objectId, existingFile.name))
-        ) {
-            return;
-        }
-
-        // handles file upload
-        if (fileToBeUploaded) {
-            await actions.uploadObjectFile(objectId, fileToBeUploaded, setUploadProgress);
-        }
+        const saveDlorPromise =
+            mode === 'add'
+                ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
+                : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+        console.log('VALUES TO SEND ARE', valuesToSend);
+        return saveDlorPromise.then(savedItem => {
+            // Save admin notes after DLO is created or updated
+            if (
+                isDlorAdminUser(account) &&
+                formValues.object_admin_notes !== (mode === 'edit' ? dlorItem?.object_admin_notes : '')
+            ) {
+                const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : savedItem?.data?.object_public_uuid;
+                const noteContent = formValues.object_admin_notes;
+                !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
+            }
+        });
     };
 
     const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
@@ -1937,16 +1894,15 @@ export const DlorForm = ({
     const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = getDlorViewPageUrl(uuid);
-        /* istanbul ignore next */
         scrollToTopOfPage();
+        window.location.href = getDlorViewPageUrl(uuid);
     };
 
     const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
-        /* istanbul ignore next */
+
         scrollToTopOfPage();
     };
 

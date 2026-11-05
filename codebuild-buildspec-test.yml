@@ -14,6 +14,8 @@ env:
 phases:
   install:
     commands:
+      - npm install --global n
+      - n 24.15.0
       - sysctl fs.inotify.max_user_watches
       - sysctl fs.inotify.max_user_watches=524288
       - sysctl fs.inotify.max_user_watches

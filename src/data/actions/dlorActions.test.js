@@ -140,6 +140,12 @@ describe('Digital Learning Hub actions', () => {
         });
     });
 
+    it('returns the created DLO response from the create action', async () => {
+        mockApi.onAny(repositories.routes.DLOR_CREATE_API().apiUrl).reply(200, dlorCreationResponse);
+
+        await expect(mockActionsStore.dispatch(createDlor(dlorCreationRequest))).resolves.toEqual(dlorCreationResponse);
+    });
+
     describe('Dlor team list Actions', () => {
         it('dispatches expected actions when all dlors call fails', async () => {
             mockApi.onGet(repositories.routes.DLOR_TEAM_LIST_API()).reply(500);
