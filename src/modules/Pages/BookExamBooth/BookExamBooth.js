@@ -136,10 +136,8 @@ const BookExamBooth = ({
     return (
         <StandardPage title={locale.pageTitle}>
             <Grid container spacing={3}>
-                <Grid item xs={12}>
-                    {locale.intro}
-                </Grid>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>{locale.intro}</Grid>
+                <Grid size={{ xs: 12 }}>
                     <StyledStandardCard title={locale.displayDecider.heading}>
                         <div className="displayDecider">
                             <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
@@ -170,7 +168,7 @@ const BookExamBooth = ({
                 </Grid>
 
                 {isProctorU === 'yes' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.locationDecider.heading}>
                             <div>
                                 <FormControl variant="standard" component="fieldset" required>
@@ -214,7 +212,7 @@ const BookExamBooth = ({
                 )}
 
                 {isProctorU === 'no' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
                             {locale.noBookingMessage.message}
                         </StyledStandardCard>
@@ -222,10 +220,10 @@ const BookExamBooth = ({
                 )}
 
                 {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <StyledStandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
                                     <br />
                                     <FormControl variant="standard" component="fieldset">
@@ -252,7 +250,7 @@ const BookExamBooth = ({
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="sessionLength">{locale.sessionLength.label}</label>
                                     <br />
                                     <Select
@@ -280,7 +278,7 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
@@ -302,7 +300,7 @@ const BookExamBooth = ({
                                         }}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <label htmlFor="startTimeHours">{locale.startTimeHours.label}</label>
                                     <br />
                                     <Select
@@ -354,7 +352,7 @@ const BookExamBooth = ({
                                         })}
                                     </Select>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <fieldset>
                                         {locale.submissionInstructions}
                                         <Button

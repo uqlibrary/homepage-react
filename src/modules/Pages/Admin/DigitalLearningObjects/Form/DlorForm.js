@@ -213,9 +213,7 @@ export const DlorForm = ({
     useEffect(() => {
         // map the keywords from the keyword string BACK into the selectedKeywords structure
         if (!!formValues?.object_keywords_string && formValues?.object_keywords_string.length > 0) {
-            const keywordStrings = splitStringToArrayOnPipe(
-                formValues.object_keywords_string || /* istanbul ignore next */ '',
-            );
+            const keywordStrings = splitStringToArrayOnPipe(formValues.object_keywords_string);
 
             const newKeywordsArray = keywordStrings.map((keyword, index) => {
                 return {
@@ -236,7 +234,7 @@ export const DlorForm = ({
     function getFacetIds(slug) {
         const facetType = dlorFilterList?.find(item => item.facet_type_slug === slug);
 
-        return facetType?.facet_list?.map(facet => facet.facet_id) || /* istanbul ignore next */ [];
+        return facetType?.facet_list?.map(facet => facet.facet_id);
     }
     useEffect(() => {
         const siteHeader = document.querySelector('uq-site-header');
@@ -272,7 +270,7 @@ export const DlorForm = ({
     useEffect(() => {
         if (!dlorTeamListError && !dlorTeamListLoading && !!dlorTeamList && dlorTeamList.length > 0) {
             if (mode === 'add') {
-                const firstTeam = dlorTeamList?.filter((t, index) => index === 0) || /* istanbul ignore next */ [];
+                const firstTeam = dlorTeamList.filter((t, index) => index === 0);
                 teamSelectRef.current = firstTeam?.shift()?.team_id;
             }
         }
@@ -351,8 +349,8 @@ export const DlorForm = ({
                 !isValidEmail(currentValues?.team_email_new)) &&
                 firstPanelErrorCount++;
         } else if (mode === 'edit') {
-            currentValues?.team_manager_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
-            currentValues?.team_admin_username_edit?.length < 1 && /* istanbul ignore next */ firstPanelErrorCount++;
+            currentValues?.team_manager_edit?.length < 1 && firstPanelErrorCount++;
+            currentValues?.team_admin_username_edit?.length < 1 && firstPanelErrorCount++;
             (currentValues?.team_email_edit?.length < 1 || !isValidEmail(currentValues?.team_email_edit)) &&
                 firstPanelErrorCount++;
         }
@@ -515,10 +513,7 @@ export const DlorForm = ({
         if (prop === 'object_summary') {
             setSummaryContent(e.target.value);
         }
-        /* istanbul ignore next */
-        if (prop === 'object_description') {
-            setSummarySuggestionOpen(true);
-        }
+
         if (prop === 'object_link_file_type') {
             linkFileTypeSelectRef.current = theNewValue;
             setShowFileTypeCreationForm(theNewValue === 'new');
@@ -541,8 +536,8 @@ export const DlorForm = ({
 
         const newValues = {
             ...formValues,
-            team_manager_edit: !!formValues ? formValues.team_manager_edit : /* istanbul ignore next */ '',
-            team_email_edit: !!formValues ? formValues.team_email_edit : /* istanbul ignore next */ '',
+            team_manager_edit: formValues?.team_manager_edit || '',
+            team_email_edit: formValues?.team_email_edit || '',
         };
         setFormValues(newValues);
     };
@@ -550,7 +545,7 @@ export const DlorForm = ({
     const stepPanelContentOwnership = React.useMemo(
         () => (
             <>
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <FormControl variant="standard" fullWidth>
                         <InputLabel htmlFor="object_publishing_user">Object owner *</InputLabel>
                         <Input
@@ -579,7 +574,7 @@ export const DlorForm = ({
                     </FormControl>
                 </Grid>
                 {mode === 'edit' && (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="object_publishing_user_email">Object owner email</InputLabel>
                             <Input
@@ -593,7 +588,7 @@ export const DlorForm = ({
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12} sx={{ minHeight: '95px' }}>
+                <Grid size={{ xs: 12 }} sx={{ minHeight: '95px' }}>
                     <InputLabel id="object_owning_team_label">Owning Team</InputLabel>
                     <Select
                         variant="standard"
@@ -637,7 +632,7 @@ export const DlorForm = ({
                     )}
                 </Grid>
                 {showTeamForm !== false && teamSelectRef.current === 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_name_new">Name of new Team *</InputLabel>
                             <Input
@@ -663,18 +658,16 @@ export const DlorForm = ({
                                 id="team_admin_username"
                                 data-testid="dlor-form-team-admin-username-new"
                                 required
-                                value={formValues?.team_admin_username_new || /* istanbul ignore next */ ''}
+                                value={formValues?.team_admin_username_new || ''}
                                 onChange={handleChange('team_admin_username_new')}
                                 type="text"
                                 error={!formValues?.team_admin_username_new}
                             />
-                            {
-                                /* istanbul ignore next */ !formValues?.team_admin_username_new && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
-                                        Team admin username is required.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!formValues?.team_admin_username_new && (
+                                <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                    Team admin username is required.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_new">Team email *</InputLabel>
@@ -696,7 +689,7 @@ export const DlorForm = ({
                     </Grid>
                 )}
                 {showTeamForm !== false && teamSelectRef.current !== 'new' && (
-                    <Grid item xs={5}>
+                    <Grid size={{ xs: 5 }}>
                         <Box sx={{ fontStyle: 'italic', marginBlock: '-16px 16px' }}>
                             A change here will affect all Objects for this team.
                             <br />
@@ -711,7 +704,7 @@ export const DlorForm = ({
                                 id="team_manager_edit"
                                 data-testid="dlor-form-team-manager-edit"
                                 required
-                                value={formValues?.team_manager_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_manager_edit || ''}
                                 onChange={handleChange('team_manager_edit')}
                             />
                         </FormControl>
@@ -721,18 +714,16 @@ export const DlorForm = ({
                                 id="team_admin_username"
                                 data-testid="dlor-form-team-admin-username_edit"
                                 required
-                                value={formValues?.team_admin_username_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_admin_username_edit || ''}
                                 onChange={handleChange('team_admin_username_edit')}
                                 type="text"
                                 error={!formValues?.team_admin_username_edit}
                             />
-                            {
-                                /* istanbul ignore next */ !formValues?.team_admin_username_edit && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-admin-username">
-                                        Team admin username is required.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!formValues?.team_admin_username_edit && (
+                                <StyledErrorMessageBox data-testid="error-message-team-admin-username">
+                                    Team admin username is required.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                         <FormControl variant="standard" fullWidth>
                             <InputLabel htmlFor="team_email_edit">Team email *</InputLabel>
@@ -740,22 +731,20 @@ export const DlorForm = ({
                                 id="team_email_edit"
                                 data-testid="dlor-form-team-email-edit"
                                 required
-                                value={formValues?.team_email_edit || /* istanbul ignore next */ ''}
+                                value={formValues?.team_email_edit || ''}
                                 onChange={handleChange('team_email_edit')}
                                 type="email"
                                 error={!isValidEmail(formValues?.team_email_edit)}
                             />
-                            {
-                                /* istanbul ignore next */ !isValidEmail(formValues?.team_email_edit) && (
-                                    <StyledErrorMessageBox data-testid="error-message-team-email-edit">
-                                        This email address is not valid.
-                                    </StyledErrorMessageBox>
-                                )
-                            }
+                            {!isValidEmail(formValues?.team_email_edit) && (
+                                <StyledErrorMessageBox data-testid="error-message-team-email-edit">
+                                    This email address is not valid.
+                                </StyledErrorMessageBox>
+                            )}
                         </FormControl>
                     </Grid>
                 )}
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     {mode === 'edit' ? (
                         <>
                             <DatePicker
@@ -795,7 +784,7 @@ export const DlorForm = ({
                 </Grid>
                 {isDlorAdminUser(account) && (
                     <>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                                 <InputLabel htmlFor="object_admin_notes">Admin Notes</InputLabel>
                                 <RichTextEditor
@@ -809,7 +798,7 @@ export const DlorForm = ({
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Accordion sx={{ marginTop: 2 }}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography variant="p">Existing Admin Notes</Typography>
@@ -892,18 +881,14 @@ export const DlorForm = ({
             return plainSummary.substring(0, lastCarriageReturnIndex).trim();
         }
 
-        /* istanbul ignore else */
         if (plainSummary?.length <= requiredLength) {
             return plainSummary;
         }
 
-        /* istanbul ignore next */
         const trimmedString = plainSummary?.slice(0, requiredLength + 1);
 
-        /* istanbul ignore next */
         const slice = trimmedString.slice(0, Math.min(trimmedString?.length, trimmedString?.lastIndexOf(' ')));
 
-        /* istanbul ignore next */
         return slice;
     };
 
@@ -922,18 +907,13 @@ export const DlorForm = ({
         let newVar = '';
         if (!!formValues?.object_summary) {
             newVar = characterCount(formValues?.object_summary?.length, summaryMinimumLength, 'object_summary');
-        } else {
-            /* istanbul ignore next */
-            if (!!summaryContent) {
-                newVar = characterCount(summaryContent?.length, summaryMinimumLength, 'object_summary');
-            }
         }
         return newVar;
     };
 
     const stepPanelContentDescription = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_title">Object title *</InputLabel>
                     <Input
@@ -947,7 +927,7 @@ export const DlorForm = ({
                         characterCount(formValues?.object_title?.length, titleMinimumLength, 'object_title')}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     <InputLabel htmlFor="object_description">Description of Object *</InputLabel>
                     <RichTextEditor
@@ -967,7 +947,7 @@ export const DlorForm = ({
                         )}
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_summary">Summary of Object *</InputLabel>
                     <Input
@@ -1018,7 +998,7 @@ export const DlorForm = ({
             </Grid>
             {(!!isDlorAdminUser(account) || (mode === 'edit' && formValues?.object_status !== 'submitted')) && (
                 <>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormControl variant="standard" fullWidth>
                             <FormLabel id="object_status_label">Object publication status</FormLabel>
                             <RadioGroup
@@ -1050,7 +1030,7 @@ export const DlorForm = ({
                             </RadioGroup>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <FormLabel>Featured object?</FormLabel>
                         <InputLabel>
                             <Checkbox
@@ -1064,7 +1044,7 @@ export const DlorForm = ({
                     </Grid>
                 </>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <FormControl fullWidth>
                     <FormLabel id="object-restriction-label">Object Restriction</FormLabel>
                     <Select
@@ -1091,7 +1071,7 @@ export const DlorForm = ({
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormLabel>Cultural advice?</FormLabel>
                 <InputLabel>
                     <Checkbox
@@ -1130,7 +1110,7 @@ export const DlorForm = ({
                     />
                 </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel htmlFor="object_link_url">File Uploader</InputLabel>
                     {!hasFile && <FileSelector onChange={onFileChange} />}
@@ -1169,12 +1149,12 @@ export const DlorForm = ({
                 </FormControl>
             </Grid>
             {isDlorAdminUser(account) && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <InputLabel id="object_link_interaction_type-label" htmlFor="object_link_interaction_type">
                         Message advising about link
                     </InputLabel>
                     <Grid container>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl>
                                 <span>&nbsp;</span>
                                 <Select
@@ -1215,7 +1195,7 @@ export const DlorForm = ({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <FormControl sx={{ minWidth: '10em' }}>
                                 {[linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
                                     linkInteractionTypeSelectRef.current,
@@ -1255,7 +1235,7 @@ export const DlorForm = ({
                                             </MenuItem>
                                         </Select>
                                         {showFileTypeCreationForm && (
-                                            <Grid item xs={12}>
+                                            <Grid size={{ xs: 12 }}>
                                                 <FormControl variant="standard" fullWidth>
                                                     <InputLabel htmlFor="new_file_type">
                                                         New File Type (abbrev)
@@ -1273,7 +1253,7 @@ export const DlorForm = ({
                                 )}
                             </FormControl>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{ xs: 4 }}>
                             <StyledViewDurationBox>
                                 {!!showLinkTimeForm && (
                                     <>
@@ -1356,7 +1336,7 @@ export const DlorForm = ({
                 </Grid>
             )}
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth sx={{ paddingTop: '50px' }}>
                     {/* yes, this looks too big locally, but looks correct live. No, I dont know why */}
                     <InputLabel htmlFor="object_download_instructions" sx={{ fontSize: 20 }}>
@@ -1366,7 +1346,7 @@ export const DlorForm = ({
                         id="download_instructions"
                         testId="download_instructions"
                         ariaLabel="Instructions"
-                        value={formValues?.object_download_instructions || /* istanbul ignore next */ ''}
+                        value={formValues?.object_download_instructions || ''}
                         onChange={htmlData => {
                             handleEditorChange('object_download_instructions', htmlData);
                         }}
@@ -1382,7 +1362,7 @@ export const DlorForm = ({
         };
 
         let result = <></>;
-        /* istanbul ignore else */
+
         if (filterItem?.facet_type_number === 'one-or-more' || filterItem?.facet_type_number === 'zero-or-more') {
             result =
                 !!filterItem.facet_list &&
@@ -1449,7 +1429,7 @@ export const DlorForm = ({
 
     const stepPanelContentFilters = (
         <>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Filters
                 </Typography>
@@ -1458,8 +1438,7 @@ export const DlorForm = ({
                 dlorFilterList.map(filterItem => {
                     return (
                         <Grid
-                            item
-                            xs={4}
+                            size={{ xs: 4 }}
                             key={filterItem.facet_type_slug}
                             data-testid={`filter-group-${convertSnakeCaseToKebabCase(filterItem.facet_type_slug)}`}
                         >
@@ -1475,12 +1454,12 @@ export const DlorForm = ({
                         </Grid>
                     );
                 })}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <Typography component={'h2'} variant={'h6'}>
                     Tags
                 </Typography>
             </Grid>
-            <Grid item xs={12} style={{ paddingTop: 20 }}>
+            <Grid size={{ xs: 12 }} style={{ paddingTop: 20 }}>
                 <FuzzySearch
                     data={dlorKeywords}
                     fuseOptions={fuseOptions}
@@ -1593,7 +1572,7 @@ export const DlorForm = ({
                 </Modal>
             </Grid>
             {mode === 'edit' && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <FormControlLabel
@@ -1734,15 +1713,14 @@ export const DlorForm = ({
     const [activeStep, setActiveStep] = useState(0);
 
     useEffect(() => {
-        /* istanbul ignore else */
         if (!dlorTeamListError && !dlorTeamListLoading && !dlorTeamList) {
             actions.loadOwningTeams();
         }
-        /* istanbul ignore else */
+
         if (!dlorFilterListError && !dlorFilterListLoading && !dlorFilterList) {
             actions.loadAllFilters();
         }
-        /* istanbul ignore else */
+
         if (mode === 'add' && !dlorFileTypeListError && !dlorFileTypeListLoading && !dlorFileTypeList) {
             actions.loadFileTypeList();
         }
@@ -1751,7 +1729,6 @@ export const DlorForm = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* istanbul ignore next */
     useEffect(() => {
         const isFileTypeSet =
             [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(
@@ -1779,7 +1756,7 @@ export const DlorForm = ({
         // 2. Owner of the object
         if (formDefaults?.object_publishing_user && account?.id === formDefaults.object_publishing_user) return true;
         // 3. In the team that owns the object
-        /* istanbul ignore else */
+
         if (Array.isArray(dlorTeamList) && formDefaults?.object_owning_team_id) {
             const owningTeam = dlorTeamList.find(t => t.team_id === formDefaults.object_owning_team_id);
             if (
@@ -1843,7 +1820,6 @@ export const DlorForm = ({
             valuesToSend.notificationText = '';
         }
 
-        /* istanbul ignore else */
         if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
@@ -1878,23 +1854,22 @@ export const DlorForm = ({
             });
         }
 
-        let objectId;
+        let savedItem;
         if (mode === 'add') {
-            objectId = await actions.createDlor(valuesToSend, isDlorAdminUser(account));
+            savedItem = await actions.createDlor(valuesToSend, isDlorAdminUser(account));
         } else {
-            objectId = await actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+            savedItem = await actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
         }
 
         // bail if object's object id is not returned by create/update action
-        if (!objectId) return;
+        if (!savedItem?.object_id) return;
 
         // Save admin notes after DLO is created or updated
         if (
             isDlorAdminUser(account) &&
-            formValues.object_admin_notes !==
-                (mode === 'edit' ? dlorItem?.object_admin_notes : /* istanbul ignore next */ '')
+            formValues.object_admin_notes !== (mode === 'edit' ? dlorItem?.object_admin_notes : '')
         ) {
-            const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : dlorSavedItem?.data?.object_public_uuid;
+            const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : savedItem.object_public_uuid;
             const noteContent = formValues.object_admin_notes;
             !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
         }
@@ -1904,14 +1879,14 @@ export const DlorForm = ({
             mode === 'edit' &&
             !!existingFile?.name &&
             existingFile.markedForDeletion &&
-            !(await actions.deleteObjectFile(objectId, existingFile.name))
+            !(await actions.deleteObjectFile(savedItem.object_id, existingFile.name))
         ) {
             return;
         }
 
         // handles file upload
         if (fileToBeUploaded) {
-            await actions.uploadObjectFile(objectId, fileToBeUploaded, setUploadProgress);
+            await actions.uploadObjectFile(savedItem.object_id, fileToBeUploaded, setUploadProgress);
         }
     };
 
@@ -1938,16 +1913,15 @@ export const DlorForm = ({
     const navigateToObject = uuid => {
         setConfirmationOpen(false);
         actions.clearADlor();
-        window.location.href = getDlorViewPageUrl(uuid);
-        /* istanbul ignore next */
         scrollToTopOfPage();
+        window.location.href = getDlorViewPageUrl(uuid);
     };
 
     const navigateToListPage = () => {
         setConfirmationOpen(false);
         actions.clearADlor();
         window.location.href = dlorAdminLink(undefined, account);
-        /* istanbul ignore next */
+
         scrollToTopOfPage();
     };
 
@@ -1974,7 +1948,7 @@ export const DlorForm = ({
 
     if (!!dlorTeamListLoading || dlorFilterListLoading || !!dlorItemSaving || !!dlorItemLoading) {
         return (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
                 <InlineLoader message="Loading" />
             </Grid>
         );
@@ -2052,7 +2026,7 @@ export const DlorForm = ({
             />
             <form id="dlor-addedit-form">
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Stepper activeStep={activeStep}>
                             {steps.map((step, index) => {
                                 const stepProps = { completed: null };
@@ -2081,7 +2055,7 @@ export const DlorForm = ({
                         </Stepper>
                     </Grid>
                     {steps[activeStep].stepPanelContent} {/* a large amount of html here!! */}
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                             <Button
                                 color="inherit"
@@ -2117,7 +2091,7 @@ export const DlorForm = ({
                 </Grid>
             </form>
             <Grid container spacing={2} sx={{ marginTop: '32px' }}>
-                <Grid item xs={3} align="left">
+                <Grid size={{ xs: 3 }} align="left">
                     <Button
                         color="secondary"
                         children="Cancel"
@@ -2126,7 +2100,7 @@ export const DlorForm = ({
                         variant="contained"
                     />
                 </Grid>
-                <Grid item xs={9} align="right" />
+                <Grid size={{ xs: 9 }} align="right" />
             </Grid>
         </>
     );

@@ -116,7 +116,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
         const openConfirmationAlertFn = jest.fn();
@@ -143,7 +143,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const newValues = { ...formValues };
         newValues.asset_id_displayed = undefined;
@@ -169,7 +169,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const actionFn = jest.fn();
         const { getByTestId, rerender } = setup({
@@ -214,7 +214,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
 
         const openConfirmationAlertFn = jest.fn();
@@ -278,7 +278,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
 
         const openConfirmationAlertFn = jest.fn();
@@ -341,7 +341,7 @@ describe('AssetPanel', () => {
 
     it('does not call clearAssets when toggling all teams off and selectedAsset matches user team', () => {
         const clearAssetsFn = jest.fn();
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const { getByRole } = setup({
             actions: { loadAssetTypes: jest.fn(), clearAssets: clearAssetsFn },
@@ -357,7 +357,7 @@ describe('AssetPanel', () => {
 
         clearAssetsFn.mockClear();
 
-        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        const toggle = getByRole('switch', { name: 'All team assets' });
         // Toggle on
         act(() => {
             fireEvent.click(toggle);
@@ -373,7 +373,7 @@ describe('AssetPanel', () => {
 
     it('calls clearAssets when toggling all teams off and selectedAsset does not match user team', () => {
         const clearAssetsFn = jest.fn();
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
         const { getByRole } = setup({
             actions: { loadAssetTypes: jest.fn(), clearAssets: clearAssetsFn },
@@ -389,7 +389,7 @@ describe('AssetPanel', () => {
 
         clearAssetsFn.mockClear();
 
-        const toggle = getByRole('checkbox', { name: 'All team assets' });
+        const toggle = getByRole('switch', { name: 'All team assets' });
         // Toggle on
         act(() => {
             fireEvent.click(toggle);
@@ -407,7 +407,7 @@ describe('AssetPanel', () => {
         const resetForm = jest.fn();
         const assignCurrentAsset = jest.fn();
         const location = { formSiteId: -1, formBuildingId: -1, formFloorId: -1, formRoomId: -1 };
-        // eslint-disable-next-line no-unused-vars
+
         const handleChange = jest.fn(prop => jest.fn(event => {}));
 
         const openConfirmationAlertFn = jest.fn();
@@ -474,7 +474,7 @@ describe('AssetPanel', () => {
     describe('useNoResultsAlert', () => {
         it('calls openConfirmationAlert when assets list is loaded and empty', () => {
             const openConfirmationAlertFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             setup({
                 actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
@@ -497,7 +497,7 @@ describe('AssetPanel', () => {
 
         it('does not call openConfirmationAlert when assets list is loaded and non-empty', () => {
             const openConfirmationAlertFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             setup({
                 actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
@@ -517,7 +517,7 @@ describe('AssetPanel', () => {
 
         it('does not call openConfirmationAlert when assets list is not yet loaded', () => {
             const openConfirmationAlertFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             setup({
                 actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
@@ -540,7 +540,7 @@ describe('AssetPanel', () => {
         it('calls loadAssetsFiltered when toggling all teams after a search', async () => {
             const searchPattern = 'UQL310000';
             const loadAssetsFilteredFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             const { getByTestId, getByRole } = setup({
                 actions: {
@@ -564,7 +564,7 @@ describe('AssetPanel', () => {
             loadAssetsFilteredFn.mockClear();
 
             // Toggle all teams on — should call loadAssetsFiltered since searchTerm is set
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).toHaveBeenCalledWith(
@@ -575,7 +575,7 @@ describe('AssetPanel', () => {
 
         it('calls loadAssetsFiltered without all_teams when toggling off after a search', async () => {
             const loadAssetsFilteredFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             const { getByTestId, getByRole } = setup({
                 actions: {
@@ -597,9 +597,9 @@ describe('AssetPanel', () => {
             await userEvent.type(input, 'UQL310000');
 
             // Ensure toggle is ON before testing the OFF toggle
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
-            await expect(getByTestId('asset_panel-all-teams-switch')).toBeChecked();
+            await expect(getByRole('switch', { name: 'All team assets' })).toBeChecked();
 
             loadAssetsFilteredFn.mockClear();
 
@@ -614,7 +614,7 @@ describe('AssetPanel', () => {
 
         it('does not call loadAssetsFiltered after clearing the search', async () => {
             const loadAssetsFilteredFn = jest.fn();
-            // eslint-disable-next-line no-unused-vars
+
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             const { getByTestId, getByRole } = setup({
                 actions: {
@@ -645,14 +645,13 @@ describe('AssetPanel', () => {
             loadAssetsFilteredFn.mockClear();
 
             // Toggle all teams — should NOT call loadAssetsFiltered since searchTerm was cleared
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
 
             expect(loadAssetsFilteredFn).not.toHaveBeenCalled();
         }, 10000);
 
         it('shows warning alert when allTeams is on and selectedAsset is from a different team', async () => {
-            // eslint-disable-next-line no-unused-vars
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             const { getByTestId, getByRole } = setup({
                 actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
@@ -667,14 +666,13 @@ describe('AssetPanel', () => {
             });
 
             // Toggle all teams on
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
 
             expect(getByTestId('asset_panel-all-teams-warning-text')).toBeInTheDocument();
         });
 
         it('does not show warning alert when allTeams is on and selectedAsset is from same team', async () => {
-            // eslint-disable-next-line no-unused-vars
             const handleChange = jest.fn(prop => jest.fn(event => {}));
             const { queryByTestId, getByRole } = setup({
                 actions: { loadAssetTypes: jest.fn(), clearAssets: jest.fn() },
@@ -689,7 +687,7 @@ describe('AssetPanel', () => {
             });
 
             // Toggle all teams on
-            const toggle = getByRole('checkbox', { name: 'All team assets' });
+            const toggle = getByRole('switch', { name: 'All team assets' });
             await userEvent.click(toggle);
 
             expect(queryByTestId('asset_panel-all-teams-warning-text')).not.toBeInTheDocument();

@@ -2,7 +2,6 @@ import React from 'react';
 
 import { fireEvent, rtlRender, screen, waitFor } from 'test-utils';
 import { cleanup } from '@testing-library/react';
-import { useCookies } from 'react-cookie';
 
 import { BookableSpacesManageLocations } from './BookableSpacesManageLocations';
 import {
@@ -262,6 +261,27 @@ describe('BookableSpacesManageLocations', () => {
         expect(screen.getByTestId('floor-name')).toHaveTextContent('Level name');
     });
 
+    it('clears add-library values after canceling and reopening the form', () => {
+        renderLocations();
+
+        const openAddLibraryDialog = () => {
+            fireEvent.click(screen.getByTestId('edit-campus-1-button'));
+            fireEvent.click(screen.getByTestId('dialog-addnew-button'));
+        };
+
+        openAddLibraryDialog();
+        document.getElementById('libraryName').value = 'Stale library';
+        document.getElementById('buildingName').value = 'Stale building';
+        document.getElementById('buildingNumber').value = '9999';
+        fireEvent.click(screen.getByTestId('dialog-cancel-button'));
+
+        openAddLibraryDialog();
+
+        expect(document.getElementById('libraryName')).toHaveValue('');
+        expect(document.getElementById('buildingName')).toHaveValue('');
+        expect(document.getElementById('buildingNumber')).toHaveValue('');
+    });
+
     it('validates and saves a new campus, including the active Cypress cookie path', async () => {
         const setCookie = jest.fn();
         require('react-cookie').useCookies.mockReturnValue([{ CYPRESS_TEST_DATA: 'active' }, setCookie]);
@@ -302,6 +322,20 @@ describe('BookableSpacesManageLocations', () => {
         fireEvent.click(screen.getByTestId('dialog-save-button'));
         await waitFor(() => expect(editActions.updateBookableSpaceLocation).toHaveBeenCalled());
         expect(displayToastMessage).toHaveBeenCalledWith('Change to campus saved');
+    });
+
+    it.each([
+        ['building name', '', '08'],
+        ['building number', 'New Building', ''],
+    ])('validates an edited library when its %s is missing', (_, buildingName, buildingNumber) => {
+        renderLocations();
+        fireEvent.click(screen.getByTestId('edit-library-2-button'));
+        document.getElementById('buildingName').value = buildingName;
+        document.getElementById('buildingNumber').value = buildingNumber;
+
+        fireEvent.click(screen.getByTestId('dialog-save-button'));
+
+        expect(document.getElementById('warningtext')).toHaveTextContent('Please enter building name and number');
     });
 
     it('validates and saves libraries and floors', async () => {
@@ -388,6 +422,32 @@ describe('BookableSpacesManageLocations', () => {
             expect(actions.updateBookableSpaceLocation).toHaveBeenCalledWith({ ground_floor_id: 9 }, 'library', '2'),
         );
         expect(displayToastMessage).toHaveBeenCalledWith('Level added');
+    });
+
+    it('renders empty ground-floor defaults and unselected campuses for a library without a ground floor', () => {
+        const libraryWithoutGroundFloor = {
+            ...campusList[0].libraries[0],
+            ground_floor_id: null,
+        };
+        const campusListWithUnmarkedLibrary = [
+            {
+                ...campusList[0],
+                libraries: [libraryWithoutGroundFloor, campusList[0].libraries[1]],
+            },
+            { ...campusList[0], campus_id: 6, campus_name: 'Gatton', campus_number: '06', libraries: [] },
+        ];
+        renderLocations({ campusList: campusListWithUnmarkedLibrary });
+
+        fireEvent.click(screen.getByTestId('edit-library-2-button'));
+
+        expect(document.querySelector('input[name="ground_floor_id_old"]')).toHaveValue('');
+        expect(document.getElementById('groundFloor-none')).toBeChecked();
+        expect(document.getElementById('chooseSite-6')).not.toBeChecked();
+
+        fireEvent.click(screen.getByTestId('dialog-addnew-button'));
+        expect(screen.getByTestId('mark-ground-floor')).toHaveTextContent(
+            'No floor is currently marked as the ground floor',
+        );
     });
 
     it('covers library and floor save failures and delete success messages', async () => {

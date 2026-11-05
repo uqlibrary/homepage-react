@@ -728,20 +728,36 @@ describe('BookableSpacesManageSpaces', () => {
                 space_id: 104,
                 space_name: 'Delta room',
                 space_type_id: null,
-                space_type_details: { space_type_name: 'Display wall' },
-                space_draftmode: false,
+                space_type_details: { space_type_name: 'Meeting room' },
+                space_draftmode: true,
                 space_deleted: false,
                 created_at: '2024-02-01T00:00:00Z',
                 updated_at: '2024-02-03T00:00:00Z',
                 space_campus_id: 2,
                 space_library_id: 22,
                 space_floor_id: 3,
+                space_outages: null,
             }),
         ];
+        const facilityTypeList = buildDefaultProps().facilityTypeList;
 
         rtlRender(
             <BookableSpacesManageSpaces
                 {...buildDefaultProps({
+                    facilityTypeList: {
+                        ...facilityTypeList,
+                        data: {
+                            ...facilityTypeList.data,
+                            facility_type_groups: [
+                                ...facilityTypeList.data.facility_type_groups,
+                                {
+                                    facility_type_group_name: 'Additional features',
+                                    facility_type_group_order: 2,
+                                    facility_type_children: [{ facility_type_id: 3, facility_type_name: 'Microphone' }],
+                                },
+                            ],
+                        },
+                    },
                     bookableSpacesRoomList: {
                         data: {
                             locations: [
@@ -761,6 +777,7 @@ describe('BookableSpacesManageSpaces', () => {
         await waitFor(() => {
             expect(screen.getByTestId('space-101-name')).toBeInTheDocument();
         });
+        expect(screen.getByText('Additional features')).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('checkbox', { name: /Show drafts only/i }));
         fireEvent.click(screen.getByRole('checkbox', { name: /Show deleted spaces/i }));
@@ -771,6 +788,7 @@ describe('BookableSpacesManageSpaces', () => {
         await waitFor(() => {
             expect(screen.getByTestId('space-103-name')).toBeInTheDocument();
         });
+        expect(screen.getByTestId('space-104-name')).toBeInTheDocument();
 
         fireEvent.click(screen.getByTestId('spaces-sort-button'));
         fireEvent.click(screen.getByRole('menuitem', { name: /Sort by creation date/i }));

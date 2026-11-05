@@ -149,7 +149,7 @@ export function createDlor(request, isDlorAdminUser = true) {
                 });
                 // refresh the list after change, only if the user is an admin
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
-                return response?.data?.object_id;
+                return response.data;
             })
             .catch(error => {
                 dispatch({
@@ -172,7 +172,7 @@ export function updateDlor(dlorId, request, isDlorAdminUser = true) {
                 });
                 // refresh the list after change
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
-                return response?.data?.object_id;
+                return response.data;
             })
             .catch(error => {
                 dispatch({
@@ -236,7 +236,7 @@ export function uploadObjectFile(id, file, onProgress) {
             },
             file,
         )
-            .then(response => {
+            .then(() => {
                 dispatch({
                     type: actions.DLOR_UPLOAD_OBJET_FILE_SUCCESS,
                 });
@@ -254,7 +254,7 @@ export function deleteObjectFile(id, filename) {
     return dispatch => {
         dispatch({ type: actions.DLOR_DELETE_OBJET_FILE_LOADING });
         return destroy(DLOR_OBJECT_FILE_DESTROY_API(id, filename))
-            .then(response => {
+            .then(() => {
                 dispatch({
                     type: actions.DLOR_DELETE_OBJET_FILE_SUCCESS,
                 });

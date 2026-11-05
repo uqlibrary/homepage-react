@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -151,7 +151,7 @@ const InspectionDetails = ({ actions }) => {
                         isBusy={dialogueBusy}
                     />
                     <Grid container spacing={3}>
-                        <Grid xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <AssetSelector
                                 id={componentId}
                                 locale={pageLocale.form}
@@ -168,7 +168,7 @@ const InspectionDetails = ({ actions }) => {
                         </Grid>
                     </Grid>
                     <Grid container>
-                        <Grid xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <SwitchIncludeAllTeams
                                 id={componentId}
                                 locale={pageLocale.form}

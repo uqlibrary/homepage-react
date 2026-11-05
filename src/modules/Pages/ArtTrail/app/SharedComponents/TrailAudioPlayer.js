@@ -205,7 +205,11 @@ const TrailAudioPlayer = ({
                     setCurrentTime(event.currentTarget.currentTime || 0);
                 }}
                 onTimeUpdate={event => {
-                    setCurrentTime(event.currentTarget.currentTime || 0);
+                    const el = event.currentTarget;
+                    setCurrentTime(el.currentTime || 0);
+                    if (Number.isFinite(el.duration)) {
+                        setDuration(el.duration);
+                    }
                 }}
                 onPlay={() => {
                     setPlaybackState(PLAYBACK_STATES.PLAYING);

@@ -12,7 +12,7 @@ const List = ({ onClear, file }) => (
             {file.name} {getFileSizeString(file.size / 1000)}
         </span>{' '}
         <Tooltip
-            componentsProps={{
+            slotProps={{
                 tooltip: {
                     sx: { maxWidth: 200, textAlign: 'center' },
                 },

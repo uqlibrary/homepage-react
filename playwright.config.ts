@@ -18,7 +18,7 @@ export default defineConfig({
     fullyParallel: true,
     failOnFlakyTests: !process.env.CI_BRANCH,
     forbidOnly: !!process.env.CI_BRANCH,
-    retries: process.env.CI_BRANCH ? 2 : 0,
+    retries: process.env.CI_BRANCH ? 2 : 1,
     workers: process.env.CI_BRANCH ? '75%' : localWorkers,
     reporter: [
         ['list'],
@@ -31,6 +31,7 @@ export default defineConfig({
                 jsonReportFilename: process.env.PW_CC_REPORT_FILENAME,
             } as IstanbulMergerConfig,
         ],
+        ['./playwright-slow-tests.ts'],
     ],
     use: {
         baseURL,

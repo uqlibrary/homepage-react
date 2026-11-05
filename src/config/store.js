@@ -1,6 +1,6 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Map } from 'immutable';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 import { saveReducerOnSessionExpired } from 'middleware';
 import rootReducer from '../reducer';
 

@@ -11,8 +11,8 @@ import SpacesFavouriteIcon from 'modules/Pages/BookableSpaces/Shared/SpacesFavou
 import { serialiseJourneyUrl } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { StyledHeaderWithLinkToAllGridItem } from 'modules/Pages/BookableSpaces/SpacesHomepage/SpacesHomepageStyles';
 
-const StyledFavouritesContainerGrid = styled(Grid)(() => ({
-    marginTop: 0,
+const StyledFavouritesContainerGrid = styled(Grid)(({ theme }) => ({
+    marginTop: theme.spacing(3),
     marginBottom: 0,
     paddingTop: 0,
     paddingBottom: 0,
@@ -25,8 +25,8 @@ const StyledFavouritesContainerGrid = styled(Grid)(() => ({
         // position the favourite star at the top left
         position: 'relative',
         '& .topLeft': {
-            top: '3rem',
-            left: '3rem',
+            top: '1.5rem',
+            left: '1.25rem',
         },
         '& h3': {
             paddingLeft: '2rem',
@@ -132,7 +132,8 @@ export const FavouritesList = ({
                 <StyledFavouritesContainerGrid
                     component={'ul'}
                     container
-                    spacing={3}
+                    rowSpacing={3}
+                    columnSpacing={2}
                     data-testid="spaces-homepage-favourites-block"
                 >
                     {favouritesToShow.map((fav, idx) => {

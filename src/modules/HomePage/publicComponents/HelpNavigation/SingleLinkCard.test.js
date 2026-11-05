@@ -46,4 +46,10 @@ describe('SingleLinkCard', () => {
         expect(getByRole('heading', { name: 'Find and borrow', level: 2 })).toBeInTheDocument();
         expect(queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
     });
+
+    it('applies layout overrides to the grid item', () => {
+        const { getByRole } = setup({ sx: { pl: 0, mb: 0 } });
+
+        expect(getByRole('listitem')).toHaveStyle({ paddingLeft: '0px', marginBottom: '0px' });
+    });
 });

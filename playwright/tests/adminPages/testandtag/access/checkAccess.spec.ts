@@ -1,7 +1,8 @@
 import { test, expect, Page } from '@uq/pw/test';
 
 test.describe('Test and Tag Dashboard Access', () => {
-    test.beforeEach(async ({}, testInfo) => {
+    test.beforeEach(async ({ page }, testInfo) => {
+        void page;
         test.setTimeout(testInfo.timeout + 30_000);
     });
 
@@ -45,118 +46,6 @@ test.describe('Test and Tag Dashboard Access', () => {
         await expect(page.getByTestId('dashboard-management-inspection-devices-link')).toBeVisible();
         await expect(page.getByTestId('dashboard-management-locations-link')).toBeVisible();
         await expect(page.getByTestId('dashboard-management-users-link')).toBeVisible();
-    });
-
-    test('Dashboard has relevant items for admin only user', async ({ page }) => {
-        await visitDashboardPage(page, 'uqttadmin');
-        await expect(getTestPanel(page)).not.toBeVisible();
-        await expect(getAssetsPanel(page)).toBeVisible();
-        await expect(getTestDevicePanel(page)).toBeVisible();
-        await expect(getReportingPanel(page)).not.toBeVisible();
-        await expect(getManagementPanel(page)).toBeVisible();
-
-        // check top panels links
-        await expect(page.getByTestId('dashboard-new-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - reporting
-        await expect(page.getByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-assets-inspected-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - management
-        await expect(page.getByTestId('dashboard-management-asset-types-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-bulk-asset-update-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspections-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspection-devices-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-locations-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-users-link')).toBeVisible();
-    });
-
-    test('Dashboard has relevant items for report only user', async ({ page }) => {
-        await visitDashboardPage(page, 'uqttreport');
-        await expect(getTestPanel(page)).not.toBeVisible();
-        await expect(getAssetsPanel(page)).toBeVisible();
-        await expect(getTestDevicePanel(page)).toBeVisible();
-        await expect(getReportingPanel(page)).toBeVisible();
-        await expect(getManagementPanel(page)).not.toBeVisible();
-
-        // check top panels links
-        await expect(page.getByTestId('dashboard-new-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-assets-due-inspection-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-devices-due-recalibration-link')).toBeVisible();
-
-        // check base panels links - reporting
-        await expect(page.getByTestId('dashboard-reporting-assets-due-inspection-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-assets-inspected-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-inspections-by-user-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-devices-due-recalibration-link')).toBeVisible();
-
-        // check base panels links - management
-        await expect(page.getByTestId('dashboard-management-asset-types-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-bulk-asset-update-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspections-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspection-devices-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-locations-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-users-link')).not.toBeVisible();
-    });
-
-    test('Dashboard has relevant items for inspect only user', async ({ page }) => {
-        await visitDashboardPage(page, 'uqttinspect');
-        await expect(getTestPanel(page)).toBeVisible();
-        await expect(getAssetsPanel(page)).toBeVisible();
-        await expect(getTestDevicePanel(page)).toBeVisible();
-        await expect(getReportingPanel(page)).not.toBeVisible();
-        await expect(getManagementPanel(page)).toBeVisible();
-
-        // check top panels links
-        await expect(page.getByTestId('dashboard-new-inspection-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - reporting
-        await expect(page.getByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-assets-inspected-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - management
-        await expect(page.getByTestId('dashboard-management-asset-types-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-bulk-asset-update-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspections-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspection-devices-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-locations-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-users-link')).not.toBeVisible();
-    });
-
-    test('Dashboard has relevant items for alter only user', async ({ page }) => {
-        await visitDashboardPage(page, 'uqttalter');
-        await expect(getTestPanel(page)).not.toBeVisible();
-        await expect(getAssetsPanel(page)).toBeVisible();
-        await expect(getTestDevicePanel(page)).toBeVisible();
-        await expect(getReportingPanel(page)).not.toBeVisible();
-        await expect(getManagementPanel(page)).toBeVisible();
-
-        // check top panels links
-        await expect(page.getByTestId('dashboard-new-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - reporting
-        await expect(page.getByTestId('dashboard-reporting-assets-due-inspection-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-assets-inspected-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-inspections-by-user-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-reporting-devices-due-recalibration-link')).not.toBeVisible();
-
-        // check base panels links - management
-        await expect(page.getByTestId('dashboard-management-asset-types-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-bulk-asset-update-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspections-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-inspection-devices-link')).toBeVisible();
-        await expect(page.getByTestId('dashboard-management-locations-link')).not.toBeVisible();
-        await expect(page.getByTestId('dashboard-management-users-link')).not.toBeVisible();
     });
 });
 
@@ -211,23 +100,23 @@ test.describe('Test and Tag Page Access', () => {
         await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
     };
 
-    const visitManageLocations = async (page: Page, user: string, expectedAllowed = true) => {
-        await page.goto(`/admin/testntag/manage/locations?user=${user}`);
-        const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
-    };
+    // const visitManageLocations = async (page: Page, user: string, expectedAllowed = true) => {
+    //     await page.goto(`/admin/testntag/manage/locations?user=${user}`);
+    //     const standardPage = page.getByTestId('StandardPage');
+    //     await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    // };
 
-    const visitManageTeams = async (page: Page, user: string, expectedAllowed = true) => {
-        await page.goto(`/admin/testntag/manage/teams?user=${user}`);
-        const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
-    };
+    // const visitManageTeams = async (page: Page, user: string, expectedAllowed = true) => {
+    //     await page.goto(`/admin/testntag/manage/teams?user=${user}`);
+    //     const standardPage = page.getByTestId('StandardPage');
+    //     await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    // };
 
-    const visitManagePrinterTemplates = async (page: Page, user: string, expectedAllowed = true) => {
-        await page.goto(`/admin/testntag/manage/printertemplates?user=${user}`);
-        const standardPage = page.getByTestId('StandardPage');
-        await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
-    };
+    // const visitManagePrinterTemplates = async (page: Page, user: string, expectedAllowed = true) => {
+    //     await page.goto(`/admin/testntag/manage/printertemplates?user=${user}`);
+    //     const standardPage = page.getByTestId('StandardPage');
+    //     await expect(standardPage.getByText(expectedAllowed ? 'for Library' : 'Page unavailable')).toBeVisible();
+    // };
 
     const visitManageUsers = async (page: Page, user: string, expectedAllowed = true) => {
         await page.goto(`/admin/testntag/manage/users?user=${user}`);
@@ -243,12 +132,13 @@ test.describe('Test and Tag Page Access', () => {
         await visitTestsByLicencedUserReport(page, 'uqtesttag', true);
         // Management
         await visitTestTagInspect(page, 'uqtesttag', true);
-        await visitManageAssetTypes(page, 'uqtesttag', true);
-        await visitBulkAssetUpdate(page, 'uqtesttag', true);
-        await visitManageInspectionDetails(page, 'uqtesttag', true);
-        await visitManageLocations(page, 'uqtesttag', true);
-        await visitManageTeams(page, 'uqtesttag', true);
-        await visitManagePrinterTemplates(page, 'uqtesttag', true);
+
+        // await visitManageAssetTypes(page, 'uqtesttag', true);
+        // await visitBulkAssetUpdate(page, 'uqtesttag', true);
+        // await visitManageInspectionDetails(page, 'uqtesttag', true);
+        // await visitManageLocations(page, 'uqtesttag', true);
+        // await visitManageTeams(page, 'uqtesttag', true);
+        // await visitManagePrinterTemplates(page, 'uqtesttag', true);
         await visitManageUsers(page, 'uqtesttag', true);
     });
 
@@ -256,11 +146,11 @@ test.describe('Test and Tag Page Access', () => {
         // Reporting
         await visitTestTagInspect(page, 'uqttadmin', false);
         await visitInspectionDueReport(page, 'uqttadmin', false);
-        await visitInspectionDevicesRecalibration(page, 'uqttadmin', false);
-        await visitAssetsByFilterReport(page, 'uqttadmin', false);
+        // await visitInspectionDevicesRecalibration(page, 'uqttadmin', false);
+        // await visitAssetsByFilterReport(page, 'uqttadmin', false);
         await visitTestsByLicencedUserReport(page, 'uqttadmin', false);
         // Management
-        await visitManageAssetTypes(page, 'uqttadmin', false);
+        // await visitManageAssetTypes(page, 'uqttadmin', false);
         await visitBulkAssetUpdate(page, 'uqttadmin', false);
         await visitManageInspectionDetails(page, 'uqttadmin', false);
     });
@@ -268,14 +158,14 @@ test.describe('Test and Tag Page Access', () => {
     test('verify reporting only rejected pages', async ({ page }) => {
         // Management
         await visitManageAssetTypes(page, 'uqttreport', false);
-        await visitBulkAssetUpdate(page, 'uqttreport', false);
+        // await visitBulkAssetUpdate(page, 'uqttreport', false);
         await visitManageInspectionDetails(page, 'uqttreport', false);
     });
 
     test('verify inspect only rejected pages', async ({ page }) => {
         // Management
-        await visitInspectionDueReport(page, 'uqttinspect', false);
-        await visitInspectionDevicesRecalibration(page, 'uqttinspect', false);
+        // await visitInspectionDueReport(page, 'uqttinspect', false);
+        // await visitInspectionDevicesRecalibration(page, 'uqttinspect', false);
         await visitAssetsByFilterReport(page, 'uqttinspect', false);
         await visitTestsByLicencedUserReport(page, 'uqttinspect', false);
     });

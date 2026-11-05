@@ -79,7 +79,7 @@ const makeNextCalibrateDateField = () => {
                 const currentDate = moment();
                 const isPastDate = dateObject.isBefore(currentDate);
                 return (
-                    <>
+                    <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                         {date}
                         {isPastDate && (
                             <Tooltip
@@ -89,7 +89,7 @@ const makeNextCalibrateDateField = () => {
                                 <WarningOutlined />
                             </Tooltip>
                         )}
-                    </>
+                    </span>
                 );
             },
         },
