@@ -1,6 +1,6 @@
 import React from 'react';
-import AlertsAdd from './AlertsAdd';
-import { rtlRender, userEvent } from 'test-utils';
+import { default as AlertsAdd } from './AlertsAddContainer';
+import { rtlRender, WithReduxStore, userEvent } from 'test-utils';
 
 const mockUseNavigate = jest.fn();
 
@@ -18,7 +18,11 @@ function setup(testProps) {
         },
         ...testProps,
     };
-    return rtlRender(<AlertsAdd {...props} />);
+    return rtlRender(
+        <WithReduxStore>
+            <AlertsAdd {...props} />
+        </WithReduxStore>,
+    );
 }
 
 describe('Form Tests', () => {

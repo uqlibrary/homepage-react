@@ -132,7 +132,7 @@ export const LearningResourcesPanel = ({ account }) => {
             standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid item xs id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
+                    <Grid size="12" id={`${LEARNING_RESOURCE_ID}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>
@@ -168,7 +168,7 @@ export const LearningResourcesPanel = ({ account }) => {
                         marginBottom: '8px',
                     }}
                 >
-                    <StyledHeadingGridItem item xs={12}>
+                    <StyledHeadingGridItem size={{ xs: 12 }}>
                         <Typography component={'h4'}>{locale.homepagePanel.userCourseTitle}</Typography>
                     </StyledHeadingGridItem>
                     {displayedClasses.length > 0 && (
@@ -176,9 +176,8 @@ export const LearningResourcesPanel = ({ account }) => {
                             {displayedClasses.slice(0, MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES).map((item, index) => {
                                 return (
                                     <StyledGridListItem
-                                        item
+                                        size={{ xs: 12 }}
                                         component={'li'}
-                                        xs={12}
                                         data-testid={`hcr-${index}`}
                                         data-analyticsid={`hcr-${index}`}
                                         key={`hcr-${index}`}
@@ -202,7 +201,7 @@ export const LearningResourcesPanel = ({ account }) => {
                     {displayedClasses.length > MAXIMUM_NUMBER_DISPLAYED_ENROLLED_COURSES && (
                         <Grid
                             item
-                            xs={12}
+                            size={{ xs: 12 }}
                             style={{ marginTop: '8px', marginBottom: '22px', paddingLeft: '12px' }}
                             data-testid={'learning-resource-panel-course-multi-footer'}
                         >

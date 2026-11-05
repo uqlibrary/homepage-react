@@ -8,6 +8,38 @@ export function getTimeEndOfDayFormatted() {
     return moment().endOf('day').format('YYYY-MM-DDTHH:mm');
 }
 
+export const isValidUrl = testurl => {
+    /* istanbul ignore else */
+    if (!testurl) {
+        return false;
+    }
+    /* istanbul ignore else */
+    if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
+        return false;
+    }
+    /* istanbul ignore else */
+    if (testurl.length < 'http://x.co'.length) {
+        // minimum possible url
+        return false;
+    }
+    // while technically an url doesn't need a TLD - in practice it does
+    /* istanbul ignore else */
+    if (!testurl.includes('.')) {
+        return false;
+    }
+    try {
+        const url = new URL(testurl);
+        /* istanbul ignore else */
+        if (url.hostname.length < 'x.co'.length) {
+            return false;
+        }
+    } catch (_) {
+        /* istanbul ignore next */
+        return false;
+    }
+    return true;
+};
+
 // so the user doesnt lose their work by clicking on the preview button,
 // change the href to an alert of what the click would be
 export function makePreviewActionButtonJustNotifyUser(values) {
@@ -17,6 +49,7 @@ export function makePreviewActionButtonJustNotifyUser(values) {
         const preview = document.getElementById('alert-preview');
         const previewShadowRoot = !!preview && preview.shadowRoot;
         const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-link');
+        /* istanbul ignore else */
         if (!!link) {
             link.setAttribute('href', '#');
             link.setAttribute('title', popuptext);
@@ -42,6 +75,7 @@ export function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
         const preview = document.getElementById('alert-preview');
         const previewShadowRoot = !!preview && preview.shadowRoot;
         const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
+        /* istanbul ignore else */
         if (!!closeButton) {
             closeButton.remove();
             clearInterval(changeMessage);
@@ -57,13 +91,15 @@ export const getBody = bodyValues => {
 
 export function extractFieldsFromBody(content) {
     const linkRegex = !!content && content.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    let theMessage = content || '';
+    let theMessage = content || /* istanbul ignore next */ '';
+    /* istanbul ignore else */
     if (!!linkRegex && linkRegex.length === 3) {
         theMessage = content.replace(linkRegex[0], '').replace('  ', ' ');
         theMessage = theMessage.replace(linkRegex[0], '').replace('  ', ' ');
     }
 
     const permanent = theMessage.includes('[permanent]');
+    /* istanbul ignore else */
     if (!!permanent) {
         theMessage = theMessage.replace('[permanent]', '');
     }

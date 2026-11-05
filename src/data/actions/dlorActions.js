@@ -147,6 +147,7 @@ export function createDlor(request, isDlorAdminUser = true) {
                 });
                 // refresh the list after change, only if the user is an admin
                 !!isDlorAdminUser && dispatch(loadAllDLORs());
+                return data;
             })
             .catch(error => {
                 dispatch({

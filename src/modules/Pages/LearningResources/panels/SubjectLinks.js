@@ -35,13 +35,13 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                 Course links
             </Typography>
             <Grid container className={'CourseLinks'}>
-                <StyledItem item xs={12}>
+                <StyledItem size={{ xs: 12 }}>
                     <a data-testid="blackboard" id="blackboard" href="https://learn.uq.edu.au/">
                         <SpacedArrowForwardIcon />
                         <span>Learn.UQ (Blackboard)</span>
                     </a>
                 </StyledItem>
-                <StyledItem item xs={12}>
+                <StyledItem size={{ xs: 12 }}>
                     <a
                         data-testid="ecp"
                         id="ecp"
@@ -55,7 +55,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                     </a>
                 </StyledItem>
                 {subject.classnumber.startsWith('LAWS') && (
-                    <StyledItem item xs={12}>
+                    <StyledItem size={{ xs: 12 }}>
                         <a
                             data-testid="legalResearchEssentials"
                             id="legalResearchEssentials"

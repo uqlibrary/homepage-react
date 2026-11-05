@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 const CulturalDisclaimer = ({ onClose }) => {
@@ -20,7 +20,7 @@ const CulturalDisclaimer = ({ onClose }) => {
             data-testid="culturalDisclaimer"
         >
             <Grid container wrap="nowrap" alignItems="flex-start">
-                <Grid xs>
+                <Grid size="12">
                     <IconButton
                         aria-label="Dismiss cultural disclaimer"
                         size="medium"

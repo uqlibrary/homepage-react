@@ -9,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -160,10 +161,12 @@ export default {
             component: (props, _, __, action, dispatch) => (
                 <Accordion defaultExpanded={action === 'add'}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
-                        {
-                            locale.pages.manage.printertemplates.placeholderEditor.form.columns.printer_template_code
-                                .label
-                        }
+                        <Typography sx={{ fontSize: '1.125rem', fontWeight: 500 }}>
+                            {
+                                locale.pages.manage.printertemplates.placeholderEditor.form.columns
+                                    .printer_template_code.label
+                            }
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <TextField
@@ -232,8 +235,8 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'string',
         resizable: false,
-        valueGetter: params => getCleanVarName(params.row.printer_template_var_name),
-        // eslint-disable-next-line no-unused-vars
+        valueGetter: (_, row) => getCleanVarName(row.printer_template_var_name),
+
         renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
             <GridEditInputCell
                 {...params}
@@ -256,7 +259,7 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'string',
         resizable: false,
-        // eslint-disable-next-line no-unused-vars
+
         renderEditCell: ({ hasChanged, otherFieldsProps, ...params }) => (
             <GridEditInputCell
                 {...params}
@@ -279,7 +282,7 @@ export const placeholderEditorColumns = ({
         editable: true,
         type: 'number',
         resizable: false,
-        valueGetter: params => Number(params.row.printer_template_var_value),
+        valueGetter: (_, row) => Number(row.printer_template_var_value),
         preProcessEditCellProps: params => {
             let hasError = false;
             try {

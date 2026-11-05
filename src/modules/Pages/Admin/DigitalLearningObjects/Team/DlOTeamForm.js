@@ -64,7 +64,6 @@ export const DLOTeamForm = ({
     const [editingMemberIdx, setEditingMemberIdx] = useState(null);
     const [editingMember, setEditingMember] = useState(null);
     const [newMember, setNewMember] = useState({ team_admin_username: '', team_admin_email: '' });
-    const [addMemberError, setAddMemberError] = useState('');
 
     // Add to your component's state
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -100,7 +99,6 @@ export const DLOTeamForm = ({
     const navigateToTeamManagementHomePage = () => {
         closeConfirmationBox();
         navigate(dlorAdminLink('/team/manage', account));
-        /* istanbul ignore next */
         scrollToTopOfPage();
     };
     const navigateToPreviousPage = () => {
@@ -109,7 +107,6 @@ export const DLOTeamForm = ({
 
     const clearForm = () => {
         closeConfirmationBox();
-        /* istanbul ignore next */
         mode === 'edit' && window.location.reload(false);
     };
 
@@ -203,7 +200,6 @@ export const DLOTeamForm = ({
             value = value.replace(/\s/g, '').slice(0, 15);
         }
         setNewMember({ ...newMember, [prop]: value });
-        setAddMemberError('');
     };
 
     const handleAddNewMember = () => {
@@ -212,23 +208,20 @@ export const DLOTeamForm = ({
             team_id: formDefaults.team_id,
         });
         setNewMember({ team_admin_username: '', team_admin_email: '' });
-        setAddMemberError('');
     };
 
     const isAddButtonDisabled =
         !newMember.team_admin_username.trim() ||
         !isValidEmail(newMember.team_admin_email) ||
-        !!addMemberError ||
         !!dlorTeamSaving ||
         !!dlorTeamLoading;
 
     return (
         <Grid container spacing={2}>
             {(() => {
-                /* istanbul ignore else */
                 if ((!!dlorTeamLoading || !!dlorTeamSaving || (!dlorTeamError && !formDefaults)) && mode === 'edit') {
                     return (
-                        <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                        <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                             <Box sx={{ minHeight: '600px' }}>
                                 <InlineLoader message="Loading" />
                             </Box>
@@ -236,7 +229,7 @@ export const DLOTeamForm = ({
                     );
                 } else if (!!dlorTeamError) {
                     return (
-                        <Grid item xs={12} md={9} sx={{ marginTop: '12px' }}>
+                        <Grid size={{ md: 9, xs: 12 }} sx={{ marginTop: '12px' }}>
                             <Typography variant="body1" data-testid="dlor-teamItem-error">
                                 {dlorTeamError}
                             </Typography>
@@ -246,7 +239,7 @@ export const DLOTeamForm = ({
                     // Only render the form if the user is a team member
                     if (!isCurrentUserTeamMember()) {
                         return (
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <Typography variant="body1" data-testid="dlor-teamItem-error-message">
                                     You are not a member of this team and cannot edit it.
                                 </Typography>
@@ -255,7 +248,7 @@ export const DLOTeamForm = ({
                     }
                     return (
                         <>
-                            <Grid item xs={12} data-testid="dlor-team-item-list">
+                            <Grid size={{ xs: 12 }} data-testid="dlor-team-item-list">
                                 <Grid container key={`list-team-${formDefaults?.team_id}`}>
                                     <ConfirmationBox
                                         actionButtonColor="primary"
@@ -277,7 +270,7 @@ export const DLOTeamForm = ({
                                     />
 
                                     <StyledForm id="dlor-editTeam-form">
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_name">Team name *</InputLabel>
                                                 <Input
@@ -302,7 +295,7 @@ export const DLOTeamForm = ({
                                                 </Box>
                                             )}
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_manager">Name of Team Manager</InputLabel>
                                                 <Input
@@ -313,7 +306,7 @@ export const DLOTeamForm = ({
                                                 />
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_admin_username">
                                                     Team admin username *
@@ -339,7 +332,7 @@ export const DLOTeamForm = ({
                                                 )}
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={12}>
+                                        <Grid size={{ xs: 12 }}>
                                             <FormControl variant="standard" fullWidth>
                                                 <InputLabel htmlFor="team_email">
                                                     Email address to contact team *
@@ -366,7 +359,7 @@ export const DLOTeamForm = ({
                                             </FormControl>
                                         </Grid>
                                     </StyledForm>
-                                    <Grid item xs={12}>
+                                    <Grid size={{ xs: 12 }}>
                                         <Accordion
                                             sx={{ marginTop: 2 }}
                                             defaultExpanded={
@@ -566,13 +559,13 @@ export const DLOTeamForm = ({
                                                     </Table>
                                                 </TableContainer>
                                                 {mode === 'edit' && (
-                                                    <Grid item xs={12}>
+                                                    <Grid size={{ xs: 12 }}>
                                                         <Box sx={{ marginTop: 2 }}>
                                                             <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
                                                                 Add Team Admin
                                                             </Typography>
                                                             <Grid container spacing={2} alignItems="center">
-                                                                <Grid item xs={4}>
+                                                                <Grid size={{ xs: 4 }}>
                                                                     <Input
                                                                         placeholder="Username"
                                                                         value={newMember.team_admin_username}
@@ -583,7 +576,7 @@ export const DLOTeamForm = ({
                                                                         data-testid="add-team-member-username"
                                                                     />
                                                                 </Grid>
-                                                                <Grid item xs={5}>
+                                                                <Grid size={{ xs: 5 }}>
                                                                     <Input
                                                                         placeholder="Email"
                                                                         value={newMember.team_admin_email}
@@ -594,7 +587,7 @@ export const DLOTeamForm = ({
                                                                         data-testid="add-team-member-email"
                                                                     />
                                                                 </Grid>
-                                                                <Grid item xs={3}>
+                                                                <Grid size={{ xs: 3 }}>
                                                                     <Button
                                                                         color="primary"
                                                                         variant="contained"
@@ -606,17 +599,6 @@ export const DLOTeamForm = ({
                                                                         Add
                                                                     </Button>
                                                                 </Grid>
-                                                                {addMemberError && (
-                                                                    <Grid item xs={12}>
-                                                                        <Typography
-                                                                            color="error"
-                                                                            variant="body2"
-                                                                            data-testid="add-team-member-error"
-                                                                        >
-                                                                            {addMemberError}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                )}
                                                             </Grid>
                                                         </Box>
                                                     </Grid>
@@ -627,7 +609,7 @@ export const DLOTeamForm = ({
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={3} align="left">
+                            <Grid size={{ xs: 3 }} align="left">
                                 <Button
                                     color="secondary"
                                     children="Cancel"
@@ -636,7 +618,7 @@ export const DLOTeamForm = ({
                                     variant="contained"
                                 />
                             </Grid>
-                            <Grid item xs={9} align="right">
+                            <Grid size={{ xs: 9 }} align="right">
                                 <Button
                                     color="primary"
                                     data-testid="admin-dlor-team-form-save-button"
@@ -678,7 +660,6 @@ export const DLOTeamForm = ({
                         </>
                     );
                 }
-                /* istanbul ignore next */
                 return <></>;
             })()}
         </Grid>

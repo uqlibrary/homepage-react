@@ -26,7 +26,7 @@ const StyledWrapper = styled(Box)(() => ({
             backgroundSize: '4em 100%,4em 100%,1em 100%,1em 100%',
             backgroundAttachment: 'local,local,scroll,scroll',
         },
-        '& .MuiDataGrid-columnHeaderWrapper': {
+        '& .MuiDataGrid-columnHeaders': {
             borderBottom: '1px solid rgba(224, 224, 224, 1)',
         },
     },
@@ -66,11 +66,24 @@ const DataTable = ({
     defaultSortColumn,
     defaultSortDirection = 'asc',
     classes = {},
+    columnVisibilityModel = {},
     ...rest
 }) => {
     const componentId = `${rootId}-${id}`;
     delete rest.editMode;
     delete rest.getRowId;
+
+    const { gridColumns, configuredColumnVisibilityModel } = columns.reduce(
+        (result, column) => {
+            const { hide, ...gridColumn } = column;
+            result.gridColumns.push(gridColumn);
+            if (typeof hide === 'boolean') {
+                result.configuredColumnVisibilityModel[column.field] = !hide;
+            }
+            return result;
+        },
+        { gridColumns: [], configuredColumnVisibilityModel: {} },
+    );
 
     const [sortModel, setSortModel] = React.useState([
         {
@@ -81,10 +94,11 @@ const DataTable = ({
 
     return (
         <StyledWrapper {...(autoHeight === false ? { height: height ?? /* istanbul ignore next */ 400 } : {})}>
-            <Box flexGrow={1} id={`${componentId}`} data-testid={`${componentId}`}>
+            <Box flexGrow={1} minWidth={0} id={`${componentId}`} data-testid={`${componentId}`}>
                 <DataGrid
                     rows={rows}
-                    columns={columns}
+                    columns={gridColumns}
+                    columnVisibilityModel={{ ...configuredColumnVisibilityModel, ...columnVisibilityModel }}
                     editMode="row"
                     disableDensitySelector
                     disableColumnMenu
@@ -124,6 +138,7 @@ DataTable.propTypes = {
     rowId: PropTypes.string.isRequired,
     defaultSortColumn: PropTypes.string,
     defaultSortDirection: PropTypes.oneOf(['asc', 'desc']),
+    columnVisibilityModel: PropTypes.object,
     toolbarComponent: PropTypes.object,
     classes: PropTypes.object,
     autoHeight: PropTypes.bool,

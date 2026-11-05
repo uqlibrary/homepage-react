@@ -141,6 +141,26 @@ export const App = ({ account, actions }) => {
         homepageLabel = 'Library Local';
     }
 
+    /* istanbul ignore next */
+    const insertAlertList = () => {
+        if (!!isAdminPage) {
+            return null; // admins don't need to see this (enough to use up the space)
+        }
+
+        const alertElement = document.getElementById('alert-list');
+        if (!!alertElement) {
+            return null; // already created
+        }
+
+        const html = '<alert-list id="alert-list" system="homepage" />';
+        const alertTemplate = document.createElement('template');
+        alertTemplate.innerHTML = html;
+        const alertBlock = document.getElementById('espace-alerts-area');
+        !!alertBlock && !!alertTemplate && alertBlock.appendChild(alertTemplate.content.cloneNode(true));
+
+        return null;
+    };
+
     return (
         <Grid
             container
@@ -165,8 +185,8 @@ export const App = ({ account, actions }) => {
                     </span>
                 </uq-site-header>
                 {!isAdminPage() && <proactive-chat />}
-                <div role="region" aria-label="UQ Library Alerts">
-                    <alert-list system="homepage" />
+                <div id="espace-alerts-area" role="region" aria-label="UQ Library Alerts">
+                    {insertAlertList()}
                 </div>
                 <cultural-advice />
                 <div style={{ flexGrow: 1 }}>

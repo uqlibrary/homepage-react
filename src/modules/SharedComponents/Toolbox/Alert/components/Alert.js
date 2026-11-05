@@ -14,7 +14,6 @@ import Help from '@mui/icons-material/Help';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import Done from '@mui/icons-material/Done';
 import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
 import { styled } from '@mui/material/styles';
 
 const StyledAlert = styled('div')(({ theme }) => ({
@@ -374,10 +373,9 @@ export const Alert = ({
             <StyledAlert className={`common ${!!customIcon ? customType : type}`} data-testid={alertId} id={alertId}>
                 <div className="layout-card">
                     <Grid container spacing={1} justifyContent="center" alignItems="center" alignContent="center">
-                        <Grid item xs={12} sm className={action && !disableAlertClick && 'linked'}>
+                        <Grid size={{ xs: 12 }} className={action && !disableAlertClick && 'linked'}>
                             <Grid container justifyContent="center" alignItems="center" alignContent="center">
                                 <Grid
-                                    item
                                     className={`icon alert-icon ${wiggle ? 'wiggler' : ''}`}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
@@ -398,8 +396,6 @@ export const Alert = ({
                                     )}
                                 </Grid>
                                 <Grid
-                                    item
-                                    xs
                                     className={'text alert-text'}
                                     onClick={!disableAlertClick && action}
                                     onKeyDown={!disableAlertClick && action}
@@ -411,39 +407,35 @@ export const Alert = ({
                                     {message}
                                 </Grid>
                                 {allowDismiss && dismissAction && (
-                                    <Hidden smUp>
-                                        <Grid item className={'dismissButton'}>
-                                            <IconButton
-                                                onClick={dismissAction}
-                                                aria-label={dismissTitle}
-                                                id={`${alertId}-dismiss-button-mobile`}
-                                                data-testid={`${alertId}-dismiss-button-mobile`}
-                                                size="large"
-                                            >
-                                                <Close />
-                                            </IconButton>
-                                        </Grid>
-                                    </Hidden>
+                                    <Grid className={'dismissButton'} sx={{ display: { xs: 'block', sm: 'none' } }}>
+                                        <IconButton
+                                            onClick={dismissAction}
+                                            aria-label={dismissTitle}
+                                            id={`${alertId}-dismiss-button-mobile`}
+                                            data-testid={`${alertId}-dismiss-button-mobile`}
+                                            size="large"
+                                        >
+                                            <Close />
+                                        </IconButton>
+                                    </Grid>
                                 )}
                                 {canHide && (
-                                    <Hidden smUp>
-                                        <Grid item className={'dismissButton'}>
-                                            <IconButton
-                                                onClick={hideThisAlert}
-                                                aria-label={dismissTitle}
-                                                id={`${alertId}-hide-button-mobile`}
-                                                data-testid={`${alertId}-hide-button-mobile`}
-                                                size="large"
-                                            >
-                                                <Close />
-                                            </IconButton>
-                                        </Grid>
-                                    </Hidden>
+                                    <Grid className={'dismissButton'} sx={{ display: { xs: 'block', sm: 'none' } }}>
+                                        <IconButton
+                                            onClick={hideThisAlert}
+                                            aria-label={dismissTitle}
+                                            id={`${alertId}-hide-button-mobile`}
+                                            data-testid={`${alertId}-hide-button-mobile`}
+                                            size="large"
+                                        >
+                                            <Close />
+                                        </IconButton>
+                                    </Grid>
                                 )}
                             </Grid>
                         </Grid>
                         {action && actionButtonLabel && (
-                            <Grid item xs sm="auto" className={'actionButton'}>
+                            <Grid size={{ sm: 'auto' }} className={'actionButton'}>
                                 <Button
                                     variant="text"
                                     children={actionButtonLabel}
@@ -456,34 +448,30 @@ export const Alert = ({
                             </Grid>
                         )}
                         {allowDismiss && dismissAction && (
-                            <Hidden smDown>
-                                <Grid item className={'dismissButton'}>
-                                    <IconButton
-                                        onClick={dismissAction}
-                                        aria-label={dismissTitle}
-                                        id={`${alertId}-dismiss-button`}
-                                        data-testid={`${alertId}-dismiss-button`}
-                                        size="large"
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Grid>
-                            </Hidden>
+                            <Grid className={'dismissButton'} sx={{ display: { xs: 'none', sm: 'block' } }}>
+                                <IconButton
+                                    onClick={dismissAction}
+                                    aria-label={dismissTitle}
+                                    id={`${alertId}-dismiss-button`}
+                                    data-testid={`${alertId}-dismiss-button`}
+                                    size="large"
+                                >
+                                    <Close />
+                                </IconButton>
+                            </Grid>
                         )}
                         {!!canHide && (
-                            <Hidden smDown>
-                                <Grid item className={'dismissButton'}>
-                                    <IconButton
-                                        onClick={hideThisAlert}
-                                        aria-label={dismissTitle}
-                                        id={`${alertId}-hide-button`}
-                                        data-testid={`${alertId}-hide-button`}
-                                        size="large"
-                                    >
-                                        <Close />
-                                    </IconButton>
-                                </Grid>
-                            </Hidden>
+                            <Grid className={'dismissButton'} sx={{ display: { xs: 'none', sm: 'block' } }}>
+                                <IconButton
+                                    onClick={hideThisAlert}
+                                    aria-label={dismissTitle}
+                                    id={`${alertId}-hide-button`}
+                                    data-testid={`${alertId}-hide-button`}
+                                    size="large"
+                                >
+                                    <Close />
+                                </IconButton>
+                            </Grid>
                         )}
                     </Grid>
                 </div>

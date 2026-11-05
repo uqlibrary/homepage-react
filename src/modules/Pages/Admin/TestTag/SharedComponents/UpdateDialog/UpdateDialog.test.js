@@ -447,8 +447,17 @@ describe('UpdateDialog Renders component', () => {
     it('renders in full screen mode on mobile view', () => {
         const createMatchMedia = width => query => ({
             matches: require('css-mediaquery').match(query, { width }),
-            addListener: () => {},
-            removeListener: () => {},
+            media: query,
+            onchange: null,
+
+            // MUI v4/v5 compatibility
+            addListener: jest.fn(),
+            removeListener: jest.fn(),
+
+            // MUI v7 requires these
+            addEventListener: jest.fn(),
+            removeEventListener: jest.fn(),
+            dispatchEvent: jest.fn(),
         });
         const originalMatchMedia = window.matchMedia;
         window.matchMedia = createMatchMedia(375);
