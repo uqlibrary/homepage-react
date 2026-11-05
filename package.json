@@ -13,9 +13,9 @@
         "clean": "rm -rf assets coverage **/coverage dist node_modules stats.json .nyc_output",
         "codestyles:files": "cross-env prettier-eslint './*.js' --list-different -l silent",
         "codestyles:fix": "cross-env prettier-eslint --write",
-        "codestyles:fix:all": "cross-env prettier-eslint '**/*.js' --write",
-        "codestyles:fix:staged": "git diff --cached --name-only --diff-filter=ACM | grep \".jsx\\{0,1\\}$\" | xargs -n 1 npx prettier-eslint --write",
-        "eslint": "eslint '**/*.{js,jsx}' --quiet",
+        "codestyles:fix:all": "cross-env prettier-eslint '**/*.{js,jsx,ts,tsx}' --write",
+        "codestyles:fix:staged": "git diff --cached --name-only --diff-filter=ACM | grep -E '\\.(js|jsx|ts|tsx)$' | xargs -n 1 npx prettier-eslint --write",
+        "eslint": "eslint '**/*.{js,jsx,ts,tsx}' --quiet",
         "eslint:fix": "npm run eslint -- --fix",
         "start": "webpack-dev-server",
         "start:build": "cross-env NODE_ENV=production URL=dev-homepage.library.uq.edu.au NODE_OPTIONS='--max-old-space-size=2048' webpack-dev-server --config=./webpack-dist.config --allowed-hosts=all",
@@ -71,6 +71,7 @@
         "@babel/plugin-transform-spread": "^7.29.7",
         "@babel/preset-env": "^7.23.9",
         "@babel/preset-react": "^7.23.3",
+        "@babel/preset-typescript": "^7.29.7",
         "@babel/register": "^7.23.7",
         "@babel/runtime-corejs2": "^7.28.4",
         "@eslint/compat": "^2.1.0",
@@ -239,7 +240,8 @@
     "babel": {
         "presets": [
             "@babel/env",
-            "@babel/react"
+            "@babel/react",
+            "@babel/preset-typescript"
         ],
         "env": {
             "production": {
@@ -253,7 +255,8 @@
                             }
                         }
                     ],
-                    "@babel/react"
+                    "@babel/react",
+                    "@babel/preset-typescript"
                 ],
                 "plugins": [
                     "@babel/plugin-transform-react-constant-elements",
@@ -316,6 +319,9 @@
         ],
         "moduleFileExtensions": [
             "js",
+            "jsx",
+            "ts",
+            "tsx",
             "json",
             "es6"
         ],

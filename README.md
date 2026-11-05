@@ -43,6 +43,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 - make sure you have created a .env file based on example.env
 - `nvm use 22 && npm i -g npm jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this clears & reinstalls npm packages
+- TypeScript is supported in `src/` and `utils/`; run `npm run tsc` to type-check application code. Webpack and Jest transpile TypeScript through Babel.
 - `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
 - `npm run start:url` to use api

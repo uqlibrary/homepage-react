@@ -1,5 +1,11 @@
 {
     "compilerOptions": {
+        "target": "esnext",
+        "jsx": "react-jsx",
+        "module": "esnext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "strict": true,
@@ -8,10 +14,36 @@
         "noImplicitAny": true,
         "noEmit": true,
         "paths": {
-            "@uq/pw/*": ["playwright/*"]
+            "@uq/pw/*": ["./playwright/*"],
+            "actions": ["./src/actions"],
+            "actions/*": ["./src/actions/*"],
+            "config": ["./src/config"],
+            "config/*": ["./src/config/*"],
+            "helpers": ["./src/helpers"],
+            "helpers/*": ["./src/helpers/*"],
+            "hooks": ["./src/hooks"],
+            "hooks/*": ["./src/hooks/*"],
+            "locale": ["./src/locale"],
+            "locale/*": ["./src/locale/*"],
+            "middleware": ["./src/middleware"],
+            "middleware/*": ["./src/middleware/*"],
+            "modules": ["./src/modules"],
+            "modules/*": ["./src/modules/*"],
+            "mock": ["./src/mock"],
+            "mock/*": ["./src/mock/*"],
+            "reducer": ["./src/reducer"],
+            "reducers": ["./src/reducers"],
+            "reducers/*": ["./src/reducers/*"],
+            "repositories": ["./src/repositories"],
+            "repositories/*": ["./src/repositories/*"],
+            "test-utils": ["./utils/test-utils"],
+            "types/*": ["./src/@types/*"],
+            "utils": ["./utils"],
+            "utils/*": ["./utils/*"]
         },
-        "include": ["playwright.config.ts", "playwright/**/*.spec.ts"],
-        "exclude": ["chrome/**/**"],
-        "jsx": "react"
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["es2016", "dom"]
     },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "utils/**/*.ts"],
+    "exclude": ["node_modules", "custom_modules", "coverage", "dist", "chrome/**/**"]
 }
