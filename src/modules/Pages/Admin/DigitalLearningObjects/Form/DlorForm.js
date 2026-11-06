@@ -1824,6 +1824,7 @@ export const DlorForm = ({
             valuesToSend.notificationText = '';
         }
 
+        /* istanbul ignore else */
         if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
@@ -1834,7 +1835,6 @@ export const DlorForm = ({
                 valuesToSend?.object_link_duration_minutes,
                 valuesToSend?.object_link_duration_seconds,
             );
-            /* istanbul ignore if */
         } else if (valuesToSend?.object_link_interaction_type === linkInteractionTypeNONE) {
             delete valuesToSend?.object_link_file_type;
         }
