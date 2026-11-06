@@ -20,6 +20,11 @@ const url = process.env.URL || 'localhost';
 const useMock = !!process.env.USE_MOCK;
 
 module.exports = {
+    cache: {
+        type: 'filesystem',
+        compression: 'gzip',
+        allowCollectingMemory: true,
+    },
     mode: 'development',
     context: resolve(__dirname),
     // Source maps off under e2e (PW_IS_RUNNING) to save dev-server memory and build time; istanbul maps
