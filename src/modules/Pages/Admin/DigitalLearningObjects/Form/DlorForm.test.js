@@ -478,8 +478,7 @@ describe('DlorForm', () => {
 
         expect(actions.createDlor).toHaveBeenCalledWith(
             expect.objectContaining({
-                object_link_interaction_type: undefined,
-                object_link_file_type: 'new',
+                object_link_interaction_type: 'none',
                 object_download_instructions: '',
             }),
             true,
@@ -866,7 +865,10 @@ describe('DlorForm', () => {
             ],
             actions: {
                 ...baseProps.actions,
-                updateDlor: jest.fn().mockResolvedValue({}),
+                updateDlor: jest.fn().mockResolvedValue({
+                    object_id: 1,
+                    object_public_uuid: 'uuid',
+                }),
                 saveDlorAdminNote: jest.fn(),
             },
         });
@@ -1152,7 +1154,7 @@ describe('DlorForm', () => {
             ],
             actions: {
                 ...baseProps.actions,
-                createDlor: jest.fn().mockResolvedValue({ data: { object_public_uuid: 'new-object-uuid' } }),
+                createDlor: jest.fn().mockResolvedValue({ object_id: 1, object_public_uuid: 'new-object-uuid' }),
             },
         });
 

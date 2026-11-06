@@ -57,6 +57,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Tooltip from '@mui/material/Tooltip';
+import ObjectFileDownloadButton from './ObjectFileDownloadButton';
 
 const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
     marginBlock: '0px',
@@ -112,6 +113,7 @@ const StyledUQActionButton = styled('div')(({ theme, noMargin }) => ({
             backgroundColor: theme.palette.white.main,
             color: theme.palette.primary.main,
             textDecoration: 'none',
+            cursor: 'pointer',
         },
     },
     '&:has(button)': {
@@ -272,11 +274,10 @@ export const DLOView = ({
     const [isNotifyOpened, setIsNotifyOpened] = React.useState(false);
     // const [notifyType, setNotifyType] = React.useState('');
     const [confirmLocale, setConfirmLocale] = React.useState({});
-
     // Add this state near your other useState declarations
     const [isFavoriteActionInProgress, setIsFavoriteActionInProgress] = useState(false);
-
     const isLoggedIn = !!account?.id;
+    const hasFileAttachment = dlorItem?.object_file_name;
 
     const defaultFormValues = {
         subjectCode: '',
@@ -727,10 +728,6 @@ export const DLOView = ({
         );
     }
 
-    console.log('account is from reducer', account);
-
-    console.log('XXXdlorItem is from reducer', dlorItem);
-
     return (
         <StandardPage>
             <>
@@ -1037,14 +1034,19 @@ export const DLOView = ({
                                         <Grid size={{ xs: 12, sm: 4 }}>
                                             {/* Demographics and notification buttons */}
                                             <StyledUQActionButton noMargin>
-                                                <Button
-                                                    aria-label="Click to access the object"
-                                                    onClick={() => navigateToObjectLink()}
-                                                    data-testid="detailpage-clicklink"
-                                                    class="extended"
-                                                >
-                                                    {getItButtonLabel(dlorItem)}
-                                                </Button>
+                                                {hasFileAttachment && (
+                                                    <ObjectFileDownloadButton object={dlorItem} class="extended" />
+                                                )}
+                                                {!hasFileAttachment && (
+                                                    <Button
+                                                        aria-label="Click to access the object"
+                                                        onClick={navigateToObjectLink}
+                                                        data-testid="detailpage-clicklink"
+                                                        class="extended"
+                                                    >
+                                                        {getItButtonLabel(dlorItem)}
+                                                    </Button>
+                                                )}
                                             </StyledUQActionButton>
                                             <div style={{ backgroundColor: '#ddd', padding: '5px', marginTop: '10px' }}>
                                                 <Box

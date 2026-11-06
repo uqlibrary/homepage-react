@@ -194,7 +194,7 @@ test.describe('Digital Learning Hub View page', () => {
             );
             await assertAccessibility(page, '[data-testid="StandardPage"]');
         });
-        test('is accessiblefor a logged in user', async ({ page }) => {
+        test('is accessible for a logged in user', async ({ page }) => {
             await page.goto('digital-learning-hub/view/98s0_dy5k3_98h4?user=s2222222');
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.locator('[data-testid="dlor-detailpage"] h1')).toHaveText(
@@ -484,6 +484,24 @@ test.describe('Digital Learning Hub View page', () => {
             await page.setViewportSize({ width: 1300, height: 1000 });
             await expect(page.getByTestId('access-denied-message')).toHaveText(
                 /You need to be a UQ Library staff member to access this object/,
+            );
+        });
+    });
+
+    test.describe('object file', () => {
+        test('shows the download button', async ({ page }) => {
+            const overwrites = {
+                object_file_name: 'test.zip',
+                object_file_size: 1000,
+            };
+            await page.goto(
+                `digital-learning-hub/view/98s0_dy5k3_98h4?responseBody[getDlorObject]=${JSON.stringify(overwrites)}`,
+            );
+            await page.setViewportSize({ width: 1300, height: 1000 });
+
+            await expect(page.getByTestId('detailpage-clicklink')).not.toBeVisible();
+            await expect(page.getByTestId('dlor-view-object-file-download-button')).toHaveText(
+                'ACCESS THE OBJECT (ZIP 1 KB)',
             );
         });
     });

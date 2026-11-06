@@ -70,6 +70,11 @@ import parse from 'html-react-parser';
 
 import FuzzySearch from 'modules/Pages/DigitalLearningObjects/SharedComponents/FuzzySearch';
 import { Link as RouterLink } from 'react-router';
+import FileSelector from './File/Selector';
+import FileList from './File/List';
+import useFile from './File/useFile';
+import FileDialogs from './File/Dialogs';
+import { Alert } from '../../../../SharedComponents/Toolbox/Alert';
 
 const fuseOptions = {
     includeScore: true,
@@ -148,27 +153,27 @@ export const DlorForm = ({
     // dlorAdminNotesLoaded,
     // dlorAdminNotesLoadError,
     dlorAdminNotes,
+    dlorObjectFileUploading,
+    dlorObjectFileUploaded,
+    dlorObjectFileUploadError,
+    dlorObjectFileDeleting,
+    dlorObjectFileDeleteError,
     formDefaults,
     dlorKeywords,
     mode,
 }) => {
     const [cookies, setCookie] = useCookies();
     const { account } = useAccountContext();
-
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [isRequestKeywordOpened, setIsRequestKeywordOpened] = useState(false);
-
     const [showTeamForm, setShowTeamForm] = useState(false); // enable-disable the Team creation fields
-
     // show-hide the File Type creation fields
     const [showFileTypeCreationForm, setShowFileTypeCreationForm] = useState(false);
-
     const linkInteractionTypeDOWNLOAD = 'download';
     const linkInteractionTypeVIEW = 'view';
     const linkInteractionTypeNONE = 'none';
     const [showLinkTimeForm, setShowLinkTimeForm] = useState(false);
     const [showLinkSizeForm, setShowLinkSizeForm] = useState(false);
-
     const [summarySuggestionOpen, setSummarySuggestionOpen] = useState(false);
     const [formValues, setFormValues] = useState(formDefaults);
     const [requestedKeywordValues, setRequestedKeywordValues] = useState({});
@@ -179,8 +184,11 @@ export const DlorForm = ({
     const teamSelectRef = useRef(null);
     const linkInteractionTypeSelectRef = useRef(formValues?.object_link_interaction_type || 'none');
     const linkFileTypeSelectRef = useRef(formValues.object_link_file_type || 'new');
-
     const [selectedKeywords, setSelectedKeywords] = useState([]);
+    const [hasFile, existingFile, fileToBeUploaded, uploadProgress, setUploadProgress, onFileChange, onClearFile] =
+        useFile({ dlorItem, mode });
+    const isProcessingFile =
+        dlorObjectFileDeleting || dlorObjectFileUploading || dlorObjectFileDeleteError || dlorObjectFileUploadError;
 
     const sendKeywordRequestEmail = () => {
         actions.requestNewKeyword(requestedKeywordValues).then(() => {
@@ -358,9 +366,9 @@ export const DlorForm = ({
         return secondPanelErrorCount;
     }
 
-    function validatePanelLinks(currentValues) {
+    function validatePanelLinks(currentValues, hasFile) {
         let thirdPanelErrorCount = 0;
-        !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
+        !hasFile && !isValidUrl(currentValues?.object_link_url) && thirdPanelErrorCount++;
 
         [linkInteractionTypeDOWNLOAD, linkInteractionTypeVIEW].includes(currentValues?.object_link_interaction_type) &&
             (!currentValues?.object_link_file_type ||
@@ -1090,39 +1098,55 @@ export const DlorForm = ({
         type => type.object_link_interaction_type === linkInteractionTypeSelectRef.current,
     );
 
+    const linkLength = formValues?.object_link_url?.length;
     const stepPanelContentLinks = (
         <>
+            {fileToBeUploaded && (
+                <Grid size={{ xs: 12 }}>
+                    <Alert
+                        type="warning"
+                        alertId="dlor-form-new-object-file-warning"
+                        canHide={false}
+                        message="Please expect a delay before newly uploaded files are fully processed."
+                    />
+                </Grid>
+            )}
             <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_link_url">Web address *</InputLabel>
+                    <InputLabel style={{ top: -18 }}>File Uploader {!linkLength && '*'}</InputLabel>
+                    <span>
+                        {!hasFile && <FileSelector onChange={onFileChange} />}
+                        {hasFile && <FileList onClear={onClearFile} file={fileToBeUploaded || existingFile} />}
+                    </span>
+                </FormControl>
+                <FormControl variant="standard" fullWidth>
+                    <InputLabel htmlFor="object_link_url">Web address {!hasFile && '*'}</InputLabel>
                     <Input
+                        disabled={hasFile}
                         id="object_link_url"
                         data-testid="object-link-url"
-                        required
                         value={formValues?.object_link_url || ''}
                         onChange={handleChange('object_link_url')}
                         error={
                             !!formValues?.object_link_url &&
-                            formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                            linkLength > 'http://ab.co'.length &&
                             !isValidUrl(formValues?.object_link_url)
                         }
                     />
-                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                        !isValidUrl(formValues?.object_link_url) && (
-                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
-                                This web address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                        isPreviewableUrl(formValues?.object_link_url) !== false && (
-                            <Box
-                                sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
-                                data-testid="object-link-url-preview"
-                            >
-                                <DoneIcon color="success" />
-                                <span>A preview will show on the View page.</span>
-                            </Box>
-                        )}
+                    {linkLength > 'http://ab.co'.length && !isValidUrl(formValues?.object_link_url) && (
+                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
+                            This web address is not valid.
+                        </StyledErrorMessageBox>
+                    )}
+                    {linkLength > 'http://ab.co'.length && isPreviewableUrl(formValues?.object_link_url) !== false && (
+                        <Box
+                            sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
+                            data-testid="object-link-url-preview"
+                        >
+                            <DoneIcon color="success" />
+                            <span>A preview will show on the View page.</span>
+                        </Box>
+                    )}
                 </FormControl>
             </Grid>
             {isDlorAdminUser(account) && (
@@ -1135,6 +1159,7 @@ export const DlorForm = ({
                             <FormControl>
                                 <span>&nbsp;</span>
                                 <Select
+                                    disabled={hasFile}
                                     variant="standard"
                                     labelId="object_link_interaction_type-label"
                                     id="object_link_interaction_type"
@@ -1179,6 +1204,7 @@ export const DlorForm = ({
                                     <>
                                         <InputLabel htmlFor="object_link_file_type">File type *</InputLabel>
                                         <Select
+                                            disabled={hasFile}
                                             variant="standard"
                                             labelId="object_link_file_type"
                                             id="object_link_file_type"
@@ -1236,6 +1262,7 @@ export const DlorForm = ({
                                         <div>
                                             <FormControl>
                                                 <Input
+                                                    disabled={hasFile}
                                                     id="object_link_duration_minutes"
                                                     aria-labelledby="object_link_duration-label object_link_duration_minutes"
                                                     data-testid="object-link-duration-minutes"
@@ -1250,6 +1277,7 @@ export const DlorForm = ({
                                             <StyledDurationSpan> and </StyledDurationSpan>
                                             <FormControl>
                                                 <Input
+                                                    disabled={hasFile}
                                                     id="object_link_duration_seconds"
                                                     aria-labelledby="object_link_duration-label object_link_duration_seconds-label"
                                                     data-testid="object-link-duration-seconds"
@@ -1268,6 +1296,7 @@ export const DlorForm = ({
                                         <div>
                                             <FormControl>
                                                 <Input
+                                                    disabled={hasFile}
                                                     id="object_link_size_amount"
                                                     aria-labelledby="object_link_file_size-label"
                                                     data-testid="object-link-size-amount"
@@ -1278,6 +1307,7 @@ export const DlorForm = ({
                                             </FormControl>
                                             <FormControl>
                                                 <Select
+                                                    disabled={hasFile}
                                                     variant="standard"
                                                     labelId="object_link_size_units"
                                                     id="object_link_size_units"
@@ -1673,7 +1703,7 @@ export const DlorForm = ({
             stepPanelContent: stepPanelContentDescription,
         },
         {
-            label: 'Link',
+            label: 'Link / File',
             stepPanelContent: stepPanelContentLinks,
         },
         {
@@ -1745,8 +1775,11 @@ export const DlorForm = ({
         return false;
     };
 
-    const saveDlor = () => {
-        const valuesToSend = { ...formValues };
+    const saveDlor = async () => {
+        const valuesToSend = {
+            ...formValues,
+            object_link_interaction_type: formValues.object_link_interaction_type || linkInteractionTypeNONE,
+        };
         // somehow in localhost this is already an array of ids, but on feature branch its the original facets
         if (valuesToSend.facets.length > 0 && valuesToSend.facets[0].hasOwnProperty('filter_key')) {
             valuesToSend.facets = flatMapFacets(formValues?.facets);
@@ -1791,6 +1824,7 @@ export const DlorForm = ({
             valuesToSend.notificationText = '';
         }
 
+        /* istanbul ignore else */
         if (valuesToSend?.object_link_interaction_type === linkInteractionTypeDOWNLOAD) {
             valuesToSend.object_link_size = convertFileSizeToKb(
                 valuesToSend?.object_link_size_amount,
@@ -1818,24 +1852,47 @@ export const DlorForm = ({
 
         const cypressTestCookie = cookies.hasOwnProperty('CYPRESS_TEST_DATA') ? cookies.CYPRESS_TEST_DATA : null;
         if (!!cypressTestCookie && location.host === 'localhost:2020' && cypressTestCookie === 'active') {
-            setCookie('CYPRESS_DATA_SAVED', valuesToSend);
+            setCookie('CYPRESS_DATA_SAVED', {
+                ...valuesToSend,
+                ...(existingFile?.markedForDeletion ? { deleteExistingFile: true } : {}),
+                ...(fileToBeUploaded ? { newFile: fileToBeUploaded } : {}),
+            });
         }
-        const saveDlorPromise =
-            mode === 'add'
-                ? actions.createDlor(valuesToSend, isDlorAdminUser(account))
-                : actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
-        console.log('VALUES TO SEND ARE', valuesToSend);
-        return saveDlorPromise.then(savedItem => {
-            // Save admin notes after DLO is created or updated
-            if (
-                isDlorAdminUser(account) &&
-                formValues.object_admin_notes !== (mode === 'edit' ? dlorItem?.object_admin_notes : '')
-            ) {
-                const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : savedItem?.data?.object_public_uuid;
-                const noteContent = formValues.object_admin_notes;
-                !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
-            }
-        });
+
+        let savedItem;
+        if (mode === 'add') {
+            savedItem = await actions.createDlor(valuesToSend, isDlorAdminUser(account));
+        } else {
+            savedItem = await actions.updateDlor(dlorItem?.object_public_uuid, valuesToSend, isDlorAdminUser(account));
+        }
+
+        // bail if object's object id is not returned by create/update action
+        if (!savedItem?.object_id) return;
+
+        // Save admin notes after DLO is created or updated
+        if (
+            isDlorAdminUser(account) &&
+            formValues.object_admin_notes !== (mode === 'edit' ? dlorItem?.object_admin_notes : '')
+        ) {
+            const objectUuid = mode === 'edit' ? dlorItem?.object_public_uuid : savedItem.object_public_uuid;
+            const noteContent = formValues.object_admin_notes;
+            !!noteContent && !!objectUuid && actions.saveDlorAdminNote(objectUuid, noteContent);
+        }
+
+        // handles file deletion
+        if (
+            mode === 'edit' &&
+            !!existingFile?.name &&
+            existingFile.markedForDeletion &&
+            !(await actions.deleteObjectFile(savedItem.object_id, existingFile.name))
+        ) {
+            return;
+        }
+
+        // handles file upload
+        if (fileToBeUploaded) {
+            await actions.uploadObjectFile(savedItem.object_id, fileToBeUploaded, setUploadProgress);
+        }
     };
 
     const confirmationTitleAdmin = mode === 'add' ? 'The object has been created' : 'Changes have been saved';
@@ -1844,7 +1901,9 @@ export const DlorForm = ({
     const locale = {
         successMessage: {
             confirmationTitle: confirmationTitle,
-            confirmationMessage: '',
+            confirmationMessage: dlorObjectFileUploaded
+                ? 'Please expect a delay before newly uploaded files are fully processed'
+                : '',
             cancelButtonLabel: mode === 'add' ? 'Add another Object' : 'Re-edit Object',
             confirmButtonLabel: mode === 'add' ? 'Return to list page' : 'View Object',
         },
@@ -1921,13 +1980,13 @@ export const DlorForm = ({
         );
     }
 
-    function panelErrorCount(index) {
+    function panelErrorCount(index, hasFile) {
         if (index === 0) {
             return validatePanelOwnership(formValues);
         } else if (index === 1) {
             return validatePanelDescription(formValues);
         } else if (index === 2) {
-            return validatePanelLinks(formValues);
+            return validatePanelLinks(formValues, hasFile);
         } else {
             // index must = 3
             return validatePanelFiltering(formValues);
@@ -1944,6 +2003,15 @@ export const DlorForm = ({
 
     return (
         <>
+            <FileDialogs
+                existingFile={existingFile}
+                fileToBeUploaded={fileToBeUploaded}
+                uploadProgress={uploadProgress}
+                deleting={dlorObjectFileDeleting}
+                deleteError={dlorObjectFileDeleteError}
+                uploading={dlorObjectFileUploading}
+                uploadError={dlorObjectFileUploadError}
+            />
             <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
@@ -1958,7 +2026,7 @@ export const DlorForm = ({
                 cancelButtonLabel={locale.successMessage.cancelButtonLabel}
                 onCancelAction={() => clearForm()}
                 onClose={closeConfirmationBox}
-                isOpen={confirmationOpen}
+                isOpen={!isProcessingFile && confirmationOpen}
                 locale={!!dlorSavedItemError ? locale.errorMessage : locale.successMessage}
             />
             <form id="dlor-addedit-form">
@@ -1970,15 +2038,16 @@ export const DlorForm = ({
                                 const labelProps = {
                                     optional: null,
                                 };
+                                const errorCount = panelErrorCount(index, hasFile);
                                 return (
                                     <Step key={step.label} {...stepProps} sx={{ paddingRight: '25px' }}>
                                         <StepLabel {...labelProps}>
-                                            {panelErrorCount(index) === 0 ? (
+                                            {!errorCount ? (
                                                 <span>{step.label}</span>
                                             ) : (
                                                 <StyledErrorCountBadge
                                                     color="error"
-                                                    badgeContent={panelErrorCount(index)}
+                                                    badgeContent={errorCount}
                                                     data-testid={`dlor-panel-validity-indicator-${index}`}
                                                 >
                                                     {step.label}
@@ -2012,10 +2081,10 @@ export const DlorForm = ({
                                     disabled={
                                         validatePanelOwnership(formValues) > 0 ||
                                         validatePanelDescription(formValues) > 0 ||
-                                        validatePanelLinks(formValues) > 0 ||
+                                        validatePanelLinks(formValues, hasFile) > 0 ||
                                         validatePanelFiltering(formValues) > 0
                                     }
-                                    onClick={saveDlor}
+                                    onClick={async () => await saveDlor()}
                                 />
                             ) : (
                                 <Button onClick={handleNext} data-testid="dlor-form-next-button">
