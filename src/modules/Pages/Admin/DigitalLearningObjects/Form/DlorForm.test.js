@@ -478,8 +478,7 @@ describe('DlorForm', () => {
 
         expect(actions.createDlor).toHaveBeenCalledWith(
             expect.objectContaining({
-                object_link_interaction_type: undefined,
-                object_link_file_type: 'new',
+                object_link_interaction_type: 'none',
                 object_download_instructions: '',
             }),
             true,
