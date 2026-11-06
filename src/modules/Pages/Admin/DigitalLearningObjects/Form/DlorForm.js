@@ -1098,10 +1098,11 @@ export const DlorForm = ({
         type => type.object_link_interaction_type === linkInteractionTypeSelectRef.current,
     );
 
+    const linkLength = formValues?.object_link_url?.length;
     const stepPanelContentLinks = (
         <>
             {fileToBeUploaded && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                     <Alert
                         type="warning"
                         alertId="dlor-form-new-object-file-warning"
@@ -1112,12 +1113,14 @@ export const DlorForm = ({
             )}
             <Grid size={{ xs: 12 }}>
                 <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_link_url">File Uploader</InputLabel>
-                    {!hasFile && <FileSelector onChange={onFileChange} />}
-                    {hasFile && <FileList onClear={onClearFile} file={fileToBeUploaded || existingFile} />}
+                    <InputLabel style={{ top: -18 }}>File Uploader {!linkLength && '*'}</InputLabel>
+                    <span>
+                        {!hasFile && <FileSelector onChange={onFileChange} />}
+                        {hasFile && <FileList onClear={onClearFile} file={fileToBeUploaded || existingFile} />}
+                    </span>
                 </FormControl>
                 <FormControl variant="standard" fullWidth>
-                    <InputLabel htmlFor="object_link_url">Web address</InputLabel>
+                    <InputLabel htmlFor="object_link_url">Web address {!hasFile && '*'}</InputLabel>
                     <Input
                         disabled={hasFile}
                         id="object_link_url"
@@ -1126,26 +1129,24 @@ export const DlorForm = ({
                         onChange={handleChange('object_link_url')}
                         error={
                             !!formValues?.object_link_url &&
-                            formValues?.object_link_url?.length > 'http://ab.co'.length &&
+                            linkLength > 'http://ab.co'.length &&
                             !isValidUrl(formValues?.object_link_url)
                         }
                     />
-                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                        !isValidUrl(formValues?.object_link_url) && (
-                            <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
-                                This web address is not valid.
-                            </StyledErrorMessageBox>
-                        )}
-                    {formValues?.object_link_url?.length > 'http://ab.co'.length &&
-                        isPreviewableUrl(formValues?.object_link_url) !== false && (
-                            <Box
-                                sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
-                                data-testid="object-link-url-preview"
-                            >
-                                <DoneIcon color="success" />
-                                <span>A preview will show on the View page.</span>
-                            </Box>
-                        )}
+                    {linkLength > 'http://ab.co'.length && !isValidUrl(formValues?.object_link_url) && (
+                        <StyledErrorMessageBox data-testid="dlor-form-error-message-object-link-url">
+                            This web address is not valid.
+                        </StyledErrorMessageBox>
+                    )}
+                    {linkLength > 'http://ab.co'.length && isPreviewableUrl(formValues?.object_link_url) !== false && (
+                        <Box
+                            sx={{ display: 'flex', alignItems: 'center', marginBlock: '6px' }}
+                            data-testid="object-link-url-preview"
+                        >
+                            <DoneIcon color="success" />
+                            <span>A preview will show on the View page.</span>
+                        </Box>
+                    )}
                 </FormControl>
             </Grid>
             {isDlorAdminUser(account) && (
