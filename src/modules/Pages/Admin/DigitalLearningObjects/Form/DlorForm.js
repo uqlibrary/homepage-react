@@ -1709,7 +1709,10 @@ export const DlorForm = ({
             setShowFileTypeCreationForm(false);
         } else {
             setShowFileTypeCreationForm(true);
-            formDefaults.object_link_file_type = 'new';
+            setFormValues(prevValues => ({
+                ...prevValues,
+                object_link_file_type: 'new',
+            }));
         }
     }, [formDefaults]);
 
