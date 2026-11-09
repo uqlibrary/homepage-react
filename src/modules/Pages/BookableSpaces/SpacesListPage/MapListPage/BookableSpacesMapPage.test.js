@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { rtlRender, screen } from 'test-utils';
+import { rtlRender, screen, WithRouter } from 'test-utils';
 import BookableSpacesMapPage from './BookableSpacesMapPage';
 
 const mockUseTitle = jest.fn();
@@ -23,7 +23,11 @@ describe('BookableSpacesMapPage', () => {
     });
 
     it('sets the page title, announces the page, and renders the advanced list view', () => {
-        rtlRender(<BookableSpacesMapPage someProp="value" />);
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesMapPage someProp="value" />
+            </WithRouter>,
+        );
 
         expect(mockUseTitle).toHaveBeenCalledWith('Bookable Spaces map - UQ Library');
         expect(screen.getByText('Bookable Spaces map')).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useAccountContext } from 'context';
 
 import CircularProgress from '@mui/material/CircularProgress';
@@ -34,6 +34,7 @@ export const BookableSpacesDetailPage = ({
 
     // "spaceUuid" matching the param passed in pathConfig.js and config/routes.js
     const { spaceUuid } = useParams();
+    const location = useLocation();
 
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
@@ -42,8 +43,8 @@ export const BookableSpacesDetailPage = ({
     useTitle(pageTitle);
 
     useEffect(() => {
-        trackSpacesPageView(pageTitle);
-    }, [pageTitle, spaceUuid]);
+        trackSpacesPageView(pageTitle, location.key);
+    }, [location.key, pageTitle]);
 
     React.useEffect(() => {
         setPageAnnouncement('Space Details');
