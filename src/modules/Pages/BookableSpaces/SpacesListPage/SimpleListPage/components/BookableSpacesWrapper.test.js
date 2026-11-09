@@ -496,6 +496,34 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(screen.getByTestId('spaces-journey-intent-card-quiet')).toBeInTheDocument();
     });
 
+    it('tracks once per route when navigating from landing to all spaces', async () => {
+        renderJourney(defaultProps);
+
+        await waitFor(() => {
+            expect(window.dataLayer).toEqual([
+                {
+                    event: 'library spaces pageview',
+                    page_title: 'Bookable Spaces - UQ Library',
+                },
+            ]);
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-journey-showall'));
+
+        await waitFor(() => {
+            expect(window.dataLayer).toEqual([
+                {
+                    event: 'library spaces pageview',
+                    page_title: 'Bookable Spaces - UQ Library',
+                },
+                {
+                    event: 'library spaces pageview',
+                    page_title: 'Bookable Spaces search results - UQ Library',
+                },
+            ]);
+        });
+    });
+
     it('renders the journey panel with and without top spacing', () => {
         const { rerender } = rtlRender(
             <StyledJourneyPanelSection data-testid="journey-panel-no-spacing" hasTopSpacing={false} />,

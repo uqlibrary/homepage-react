@@ -29,4 +29,16 @@ describe('trackSpacesPageView', () => {
             },
         ]);
     });
+
+    it('pushes only once for the same router location key', () => {
+        trackSpacesPageView('Bookable Spaces search results - UQ Library', 'location-1');
+        trackSpacesPageView('Bookable Spaces search results - UQ Library', 'location-1');
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Bookable Spaces search results - UQ Library',
+            },
+        ]);
+    });
 });

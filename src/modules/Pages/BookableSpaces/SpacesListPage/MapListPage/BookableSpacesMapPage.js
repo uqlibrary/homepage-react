@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router';
 import { useTitle } from 'hooks';
 import BookableSpacesListContainer from 'modules/Pages/BookableSpaces/BookableSpacesListContainer';
 import BookableSpacesPageLayout from 'modules/Pages/BookableSpaces/Shared/BookableSpacesPageLayout';
@@ -6,6 +7,7 @@ import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesA
 
 const BookableSpacesMapPage = props => {
     const [pageAnnouncement, setPageAnnouncement] = React.useState('');
+    const location = useLocation();
     const pageTitle = 'Bookable Spaces map - UQ Library';
     useTitle(pageTitle);
 
@@ -14,8 +16,8 @@ const BookableSpacesMapPage = props => {
     }, []);
 
     React.useEffect(() => {
-        trackSpacesPageView(pageTitle);
-    }, [pageTitle]);
+        trackSpacesPageView(pageTitle, location.key);
+    }, [location.key, pageTitle]);
 
     return (
         <BookableSpacesPageLayout>

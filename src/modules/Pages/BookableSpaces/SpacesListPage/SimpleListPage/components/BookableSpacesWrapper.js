@@ -363,14 +363,13 @@ const BookableSpacesWrapper = ({
         );
     }, [isResultsRoute, view]);
 
-    const spacesPageTitle =
-        isResultsRoute || view === 'results'
-            ? 'Bookable Spaces search results - UQ Library'
-            : 'Bookable Spaces - UQ Library';
+    const spacesPageTitle = isResultsRoute
+        ? 'Bookable Spaces search results - UQ Library'
+        : 'Bookable Spaces - UQ Library';
     useTitle(spacesPageTitle);
     React.useEffect(() => {
-        trackSpacesPageView(spacesPageTitle);
-    }, [currentPath, spacesPageTitle]);
+        trackSpacesPageView(spacesPageTitle, location.key);
+    }, [location.key, spacesPageTitle]);
 
     const availableIntentDefinitions = React.useMemo(
         () => (hasFavourites ? [favouriteIntentDefinition, ...intentDefinitions] : intentDefinitions),
