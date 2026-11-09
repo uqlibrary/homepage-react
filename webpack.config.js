@@ -122,8 +122,8 @@ module.exports = {
                         options: {
                             sourceMap: true,
                             sassOptions: {
-                                includePaths: [resolve(__dirname, './src')],
-                                outputStyle: 'expanded',
+                                loadPaths: [resolve(__dirname, './src')],
+                                style: 'expanded',
                             },
                         },
                     },
