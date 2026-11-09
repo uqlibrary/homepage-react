@@ -22,5 +22,5 @@
         "lib": ["es2016", "dom"]
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "utils/**/*.ts"],
-    "exclude": ["node_modules", "custom_modules", "coverage", "dist", "chrome/**/**"]
+    "exclude": ["node_modules"]
 }
