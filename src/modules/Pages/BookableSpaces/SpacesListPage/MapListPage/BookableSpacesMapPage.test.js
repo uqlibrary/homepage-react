@@ -19,6 +19,7 @@ jest.mock('modules/Pages/BookableSpaces/BookableSpacesListContainer', () => ({
 describe('BookableSpacesMapPage', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        delete window.dataLayer;
     });
 
     it('sets the page title, announces the page, and renders the advanced list view', () => {
@@ -27,5 +28,11 @@ describe('BookableSpacesMapPage', () => {
         expect(mockUseTitle).toHaveBeenCalledWith('Bookable Spaces map - UQ Library');
         expect(screen.getByText('Bookable Spaces map')).toBeInTheDocument();
         expect(screen.getByTestId('map-list-container')).toHaveAttribute('data-force-advanced', 'true');
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Bookable Spaces map - UQ Library',
+            },
+        ]);
     });
 });

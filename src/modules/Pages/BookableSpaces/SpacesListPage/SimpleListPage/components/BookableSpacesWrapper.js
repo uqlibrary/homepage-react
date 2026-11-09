@@ -28,6 +28,7 @@ import {
     writeJourneyLiveFilterState,
     writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 // const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
@@ -362,11 +363,14 @@ const BookableSpacesWrapper = ({
         );
     }, [isResultsRoute, view]);
 
-    useTitle(
+    const spacesPageTitle =
         isResultsRoute || view === 'results'
             ? 'Bookable Spaces search results - UQ Library'
-            : 'Bookable Spaces - UQ Library',
-    );
+            : 'Bookable Spaces - UQ Library';
+    useTitle(spacesPageTitle);
+    React.useEffect(() => {
+        trackSpacesPageView(spacesPageTitle);
+    }, [currentPath, spacesPageTitle]);
 
     const availableIntentDefinitions = React.useMemo(
         () => (hasFavourites ? [favouriteIntentDefinition, ...intentDefinitions] : intentDefinitions),

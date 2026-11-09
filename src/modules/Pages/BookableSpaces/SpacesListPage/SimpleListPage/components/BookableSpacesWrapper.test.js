@@ -126,6 +126,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         MockDate.reset();
         window.history.replaceState({}, '', '/#/spaces');
         window.localStorage.clear();
+        delete window.dataLayer;
     });
 
     it('covers the exported journey result helper branches', () => {
@@ -789,6 +790,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         await waitFor(() => {
             expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
         });
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Bookable Spaces search results - UQ Library',
+            },
+        ]);
     });
 
     it('scrolls to the top when the landing route is active', async () => {
@@ -804,6 +811,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         await waitFor(() => {
             expect(scrollToMock).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' });
         });
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Bookable Spaces - UQ Library',
+            },
+        ]);
     });
 
     it('scrolls to the top when a hash-based detail route is active', async () => {
