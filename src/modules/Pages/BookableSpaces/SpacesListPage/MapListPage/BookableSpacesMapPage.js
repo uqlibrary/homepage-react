@@ -2,14 +2,20 @@ import React from 'react';
 import { useTitle } from 'hooks';
 import BookableSpacesListContainer from 'modules/Pages/BookableSpaces/BookableSpacesListContainer';
 import BookableSpacesPageLayout from 'modules/Pages/BookableSpaces/Shared/BookableSpacesPageLayout';
+import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 
 const BookableSpacesMapPage = props => {
     const [pageAnnouncement, setPageAnnouncement] = React.useState('');
-    useTitle('Bookable Spaces map - UQ Library');
+    const pageTitle = 'Bookable Spaces map - UQ Library';
+    useTitle(pageTitle);
 
     React.useEffect(() => {
         setPageAnnouncement('Bookable Spaces map');
     }, []);
+
+    React.useEffect(() => {
+        trackSpacesPageView(pageTitle);
+    }, [pageTitle]);
 
     return (
         <BookableSpacesPageLayout>

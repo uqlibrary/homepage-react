@@ -75,6 +75,7 @@ function setup({
 describe('Spaces Detail', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        delete window.dataLayer;
         useAccountContext.mockReturnValue({ account: null });
         Object.defineProperty(window, 'scrollTo', {
             value: jest.fn(),
@@ -114,6 +115,12 @@ describe('Spaces Detail', () => {
         expect(actions.loadWeeklyHours).toHaveBeenCalledTimes(1);
         expect(actions.loadSpacesFavourites).toHaveBeenCalledTimes(1);
         expect(useTitle).toHaveBeenCalledWith('Space Details - UQ Library');
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Space Details - UQ Library',
+            },
+        ]);
     });
 
     it('does not load favourites when there is no account context', () => {

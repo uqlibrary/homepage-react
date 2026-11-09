@@ -10,6 +10,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { Grid } from '@mui/material';
 import { useTitle } from 'hooks';
 import JourneyBreadcrumbs from '../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs';
+import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 
 export const BookableSpacesDetailPage = ({
     actions,
@@ -37,7 +38,12 @@ export const BookableSpacesDetailPage = ({
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
     const [pageAnnouncement, setPageAnnouncement] = React.useState('');
-    useTitle('Space Details - UQ Library');
+    const pageTitle = 'Space Details - UQ Library';
+    useTitle(pageTitle);
+
+    useEffect(() => {
+        trackSpacesPageView(pageTitle);
+    }, [pageTitle, spaceUuid]);
 
     React.useEffect(() => {
         setPageAnnouncement('Space Details');
