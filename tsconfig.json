@@ -13,10 +13,9 @@
         "checkJs": false,
         "noImplicitAny": true,
         "noEmit": true,
+        "baseUrl": "./src",
         "paths": {
             "@uq/pw/*": ["./playwright/*"],
-            "actions": ["./src/actions"],
-            "actions/*": ["./src/actions/*"],
             "config": ["./src/config"],
             "config/*": ["./src/config/*"],
             "helpers": ["./src/helpers"],
