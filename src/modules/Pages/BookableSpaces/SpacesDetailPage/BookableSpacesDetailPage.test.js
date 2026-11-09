@@ -31,6 +31,7 @@ jest.mock('../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs', () =
 const buildDetailResult = overrides => ({
     data: {
         space_id: 42,
+        space_uuid: 'space-1',
         space_name: 'Study room alpha',
         ...overrides,
     },
@@ -114,11 +115,48 @@ describe('Spaces Detail', () => {
         expect(actions.loadABookableSpacesRoom).toHaveBeenCalledWith('space-1');
         expect(actions.loadWeeklyHours).toHaveBeenCalledTimes(1);
         expect(actions.loadSpacesFavourites).toHaveBeenCalledTimes(1);
-        expect(useTitle).toHaveBeenCalledWith('Space Details - UQ Library');
+        expect(useTitle).toHaveBeenCalledWith('Space Details - Logged in space - UQ Library');
         expect(window.dataLayer).toEqual([
             {
                 event: 'library spaces pageview',
-                page_title: 'Space Details - UQ Library',
+                page_title: 'Space Details - Logged in space - UQ Library',
+            },
+        ]);
+    });
+
+    it('waits for the space details to load before tracking its named pageview', () => {
+        const actions = { ...defaultActions };
+        const { rerender } = setup({
+            actions,
+            bookableSpaceGetting: true,
+            bookableSpaceGetResult: null,
+        });
+
+        expect(window.dataLayer).toBeUndefined();
+
+        rerender(
+            <WithRouter route="/spaces/details/:spaceUuid" initialEntries={['/spaces/details/space-1']}>
+                <BookableSpacesDetailPage
+                    actions={actions}
+                    weeklyHours={{ locations: [] }}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={false}
+                    bookableSpaceGetting={false}
+                    bookableSpaceGetError={false}
+                    bookableSpaceGetResult={buildDetailResult({
+                        space_name: '621',
+                        space_type_details: { space_type_name: 'Training room' },
+                    })}
+                    spacesFavouritesList={[]}
+                    spacesFavouritesError={false}
+                />
+            </WithRouter>,
+        );
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Space Details - Training room 621 - UQ Library',
             },
         ]);
     });
