@@ -14,9 +14,52 @@ import { default as ACCT1101Guide } from '../../../src/data/mock/data/records/le
 import { default as ACCT1101Exam } from '../../../src/data/mock/data/records/learningResources/examListACCT1101';
 import { default as subjectSearchSuggestions } from '../../../src/data/mock/data/records/learningResources/subjectSearchSuggestions';
 
+interface CourseReadingList {
+    coursecode: string;
+    course_title: string;
+    reading_lists?: Array<{
+        campus: string;
+        url: string;
+        period: string;
+        totalCount: number;
+    }>;
+}
+
+interface SubjectSearchSuggestion {
+    name: string;
+    course_title?: string;
+    campus?: string;
+    period?: string;
+}
+
+interface SubjectGuide {
+    title: string;
+    url: string;
+}
+
+function getSubjectSearchSuggestion(
+    searchSuggestions: SubjectSearchSuggestion[],
+    courseCode: string,
+): Required<Pick<SubjectSearchSuggestion, 'course_title' | 'campus' | 'period'>> {
+    const suggestion = searchSuggestions.find(({ name }) => name === courseCode);
+    if (
+        !suggestion ||
+        suggestion.course_title === undefined ||
+        suggestion.campus === undefined ||
+        suggestion.period === undefined
+    ) {
+        throw new Error(`Search suggestion data is incomplete for ${courseCode}`);
+    }
+    return {
+        course_title: suggestion.course_title,
+        campus: suggestion.campus,
+        period: suggestion.period,
+    };
+}
+
 async function the_user_lands_on_the_My_Classes_tab(
     page: Page,
-    courseReadingList: Record<string, string>,
+    courseReadingList: CourseReadingList,
     panelId = 0,
 ) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -128,7 +171,7 @@ async function guides_panel_has_correct_Library_Guides_footer_links_for_a_subjec
 
 async function guides_panel_loads_correctly_for_a_subject_with_one_guide(
     page: Page,
-    guides: Record<string, string>,
+    guides: SubjectGuide[],
     courseCode: string,
     displayType = 'mycourses',
 ) {
@@ -153,10 +196,6 @@ async function guides_panel_loads_correctly_for_a_subject_with_one_guide(
     );
 
     await guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page(page);
-}
-
-interface CourseReadingList {
-    coursecode: string;
 }
 
 async function course_links_panel_loads_correctly_for_a_subject(page: Page, courseReadingList: CourseReadingList) {
@@ -195,11 +234,7 @@ async function load_a_subject_in_learning_resource_page_search_tab(
     typeChar = 'FREN',
     numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
 ) {
-    const frenchSearchSuggestion = searchSuggestions
-        .filter(obj => {
-            return obj.name === courseCode;
-        })
-        .pop();
+    const frenchSearchSuggestion = getSubjectSearchSuggestion(searchSuggestions, courseCode);
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').clear();
     await expect(page.getByTestId('noCoursesFound')).not.toBeVisible();
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').type(typeChar);
@@ -234,8 +269,8 @@ async function load_a_subject_in_learning_resource_page_search_tab(
 
 async function a_user_can_use_the_search_bar_to_load_a_subject(
     page: Page,
-    courseReadingList: Record<string, string>,
-    searchSuggestions: Array<{ name: string }>,
+    courseReadingList: CourseReadingList,
+    searchSuggestions: SubjectSearchSuggestion[],
     typeChar = 'FREN',
     numberOfMatchingSubject = 3, // autocomplete finds this many entries for typeChar
     tabId = 0,
@@ -276,14 +311,14 @@ async function the_user_sees_the_search_form(page: Page) {
     await expect(page.locator('[data-testid="learning-resource-search-input-field"] input')).toBeVisible();
 }
 
-async function click_on_a_subject_tab(page: Page, panelNumber: string, courseReadingList) {
+async function click_on_a_subject_tab(page: Page, panelNumber: number, courseReadingList: CourseReadingList) {
     const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const title = courseReadingList.course_title || 'mock data is missing';
     await page.locator(`button#classtab-${panelNumber}`).getByText(courseCode).first().click();
     await expect(page.locator(`div[data-testid=classpanel-${panelNumber}] h2`).getByText(title).first()).toBeVisible();
 }
 
-async function the_title_block_displays_properly(page: Page, courseReadingList: Record<string, string>) {
+async function the_title_block_displays_properly(page: Page, courseReadingList: CourseReadingList) {
     const listTitle = courseReadingList.course_title || 'mock data is missing1';
     const courseCode = courseReadingList.coursecode || 'mock data is missing2';
     await expect(
@@ -344,11 +379,7 @@ async function FREN1010LoadsProperly(page: Page) {
 }
 
 async function searchFor(page: Page, searchFor = 'FREN', selectCourseCode: string) {
-    const searchSuggestionForThisCourse = subjectSearchSuggestions
-        .filter(obj => {
-            return obj.name === selectCourseCode;
-        })
-        .pop();
+    const searchSuggestionForThisCourse = getSubjectSearchSuggestion(subjectSearchSuggestions, selectCourseCode);
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').clear();
     await page.locator('div[data-testid=full-learningresource-autocomplete] input').type(searchFor);
     // click the first option
