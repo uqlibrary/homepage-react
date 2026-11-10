@@ -199,12 +199,26 @@ test.describe('Membership terms & consent', () => {
     });
 });
 
-// Planned outages: both configured windows are in the past, so we move the browser clock into them to prove
-// the form is replaced by the maintenance / gateway-outage message during a window, and shows outside it.
+// Planned outages: rather than track whatever real windows src/.../membershipOutage.js happens to hold (which
+// are edited whenever an outage is scheduled), each test pins its own known window through the mock/e2e-only
+// override and moves the browser clock into it. The real config can change freely without touching these tests.
+
+// A fixed, test owned window and an instant inside it. Any future dates work; they just have to agree.
+const TEST_WINDOW = { from: '2099-03-01T02:00Z', to: '2099-03-01T04:00Z' };
+const DURING_TEST_WINDOW = new Date('2099-03-01T03:00:00Z');
+
+// Pin the outage window the app reads (via window.__MEMBERSHIP_OUTAGE_OVERRIDE__, honoured only in mock builds)
+// before any page script runs, and freeze the clock inside it.
+const pinOutage = async (page, override) => {
+    await page.addInitScript(value => {
+        window.__MEMBERSHIP_OUTAGE_OVERRIDE__ = value;
+    }, override);
+    await page.clock.setFixedTime(DURING_TEST_WINDOW);
+};
 
 test.describe('Membership planned outages', () => {
     test('closes the form for everyone during a maintenance freeze', async ({ page }) => {
-        await page.clock.setFixedTime(new Date('2017-06-15T03:00:00Z'));
+        await pinOutage(page, { MAINTENANCE_WINDOW: TEST_WINDOW });
         await page.goto('/membership/form/community?user=public');
 
         await expect(page.getByTestId('membership-form-frozen')).toBeVisible();
@@ -212,7 +226,7 @@ test.describe('Membership planned outages', () => {
     });
 
     test('turns paying types away during a payment gateway outage, but not free types', async ({ page }) => {
-        await page.clock.setFixedTime(new Date('2025-01-19T22:00:00Z'));
+        await pinOutage(page, { PAYMENT_GATEWAY_OUTAGE: TEST_WINDOW });
 
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form-outage')).toBeVisible();
