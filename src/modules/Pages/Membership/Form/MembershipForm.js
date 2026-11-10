@@ -14,7 +14,13 @@ import { pathConfig } from 'config/pathConfig';
 import { breadcrumbs } from 'config/routes';
 
 import { MEMBERSHIP_TYPES } from '../membershipFieldRules';
-import { isFrozen, isPaymentGatewayOutage } from '../membershipOutage';
+import {
+    isFrozen,
+    isPaymentGatewayOutage,
+    formatOutageWindow,
+    MAINTENANCE_WINDOW,
+    PAYMENT_GATEWAY_OUTAGE,
+} from '../membershipOutage';
 import { isRenewal, transformRequest, transformResponse } from '../membershipTransformers';
 import locale from '../membership.locale';
 import ConfigText from '../SharedComponents/ConfigText';
@@ -133,7 +139,7 @@ export const MembershipForm = ({
         return (
             <StandardPage title={form.title}>
                 <Alert severity="error" data-testid="membership-form-frozen">
-                    {form.frozen}
+                    {form.frozen(formatOutageWindow(MAINTENANCE_WINDOW))}
                 </Alert>
             </StandardPage>
         );
@@ -144,7 +150,7 @@ export const MembershipForm = ({
         return (
             <StandardPage title={form.title}>
                 <Alert severity="error" data-testid="membership-form-outage">
-                    {form.paymentGatewayOutage}
+                    {form.paymentGatewayOutage(formatOutageWindow(PAYMENT_GATEWAY_OUTAGE))}
                 </Alert>
             </StandardPage>
         );
