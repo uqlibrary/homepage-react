@@ -1,5 +1,4 @@
 const moment = require('moment');
-
 export function getTimeNowFormatted() {
     return moment().format('YYYY-MM-DDTHH:mm');
 }
@@ -126,14 +125,27 @@ export function extractFieldsFromBody(content) {
 export const systemList = [
     {
         slug: 'homepage',
-        title: 'Home page',
+        title: 'Home page systems (www.library.uq.edu.au)',
+        shortTitle: 'Home page',
+    },
+    {
+        slug: 'drupal',
+        title: 'Drupal (web.library.uq.edu.au)',
+        shortTitle: 'Drupal',
+    },
+    {
+        slug: 'guides',
+        title: 'Guides (guides.library.uq.edu.au)',
+        shortTitle: 'Guides',
     },
     {
         slug: 'primo',
-        title: 'Primo',
+        title: 'Library Search (Primo) (search.library.uq.edu.au)',
+        shortTitle: 'Library Search',
     },
     {
         slug: 'espace',
-        title: 'eSpace',
+        title: 'UQ eSpace (espace.library.uq.edu.au)',
+        shortTitle: 'UQ eSpace',
     },
 ];
