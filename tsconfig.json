@@ -15,12 +15,20 @@
         "noEmit": true,
         "baseUrl": "./src",
         "paths": {
+            "@uq/pw/*": ["../playwright/*"],
             "utils": ["../utils"],
             "utils/*": ["../utils/*"]
         },
         "forceConsistentCasingInFileNames": true,
         "lib": ["es2016", "dom"]
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "utils/**/*.ts"],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "utils/**/*.ts",
+        "playwright/**/*.ts",
+        "playwright.config.ts",
+        "playwright-slow-tests.ts"
+    ],
     "exclude": ["node_modules"]
 }
