@@ -1,16 +1,16 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, type Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 // The community application form. Runs against the mock server: the form data (account_types, titles) is
 // served by the mock, and a submission is answered with a saved record, landing the applicant on the received
 // page.
 
-const selectOption = async (page, id: string, value: string) => {
+const selectOption = async (page: Page, id: string, value: string) => {
     await page.getByTestId(`${id}-select`).click();
     await page.getByTestId(`${id}-option-${value}`).click();
 };
 
-const fillCommunityForm = async page => {
+const fillCommunityForm = async (page: Page) => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
     await page.getByTestId('sn-input').fill('Lovelace');
@@ -67,7 +67,7 @@ test.describe('Membership application form (community)', () => {
 // type-specific rendering: which sections show, how a section is titled, and — for a type collecting no
 // address — that the postcode helper drops away and a minimal application still submits.
 
-const fillBaseIdentity = async page => {
+const fillBaseIdentity = async (page: Page) => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
     await page.getByTestId('sn-input').fill('Lovelace');
@@ -144,7 +144,7 @@ test.describe('Membership application form (type-specific rendering)', () => {
 // Terms, conditions & privacy consent: the two alumni types must tick a box before applying; every other type
 // agrees by submitting. The privacy notice and policy links show for everyone.
 
-const fillAlumniForm = async page => {
+const fillAlumniForm = async (page: Page) => {
     await fillBaseIdentity(page);
     await page.getByTestId('home_address_0-input').fill('123 Library Way');
     await page.getByTestId('home_address_city-input').fill('Brisbane');
