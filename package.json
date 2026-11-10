@@ -140,7 +140,7 @@
         "react-test-renderer": "^19",
         "redux-mock-store": "^1.5.1",
         "robotstxt-webpack-plugin": "^8.0.0",
-        "sass": "^1.108.0",
+        "sass": "^1.108.1",
         "sass-loader": "^17.1.0",
         "snapshot-diff": "^0.10.0",
         "string-to-arraybuffer": "^1.0.0",
