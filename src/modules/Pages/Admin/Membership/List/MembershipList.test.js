@@ -9,7 +9,7 @@ import MembershipList, { messageOf, typeTitlesFrom } from './MembershipList';
 
 jest.mock('modules/Pages/Membership/membershipOutage', () => ({
     isFrozen: jest.fn(() => false),
-    formatOutageWindow: jest.fn(() => '12:00pm-2:00pm AEST Thursday 15th June 2017'),
+    formatOutageWindow: jest.fn(() => '12pm to 2pm (AEST) on Thursday 15 June 2017'),
     MAINTENANCE_WINDOW: { from: '2017-06-15T02:00Z', to: '2017-06-15T04:00Z' },
 }));
 const { isFrozen } = require('modules/Pages/Membership/membershipOutage');
