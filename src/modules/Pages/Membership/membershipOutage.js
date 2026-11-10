@@ -17,10 +17,10 @@ export const MAINTENANCE_WINDOW = {
     to: '2017-06-15T04:00Z',
 };
 
-// The payment gateway was down from 07:00 to 13:00 AEST on 25 November 2026.
+// The payment gateway was down from 07:00 to 15:00 AEST on 25 November 2026.
 export const PAYMENT_GATEWAY_OUTAGE = {
     from: '2026-11-24T21:00Z',
-    to: '2026-11-25T03:00Z',
+    to: '2026-11-25T05:00Z',
 };
 
 /**
@@ -54,11 +54,6 @@ export const isPaymentGatewayOutage = (type, now = new Date()) =>
 // AEST, so the quoted times are stable year round.
 const BRISBANE_TZ = 'Australia/Brisbane';
 
-const withOrdinal = day => {
-    const suffix = day % 100 >= 11 && day % 100 <= 13 ? 'th' : (['th', 'st', 'nd', 'rd'][day % 10] ?? 'th');
-    return `${day}${suffix}`;
-};
-
 const partsOf = (date, options) =>
     new Intl.DateTimeFormat('en-AU', { timeZone: BRISBANE_TZ, ...options })
         .formatToParts(date)
@@ -66,7 +61,9 @@ const partsOf = (date, options) =>
 
 const formatAestTime = date => {
     const { hour, minute, dayPeriod } = partsOf(date, { hour: 'numeric', minute: '2-digit', hour12: true });
-    return `${hour}:${minute}${dayPeriod.toLowerCase().replace(/\s/g, '')}`;
+    // Drop the minutes for an on-the-hour time: "7am", not "7:00am".
+    const time = minute === '00' ? hour : `${hour}:${minute}`;
+    return `${time}${dayPeriod.toLowerCase().replace(/\s/g, '')}`;
 };
 
 const formatAestDate = date => {
@@ -76,13 +73,13 @@ const formatAestDate = date => {
         month: 'long',
         year: 'numeric',
     });
-    return `${weekday} ${withOrdinal(Number(day))} ${month} ${year}`;
+    return `${weekday} ${day} ${month} ${year}`;
 };
 
 /**
  * A window as the human-readable AEST text the outage message quotes, e.g.
- * "7:00am-1:00pm AEST Wednesday 25th November 2026". Derived from the window so the message tracks the
+ * "7am to 3pm (AEST) on Wednesday 25 November 2026". Derived from the window so the message tracks the
  * configured dates. membership.locale.js never needs editing when an outage is rescheduled.
  */
 export const formatOutageWindow = ({ from, to }) =>
-    `${formatAestTime(new Date(from))}-${formatAestTime(new Date(to))} AEST ${formatAestDate(new Date(from))}`;
+    `${formatAestTime(new Date(from))} to ${formatAestTime(new Date(to))} (AEST) on ${formatAestDate(new Date(from))}`;

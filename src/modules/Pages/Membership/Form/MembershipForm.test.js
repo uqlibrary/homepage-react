@@ -20,13 +20,13 @@ jest.mock('react-router', () => ({
 // Both outage windows are in the past, so the real functions are always false; force them on to test the guards.
 // formatOutageWindow is stubbed to a fixed string so the outage message is asserted without date formatting here
 // (formatOutageWindow has its own tests in membershipOutage.test.js).
-const MOCK_OUTAGE_WHEN = '7:00am-1:00pm AEST Wednesday 25th November 2026';
+const MOCK_OUTAGE_WHEN = '7am to 3pm (AEST) on Wednesday 25 November 2026';
 jest.mock('../membershipOutage', () => ({
     isFrozen: jest.fn(() => false),
     isPaymentGatewayOutage: jest.fn(() => false),
-    formatOutageWindow: jest.fn(() => '7:00am-1:00pm AEST Wednesday 25th November 2026'),
+    formatOutageWindow: jest.fn(() => '7am to 3pm (AEST) on Wednesday 25 November 2026'),
     MAINTENANCE_WINDOW: { from: '2017-06-15T02:00Z', to: '2017-06-15T04:00Z' },
-    PAYMENT_GATEWAY_OUTAGE: { from: '2026-11-24T21:00Z', to: '2026-11-25T03:00Z' },
+    PAYMENT_GATEWAY_OUTAGE: { from: '2026-11-24T21:00Z', to: '2026-11-25T05:00Z' },
 }));
 
 // The upload component has its own test; here it stands in for driving the form's wiring — its onChange feeds
