@@ -14,7 +14,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { breadcrumbs } from 'config/routes';
 
-import { isFrozen } from 'modules/Pages/Membership/membershipOutage';
+import { isFrozen, formatOutageWindow, MAINTENANCE_WINDOW } from 'modules/Pages/Membership/membershipOutage';
 import { DEFAULT_PER_PAGE, SORT_NEWEST, STATUS_ALL } from '../membershipAdmin';
 import { buildCsv, downloadCsv } from '../membershipCsv';
 import MembershipApplicationCard, { fullName } from './MembershipApplicationCard';
@@ -282,7 +282,7 @@ export const MembershipList = ({
         return (
             <StandardPage title={strings.title}>
                 <Alert severity="error" data-testid="membership-admin-frozen">
-                    {strings.frozen}
+                    {strings.frozen(formatOutageWindow(MAINTENANCE_WINDOW))}
                 </Alert>
             </StandardPage>
         );
