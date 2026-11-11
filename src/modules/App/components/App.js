@@ -143,7 +143,7 @@ export const App = ({ account, actions }) => {
 
     /* istanbul ignore next */
     const insertAlertList = () => {
-        if (!!isAdminPage) {
+        if (!!isAdminPage()) {
             return null; // admins don't need to see this (enough to use up the space)
         }
 
