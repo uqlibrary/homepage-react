@@ -19,7 +19,10 @@ import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/Spac
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import {
+    FILTER_CAPACITY_TYPE_ID,
+    FILTER_SPACE_CAPACITY_ACTION_NAME,
     findSpaceById,
+    getActiveSelectedFacilityTypes,
     JOURNEY_VIEWS,
     parseJourneyStateFromUrl,
     readJourneyLiveFilterState,
@@ -28,7 +31,7 @@ import {
     writeJourneyLiveFilterState,
     writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
+import { trackSpacesNavigationClick, trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 // const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
@@ -385,6 +388,68 @@ const BookableSpacesWrapper = ({
             currentPath === '/spaces/' ||
             currentPath === '/#/spaces' ||
             currentPath === '/#/spaces/');
+    const handleLoginPromptClick = React.useCallback(
+        event => {
+            const loginLink = event.currentTarget;
+            const selectedCampusName =
+                Number(selectedCampus) === 0
+                    ? 'All campuses'
+                    : campusList?.find(campus => Number(campus.campus_id) === Number(selectedCampus))?.campus_name ||
+                      null;
+            const selectedLibraryName =
+                Number(selectedLibrary) === 0
+                    ? 'All libraries'
+                    : librariesForCampus?.find(library => Number(library.library_id) === Number(selectedLibrary))
+                          ?.library_name || null;
+            const activeFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes).filter(
+                filter =>
+                    Number(filter?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID &&
+                    filter?.facility_special_action !== FILTER_SPACE_CAPACITY_ACTION_NAME,
+            );
+            const activeFilters = {};
+            const hasActiveCapacityFilter =
+                Array.isArray(capacityFilterValue) &&
+                capacityFilterValue.length === 2 &&
+                (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
+                    Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
+
+            if (activeFacilityTypes.length) {
+                activeFilters.facility_types = activeFacilityTypes.map(
+                    filter => filter?.facility_type_name || String(filter?.facility_type_id),
+                );
+            }
+            if (hasActiveCapacityFilter) {
+                activeFilters.capacity = {
+                    minimum: Number(capacityFilterValue[0]),
+                    maximum: Number(capacityFilterValue[1]),
+                };
+            }
+            if (showFavouriteSpacesOnly) {
+                activeFilters.favourites_only = true;
+            }
+
+            trackSpacesNavigationClick({
+                click_label: loginLink.textContent.trim(),
+                click_class: 'dlor-homepage-loginprompt',
+                click_url: loginLink.href,
+                click_space_name: null,
+                click_campus: selectedCampusName,
+                click_library: selectedLibraryName,
+                click_active_filters: JSON.stringify(activeFilters),
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
     const spacesForUrlLookup = React.useMemo(
         () => [
             ...(Array.isArray(allSpaceLocations) ? allSpaceLocations : /* istanbul ignore next */ []),
@@ -1079,6 +1144,7 @@ const BookableSpacesWrapper = ({
                         persistIntentSelection(intent, { clearExistingFilters: true });
                     }}
                     onSeeAllSpaces={handleSeeAllSpaces}
+                    onLoginClick={handleLoginPromptClick}
                     goToLegacyBrowse={goToLegacyBrowse}
                     weeklyHours={weeklyHours}
                     weeklyHoursLoading={weeklyHoursLoading}

@@ -128,7 +128,7 @@ describe('Spaces Detail', () => {
         const actions = { ...defaultActions };
         const { rerender } = setup({
             actions,
-            bookableSpaceGetting: true,
+            bookableSpaceGetting: null,
             bookableSpaceGetResult: null,
         });
 
@@ -157,6 +157,70 @@ describe('Spaces Detail', () => {
             {
                 event: 'library spaces pageview',
                 page_title: 'Space Details - Training room 621 - UQ Library',
+            },
+        ]);
+    });
+
+    it('tracks a generic detail pageview when the current request errors', () => {
+        const actions = { ...defaultActions };
+        const { rerender } = setup({
+            actions,
+            bookableSpaceGetting: true,
+            bookableSpaceGetResult: null,
+        });
+
+        rerender(
+            <WithRouter route="/spaces/details/:spaceUuid" initialEntries={['/spaces/details/space-1']}>
+                <BookableSpacesDetailPage
+                    actions={actions}
+                    weeklyHours={{ locations: [] }}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={false}
+                    bookableSpaceGetting={false}
+                    bookableSpaceGetError
+                    bookableSpaceGetResult={{ data: { space_uuid: 'stale-space', space_name: 'Old space' } }}
+                    spacesFavouritesList={[]}
+                    spacesFavouritesError={false}
+                />
+            </WithRouter>,
+        );
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Space Details - UQ Library',
+            },
+        ]);
+    });
+
+    it('tracks a generic detail pageview when the current request returns no space', () => {
+        const actions = { ...defaultActions };
+        const { rerender } = setup({
+            actions,
+            bookableSpaceGetting: true,
+            bookableSpaceGetResult: null,
+        });
+
+        rerender(
+            <WithRouter route="/spaces/details/:spaceUuid" initialEntries={['/spaces/details/space-1']}>
+                <BookableSpacesDetailPage
+                    actions={actions}
+                    weeklyHours={{ locations: [] }}
+                    weeklyHoursLoading={false}
+                    weeklyHoursError={false}
+                    bookableSpaceGetting={false}
+                    bookableSpaceGetError={false}
+                    bookableSpaceGetResult={{ data: {} }}
+                    spacesFavouritesList={[]}
+                    spacesFavouritesError={false}
+                />
+            </WithRouter>,
+        );
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces pageview',
+                page_title: 'Space Details - UQ Library',
             },
         ]);
     });
