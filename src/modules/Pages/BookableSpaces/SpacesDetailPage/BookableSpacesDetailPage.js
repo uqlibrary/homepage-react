@@ -39,12 +39,16 @@ export const BookableSpacesDetailPage = ({
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
     const [pageAnnouncement, setPageAnnouncement] = React.useState('');
-    const pageTitle = 'Space Details - UQ Library';
+    const loadedSpace = bookableSpaceGetResult?.data;
+    const spaceMatchesRoute = [loadedSpace?.space_uuid, loadedSpace?.space_id].some(
+        identifier => identifier != null && String(identifier) === String(spaceUuid),
+    );
+    const spaceName = spaceMatchesRoute
+        ? [loadedSpace?.space_type_details?.space_type_name, loadedSpace?.space_name].filter(Boolean).join(' ')
+        : null;
+    const pageTitle = spaceName ? `Space Details - ${spaceName} - UQ Library` : 'Space Details - UQ Library';
     useTitle(pageTitle);
-
-    useEffect(() => {
-        trackSpacesPageView(pageTitle, location.key);
-    }, [location.key, pageTitle]);
+    const spaceRequestStateRef = React.useRef({ spaceUuid: null, loadingObserved: false });
 
     React.useEffect(() => {
         setPageAnnouncement('Space Details');
@@ -52,6 +56,7 @@ export const BookableSpacesDetailPage = ({
 
     useEffect(() => {
         if (!!spaceUuid) {
+            spaceRequestStateRef.current = { spaceUuid, loadingObserved: false };
             actions.loadABookableSpacesRoom(spaceUuid);
             actions.loadWeeklyHours();
             if (isLoggedIn) {
@@ -59,6 +64,40 @@ export const BookableSpacesDetailPage = ({
             }
         }
     }, [actions, isLoggedIn, spaceUuid]);
+
+    useEffect(() => {
+        const requestState = spaceRequestStateRef.current;
+        if (!spaceUuid || requestState.spaceUuid !== spaceUuid) {
+            return;
+        }
+
+        if (bookableSpaceGetting === true) {
+            requestState.loadingObserved = true;
+            return;
+        }
+
+        if (bookableSpaceGetting !== false) {
+            return;
+        }
+
+        const isNotFoundResult = loadedSpace && Object.keys(loadedSpace).length === 0;
+        const hasCurrentResponse =
+            spaceMatchesRoute ||
+            (requestState.loadingObserved && (bookableSpaceGetError !== false || isNotFoundResult));
+        if (!hasCurrentResponse) {
+            return;
+        }
+
+        trackSpacesPageView(pageTitle, location.key);
+    }, [
+        bookableSpaceGetError,
+        bookableSpaceGetting,
+        loadedSpace,
+        location.key,
+        pageTitle,
+        spaceMatchesRoute,
+        spaceUuid,
+    ]);
 
     useEffect(() => {
         const restoreScrollBehavior = () => {

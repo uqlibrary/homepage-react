@@ -1,4 +1,4 @@
-import { trackSpacesPageView } from './spacesAnalytics';
+import { trackSpacesNavigationClick, trackSpacesPageView } from './spacesAnalytics';
 
 describe('trackSpacesPageView', () => {
     beforeEach(() => {
@@ -38,6 +38,30 @@ describe('trackSpacesPageView', () => {
             {
                 event: 'library spaces pageview',
                 page_title: 'Bookable Spaces search results - UQ Library',
+            },
+        ]);
+    });
+
+    it('pushes navigation click events with the Spaces event defaults', () => {
+        trackSpacesNavigationClick({
+            click_label: 'Log in',
+            click_class: 'dlor-homepage-loginprompt',
+            click_url: 'https://auth.library.uq.edu.au/login',
+            click_campus: 'St Lucia',
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: null,
+                click_active_filters: '{}',
+                click_label: 'Log in',
+                click_class: 'dlor-homepage-loginprompt',
+                click_url: 'https://auth.library.uq.edu.au/login',
             },
         ]);
     });

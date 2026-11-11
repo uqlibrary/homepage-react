@@ -53,6 +53,7 @@ const LoginPrompt = ({
     narrower = false,
     prompt = 'for extra features',
     instyle,
+    onLoginClick,
     helpUrl = 'https://guides.library.uq.edu.au/research-and-teaching-staff/link-embed-resources/digital-learning-objects#s-lg-box-22922915',
     helpAriaLabel = 'Learn more about "Digital Learning Objects"',
 }) => {
@@ -71,7 +72,9 @@ const LoginPrompt = ({
                 >
                     <StyledInfoBadge aria-hidden="true" />
                     <span>
-                        <a href={loginLink}>Log in</a>
+                        <a href={loginLink} onClick={onLoginClick}>
+                            Log in
+                        </a>
                         &nbsp;{displayPrompt}
                         {!!helpUrl && (
                             <>
@@ -94,6 +97,7 @@ LoginPrompt.propTypes = {
     narrower: PropTypes.bool,
     prompt: PropTypes.string,
     instyle: PropTypes.any,
+    onLoginClick: PropTypes.func,
     helpUrl: PropTypes.string,
     helpAriaLabel: PropTypes.string,
 };

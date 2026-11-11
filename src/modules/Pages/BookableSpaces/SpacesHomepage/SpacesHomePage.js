@@ -132,6 +132,7 @@ export const SpacesHomePage = ({
     navigateToView,
     activateFavouritesResults,
     onSeeAllSpaces,
+    onLoginClick,
     setSelectedSpace,
     setSelectedIntentId,
     getIntentLandingUrl,
@@ -180,6 +181,7 @@ export const SpacesHomePage = ({
                     <LoginPrompt
                         isLoggedIn={isLoggedIn}
                         prompt="to save your favourite study spaces"
+                        onLoginClick={onLoginClick}
                         helpUrl=""
                         helpAriaLabel="Learn more about bookable spaces"
                     />
@@ -237,6 +239,7 @@ SpacesHomePage.propTypes = {
     onIntentLinkNavigate: PropTypes.func,
     onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
+    onLoginClick: PropTypes.func,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,

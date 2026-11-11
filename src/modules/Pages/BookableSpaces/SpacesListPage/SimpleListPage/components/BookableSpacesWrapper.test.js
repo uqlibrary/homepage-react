@@ -524,6 +524,97 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
+    it('tracks login lure clicks with the current Spaces filter context', () => {
+        renderJourney({
+            ...defaultProps,
+            selectedFacilityTypes: [
+                { facility_type_id: 11, facility_type_name: 'Quiet', selected: true },
+                { facility_type_id: 12, selected: true },
+                {
+                    facility_type_id: 13,
+                    facility_special_action: spacesHelpers.FILTER_SPACE_CAPACITY_ACTION_NAME,
+                    selected: true,
+                },
+                {
+                    facility_type_id: spacesHelpers.FILTER_CAPACITY_TYPE_ID,
+                    facility_special_action: spacesHelpers.FILTER_SPACE_CAPACITY_ACTION_NAME,
+                    selected: true,
+                },
+            ],
+            capacityFilterValue: [4, 12],
+            showFavouriteSpacesOnly: true,
+        });
+
+        fireEvent.click(screen.getByRole('link', { name: 'Log in' }));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'Log in',
+                click_class: 'dlor-homepage-loginprompt',
+                click_url: expect.stringContaining('https://auth.library.uq.edu.au/login'),
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: JSON.stringify({
+                    facility_types: ['Quiet', '12'],
+                    capacity: { minimum: 4, maximum: 12 },
+                    favourites_only: true,
+                }),
+            }),
+        );
+    });
+
+    it('tracks default campus, library, and filter values when the login lure is clicked', () => {
+        renderJourney({
+            ...defaultProps,
+            selectedCampus: 0,
+            selectedLibrary: 0,
+            selectedFacilityTypes: [],
+            capacityFilterValue: [1, 20],
+            showFavouriteSpacesOnly: false,
+        });
+
+        fireEvent.click(screen.getByRole('link', { name: 'Log in' }));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: '{}',
+            }),
+        );
+    });
+
+    it('tracks missing campus and library names and a max-only capacity filter', () => {
+        renderJourney({
+            ...defaultProps,
+            campusList: [],
+            selectedCampus: 999,
+            librariesForCampus: [],
+            selectedLibrary: 999,
+            selectedFacilityTypes: [],
+            capacityFilterValue: [1, 12],
+            showFavouriteSpacesOnly: false,
+        });
+
+        fireEvent.click(screen.getByRole('link', { name: 'Log in' }));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_campus: null,
+                click_library: null,
+                click_active_filters: JSON.stringify({
+                    capacity: { minimum: 1, maximum: 12 },
+                }),
+            }),
+        );
+    });
+
     it('renders the journey panel with and without top spacing', () => {
         const { rerender } = rtlRender(
             <StyledJourneyPanelSection data-testid="journey-panel-no-spacing" hasTopSpacing={false} />,
