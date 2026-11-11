@@ -19,10 +19,7 @@ import { SpacesHomePage } from 'modules/Pages/BookableSpaces/SpacesHomepage/Spac
 import { JourneyResultsView } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/JourneyResultsView';
 
 import {
-    FILTER_CAPACITY_TYPE_ID,
-    FILTER_SPACE_CAPACITY_ACTION_NAME,
     findSpaceById,
-    getActiveSelectedFacilityTypes,
     JOURNEY_VIEWS,
     parseJourneyStateFromUrl,
     readJourneyLiveFilterState,
@@ -31,7 +28,11 @@ import {
     writeJourneyLiveFilterState,
     writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
-import { trackSpacesNavigationClick, trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
+import {
+    buildSpacesActiveFilters,
+    trackSpacesNavigationClick,
+    trackSpacesPageView,
+} from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
 // const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
@@ -401,32 +402,22 @@ const BookableSpacesWrapper = ({
                     ? 'All libraries'
                     : librariesForCampus?.find(library => Number(library.library_id) === Number(selectedLibrary))
                           ?.library_name || null;
-            const activeFacilityTypes = getActiveSelectedFacilityTypes(selectedFacilityTypes).filter(
-                filter =>
-                    Number(filter?.facility_type_id) !== FILTER_CAPACITY_TYPE_ID &&
-                    filter?.facility_special_action !== FILTER_SPACE_CAPACITY_ACTION_NAME,
-            );
-            const activeFilters = {};
-            const hasActiveCapacityFilter =
-                Array.isArray(capacityFilterValue) &&
-                capacityFilterValue.length === 2 &&
-                (Number(capacityFilterValue[0]) !== Number(minimumSpaceCapacity) ||
-                    Number(capacityFilterValue[1]) !== Number(maximumSpaceCapacity));
-
-            if (activeFacilityTypes.length) {
-                activeFilters.facility_types = activeFacilityTypes.map(
-                    filter => filter?.facility_type_name || String(filter?.facility_type_id),
-                );
-            }
-            if (hasActiveCapacityFilter) {
-                activeFilters.capacity = {
-                    minimum: Number(capacityFilterValue[0]),
-                    maximum: Number(capacityFilterValue[1]),
-                };
-            }
-            if (showFavouriteSpacesOnly) {
-                activeFilters.favourites_only = true;
-            }
+            const facilityTypeGroups = [
+                ...(Array.isArray(facilityTypeList?.data?.facility_type_groups)
+                    ? facilityTypeList.data.facility_type_groups
+                    : []),
+                ...(Array.isArray(filteredFacilityTypeList?.data?.facility_type_groups)
+                    ? filteredFacilityTypeList.data.facility_type_groups
+                    : []),
+            ];
+            const activeFilters = buildSpacesActiveFilters({
+                facilityTypeGroups,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
 
             trackSpacesNavigationClick({
                 click_label: loginLink.textContent.trim(),
@@ -435,7 +426,7 @@ const BookableSpacesWrapper = ({
                 click_space_name: null,
                 click_campus: selectedCampusName,
                 click_library: selectedLibraryName,
-                click_active_filters: JSON.stringify(activeFilters),
+                click_active_filters: activeFilters,
             });
         },
         [
