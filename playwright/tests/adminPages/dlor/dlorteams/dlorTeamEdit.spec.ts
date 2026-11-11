@@ -1,8 +1,8 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, Page } from '@uq/pw/test';
 import { DLOR_ADMIN_USER } from '@uq/pw/lib/constants';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
-const openDlorTeamAdminMenu = async page => {
+const openDlorTeamAdminMenu = async (page: Page) => {
     await page.goto('http://localhost:2020/digital-learning-hub?user=uqstaff');
     await page.setViewportSize({ width: 1300, height: 1000 });
 
@@ -288,18 +288,22 @@ test.describe('Digital Learning Hub admin Edit Team', () => {
 
             await page.evaluate(() => {
                 const original = URL.createObjectURL;
-                URL.createObjectURL = function () {
-                    window.wasCreateObjectURLCalled = true;
-                    return original.apply(this, arguments);
+                URL.createObjectURL = (object: Blob | MediaSource) => {
+                    (window as Window & { wasCreateObjectURLCalled?: boolean }).wasCreateObjectURLCalled = true;
+                    return original.call(URL, object);
                 };
             });
 
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).not.toBeTruthy();
+            expect(
+                await page.evaluate(() => (window as Window & { wasCreateObjectURLCalled?: boolean }).wasCreateObjectURLCalled),
+            ).not.toBeTruthy();
             await expect(page.getByTestId('admin-dlor-team-admin-menu-button')).toBeVisible({ timeout: 30000 });
             await page.getByTestId('admin-dlor-team-admin-menu-button').click();
             await page.getByTestId('admin-dlor-export-team-objects--button').click();
             // Verify that the URL.createObjectURL method was called
-            expect(await page.evaluate(() => window.wasCreateObjectURLCalled)).toBeTruthy();
+            expect(
+                await page.evaluate(() => (window as Window & { wasCreateObjectURLCalled?: boolean }).wasCreateObjectURLCalled),
+            ).toBeTruthy();
         });
     });
 });

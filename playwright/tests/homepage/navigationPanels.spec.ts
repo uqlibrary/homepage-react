@@ -1,11 +1,11 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, type Locator, type Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 const expectWithinOnePixel = (actual: number, expected: number) => {
     expect(Math.abs(actual - expected)).toBeLessThanOrEqual(1);
 };
 
-const waitForLayoutToSettle = async page => {
+const waitForLayoutToSettle = async (page: Page) => {
     await page.waitForLoadState('networkidle');
     await page.evaluate(async () => {
         if (document.fonts?.ready) {
@@ -16,7 +16,7 @@ const waitForLayoutToSettle = async page => {
     });
 };
 
-const waitForTabletBig6Grid = async li => {
+const waitForTabletBig6Grid = async (li: Locator) => {
     await expect
         .poll(async () => {
             const tops = await li.evaluateAll(elements =>
@@ -38,7 +38,7 @@ const waitForTabletBig6Grid = async li => {
         .toBe(true);
 };
 
-const waitForDesktopBig6Grid = async li => {
+const waitForDesktopBig6Grid = async (li: Locator) => {
     await expect
         .poll(async () => {
             const tops = await li.evaluateAll(elements => elements.map(el => el.getBoundingClientRect().top));

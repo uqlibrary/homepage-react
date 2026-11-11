@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, type Page } from '@uq/pw/test';
 import { readFileSync } from 'fs';
 
 // Exporting the applications matching the current search and filter to a CSV, for reporting and offline
@@ -9,11 +9,12 @@ const ADMIN = 'uqpkopit';
 
 const HEADER = '"Name","Email","Type","Expiry","Barcode"';
 
-const csvOf = async (page, trigger) => {
+const csvOf = async (page: Page, trigger: () => Promise<void>) => {
     const downloadPromise = page.waitForEvent('download');
     await trigger();
     const download = await downloadPromise;
     const path = await download.path();
+    if (!path) throw new Error('Downloaded CSV is not available on the local filesystem');
     return { filename: download.suggestedFilename(), lines: readFileSync(path, 'utf8').split('\r\n') };
 };
 
