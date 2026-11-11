@@ -528,19 +528,71 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         renderJourney({
             ...defaultProps,
             selectedFacilityTypes: [
-                { facility_type_id: 11, facility_type_name: 'Quiet', selected: true },
-                { facility_type_id: 12, selected: true },
                 {
+                    facility_type_group_id: 1,
+                    facility_type_id: 11,
+                    facility_type_name: 'Quiet',
+                    selected: true,
+                },
+                { facility_type_group_id: 1, facility_type_id: 12, selected: true },
+                {
+                    facility_type_group_id: 1,
                     facility_type_id: 13,
                     facility_special_action: spacesHelpers.FILTER_SPACE_CAPACITY_ACTION_NAME,
                     selected: true,
                 },
                 {
+                    facility_type_group_id: 20,
                     facility_type_id: spacesHelpers.FILTER_CAPACITY_TYPE_ID,
                     facility_special_action: spacesHelpers.FILTER_SPACE_CAPACITY_ACTION_NAME,
                     selected: true,
                 },
+                {
+                    facility_type_group_id: 20,
+                    facility_type_id: 9001,
+                    facility_type_name: 'Currently open',
+                    facility_special_action: spacesHelpers.FILTER_CURRENTLY_OPEN_ACTION_NAME,
+                    selected: true,
+                },
+                {
+                    facility_type_group_id: 20,
+                    facility_type_id: spacesHelpers.FILTER_BOOKABLE_TYPE_ID,
+                    facility_type_name: 'Bookable',
+                    facility_special_action: spacesHelpers.FILTER_BOOKABLE_ACTION_NAME,
+                    selected: true,
+                },
             ],
+            facilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 1,
+                            facility_type_group_name: 'Study Environment',
+                            facility_type_children: [
+                                { facility_type_id: 11, facility_type_name: 'Quiet' },
+                                { facility_type_id: 12, facility_type_name: 'Natural light' },
+                            ],
+                        },
+                    ],
+                },
+            },
+            filteredFacilityTypeList: {
+                data: {
+                    facility_type_groups: [
+                        {
+                            facility_type_group_id: 20,
+                            facility_type_group_name: 'Availability',
+                            facility_type_children: [
+                                { facility_type_id: 9001, facility_type_name: 'Currently open' },
+                                {
+                                    facility_type_id: spacesHelpers.FILTER_BOOKABLE_TYPE_ID,
+                                    facility_type_name: 'Bookable',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
             capacityFilterValue: [4, 12],
             showFavouriteSpacesOnly: true,
         });
@@ -558,11 +610,12 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 click_space_name: null,
                 click_campus: 'St Lucia',
                 click_library: 'Central Library',
-                click_active_filters: JSON.stringify({
-                    facility_types: ['Quiet', '12'],
-                    capacity: { minimum: 4, maximum: 12 },
-                    favourites_only: true,
-                }),
+                click_active_filters: {
+                    study_environment: ['Quiet', 'Natural light'],
+                    availability: ['Currently open', 'Bookable'],
+                    capacity: { min: 4, max: 12 },
+                    favourites: true,
+                },
             }),
         );
     });
@@ -570,6 +623,8 @@ describe('BookableSpacesWrapper browser back navigation', () => {
     it('tracks default campus, library, and filter values when the login lure is clicked', () => {
         renderJourney({
             ...defaultProps,
+            facilityTypeList: null,
+            filteredFacilityTypeList: null,
             selectedCampus: 0,
             selectedLibrary: 0,
             selectedFacilityTypes: [],
@@ -584,7 +639,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 event: 'library spaces click',
                 click_campus: 'All campuses',
                 click_library: 'All libraries',
-                click_active_filters: '{}',
+                click_active_filters: {},
             }),
         );
     });
@@ -608,9 +663,9 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 event: 'library spaces click',
                 click_campus: null,
                 click_library: null,
-                click_active_filters: JSON.stringify({
-                    capacity: { minimum: 1, maximum: 12 },
-                }),
+                click_active_filters: {
+                    capacity: { min: 1, max: 12 },
+                },
             }),
         );
     });
