@@ -206,11 +206,12 @@ test.describe('Membership terms & consent', () => {
 // A fixed, test owned window and an instant inside it. Any future dates work; they just have to agree.
 const TEST_WINDOW = { from: '2099-03-01T02:00Z', to: '2099-03-01T04:00Z' };
 const DURING_TEST_WINDOW = new Date('2099-03-01T03:00:00Z');
+type MembershipOutageOverride = NonNullable<Window['__MEMBERSHIP_OUTAGE_OVERRIDE__']>;
 
 // Pin the outage window the app reads (via window.__MEMBERSHIP_OUTAGE_OVERRIDE__, honoured only in mock builds)
 // before any page script runs, and freeze the clock inside it.
-const pinOutage = async (page, override) => {
-    await page.addInitScript(value => {
+const pinOutage = async (page: Page, override: MembershipOutageOverride) => {
+    await page.addInitScript((value: MembershipOutageOverride) => {
         window.__MEMBERSHIP_OUTAGE_OVERRIDE__ = value;
     }, override);
     await page.clock.setFixedTime(DURING_TEST_WINDOW);
