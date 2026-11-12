@@ -27,6 +27,7 @@ jest.mock(
 import BookableSpacesWrapper, {
     applyJourneyIntentFilters,
     buildLegacyBrowseNavigationUrl,
+    getSpacesClickContext,
     resolveJourneyIntentFilters,
 } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
 import {
@@ -63,6 +64,70 @@ jest.mock('modules/Pages/BookableSpaces/Shared/BookableSpacesMap', () => {
 
 describe('BookableSpacesWrapper browser back navigation', () => {
     const originalScrollIntoView = window.HTMLElement.prototype.scrollIntoView;
+
+    it('builds tracking context for selected campus and library names and grouped filters', () => {
+        expect(
+            getSpacesClickContext({
+                selectedCampus: 1,
+                campusList: [{ campus_id: 1, campus_name: 'St Lucia' }],
+                selectedLibrary: 2,
+                librariesForCampus: [{ library_id: 2, library_name: 'Central Library' }],
+                facilityTypeList: {
+                    data: {
+                        facility_type_groups: [
+                            {
+                                facility_type_group_id: 5,
+                                facility_type_group_name: 'Study Environment',
+                                facility_type_children: [{ facility_type_id: 51, facility_type_name: 'Quiet' }],
+                            },
+                        ],
+                    },
+                },
+                filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+                selectedFacilityTypes: [{ facility_type_group_id: 5, facility_type_id: 51, selected: true }],
+            }),
+        ).toEqual({
+            click_campus: 'St Lucia',
+            click_library: 'Central Library',
+            click_active_filters: { study_environment: ['Quiet'] },
+        });
+    });
+
+    it('uses all-campus defaults, empty filter lists, and safely handles unknown selections', () => {
+        expect(getSpacesClickContext()).toEqual({
+            click_campus: null,
+            click_library: null,
+            click_active_filters: {},
+        });
+
+        expect(
+            getSpacesClickContext({
+                selectedCampus: 0,
+                selectedLibrary: 0,
+                facilityTypeList: null,
+                filteredFacilityTypeList: { data: { facility_type_groups: [] } },
+            }),
+        ).toEqual({
+            click_campus: 'All campuses',
+            click_library: 'All libraries',
+            click_active_filters: {},
+        });
+
+        expect(
+            getSpacesClickContext({
+                selectedCampus: 99,
+                campusList: [],
+                selectedLibrary: 99,
+                librariesForCampus: [],
+                facilityTypeList: { data: { facility_type_groups: [] } },
+                filteredFacilityTypeList: null,
+            }),
+        ).toEqual({
+            click_campus: null,
+            click_library: null,
+            click_active_filters: {},
+        });
+    });
 
     beforeAll(() => {
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -517,11 +582,67 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                     page_title: 'Bookable Spaces - UQ Library',
                 },
                 {
+                    event: 'library spaces click',
+                    click_category: 'navigation',
+                    click_action: 'click',
+                    click_space_name: null,
+                    click_campus: 'St Lucia',
+                    click_library: 'Central Library',
+                    click_active_filters: {},
+                    click_label: 'See all spaces',
+                    click_class: 'spaces-journey-showall',
+                    click_url: expect.stringContaining('/spaces/results'),
+                },
+                {
                     event: 'library spaces pageview',
                     page_title: 'Bookable Spaces search results - UQ Library',
                 },
             ]);
         });
+    });
+
+    it('tracks intent card clicks with the clicked label, test id and href', async () => {
+        renderJourney(defaultProps);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
+
+        await waitFor(() => {
+            expect(window.dataLayer).toContainEqual(
+                expect.objectContaining({
+                    event: 'library spaces click',
+                    click_category: 'navigation',
+                    click_action: 'click',
+                    click_space_name: null,
+                    click_campus: 'St Lucia',
+                    click_library: 'Central Library',
+                    click_active_filters: {},
+                    click_label: 'Quiet space',
+                    click_class: 'spaces-journey-intent-card-quiet',
+                    click_url: expect.stringContaining('/spaces/results/quiet'),
+                }),
+            );
+        });
+    });
+
+    it('tracks UQ Maps browse clicks with the current Spaces context', () => {
+        renderJourney(defaultProps);
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-browse-all'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'Browse all library study spaces with UQ Maps',
+                click_class: 'spaces-journey-landing-browse-all',
+                click_url: '/spaces/mapresults',
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
     });
 
     it('tracks login lure clicks with the current Spaces filter context', () => {
@@ -1281,7 +1402,7 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(favouritesToggle).toBeChecked();
     });
 
-    it('clears the journey state when the user chooses see all spaces from the landing page', () => {
+    it('clears the journey state and tracks the landing page see all spaces click', () => {
         const onResetAllFilters = jest.fn();
 
         renderJourney({
@@ -1294,6 +1415,20 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         fireEvent.click(screen.getByRole('link', { name: /see all spaces/i }));
 
         expect(onResetAllFilters).toHaveBeenCalled();
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+                click_label: 'See all spaces',
+                click_class: 'spaces-journey-showall',
+                click_url: expect.stringContaining('/spaces/results'),
+            }),
+        );
     });
 
     it('uses an intent-specific results link for the landing card so a new tab can restore the selected intent', () => {

@@ -89,6 +89,7 @@ export const SpacesQuickLinks = ({
     onIntentLinkNavigate,
     onIntentLinkPersist,
     onSeeAllSpaces,
+    onBrowseAllSpacesClick,
     hasFavourites = false,
 }) => {
     return (
@@ -110,7 +111,7 @@ export const SpacesQuickLinks = ({
                     onClick={e => {
                         e.preventDefault();
                         if (typeof onSeeAllSpaces === 'function') {
-                            onSeeAllSpaces();
+                            onSeeAllSpaces(e);
                         }
                         navigateToView('results');
                     }}
@@ -148,7 +149,7 @@ export const SpacesQuickLinks = ({
                                 showH3
                                 onNavigate={
                                     typeof onIntentLinkNavigate === 'function'
-                                        ? () => onIntentLinkNavigate(intent)
+                                        ? event => onIntentLinkNavigate(event, intent)
                                         : undefined
                                 }
                                 onMouseDown={event => {
@@ -175,7 +176,11 @@ export const SpacesQuickLinks = ({
                     Explore on the map
                 </Typography>
                 <div>
-                    <Link data-testid="spaces-journey-landing-browse-all" to="/spaces/mapresults">
+                    <Link
+                        data-testid="spaces-journey-landing-browse-all"
+                        to="/spaces/mapresults"
+                        onClick={onBrowseAllSpacesClick}
+                    >
                         Browse all library study spaces with UQ Maps
                     </Link>
                 </div>
@@ -222,6 +227,7 @@ SpacesQuickLinks.propTypes = {
     onIntentLinkNavigate: PropTypes.func,
     onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
+    onBrowseAllSpacesClick: PropTypes.func,
 };
 
 export default SpacesQuickLinks;
