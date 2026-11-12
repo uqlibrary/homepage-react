@@ -95,13 +95,29 @@ describe('SpacesQuickLinks', () => {
         expect(defaultProps.navigateToView).toHaveBeenCalledWith('results');
 
         fireEvent.click(screen.getByTestId('spaces-journey-intent-card-quiet'));
-        expect(defaultProps.onIntentLinkNavigate).toHaveBeenCalledWith(expect.objectContaining({ id: 'quiet' }));
+        expect(defaultProps.onIntentLinkNavigate).toHaveBeenCalledWith(
+            expect.objectContaining({ type: 'click' }),
+            expect.objectContaining({ id: 'quiet' }),
+        );
 
         fireEvent.mouseDown(screen.getByTestId('spaces-journey-intent-card-group'), { button: 0 });
         expect(defaultProps.onIntentLinkPersist).toHaveBeenCalledWith(expect.objectContaining({ id: 'group' }));
 
         fireEvent.contextMenu(screen.getByTestId('spaces-journey-intent-card-group'));
         expect(defaultProps.onIntentLinkPersist).toHaveBeenLastCalledWith(expect.objectContaining({ id: 'group' }));
+    });
+
+    it('calls the tracking callback for the UQ Maps browse link', () => {
+        const onBrowseAllSpacesClick = jest.fn();
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks {...defaultProps} onBrowseAllSpacesClick={onBrowseAllSpacesClick} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-journey-landing-browse-all'));
+
+        expect(onBrowseAllSpacesClick).toHaveBeenCalledTimes(1);
     });
 
     it('ignores non-primary mouse button presses while still supporting context-menu persistence', () => {
