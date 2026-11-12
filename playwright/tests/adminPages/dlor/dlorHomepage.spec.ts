@@ -508,7 +508,7 @@ test.describe('Digital Learning Hub admin homepage', () => {
             await expect(page.getByTestId('dlor-homepage-panel-987y-isjgt-9866')).toBeVisible();
 
             // Mock console.error
-            const consoleErrors = [];
+            const consoleErrors: string[] = [];
             page.on('console', msg => {
                 if (msg.type() === 'error') {
                     consoleErrors.push(msg.text());

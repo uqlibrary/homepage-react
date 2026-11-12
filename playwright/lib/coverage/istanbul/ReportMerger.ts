@@ -3,9 +3,16 @@ import type { FullConfig, FullResult, Reporter as Base } from '@playwright/test/
 import fs from 'fs';
 import path from 'path';
 import { CoverageMap, createCoverageMap } from 'istanbul-lib-coverage';
+import type { CoverageMapData, FileCoverageData } from 'istanbul-lib-coverage';
 import { createContext } from 'istanbul-lib-report';
 import { create as createReporter } from 'istanbul-reports';
 import { ReporterDescription } from '@playwright/test';
+
+type CoverageStructure = Pick<FileCoverageData, 'path' | 'statementMap' | 'fnMap' | 'branchMap'> & {
+    hash: string;
+};
+
+type CoverageCounts = Pick<FileCoverageData, 'path' | 's' | 'f' | 'b'> & { hash?: string };
 
 export type Config =
     | {
@@ -72,8 +79,8 @@ export default class ReportMerger implements Base {
 
     // Load the write-once structures (keyed by hash) and rejoin each per-test counts partial
     // ({ [file]: { hash, s, f, b } }) back into full istanbul file coverage before merging.
-    loadStructures(structureDirPath: string): Record<string, Record<string, unknown>> {
-        const structures: Record<string, Record<string, unknown>> = {};
+    loadStructures(structureDirPath: string): Record<string, CoverageStructure> {
+        const structures: Record<string, CoverageStructure> = {};
         if (!fs.existsSync(structureDirPath)) return structures;
         for (const f of fs.readdirSync(structureDirPath).filter(f => f.endsWith('.json'))) {
             const s = JSON.parse(fs.readFileSync(path.join(structureDirPath, f), 'utf-8'));
@@ -83,10 +90,10 @@ export default class ReportMerger implements Base {
     }
 
     rejoin(
-        counts: Record<string, { hash?: string }>,
-        structures: Record<string, Record<string, unknown>>,
-    ): Record<string, unknown> {
-        const full: Record<string, unknown> = {};
+        counts: Record<string, CoverageCounts>,
+        structures: Record<string, CoverageStructure>,
+    ): CoverageMapData {
+        const full: CoverageMapData = {};
         for (const key of Object.keys(counts)) {
             const c = counts[key];
             const structure = c.hash ? structures[c.hash] : undefined;

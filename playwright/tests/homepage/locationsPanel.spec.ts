@@ -186,11 +186,12 @@ test.describe('Locations Panel', () => {
         const panel = page.getByTestId('locations-panel-content');
         const gattonBottom = await panel
             .locator('[data-testid="hours-item-gatton"] a')
-            .evaluate(el => el.getBoundingClientRect().top + el.offsetHeight);
+            .evaluate(el => el.getBoundingClientRect().bottom);
         const lawBox = await panel.locator('[data-testid="hours-item-law"] a').evaluate(el => {
+            const rect = el.getBoundingClientRect();
             return {
-                top: el.getBoundingClientRect().top,
-                bottom: el.getBoundingClientRect().top + el.offsetHeight,
+                top: rect.top,
+                bottom: rect.bottom,
             };
         });
 
@@ -309,18 +310,14 @@ test.describe('Locations Panel', () => {
                     await page.getByTestId('hours-accordion-open').click({ timeout: 2000 });
                     isRetry = true;
                     await expect(
-                        page
-                            .getByTestId('homepage-hours-weeklyhours-link')
-                            .getByText('See all Library and AskUs hours', {
-                                timeout: 2000,
-                            }),
-                    ).toBeVisible();
+                        page.getByTestId('homepage-hours-weeklyhours-link').getByText('See all Library and AskUs hours'),
+                    ).toBeVisible({ timeout: 2000 });
                 }).toPass();
 
                 const utilityBarBottom = await page
                     .getByTestId('hours-accordion-open')
                     .locator('..')
-                    .evaluate(el => el.getBoundingClientRect().top + el.offsetHeight);
+                    .evaluate(el => el.getBoundingClientRect().bottom);
 
                 const locationsPanelTop = await page
                     .getByTestId('locations-panel')
