@@ -144,7 +144,7 @@
         "terser-webpack-plugin": "^5.3.14",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.61.1",
-        "webpack": "^5.107.2",
+        "webpack": "^5.112.2",
         "webpack-cli": "^7.0.3",
         "webpack-dev-server": "^5.2.6"
     },
