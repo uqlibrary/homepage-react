@@ -4,7 +4,6 @@ const { resolve, join } = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const chalk = require('chalk');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -78,6 +77,9 @@ const currentCommitHash = execSync('git rev-parse --short HEAD').toString().trim
 
 const webpackConfig = {
     mode: 'production',
+    experiments: {
+        css: true,
+    },
     // The entry file. All your app roots from here.
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
@@ -88,6 +90,7 @@ const webpackConfig = {
     output: {
         path: resolve(__dirname, './dist/', config.basePath),
         filename: `frontend-js/${currentCommitHash}/[name]-[contenthash].min.js`,
+        cssFilename: `frontend-css/${currentCommitHash}/[name]-[contenthash].min.css`,
         publicPath: config.publicPath,
         // assetModuleFilename: 'images/[hash][ext][query]', // TBD
     },
@@ -135,10 +138,6 @@ const webpackConfig = {
             )} (It took :elapsed seconds to build)\n`,
             clear: false,
         }),
-        new MiniCssExtractPlugin({
-            filename: `frontend-css/${currentCommitHash}/[name]-[contenthash].min.css`,
-        }),
-
         // plugin for passing in data to the js, like what NODE_ENV we are in.
         new webpack.DefinePlugin({
             __DEVELOPMENT__: !process.env.CI_BRANCH, // always production build on CI
@@ -224,8 +223,9 @@ const webpackConfig = {
                 },
             },
             {
-                test: /\.scss/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+                test: /\.s[ac]ss$/i,
+                type: 'css/auto',
+                use: ['sass-loader'],
             },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
