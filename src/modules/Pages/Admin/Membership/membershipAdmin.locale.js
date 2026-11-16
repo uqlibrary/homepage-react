@@ -2,9 +2,10 @@ export default {
     list: {
         title: 'UQ Library Membership Admin',
         pageTitle: 'Membership Admin',
-        frozen:
+        // `when` is the formatted maintenance window (see formatOutageWindow in membershipOutage.js)
+        frozen: when =>
             'The membership backend database is being migrated to a new platform. ' +
-            'Membership applications will be unavailable from 12-2pm AEST Thursday 15th June 2017.',
+            `Membership applications will be unavailable from ${when}.`,
         loading: 'Loading membership applications',
         loadFailed: 'The membership applications could not be loaded. Please try again.',
         retry: 'Try again',

@@ -37,13 +37,15 @@ export default {
         applying: 'Applying..',
         renew: 'Renew membership',
         renewing: 'Renewing..',
-        frozen:
+        // `when` is the formatted maintenance window (see formatOutageWindow in membershipOutage.js)
+        frozen: when =>
             'The membership backend database is being migrated to a new platform. Membership applications will be ' +
-            'unavailable from 12-2pm AEST Thursday 15th June 2017.',
-        paymentGatewayOutage:
-            'The membership payment system is currently unavailable due to a scheduled outage. Alumni and Community ' +
-            'membership applications and renewals will be unavailable from 7:00am-1:00pm AEST Monday 20th January ' +
-            '2025. We apologise for any inconvenience caused.',
+            `unavailable from ${when}.`,
+        // `when` is the formatted outage window (see formatOutageWindow in membershipOutage.js)
+        paymentGatewayOutage: when =>
+            'The membership payment system is currently unavailable due to a scheduled outage. Alumni Friends and ' +
+            `Community membership applications and renewals will be unavailable from ${when}. We apologise for any ` +
+            'inconvenience caused.',
         contactUs: {
             text: 'if you do not receive the confirmation email or require assistance.',
             label: 'Contact us',

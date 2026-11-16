@@ -84,6 +84,21 @@ test.describe('Membership admin list', () => {
         await assertAccessibility(page, '[data-testid="StandardPage"]');
     });
 
+    test('is replaced by a maintenance message during a freeze', async ({ page }) => {
+        await page.addInitScript(
+            value => {
+                window.__MEMBERSHIP_OUTAGE_OVERRIDE__ = value;
+            },
+            { MAINTENANCE_WINDOW: { from: '2099-03-01T02:00Z', to: '2099-03-01T04:00Z' } },
+        );
+        await page.clock.setFixedTime(new Date('2099-03-01T03:00:00Z'));
+
+        await page.goto(`/admin/membership?user=${ADMIN}`);
+
+        await expect(page.getByTestId('membership-admin-frozen')).toBeVisible();
+        await expect(page.getByTestId('membership-list')).toHaveCount(0);
+    });
+
     test('a signed-in user without the membership-admin group is turned away', async ({ page }) => {
         await page.goto('/admin/membership?user=uqstaff');
 

@@ -1,16 +1,16 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, type Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 // The community application form. Runs against the mock server: the form data (account_types, titles) is
 // served by the mock, and a submission is answered with a saved record, landing the applicant on the received
 // page.
 
-const selectOption = async (page, id: string, value: string) => {
+const selectOption = async (page: Page, id: string, value: string) => {
     await page.getByTestId(`${id}-select`).click();
     await page.getByTestId(`${id}-option-${value}`).click();
 };
 
-const fillCommunityForm = async page => {
+const fillCommunityForm = async (page: Page) => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
     await page.getByTestId('sn-input').fill('Lovelace');
@@ -67,7 +67,7 @@ test.describe('Membership application form (community)', () => {
 // type-specific rendering: which sections show, how a section is titled, and — for a type collecting no
 // address — that the postcode helper drops away and a minimal application still submits.
 
-const fillBaseIdentity = async page => {
+const fillBaseIdentity = async (page: Page) => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
     await page.getByTestId('sn-input').fill('Lovelace');
@@ -144,7 +144,7 @@ test.describe('Membership application form (type-specific rendering)', () => {
 // Terms, conditions & privacy consent: the two alumni types must tick a box before applying; every other type
 // agrees by submitting. The privacy notice and policy links show for everyone.
 
-const fillAlumniForm = async page => {
+const fillAlumniForm = async (page: Page) => {
     await fillBaseIdentity(page);
     await page.getByTestId('home_address_0-input').fill('123 Library Way');
     await page.getByTestId('home_address_city-input').fill('Brisbane');
@@ -199,12 +199,27 @@ test.describe('Membership terms & consent', () => {
     });
 });
 
-// Planned outages: both configured windows are in the past, so we move the browser clock into them to prove
-// the form is replaced by the maintenance / gateway-outage message during a window, and shows outside it.
+// Planned outages: rather than track whatever real windows src/.../membershipOutage.js happens to hold (which
+// are edited whenever an outage is scheduled), each test pins its own known window through the mock/e2e-only
+// override and moves the browser clock into it. The real config can change freely without touching these tests.
+
+// A fixed, test owned window and an instant inside it. Any future dates work; they just have to agree.
+const TEST_WINDOW = { from: '2099-03-01T02:00Z', to: '2099-03-01T04:00Z' };
+const DURING_TEST_WINDOW = new Date('2099-03-01T03:00:00Z');
+type MembershipOutageOverride = NonNullable<Window['__MEMBERSHIP_OUTAGE_OVERRIDE__']>;
+
+// Pin the outage window the app reads (via window.__MEMBERSHIP_OUTAGE_OVERRIDE__, honoured only in mock builds)
+// before any page script runs, and freeze the clock inside it.
+const pinOutage = async (page: Page, override: MembershipOutageOverride) => {
+    await page.addInitScript((value: MembershipOutageOverride) => {
+        window.__MEMBERSHIP_OUTAGE_OVERRIDE__ = value;
+    }, override);
+    await page.clock.setFixedTime(DURING_TEST_WINDOW);
+};
 
 test.describe('Membership planned outages', () => {
     test('closes the form for everyone during a maintenance freeze', async ({ page }) => {
-        await page.clock.setFixedTime(new Date('2017-06-15T03:00:00Z'));
+        await pinOutage(page, { MAINTENANCE_WINDOW: TEST_WINDOW });
         await page.goto('/membership/form/community?user=public');
 
         await expect(page.getByTestId('membership-form-frozen')).toBeVisible();
@@ -212,7 +227,7 @@ test.describe('Membership planned outages', () => {
     });
 
     test('turns paying types away during a payment gateway outage, but not free types', async ({ page }) => {
-        await page.clock.setFixedTime(new Date('2025-01-19T22:00:00Z'));
+        await pinOutage(page, { PAYMENT_GATEWAY_OUTAGE: TEST_WINDOW });
 
         await page.goto('/membership/form/community?user=public');
         await expect(page.getByTestId('membership-form-outage')).toBeVisible();

@@ -83,6 +83,12 @@ function check_code_style {
     fi
 }
 
+function run_type_check {
+    set -e
+    printf "\n--- \e[1mRUNNING TYPESCRIPT CHECK\e[0m ---\n"
+    npm run tsc -- --pretty false
+}
+
 function fix_coverage_report_paths() {
     if [[ ! -f "$1" ]]; then
         return 0
@@ -111,6 +117,7 @@ check_code_style
 
 case "$PIPE_NUM" in
 "1")
+    run_type_check
     run_pw_test_shard "$PIPE_NUM"
 ;;
 "2")

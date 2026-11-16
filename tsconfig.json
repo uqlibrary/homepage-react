@@ -1,5 +1,11 @@
 {
     "compilerOptions": {
+        "target": "esnext",
+        "jsx": "react-jsx",
+        "module": "esnext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "strict": true,
@@ -7,11 +13,22 @@
         "checkJs": false,
         "noImplicitAny": true,
         "noEmit": true,
+        "baseUrl": "./src",
         "paths": {
-            "@uq/pw/*": ["playwright/*"]
+            "@uq/pw/*": ["../playwright/*"],
+            "utils": ["../utils"],
+            "utils/*": ["../utils/*"]
         },
-        "include": ["playwright.config.ts", "playwright/**/*.spec.ts"],
-        "exclude": ["chrome/**/**"],
-        "jsx": "react"
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["es2016", "dom"]
     },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "utils/**/*.ts",
+        "playwright/**/*.ts",
+        "playwright.config.ts",
+        "playwright-slow-tests.ts"
+    ],
+    "exclude": ["node_modules"]
 }

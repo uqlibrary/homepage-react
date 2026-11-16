@@ -1,4 +1,4 @@
-import { test, expect } from '@uq/pw/test';
+import { test, expect, type Page } from '@uq/pw/test';
 import { assertAccessibility } from '@uq/pw/lib/axe';
 
 // The payment gateway's return leg. By the time the applicant lands here the money has changed hands; the page
@@ -7,12 +7,12 @@ import { assertAccessibility } from '@uq/pw/lib/axe';
 const RETURN_QUERY =
     '?UQ_LIB_ID=00000000-0000-0000-0000-000000000123&ReceiptNo=R123456&MembershipCode=COM&Success=Y&AmountPaid=25.00';
 
-const selectOption = async (page, id: string, value: string) => {
+const selectOption = async (page: Page, id: string, value: string) => {
     await page.getByTestId(`${id}-select`).click();
     await page.getByTestId(`${id}-option-${value}`).click();
 };
 
-const fillCommunityForm = async page => {
+const fillCommunityForm = async (page: Page) => {
     await selectOption(page, 'title', 'Ms');
     await page.getByTestId('first_name-input').fill('Ada');
     await page.getByTestId('sn-input').fill('Lovelace');
