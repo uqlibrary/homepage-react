@@ -240,5 +240,39 @@ describe('SpacesQuickLinks', () => {
             'href',
             'https://web.library.uq.edu.au/visit/all-opening-hours',
         );
+        expect(screen.getByTestId('spaces-info-booking')).toHaveAttribute(
+            'href',
+            'https://web.library.uq.edu.au/visit/using-library-study-spaces#bookings',
+        );
+        expect(screen.getByTestId('spaces-info-guide')).toHaveAttribute(
+            'href',
+            'https://web.library.uq.edu.au/visit/using-library-study-spaces',
+        );
+        expect(screen.getByTestId('spaces-info-facilities')).toHaveAttribute(
+            'href',
+            'https://web.library.uq.edu.au/visit/library-facilities',
+        );
+        expect(screen.getByTestId('spaces-info-accessibility')).toHaveAttribute(
+            'href',
+            'https://web.library.uq.edu.au/study-and-learning-support/support-clients-disability',
+        );
+    });
+
+    it('forwards GridOfLinks clicks through the Spaces landing-page callback', () => {
+        const onGridLinkClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute(
+                'href',
+                'https://web.library.uq.edu.au/study-and-learning-support/support-clients-disability',
+            );
+        });
+        rtlRender(
+            <WithRouter route="/" initialEntries={['/']}>
+                <SpacesQuickLinks {...defaultProps} onGridLinkClick={onGridLinkClick} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-info-accessibility'));
+
+        expect(onGridLinkClick).toHaveBeenCalledTimes(1);
     });
 });

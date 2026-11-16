@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 
@@ -47,6 +47,38 @@ describe('GridOfLinks', () => {
 
         const fallbackLink = screen.getByRole('link', { name: 'Fallback route' });
         expect(fallbackLink).toBeInTheDocument();
+    });
+
+    it('sets supplied test IDs and forwards clicks for external and internal links', () => {
+        const onLinkClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('data-click-label');
+        });
+        rtlRender(
+            <WithRouter>
+                <GridOfLinks
+                    onLinkClick={onLinkClick}
+                    links={[
+                        {
+                            key: 'external',
+                            label: 'External resource',
+                            href: 'https://example.com/resource',
+                            testId: 'spaces-info-external',
+                        },
+                        {
+                            key: 'internal',
+                            label: 'Internal resource',
+                            to: '/spaces/results',
+                            testId: 'spaces-info-internal',
+                        },
+                    ]}
+                />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('spaces-info-external'));
+        fireEvent.click(screen.getByTestId('spaces-info-internal'));
+
+        expect(onLinkClick).toHaveBeenCalledTimes(2);
     });
 
     it('does not render a title or links when the section is empty', () => {
