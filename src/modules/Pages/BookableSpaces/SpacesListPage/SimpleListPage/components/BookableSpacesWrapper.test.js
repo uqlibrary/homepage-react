@@ -1437,6 +1437,57 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         expect(favouritesToggle).toBeChecked();
     });
 
+    it('tracks the see-all-favourites click with the current Spaces context', () => {
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-homepage-favourites-all-link'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'See all favourites',
+                click_class: 'spaces-homepage-favourites-all-link',
+                click_url: expect.stringContaining('/spaces/results'),
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+        expect(screen.getByTestId('bookable-spaces-journey-results-view')).toBeInTheDocument();
+    });
+
+    it('tracks favourite space clicks with the displayed name and current Spaces context', () => {
+        renderJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-journey-favourite-card-1'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Silent study Space999',
+                click_class: 'spaces-journey-favourite-card-1',
+                click_url: expect.stringContaining(`/spaces/detail/${baseSpace.space_uuid}`),
+                click_space_name: 'Silent study Space999',
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+    });
+
     it('clears the journey state and tracks the landing page see all spaces click', () => {
         const onResetAllFilters = jest.fn();
 

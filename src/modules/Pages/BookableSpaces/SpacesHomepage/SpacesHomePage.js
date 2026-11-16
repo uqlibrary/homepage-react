@@ -132,6 +132,8 @@ export const SpacesHomePage = ({
     navigateToView,
     activateFavouritesResults,
     onSeeAllSpaces,
+    onSeeAllFavouritesClick,
+    onFavouriteSpaceClick,
     onBrowseAllSpacesClick,
     onGridLinkClick,
     onLoginClick,
@@ -200,6 +202,8 @@ export const SpacesHomePage = ({
                             spacesFavouritesList={spacesFavouritesList}
                             selectedIntentId={selectedIntentId}
                             setSelectedSpace={setSelectedSpace}
+                            onSeeAllFavouritesClick={onSeeAllFavouritesClick}
+                            onFavouriteSpaceClick={onFavouriteSpaceClick}
                             findSpaceById={findSpaceById}
                             getSpaceIdentifier={getSpaceIdentifier}
                         />
@@ -243,6 +247,8 @@ SpacesHomePage.propTypes = {
     onIntentLinkNavigate: PropTypes.func,
     onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
+    onSeeAllFavouritesClick: PropTypes.func,
+    onFavouriteSpaceClick: PropTypes.func,
     onBrowseAllSpacesClick: PropTypes.func,
     onGridLinkClick: PropTypes.func,
     onLoginClick: PropTypes.func,
