@@ -133,6 +133,7 @@ export const SpacesHomePage = ({
     activateFavouritesResults,
     onSeeAllSpaces,
     onBrowseAllSpacesClick,
+    onGridLinkClick,
     onLoginClick,
     setSelectedSpace,
     setSelectedIntentId,
@@ -213,6 +214,7 @@ export const SpacesHomePage = ({
                         onIntentLinkPersist={onIntentLinkPersist}
                         onSeeAllSpaces={onSeeAllSpaces}
                         onBrowseAllSpacesClick={onBrowseAllSpacesClick}
+                        onGridLinkClick={onGridLinkClick}
                         hasFavourites={hasFavourites}
                     />
                 </StandardPage>
@@ -242,6 +244,7 @@ SpacesHomePage.propTypes = {
     onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
     onBrowseAllSpacesClick: PropTypes.func,
+    onGridLinkClick: PropTypes.func,
     onLoginClick: PropTypes.func,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,

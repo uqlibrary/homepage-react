@@ -967,7 +967,47 @@ const BookableSpacesWrapper = ({
             });
 
             trackSpacesNavigationClick({
-                click_label: link.textContent.trim(),
+                click_label: link.getAttribute('data-click-label'),
+                click_class: link.getAttribute('data-testid'),
+                click_url: link.getAttribute('href'),
+                click_space_name: null,
+                ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
+    const handleGridLinkClick = React.useCallback(
+        event => {
+            const link = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesNavigationClick({
+                click_label: link.getAttribute('data-click-label'),
                 click_class: link.getAttribute('data-testid'),
                 click_url: link.getAttribute('href'),
                 click_space_name: null,
@@ -1284,6 +1324,7 @@ const BookableSpacesWrapper = ({
                     }}
                     onSeeAllSpaces={handleSeeAllSpaces}
                     onBrowseAllSpacesClick={handleBrowseAllSpacesClick}
+                    onGridLinkClick={handleGridLinkClick}
                     onLoginClick={handleLoginPromptClick}
                     goToLegacyBrowse={goToLegacyBrowse}
                     weeklyHours={weeklyHours}

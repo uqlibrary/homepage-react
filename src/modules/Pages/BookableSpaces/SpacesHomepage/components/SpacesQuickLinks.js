@@ -90,6 +90,7 @@ export const SpacesQuickLinks = ({
     onIntentLinkPersist,
     onSeeAllSpaces,
     onBrowseAllSpacesClick,
+    onGridLinkClick,
     hasFavourites = false,
 }) => {
     return (
@@ -178,6 +179,7 @@ export const SpacesQuickLinks = ({
                 <div>
                     <Link
                         data-testid="spaces-journey-landing-browse-all"
+                        data-click-label="Browse all library study spaces with UQ Maps"
                         to="/spaces/mapresults"
                         onClick={onBrowseAllSpacesClick}
                     >
@@ -188,29 +190,35 @@ export const SpacesQuickLinks = ({
 
             <GridOfLinks
                 title="Using library spaces"
+                onLinkClick={onGridLinkClick}
                 links={[
                     {
                         key: 'book-space',
+                        testId: 'spaces-info-booking',
                         label: 'Book a library study space',
                         href: 'https://web.library.uq.edu.au/visit/using-library-study-spaces#bookings',
                     },
                     {
                         key: 'using-spaces',
+                        testId: 'spaces-info-guide',
                         label: 'Using library spaces',
                         href: 'https://web.library.uq.edu.au/visit/using-library-study-spaces',
                     },
                     {
                         key: 'opening-hours',
+                        testId: 'spaces-info-hours',
                         label: 'Opening hours',
                         href: 'https://web.library.uq.edu.au/visit/all-opening-hours',
                     },
                     {
                         key: 'about-facilities',
+                        testId: 'spaces-info-facilities',
                         label: 'About our facilities',
                         href: 'https://web.library.uq.edu.au/visit/library-facilities',
                     },
                     {
                         key: 'support-accessibility',
+                        testId: 'spaces-info-accessibility',
                         label: 'Support for clients with disability',
                         href: 'https://web.library.uq.edu.au/study-and-learning-support/support-clients-disability',
                     },
@@ -227,6 +235,7 @@ SpacesQuickLinks.propTypes = {
     onIntentLinkNavigate: PropTypes.func,
     onIntentLinkPersist: PropTypes.func,
     onSeeAllSpaces: PropTypes.func,
+    onGridLinkClick: PropTypes.func,
     onBrowseAllSpacesClick: PropTypes.func,
 };
 

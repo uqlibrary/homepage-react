@@ -645,6 +645,41 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         );
     });
 
+    it('tracks each landing-page information link with its ID and Spaces context', () => {
+        renderJourney(defaultProps);
+
+        const informationLinks = [
+            ['spaces-info-booking', 'Book a library study space', '/visit/using-library-study-spaces#bookings'],
+            ['spaces-info-guide', 'Using library spaces', '/visit/using-library-study-spaces'],
+            ['spaces-info-hours', 'Opening hours', '/visit/all-opening-hours'],
+            ['spaces-info-facilities', 'About our facilities', '/visit/library-facilities'],
+            [
+                'spaces-info-accessibility',
+                'Support for clients with disability',
+                '/study-and-learning-support/support-clients-disability',
+            ],
+        ];
+
+        informationLinks.forEach(([testId, label, url]) => {
+            fireEvent.click(screen.getByTestId(testId));
+
+            expect(window.dataLayer).toContainEqual(
+                expect.objectContaining({
+                    event: 'library spaces click',
+                    click_category: 'navigation',
+                    click_action: 'click',
+                    click_label: label,
+                    click_class: testId,
+                    click_url: expect.stringContaining(url),
+                    click_space_name: null,
+                    click_campus: 'St Lucia',
+                    click_library: 'Central Library',
+                    click_active_filters: {},
+                }),
+            );
+        });
+    });
+
     it('tracks login lure clicks with the current Spaces filter context', () => {
         renderJourney({
             ...defaultProps,

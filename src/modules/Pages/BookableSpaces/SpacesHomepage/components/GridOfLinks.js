@@ -77,7 +77,7 @@ const StyledLink = styled(Link)(({ theme }) => linkStyles({ theme }));
 
 const StyledAnchor = styled('a')(({ theme }) => linkStyles({ theme }));
 
-export const GridOfLinks = ({ title, links }) => {
+export const GridOfLinks = ({ title, links, onLinkClick }) => {
     return (
         <StyledGridOfLinks>
             {title && (
@@ -108,11 +108,25 @@ export const GridOfLinks = ({ title, links }) => {
                     return (
                         <StyledListItem key={link.key || label}>
                             {link.href ? (
-                                <StyledAnchor href={link.href} target={link.target} rel={link.rel}>
+                                <StyledAnchor
+                                    href={link.href}
+                                    target={link.target}
+                                    rel={link.rel}
+                                    data-testid={link.testId}
+                                    data-click-label={label}
+                                    onClick={onLinkClick}
+                                >
                                     {content}
                                 </StyledAnchor>
                             ) : (
-                                <StyledLink to={link.to || '#'}>{content}</StyledLink>
+                                <StyledLink
+                                    to={link.to || '#'}
+                                    data-testid={link.testId}
+                                    data-click-label={label}
+                                    onClick={onLinkClick}
+                                >
+                                    {content}
+                                </StyledLink>
                             )}
                         </StyledListItem>
                     );
@@ -124,10 +138,12 @@ export const GridOfLinks = ({ title, links }) => {
 
 GridOfLinks.propTypes = {
     title: PropTypes.string,
+    onLinkClick: PropTypes.func,
     links: PropTypes.arrayOf(
         PropTypes.shape({
             key: PropTypes.string,
             label: PropTypes.string.isRequired,
+            testId: PropTypes.string,
             to: PropTypes.string,
             href: PropTypes.string,
             target: PropTypes.string,
