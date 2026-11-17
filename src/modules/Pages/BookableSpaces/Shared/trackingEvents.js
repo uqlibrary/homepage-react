@@ -5,10 +5,13 @@ const event = {
 
 const category = {
     NAVIGATION: 'navigation',
+    SPACE: 'space',
 };
 
 const action = {
     CLICK: 'click',
+    SELECT: 'select',
+    DESELECT: 'deselect',
 };
 
 export { event, category, action };

@@ -182,4 +182,33 @@ describe('SpacesFavouriteIcon', () => {
         await waitFor(() => expect(actions.removeSpaceFavourite).toHaveBeenCalledWith(15));
         expect(displayToastMessage).toHaveBeenCalledWith('Space removed from favourites');
     });
+
+    it('reports the current favourite state and accessible label to the click handler', () => {
+        const onFavouriteToggleClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('aria-label', 'Unfavourite space');
+        });
+        const actions = {
+            removeSpaceFavourite: jest.fn().mockResolvedValue(),
+        };
+
+        rtlRender(
+            <SpacesFavouriteIcon
+                actions={actions}
+                bookableSpace={{ space_id: 15, space_name: '342' }}
+                isFavourite
+                ariaLabel="Unfavourite space"
+                onFavouriteToggleClick={onFavouriteToggleClick}
+            />,
+        );
+
+        fireEvent.click(screen.getByTestId('space-15-detail-unfavourite'));
+
+        expect(onFavouriteToggleClick).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                bookableSpace: { space_id: 15, space_name: '342' },
+                isFavourite: true,
+            }),
+        );
+    });
 });

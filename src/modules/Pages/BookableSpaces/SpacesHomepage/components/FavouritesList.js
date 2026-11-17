@@ -45,6 +45,9 @@ export const FavouritesList = ({
     spacesFavouritesList,
     selectedIntentId,
     setSelectedSpace,
+    onSeeAllFavouritesClick,
+    onFavouriteToggleClick,
+    onFavouriteSpaceClick,
     findSpaceById,
     getSpaceIdentifier,
 }) => {
@@ -102,6 +105,7 @@ export const FavouritesList = ({
                         })}
                         onClick={e => {
                             e.preventDefault();
+                            onSeeAllFavouritesClick?.(e);
                             setSelectedIntentId(favouriteIntentDefinition.id);
                             activateFavouritesResults();
                         }}
@@ -160,7 +164,11 @@ export const FavouritesList = ({
                                     fillContainer
                                     ariaLabel={`View details for Space ${space?.space_name} in ${space?.space_library_name}`}
                                     showH3
-                                    onClick={() => {
+                                    onClick={event => {
+                                        onFavouriteSpaceClick?.(event, {
+                                            space,
+                                            spaceName: displayedSpaceName,
+                                        });
                                         if (space) {
                                             setSelectedSpace(space);
                                             navigateToView('details', {
@@ -192,6 +200,7 @@ export const FavouritesList = ({
                                             isFavourite
                                             iconPosition="topLeft"
                                             ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
+                                            onFavouriteToggleClick={onFavouriteToggleClick}
                                         />
                                     }
                                 />
@@ -214,6 +223,9 @@ FavouritesList.propTypes = {
     spacesFavouritesList: PropTypes.any,
     selectedIntentId: PropTypes.any,
     setSelectedSpace: PropTypes.any,
+    onSeeAllFavouritesClick: PropTypes.func,
+    onFavouriteToggleClick: PropTypes.func,
+    onFavouriteSpaceClick: PropTypes.func,
     activateFavouritesResults: PropTypes.func,
     findSpaceById: PropTypes.any,
     getSpaceIdentifier: PropTypes.any,
