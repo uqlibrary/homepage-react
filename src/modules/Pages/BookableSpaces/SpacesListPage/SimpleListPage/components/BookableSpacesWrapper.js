@@ -30,57 +30,17 @@ import {
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import {
     buildSpacesActiveFilters,
+    getSpacesClickContext,
+    getSpacesSpaceName,
+    trackSpacesFavouriteClick,
     trackSpacesNavigationClick,
     trackSpacesPageView,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
+export { getSpacesClickContext } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
+
 // const journeyFallbackImage = require('../../../../../../../public/images/spaces/hero-jk-murray-library-gatton-students-outdoor-study.jpg');
-
-export const getSpacesClickContext = ({
-    selectedCampus,
-    campusList,
-    selectedLibrary,
-    librariesForCampus,
-    facilityTypeList,
-    filteredFacilityTypeList,
-    selectedFacilityTypes,
-    capacityFilterValue,
-    minimumSpaceCapacity,
-    maximumSpaceCapacity,
-    showFavouriteSpacesOnly,
-} = {}) => {
-    const selectedCampusName =
-        Number(selectedCampus) === 0
-            ? 'All campuses'
-            : campusList?.find(campus => Number(campus.campus_id) === Number(selectedCampus))?.campus_name || null;
-    const selectedLibraryName =
-        Number(selectedLibrary) === 0
-            ? 'All libraries'
-            : librariesForCampus?.find(library => Number(library.library_id) === Number(selectedLibrary))
-                  ?.library_name || null;
-    const facilityTypeGroups = [
-        ...(Array.isArray(facilityTypeList?.data?.facility_type_groups)
-            ? facilityTypeList.data.facility_type_groups
-            : []),
-        ...(Array.isArray(filteredFacilityTypeList?.data?.facility_type_groups)
-            ? filteredFacilityTypeList.data.facility_type_groups
-            : []),
-    ];
-
-    return {
-        click_campus: selectedCampusName,
-        click_library: selectedLibraryName,
-        click_active_filters: buildSpacesActiveFilters({
-            facilityTypeGroups,
-            selectedFacilityTypes,
-            capacityFilterValue,
-            minimumSpaceCapacity,
-            maximumSpaceCapacity,
-            showFavouriteSpacesOnly,
-        }),
-    };
-};
 
 const intentDefinitions = [
     {
@@ -1110,6 +1070,47 @@ const BookableSpacesWrapper = ({
         ],
     );
 
+    const handleFavouriteToggleClick = React.useCallback(
+        (event, { bookableSpace, isFavourite }) => {
+            const button = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesFavouriteClick({
+                isFavourite,
+                click_label: button.getAttribute('aria-label'),
+                click_class: button.getAttribute('data-testid'),
+                click_url: null,
+                click_space_name: getSpacesSpaceName(bookableSpace),
+                ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
     const getIntentLandingUrl = React.useCallback(intent => {
         const intentId = intent?.id;
         /* istanbul ignore next */
@@ -1405,6 +1406,7 @@ const BookableSpacesWrapper = ({
                     }}
                     onSeeAllSpaces={handleSeeAllSpaces}
                     onSeeAllFavouritesClick={handleSeeAllFavouritesClick}
+                    onFavouriteToggleClick={handleFavouriteToggleClick}
                     onFavouriteSpaceClick={handleFavouriteSpaceClick}
                     onBrowseAllSpacesClick={handleBrowseAllSpacesClick}
                     onGridLinkClick={handleGridLinkClick}
@@ -1474,6 +1476,7 @@ const BookableSpacesWrapper = ({
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         spacesFavouritesList={spacesFavouritesList}
+                        onFavouriteToggleClick={handleFavouriteToggleClick}
                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                         setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                         onResetAllFilters={onResetAllFilters}

@@ -35,12 +35,20 @@ export const SpacesFavouriteIcon = ({
     iconPosition,
     ariaLabel,
     isDetailPage = false,
+    onFavouriteToggleClick,
 }) => {
     const { account } = useAccountContext();
     const isLoggedIn = !!account?.id;
     const theme = useTheme();
 
     const [isFavouriteActionInProgress, setIsFavouriteActionInProgress] = React.useState(false);
+    const displaySpaceName =
+        [bookableSpace?.space_type_details?.space_type_name, bookableSpace?.space_name].filter(Boolean).join(' ') ||
+        String(bookableSpace?.space_id || '');
+    const favouriteLabel = ariaLabel || 'Add to Favourites';
+    const unfavouriteLabel =
+        ariaLabel ||
+        `Unfavourite Space ${displaySpaceName}${bookableSpace?.space_library_name ? ` in ${bookableSpace.space_library_name}` : ''}`;
 
     const onFavouriteToggle = async (actionType, spaceId) => {
         // matching name of action in object key for easy lookup
@@ -68,6 +76,16 @@ export const SpacesFavouriteIcon = ({
         }
     };
 
+    const handleFavouriteClick = event => {
+        onFavouriteToggleClick?.(event, { bookableSpace, isFavourite });
+        onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id);
+    };
+
+    const handleUnfavouriteClick = event => {
+        onFavouriteToggleClick?.(event, { bookableSpace, isFavourite });
+        onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id);
+    };
+
     if (!isLoggedIn) {
         return null;
     }
@@ -87,10 +105,11 @@ export const SpacesFavouriteIcon = ({
 
     if (isFavourite) {
         return (
-            <StyledTooltip title={ariaLabel ? `${ariaLabel}` : 'Remove from Favourites'} arrow className={iconPosition}>
+            <StyledTooltip title={unfavouriteLabel} arrow className={iconPosition}>
                 <IconButton
-                    onClick={() => onFavouriteToggle('removeSpaceFavourite', bookableSpace?.space_id)}
+                    onClick={handleUnfavouriteClick}
                     data-testid={`space-${bookableSpace?.space_id}-detail-unfavourite`}
+                    aria-label={unfavouriteLabel}
                     size="large"
                 >
                     <StarIcon
@@ -107,10 +126,10 @@ export const SpacesFavouriteIcon = ({
     }
 
     return (
-        <StyledTooltip title="Add to Favourites" arrow className={iconPosition}>
+        <StyledTooltip title={favouriteLabel} arrow className={iconPosition}>
             <IconButton
-                onClick={() => onFavouriteToggle('addSpaceFavourite', bookableSpace?.space_id)}
-                aria-label="Add to Favourites"
+                onClick={handleFavouriteClick}
+                aria-label={favouriteLabel}
                 data-testid={`space-${bookableSpace?.space_id}-detail-favourite`}
                 size="large"
             >
@@ -133,5 +152,6 @@ SpacesFavouriteIcon.propTypes = {
     isDetailPage: PropTypes.bool,
     iconPosition: PropTypes.any,
     ariaLabel: PropTypes.string,
+    onFavouriteToggleClick: PropTypes.func,
 };
 export default SpacesFavouriteIcon;

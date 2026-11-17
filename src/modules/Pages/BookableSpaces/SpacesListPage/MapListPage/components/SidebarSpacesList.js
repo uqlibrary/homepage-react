@@ -50,6 +50,7 @@ const SidebarSpacesList = ({
     StyledStandardCard,
     suppliedClassName = null,
     spacesFavouritesList = null,
+    onFavouriteToggleClick,
     onSpaceSelect = null,
     onSpaceToggle = null,
     expandedSpaceId = null,
@@ -108,6 +109,7 @@ const SidebarSpacesList = ({
                                             isFavourite={spacesFavouritesList?.some(
                                                 fav => fav.space_id === bookableSpace?.space_id,
                                             )}
+                                            onFavouriteToggleClick={onFavouriteToggleClick}
                                         />
                                         <span
                                             className="spaceTitle"
@@ -165,6 +167,7 @@ SidebarSpacesList.propTypes = {
     StyledStandardCard: PropTypes.any,
     suppliedClassName: PropTypes.string,
     spacesFavouritesList: PropTypes.any,
+    onFavouriteToggleClick: PropTypes.func,
     onSpaceSelect: PropTypes.func,
     onSpaceToggle: PropTypes.func,
     expandedSpaceId: PropTypes.number,

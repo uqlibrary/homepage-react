@@ -219,6 +219,49 @@ describe('BookableSpacesList campus selection', () => {
         expect(latestSidebarProps.selectedCampus).toBe(0);
     });
 
+    it('tracks favourite toggles from the map results space list', async () => {
+        delete window.dataLayer;
+        useAccountContext.mockReturnValue({ account: { id: 42 } });
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarListRender).toHaveBeenCalled());
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+        const button = {
+            getAttribute: attribute =>
+                ({
+                    'aria-label': 'Unfavourite Space St Lucia space in Central Library',
+                    'data-testid': 'space-101-detail-unfavourite',
+                })[attribute] || null,
+        };
+
+        latestSidebarListProps.onFavouriteToggleClick(
+            { currentTarget: button },
+            { bookableSpace: baseProps.bookableSpacesRoomList.data.locations[0], isFavourite: true },
+        );
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'deselect',
+                click_label: 'Unfavourite Space St Lucia space in Central Library',
+                click_class: 'space-101-detail-unfavourite',
+                click_url: null,
+                click_space_name: 'St Lucia space',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+
+        useAccountContext.mockReturnValue({ account: null });
+    });
+
     it('uses default view and handles unavailable room and article data while loading', () => {
         const props = {
             ...baseProps,

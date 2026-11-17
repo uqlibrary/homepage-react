@@ -28,6 +28,11 @@ import { useAccountContext } from 'context';
 import BookableSpacesWrapper from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/BookableSpacesWrapper';
 import { StyledFilterShowHideButton } from 'modules/Pages/BookableSpaces/SpacesListPage/SimpleListPage/components/journeyViewStyles';
 import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/SidebarSpacesList';
+import {
+    getSpacesClickContext,
+    getSpacesSpaceName,
+    trackSpacesFavouriteClick,
+} from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
 import SidebarFilters from 'modules/Pages/BookableSpaces/Shared/SidebarFilters';
@@ -1687,6 +1692,47 @@ export const BookableSpacesList = ({
         (activeSelectedFacilityTypes?.length || 0) +
         (showFavouriteSpacesOnly ? 1 : 0) +
         (hasActiveCapacityFilter ? 1 : 0);
+    const handleFavouriteToggleClick = React.useCallback(
+        (event, { bookableSpace, isFavourite }) => {
+            const button = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus: correctedCampusId(selectedCampus),
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesFavouriteClick({
+                isFavourite,
+                click_label: button.getAttribute('aria-label'),
+                click_class: button.getAttribute('data-testid'),
+                click_url: null,
+                click_space_name: getSpacesSpaceName(bookableSpace),
+                ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            correctedCampusId,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
     const mapViewToggleLabel = 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
         const validHighlightedSpaces =
@@ -1769,6 +1815,7 @@ export const BookableSpacesList = ({
                             showFavouriteSpacesOnly={showFavouriteSpacesOnly}
                             setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
                             onResetAllFilters={resetAllSpaceFilters}
+                            onFavouriteToggleClick={handleFavouriteToggleClick}
                             hasFavouriteSpaces={(spacesFavouritesList || []).length > 0}
                             hasJourneyMapFilterState={false}
                         />
@@ -1894,6 +1941,7 @@ export const BookableSpacesList = ({
                                                 }
                                                 spacesFavouritesList={spacesFavouritesList}
                                                 isLoggedIn={isLoggedIn}
+                                                onFavouriteToggleClick={handleFavouriteToggleClick}
                                                 onSpaceSelect={handleSpaceSelect}
                                                 onSpaceToggle={handleSpaceToggle}
                                                 expandedSpaceId={expandedSpaceId}

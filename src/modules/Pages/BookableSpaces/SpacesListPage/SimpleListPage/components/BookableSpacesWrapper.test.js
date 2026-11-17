@@ -4,6 +4,7 @@ import MockDate from 'mockdate';
 import { waitFor } from '@testing-library/react';
 
 import { fireEvent, rtlRender, screen, WithRouter } from 'test-utils';
+import { AccountContext } from 'context';
 
 if (typeof globalThis.Request === 'undefined') {
     globalThis.Request = class Request {
@@ -532,6 +533,15 @@ describe('BookableSpacesWrapper browser back navigation', () => {
             </WithRouter>,
         );
     };
+
+    const renderLoggedInJourney = (props, route = '/spaces') =>
+        rtlRender(
+            <AccountContext.Provider value={{ account: { id: 42 } }}>
+                <WithRouter route="*" initialEntries={[route]}>
+                    <BookableSpacesWrapper {...props} />
+                </WithRouter>
+            </AccountContext.Provider>,
+        );
 
     it('skips hydrated journey state when both the route and storage are empty', () => {
         const parseSpy = jest.spyOn(spacesHelpers, 'parseJourneyStateFromUrl').mockReturnValue(null);
@@ -1480,6 +1490,62 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 click_label: 'Silent study Space999',
                 click_class: 'spaces-journey-favourite-card-1',
                 click_url: expect.stringContaining(`/spaces/detail/${baseSpace.space_uuid}`),
+                click_space_name: 'Silent study Space999',
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+    });
+
+    it('tracks unfavouriting a landing-page favourite with the space context', () => {
+        renderLoggedInJourney({
+            ...defaultProps,
+            isLoggedIn: true,
+            actions: { removeSpaceFavourite: jest.fn().mockResolvedValue() },
+            spacesFavouritesList: [{ space_id: baseSpace.space_id, label: 'Space999' }],
+        });
+
+        fireEvent.click(screen.getByTestId('space-101-detail-unfavourite'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'deselect',
+                click_label: 'Unfavourite Space Space999 in Central Library',
+                click_class: 'space-101-detail-unfavourite',
+                click_url: null,
+                click_space_name: 'Silent study Space999',
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+    });
+
+    it('tracks favouriting a space in journey search results', () => {
+        renderLoggedInJourney(
+            {
+                ...defaultProps,
+                isLoggedIn: true,
+                initialView: 'results',
+                actions: { addSpaceFavourite: jest.fn().mockResolvedValue() },
+                spacesFavouritesList: [],
+            },
+            '/spaces/results',
+        );
+
+        fireEvent.click(screen.getByTestId('space-101-detail-favourite'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'select',
+                click_label: 'Add to Favourites',
+                click_class: 'space-101-detail-favourite',
+                click_url: null,
                 click_space_name: 'Silent study Space999',
                 click_campus: 'St Lucia',
                 click_library: 'Central Library',

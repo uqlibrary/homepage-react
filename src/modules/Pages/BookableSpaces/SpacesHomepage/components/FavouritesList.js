@@ -46,6 +46,7 @@ export const FavouritesList = ({
     selectedIntentId,
     setSelectedSpace,
     onSeeAllFavouritesClick,
+    onFavouriteToggleClick,
     onFavouriteSpaceClick,
     findSpaceById,
     getSpaceIdentifier,
@@ -199,6 +200,7 @@ export const FavouritesList = ({
                                             isFavourite
                                             iconPosition="topLeft"
                                             ariaLabel={`Unfavourite Space ${space?.space_name} in ${space?.space_library_name}`}
+                                            onFavouriteToggleClick={onFavouriteToggleClick}
                                         />
                                     }
                                 />
@@ -222,6 +224,7 @@ FavouritesList.propTypes = {
     selectedIntentId: PropTypes.any,
     setSelectedSpace: PropTypes.any,
     onSeeAllFavouritesClick: PropTypes.func,
+    onFavouriteToggleClick: PropTypes.func,
     onFavouriteSpaceClick: PropTypes.func,
     activateFavouritesResults: PropTypes.func,
     findSpaceById: PropTypes.any,

@@ -105,6 +105,7 @@ export const JourneyResultsView = ({
     weeklyHoursLoading,
     weeklyHoursError,
     spacesFavouritesList,
+    onFavouriteToggleClick,
     showFavouriteSpacesOnly,
     setShowFavouriteSpacesOnly,
     isLoggedIn,
@@ -323,6 +324,7 @@ export const JourneyResultsView = ({
                                                 isFavourite={spacesFavouritesList?.some(
                                                     fav => fav.space_id === space?.space_id,
                                                 )}
+                                                onFavouriteToggleClick={onFavouriteToggleClick}
                                                 // onFavouriteToggle={() => onFavouriteToggle?.(space)}
                                                 iconPosition="topLeft"
                                             />
@@ -440,6 +442,7 @@ JourneyResultsView.propTypes = {
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
+    onFavouriteToggleClick: PropTypes.func,
     showFavouriteSpacesOnly: PropTypes.bool,
     setShowFavouriteSpacesOnly: PropTypes.func,
     isLoggedIn: PropTypes.bool,

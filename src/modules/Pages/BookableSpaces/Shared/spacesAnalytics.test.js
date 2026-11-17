@@ -1,4 +1,21 @@
-import { buildSpacesActiveFilters, trackSpacesNavigationClick, trackSpacesPageView } from './spacesAnalytics';
+import {
+    buildSpacesActiveFilters,
+    getSpacesSpaceName,
+    trackSpacesNavigationClick,
+    trackSpacesPageView,
+} from './spacesAnalytics';
+
+describe('getSpacesSpaceName', () => {
+    it('builds the displayed space name and returns null when no name is available', () => {
+        expect(
+            getSpacesSpaceName({
+                space_type_details: { space_type_name: 'Communal space' },
+                space_name: '342',
+            }),
+        ).toBe('Communal space 342');
+        expect(getSpacesSpaceName({})).toBeNull();
+    });
+});
 
 describe('trackSpacesPageView', () => {
     beforeEach(() => {
