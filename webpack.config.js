@@ -22,6 +22,9 @@ const publicPath = '';
 
 module.exports = {
     mode: 'development',
+    experiments: {
+        css: true,
+    },
     context: resolve(__dirname),
     // Source maps off under e2e (PW_IS_RUNNING) to save dev-server memory and build time; istanbul maps
     // coverage to source via the instrumentation itself, so no webpack source map is needed under cc.
@@ -107,15 +110,10 @@ module.exports = {
                 },
             },
             {
-                test: /\.css/,
-                use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.scss|\.styl/,
+                test: /\.s[ac]ss$/i,
                 include: [resolve(__dirname, 'src')],
+                type: 'css/auto',
                 use: [
-                    'style-loader',
-                    'css-loader',
                     'postcss-loader',
                     {
                         loader: 'sass-loader',
