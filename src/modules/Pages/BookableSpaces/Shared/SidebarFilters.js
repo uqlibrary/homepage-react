@@ -326,11 +326,13 @@ export const SidebarFilters = ({
     setCapacityFilterValue,
     selectedCampus,
     handleCampusSelection,
+    onCampusFilterSelection,
     campusList,
     activeFilterCount,
     librariesForCampus,
     selectedLibrary,
     handleLibrarySelection,
+    onLibraryFilterSelection,
     onResetAllFilters,
     showBottomActionButtons = false,
     hasJourneyMapFilterState = false,
@@ -1199,11 +1201,13 @@ export const SidebarFilters = ({
                             selectedCampusValue={selectedCampusValue}
                             campusList={campusList}
                             handleCampusSelection={handleCampusSelection}
+                            onSelection={onCampusFilterSelection}
                         />
                         <ChooseLibrary
                             selectedLibrary={selectedLibrary}
                             librariesForCampus={librariesForCampus}
                             handleLibrarySelection={handleLibrarySelection}
+                            onSelection={onLibraryFilterSelection}
                         />
                     </StyledCampusWrapperDiv>
                 )}
@@ -1287,12 +1291,14 @@ SidebarFilters.propTypes = {
     setCapacityFilterValue: PropTypes.func,
     selectedCampus: PropTypes.any,
     handleCampusSelection: PropTypes.func,
+    onCampusFilterSelection: PropTypes.func,
     campusList: PropTypes.any,
     suppliedClassName: PropTypes.string,
     activeFilterCount: PropTypes.number,
     librariesForCampus: PropTypes.any,
     selectedLibrary: PropTypes.any,
     handleLibrarySelection: PropTypes.func,
+    onLibraryFilterSelection: PropTypes.func,
     onApplyAllFilters: PropTypes.func,
     onResetAllFilters: PropTypes.func,
     showBottomActionButtons: PropTypes.bool,

@@ -219,6 +219,145 @@ describe('BookableSpacesList campus selection', () => {
         expect(latestSidebarProps.selectedCampus).toBe(0);
     });
 
+    it('tracks campus and library selections with their updated Spaces context', async () => {
+        delete window.dataLayer;
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const triggerCampusSelection = value => {
+            const props = mockSidebarRender.mock.calls.at(-1)[0];
+            const event = { target: { value: String(value) } };
+            props.onCampusFilterSelection(event, 'filter-by-campus');
+            props.handleCampusSelection(event);
+        };
+        const triggerLibrarySelection = value => {
+            const props = mockSidebarRender.mock.calls.at(-1)[0];
+            const event = { target: { value: String(value) } };
+            props.onLibraryFilterSelection(event, 'filter-by-library');
+            props.handleLibrarySelection(event);
+        };
+
+        act(() => triggerCampusSelection(2));
+
+        await waitFor(() => expect(mockSidebarRender.mock.calls.at(-1)[0].selectedCampus).toBe(2));
+        act(() => triggerLibrarySelection(22));
+        act(() => triggerCampusSelection(1));
+        await waitFor(() => expect(mockSidebarRender.mock.calls.at(-1)[0].selectedCampus).toBe(1));
+        act(() => triggerLibrarySelection(0));
+        act(() => triggerCampusSelection(0));
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Campus=Gatton',
+                click_class: 'filter-by-campus',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'Gatton',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Library=Gatton Library',
+                click_class: 'filter-by-library',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'Gatton',
+                click_library: 'Gatton Library',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Campus=St Lucia',
+                click_class: 'filter-by-campus',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Library=All libraries',
+                click_class: 'filter-by-library',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Campus=All campuses',
+                click_class: 'filter-by-campus',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+        ]);
+    });
+
+    it('ignores invalid filter values and uses fallback labels and classes for unknown selections', async () => {
+        delete window.dataLayer;
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarRender).toHaveBeenCalled());
+        const props = mockSidebarRender.mock.calls.at(-1)[0];
+        props.onCampusFilterSelection({ target: { value: 'not-a-number' } });
+        props.onLibraryFilterSelection({ target: { value: 'not-a-number' } });
+
+        expect(window.dataLayer).toBeUndefined();
+
+        props.onCampusFilterSelection({ target: { value: '999' } });
+        props.onLibraryFilterSelection({ target: { value: '999' } });
+
+        expect(window.dataLayer).toHaveLength(2);
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Campus=999',
+                click_class: 'filter-by-campus',
+                click_campus: null,
+                click_library: 'All libraries',
+            }),
+        );
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Library=999',
+                click_class: 'filter-by-library',
+                click_library: null,
+            }),
+        );
+    });
+
     it('tracks favourite toggles from the map results space list', async () => {
         delete window.dataLayer;
         useAccountContext.mockReturnValue({ account: { id: 42 } });

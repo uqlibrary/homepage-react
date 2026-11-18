@@ -1,6 +1,7 @@
 import {
     buildSpacesActiveFilters,
     getSpacesSpaceName,
+    trackSpacesFilterSelection,
     trackSpacesNavigationClick,
     trackSpacesPageView,
 } from './spacesAnalytics';
@@ -79,6 +80,34 @@ describe('trackSpacesPageView', () => {
                 click_label: 'Log in',
                 click_class: 'dlor-homepage-loginprompt',
                 click_url: 'https://auth.library.uq.edu.au/login',
+            },
+        ]);
+    });
+
+    it('pushes filter selection events with the selected filter and context', () => {
+        trackSpacesFilterSelection({
+            filterName: 'Library',
+            selection: 'All libraries',
+            clickClass: 'filter-by-library',
+            clickContext: {
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { availability: ['Bookable'] },
+            },
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Library=All libraries',
+                click_class: 'filter-by-library',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { availability: ['Bookable'] },
             },
         ]);
     });

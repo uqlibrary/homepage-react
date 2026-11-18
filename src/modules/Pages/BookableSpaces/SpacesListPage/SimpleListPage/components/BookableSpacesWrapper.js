@@ -307,10 +307,12 @@ const BookableSpacesWrapper = ({
     campusList,
     selectedCampus,
     handleCampusSelection,
+    onCampusFilterSelection,
     activeFilterCount,
     librariesForCampus,
     selectedLibrary,
     handleLibrarySelection,
+    onLibraryFilterSelection,
     weeklyHours,
     weeklyHoursLoading,
     weeklyHoursError,
@@ -1464,10 +1466,12 @@ const BookableSpacesWrapper = ({
                         campusList={campusList}
                         selectedCampus={selectedCampus}
                         handleCampusSelection={handleCampusSelection}
+                        onCampusFilterSelection={onCampusFilterSelection}
                         activeFilterCount={activeFilterCount}
                         librariesForCampus={librariesForCampus}
                         selectedLibrary={selectedLibrary}
                         handleLibrarySelection={handleLibrarySelection}
+                        onLibraryFilterSelection={onLibraryFilterSelection}
                         shouldShowAdvancedFilters={shouldShowAdvancedFilters}
                         isDesktopResultsLayout={isDesktopResultsLayout}
                         showAdvancedFilters={showAdvancedFilters}
@@ -1511,10 +1515,12 @@ BookableSpacesWrapper.propTypes = {
     campusList: PropTypes.array,
     selectedCampus: PropTypes.number,
     handleCampusSelection: PropTypes.func,
+    onCampusFilterSelection: PropTypes.func,
     activeFilterCount: PropTypes.number,
     librariesForCampus: PropTypes.array,
     selectedLibrary: PropTypes.number,
     handleLibrarySelection: PropTypes.func,
+    onLibraryFilterSelection: PropTypes.func,
     weeklyHours: PropTypes.any,
     weeklyHoursLoading: PropTypes.bool,
     weeklyHoursError: PropTypes.any,

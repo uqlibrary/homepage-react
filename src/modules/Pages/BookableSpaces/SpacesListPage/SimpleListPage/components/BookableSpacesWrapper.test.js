@@ -534,6 +534,41 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         );
     };
 
+    it('forwards real result-page campus and library changes to analytics callbacks', async () => {
+        const trackedCampusSelection = jest.fn();
+        const trackedLibrarySelection = jest.fn();
+        const onCampusFilterSelection = jest.fn((event, testId) => trackedCampusSelection(event.target.value, testId));
+        const onLibraryFilterSelection = jest.fn((event, testId) =>
+            trackedLibrarySelection(event.target.value, testId),
+        );
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            campusList: [
+                { campus_id: 1, campus_name: 'St Lucia', campus_space_count: 10 },
+                { campus_id: 2, campus_name: 'Gatton', campus_space_count: 4 },
+            ],
+            librariesForCampus: [
+                { library_id: 0, library_name: 'All libraries' },
+                { library_id: 1, library_name: 'Central Library' },
+                { library_id: 2, library_name: 'Law Library' },
+            ],
+            onCampusFilterSelection,
+            onLibraryFilterSelection,
+        });
+
+        fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+        fireEvent.click(await screen.findByRole('option', { name: 'Gatton' }));
+
+        expect(trackedCampusSelection).toHaveBeenCalledWith(2, 'filter-by-campus');
+
+        const librarySelect = screen.getAllByTestId('filter-by-library')[0].querySelector('[role="combobox"]');
+        fireEvent.mouseDown(librarySelect);
+        fireEvent.click(await screen.findByRole('option', { name: 'Law Library' }));
+
+        expect(trackedLibrarySelection).toHaveBeenCalledWith(2, 'filter-by-library');
+    });
+
     const renderLoggedInJourney = (props, route = '/spaces') =>
         rtlRender(
             <AccountContext.Provider value={{ account: { id: 42 } }}>

@@ -276,6 +276,44 @@ describe('SidebarFilters campus selector', () => {
         expect(await screen.findByRole('option', { name: 'All campuses' })).toBeInTheDocument();
     });
 
+    it('forwards real campus and library selections to their analytics callbacks', async () => {
+        const handleCampusSelection = jest.fn();
+        const handleLibrarySelection = jest.fn();
+        const onCampusFilterSelection = jest.fn();
+        const onLibraryFilterSelection = jest.fn();
+
+        renderWithTheme({
+            ...baseProps,
+            handleCampusSelection,
+            handleLibrarySelection,
+            onCampusFilterSelection,
+            onLibraryFilterSelection,
+            librariesForCampus: [
+                { library_id: 0, library_name: 'All libraries' },
+                { library_id: 1, library_name: 'Central Library' },
+                { library_id: 2, library_name: 'Law Library' },
+            ],
+        });
+
+        fireEvent.mouseDown(screen.getAllByRole('combobox')[0]);
+        fireEvent.click(await screen.findByRole('option', { name: 'Gatton' }));
+
+        expect(onCampusFilterSelection).toHaveBeenCalledWith(
+            expect.objectContaining({ target: expect.objectContaining({ value: 2 }) }),
+            'filter-by-campus',
+        );
+        expect(handleCampusSelection).toHaveBeenCalledTimes(1);
+
+        fireEvent.mouseDown(screen.getAllByRole('combobox')[1]);
+        fireEvent.click(await screen.findByRole('option', { name: 'Law Library' }));
+
+        expect(onLibraryFilterSelection).toHaveBeenCalledWith(
+            expect.objectContaining({ target: expect.objectContaining({ value: 2 }) }),
+            'filter-by-library',
+        );
+        expect(handleLibrarySelection).toHaveBeenCalledTimes(1);
+    });
+
     it('shows the library selector when there is more than one library option', () => {
         renderWithTheme({
             ...baseProps,
