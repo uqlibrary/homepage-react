@@ -6,6 +6,7 @@ const event = {
 const category = {
     NAVIGATION: 'navigation',
     SPACE: 'space',
+    FILTERS: 'filters',
 };
 
 const action = {

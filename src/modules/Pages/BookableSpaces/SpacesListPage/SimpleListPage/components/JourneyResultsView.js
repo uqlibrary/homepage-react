@@ -95,10 +95,12 @@ export const JourneyResultsView = ({
     campusList,
     selectedCampus,
     handleCampusSelection,
+    onCampusFilterSelection,
     activeFilterCount,
     librariesForCampus,
     selectedLibrary,
     handleLibrarySelection,
+    onLibraryFilterSelection,
     isDesktopResultsLayout,
     setShowAdvancedFilters,
     weeklyHours,
@@ -217,6 +219,7 @@ export const JourneyResultsView = ({
                                         selectedCampusValue={selectedCampus}
                                         campusList={campusList}
                                         handleCampusSelection={handleCampusSelection}
+                                        onSelection={onCampusFilterSelection}
                                         campusLabel="Campus:"
                                         testId="mobile-campus"
                                     />
@@ -226,6 +229,7 @@ export const JourneyResultsView = ({
                                         selectedLibrary={selectedLibrary}
                                         librariesForCampus={librariesForCampus}
                                         handleLibrarySelection={handleLibrarySelection}
+                                        onSelection={onLibraryFilterSelection}
                                         libraryLabel="Library:"
                                     />
                                 </StyledSelectorWrapperDiv>
@@ -386,10 +390,12 @@ export const JourneyResultsView = ({
                         campusList={campusList}
                         selectedCampus={selectedCampus}
                         handleCampusSelection={handleCampusSelection}
+                        onCampusFilterSelection={onCampusFilterSelection}
                         activeFilterCount={activeFilterCount}
                         librariesForCampus={librariesForCampus}
                         selectedLibrary={selectedLibrary}
                         handleLibrarySelection={handleLibrarySelection}
+                        onLibraryFilterSelection={onLibraryFilterSelection}
                         onApplyAllFilters={
                             /* istanbul ignore next */ () =>
                                 /* istanbul ignore next */
@@ -431,10 +437,12 @@ JourneyResultsView.propTypes = {
     campusList: PropTypes.array,
     selectedCampus: PropTypes.number,
     handleCampusSelection: PropTypes.func,
+    onCampusFilterSelection: PropTypes.func,
     activeFilterCount: PropTypes.number,
     librariesForCampus: PropTypes.array,
     selectedLibrary: PropTypes.number,
     handleLibrarySelection: PropTypes.func,
+    onLibraryFilterSelection: PropTypes.func,
     shouldShowAdvancedFilters: PropTypes.bool,
     isDesktopResultsLayout: PropTypes.bool,
     setShowAdvancedFilters: PropTypes.func,

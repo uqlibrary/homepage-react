@@ -184,3 +184,19 @@ export const trackSpacesFavouriteClick = ({ isFavourite, ...parameters }) => {
     console.log('GA SPACES CLICK PUSH', JSON.stringify(trackingData, null, 2));
     window.dataLayer.push(trackingData);
 };
+
+export const trackSpacesFilterSelection = ({ filterName, selection, clickClass, clickContext }) => {
+    window.dataLayer = window.dataLayer || [];
+    const trackingData = {
+        event: event.CLICK,
+        click_category: category.FILTERS,
+        click_action: action.SELECT,
+        click_label: `${filterName}=${selection}`,
+        click_class: clickClass,
+        click_url: null,
+        click_space_name: null,
+        ...clickContext,
+    };
+    console.log('GA SPACES CLICK PUSH', JSON.stringify(trackingData, null, 2));
+    window.dataLayer.push(trackingData);
+};

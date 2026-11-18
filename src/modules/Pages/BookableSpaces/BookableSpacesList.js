@@ -32,6 +32,7 @@ import {
     getSpacesClickContext,
     getSpacesSpaceName,
     trackSpacesFavouriteClick,
+    trackSpacesFilterSelection,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
@@ -749,49 +750,6 @@ export const BookableSpacesList = ({
         persistCampusPreference(selectedCampus);
     }, [persistCampusPreference, selectedCampus]);
 
-    const handleCampusSelection = e => {
-        const campusId = Number(e?.target?.value);
-        if (Number.isNaN(campusId)) {
-            return;
-        }
-        hasUserOverriddenCampusSelectionRef.current = true;
-        setSelectedCampus(campusId);
-
-        setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
-
-        setExpandedSpaceId(null);
-        persistCampusPreference(campusId);
-
-        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
-        /* istanbul ignore else */
-        if (locationOfCentreOfCampus) {
-            setLiveMapCentre(locationOfCentreOfCampus);
-            mapRef.current?.flyToSpace(locationOfCentreOfCampus);
-        }
-    };
-
-    const handleLibrarySelection = e => {
-        const libraryId = Number(e?.target?.value);
-        if (Number.isNaN(libraryId)) {
-            return;
-        }
-        hasUserOverriddenCampusSelectionRef.current = true;
-        setSelectedLibrary(libraryId);
-
-        if (libraryId === ALL_LIBRARIES_ID) {
-            // all libraries chosen
-            const locationOfCentreOfCampus = getLatLngCentreOfCampus(
-                bookableSpacesRoomList?.data?.locations,
-                selectedCampus,
-            );
-            !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
-        } else {
-            // particular library chosen
-            const libraryDetails = bookableSpacesRoomList?.data?.locations?.find(s => s.space_library_id === libraryId);
-            !!libraryDetails && mapRef.current?.flyToSpace(libraryDetails, ZOOM_IN_TO_LIBRARY);
-        }
-    };
-
     const minimumSpaceCapacity = 1;
     const [capacityFilterValue, setCapacityFilterValue] = React.useState([]);
     const [maximumSpaceCapacity, setMaximumSpaceCapacity] = React.useState(50);
@@ -1458,6 +1416,110 @@ export const BookableSpacesList = ({
         getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, correctedCampusId(selectedCampus)),
     );
 
+    const handleCampusSelection = e => {
+        const campusId = Number(e?.target?.value);
+        if (Number.isNaN(campusId)) {
+            return;
+        }
+        hasUserOverriddenCampusSelectionRef.current = true;
+        setSelectedCampus(campusId);
+
+        setSelectedLibrary(ALL_LIBRARIES_ID); // clear the library on changing campus
+
+        setExpandedSpaceId(null);
+        persistCampusPreference(campusId);
+
+        const locationOfCentreOfCampus = getLatLngCentreOfCampus(bookableSpacesRoomList?.data?.locations, campusId);
+        /* istanbul ignore else */
+        if (locationOfCentreOfCampus) {
+            setLiveMapCentre(locationOfCentreOfCampus);
+            mapRef.current?.flyToSpace(locationOfCentreOfCampus);
+        }
+    };
+
+    const handleLibrarySelection = e => {
+        const libraryId = Number(e?.target?.value);
+        if (Number.isNaN(libraryId)) {
+            return;
+        }
+        hasUserOverriddenCampusSelectionRef.current = true;
+        setSelectedLibrary(libraryId);
+
+        if (libraryId === ALL_LIBRARIES_ID) {
+            // all libraries chosen
+            const locationOfCentreOfCampus = getLatLngCentreOfCampus(
+                bookableSpacesRoomList?.data?.locations,
+                selectedCampus,
+            );
+            !!locationOfCentreOfCampus && mapRef.current?.flyToSpace(locationOfCentreOfCampus);
+        } else {
+            // particular library chosen
+            const libraryDetails = bookableSpacesRoomList?.data?.locations?.find(s => s.space_library_id === libraryId);
+            !!libraryDetails && mapRef.current?.flyToSpace(libraryDetails, ZOOM_IN_TO_LIBRARY);
+        }
+    };
+
+    const trackCampusFilterSelection = (event, testId) => {
+        const campusId = Number(event?.target?.value);
+        if (Number.isNaN(campusId)) {
+            return;
+        }
+
+        const campusName =
+            campusId === ALL_CAMPUSES_ID
+                ? 'All campuses'
+                : campusList.find(campus => Number(campus.campus_id) === campusId)?.campus_name || String(campusId);
+        trackSpacesFilterSelection({
+            filterName: 'Campus',
+            selection: campusName,
+            clickClass: testId || 'filter-by-campus',
+            clickContext: getSpacesClickContext({
+                selectedCampus: campusId,
+                campusList,
+                selectedLibrary: ALL_LIBRARIES_ID,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
+    };
+
+    const trackLibraryFilterSelection = (event, testId) => {
+        const libraryId = Number(event?.target?.value);
+        if (Number.isNaN(libraryId)) {
+            return;
+        }
+
+        const libraryName =
+            libraryId === ALL_LIBRARIES_ID
+                ? 'All libraries'
+                : librariesForCampus?.find(library => Number(library.library_id) === libraryId)?.library_name ||
+                  String(libraryId);
+        trackSpacesFilterSelection({
+            filterName: 'Library',
+            selection: libraryName,
+            clickClass: testId || 'filter-by-library',
+            clickContext: getSpacesClickContext({
+                selectedCampus: correctedCampusId(selectedCampus),
+                campusList,
+                selectedLibrary: libraryId,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
+    };
+
     React.useEffect(() => {
         const campusId = correctedCampusId(selectedCampus);
 
@@ -1805,10 +1867,12 @@ export const BookableSpacesList = ({
                             campusList={campusList}
                             selectedCampus={correctedCampusId(selectedCampus)}
                             handleCampusSelection={handleCampusSelection}
+                            onCampusFilterSelection={trackCampusFilterSelection}
                             activeFilterCount={activeFilterCount}
                             librariesForCampus={librariesForCampus}
                             selectedLibrary={selectedLibrary}
                             handleLibrarySelection={handleLibrarySelection}
+                            onLibraryFilterSelection={trackLibraryFilterSelection}
                             weeklyHours={weeklyHours}
                             weeklyHoursLoading={weeklyHoursLoading}
                             weeklyHoursError={weeklyHoursError}
@@ -1879,10 +1943,12 @@ export const BookableSpacesList = ({
                                         campusList={campusList}
                                         selectedCampus={correctedCampusId(selectedCampus)}
                                         handleCampusSelection={handleCampusSelection}
+                                        onCampusFilterSelection={trackCampusFilterSelection}
                                         activeFilterCount={activeFilterCount}
                                         librariesForCampus={librariesForCampus}
                                         selectedLibrary={selectedLibrary}
                                         handleLibrarySelection={handleLibrarySelection}
+                                        onLibraryFilterSelection={trackLibraryFilterSelection}
                                         onResetAllFilters={resetAllSpaceFilters}
                                         hasJourneyMapFilterState={false}
                                         showFavouriteSpacesOnly={showFavouriteSpacesOnly}

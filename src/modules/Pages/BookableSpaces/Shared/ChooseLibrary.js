@@ -9,6 +9,7 @@ export const ChooseLibrary = ({
     selectedLibrary,
     handleLibrarySelection,
     libraryLabel = 'Choose library',
+    onSelection,
 }) => {
     return (
         <>
@@ -24,7 +25,10 @@ export const ChooseLibrary = ({
                         labelId="filter-by-library-label"
                         data-testid="filter-by-library"
                         value={librariesForCampus?.find(c => c.library_id === selectedLibrary)?.library_id || 0}
-                        onChange={handleLibrarySelection}
+                        onChange={event => {
+                            onSelection?.(event, 'filter-by-library');
+                            handleLibrarySelection(event);
+                        }}
                         inputProps={{
                             id: 'filter-by-library-input',
                             title: 'Filter the displayed Spaces by library',
@@ -51,6 +55,7 @@ ChooseLibrary.propTypes = {
     selectedLibrary: PropTypes.any,
     handleLibrarySelection: PropTypes.func,
     libraryLabel: PropTypes.string,
+    onSelection: PropTypes.func,
 };
 
 export default ChooseLibrary;

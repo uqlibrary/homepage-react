@@ -10,6 +10,7 @@ export const ChooseCampus = ({
     campusList,
     campusLabel = 'Choose campus',
     testid = 'filter-by-campus',
+    onSelection,
 }) => {
     return (
         <>
@@ -20,9 +21,12 @@ export const ChooseCampus = ({
                 className="sidebarSelector"
                 id="filter-by-campus"
                 labelId="filter-by-campus-label"
-                data-testid={`${testid}`}
+                data-testid={testid}
                 value={selectedCampusValue}
-                onChange={handleCampusSelection}
+                onChange={event => {
+                    onSelection?.(event, testid);
+                    handleCampusSelection(event);
+                }}
                 inputProps={{
                     id: 'filter-by-campus-input',
                     title: 'Filter the displayed Spaces by campus',
@@ -53,6 +57,7 @@ ChooseCampus.propTypes = {
     campusList: PropTypes.any,
     campusLabel: PropTypes.string,
     testid: PropTypes.string,
+    onSelection: PropTypes.func,
 };
 
 export default ChooseCampus;
