@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { render, screen, fireEvent, waitFor, WithRouter } from '../../../../../../utils/test-utils';
 import { useNavigate } from 'react-router';

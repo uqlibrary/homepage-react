@@ -1,4 +1,3 @@
-/* eslint-env jest */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
