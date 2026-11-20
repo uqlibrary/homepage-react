@@ -84,7 +84,6 @@ const webpackConfig = {
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
         main: resolve(__dirname, './src/index.js'),
-        vendor: ['react', 'react-dom', 'redux', 'react-redux', 'moment'],
     },
     // Where you want the output to go
     output: {
@@ -196,6 +195,14 @@ const webpackConfig = {
             automaticNameDelimiter: '-',
             minChunks: 5,
             minSize: 40000,
+            cacheGroups: {
+                defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    minChunks: 2,
+                    priority: -10,
+                    reuseExistingChunk: true,
+                },
+            },
         },
         minimize: true,
         minimizer: [
