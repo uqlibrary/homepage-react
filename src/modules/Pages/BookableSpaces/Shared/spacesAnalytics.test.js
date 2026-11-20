@@ -1,6 +1,7 @@
 import {
     buildSpacesActiveFilters,
     getSpacesSpaceName,
+    trackSpacesFilterCheckbox,
     trackSpacesFilterGroupToggle,
     trackSpacesFilterSelection,
     trackSpacesNavigationClick,
@@ -153,6 +154,53 @@ describe('trackSpacesPageView', () => {
                 click_url: null,
                 click_space_name: null,
                 ...clickContext,
+            },
+        ]);
+    });
+
+    it('pushes select and deselect events for filter checkboxes', () => {
+        const selectedContext = {
+            click_campus: 'St Lucia',
+            click_library: 'All libraries',
+            click_active_filters: { study_environment: ['Low noise'] },
+        };
+        trackSpacesFilterCheckbox({
+            isChecked: true,
+            filterGroupName: 'Study environment',
+            filterName: 'Low noise',
+            clickClass: 'facility-type-listitem-78',
+            clickContext: selectedContext,
+        });
+        trackSpacesFilterCheckbox({
+            isChecked: false,
+            filterGroupName: 'Study environment',
+            filterName: 'Low noise',
+            clickClass: 'facility-type-listitem-78',
+            clickContext: { ...selectedContext, click_active_filters: {} },
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Study environment=Low noise',
+                click_class: 'facility-type-listitem-78',
+                click_url: null,
+                click_space_name: null,
+                ...selectedContext,
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Study environment=Low noise',
+                click_class: 'facility-type-listitem-78',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: {},
             },
         ]);
     });
