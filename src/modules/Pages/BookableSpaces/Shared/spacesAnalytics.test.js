@@ -1,6 +1,8 @@
 import {
     buildSpacesActiveFilters,
     getSpacesSpaceName,
+    trackSpacesFilterCheckbox,
+    trackSpacesFilterGroupToggle,
     trackSpacesFilterSelection,
     trackSpacesNavigationClick,
     trackSpacesPageView,
@@ -108,6 +110,97 @@ describe('trackSpacesPageView', () => {
                 click_campus: 'St Lucia',
                 click_library: 'All libraries',
                 click_active_filters: { availability: ['Bookable'] },
+            },
+        ]);
+    });
+
+    it('pushes expand and collapse events for filter groups with the Spaces context', () => {
+        const clickContext = {
+            click_campus: 'St Lucia',
+            click_library: 'All libraries',
+            click_active_filters: { availability: ['Currently open'] },
+        };
+
+        trackSpacesFilterGroupToggle({
+            isExpanded: true,
+            filterName: 'Availability',
+            clickClass: 'facility-type-group-12',
+            clickContext,
+        });
+        trackSpacesFilterGroupToggle({
+            isExpanded: false,
+            filterName: 'Availability',
+            clickClass: 'facility-type-group-12',
+            clickContext,
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'expand',
+                click_label: 'Availability',
+                click_class: 'facility-type-group-12',
+                click_url: null,
+                click_space_name: null,
+                ...clickContext,
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'collapse',
+                click_label: 'Availability',
+                click_class: 'facility-type-group-12',
+                click_url: null,
+                click_space_name: null,
+                ...clickContext,
+            },
+        ]);
+    });
+
+    it('pushes select and deselect events for filter checkboxes', () => {
+        const selectedContext = {
+            click_campus: 'St Lucia',
+            click_library: 'All libraries',
+            click_active_filters: { study_environment: ['Low noise'] },
+        };
+        trackSpacesFilterCheckbox({
+            isChecked: true,
+            filterGroupName: 'Study environment',
+            filterName: 'Low noise',
+            clickClass: 'facility-type-listitem-78',
+            clickContext: selectedContext,
+        });
+        trackSpacesFilterCheckbox({
+            isChecked: false,
+            filterGroupName: 'Study environment',
+            filterName: 'Low noise',
+            clickClass: 'facility-type-listitem-78',
+            clickContext: { ...selectedContext, click_active_filters: {} },
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Study environment=Low noise',
+                click_class: 'facility-type-listitem-78',
+                click_url: null,
+                click_space_name: null,
+                ...selectedContext,
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Study environment=Low noise',
+                click_class: 'facility-type-listitem-78',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: {},
             },
         ]);
     });

@@ -29,6 +29,11 @@ import {
     readJourneyViewState,
     writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import {
+    getSpacesClickContext,
+    trackSpacesFilterCheckbox,
+    trackSpacesFilterGroupToggle,
+} from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
@@ -613,6 +618,42 @@ export const SidebarFilters = ({
         // scrollToTopOfContent();
     };
 
+    const trackFilterCheckboxSelection = (isChecked, facilityType, filterGroup) => {
+        const facilityTypeId = facilityType?.facility_type_id;
+        const groupId = filterGroup?.facility_type_group_id ?? facilityType?.facility_type_group_id;
+        const nextSelectedFacilityTypes = [
+            ...(selectedFacilityTypes || []).filter(
+                filter => !isSameFacilityTypeId(filter?.facility_type_id, facilityTypeId),
+            ),
+            {
+                ...facilityType,
+                facility_type_group_id: groupId,
+                selected: !!isChecked,
+                unselected: false,
+            },
+        ];
+
+        trackSpacesFilterCheckbox({
+            isChecked: !!isChecked,
+            filterGroupName: filterGroup?.facility_type_group_name || String(groupId),
+            filterName: facilityType?.facility_type_name || String(facilityTypeId),
+            clickClass: `facility-type-listitem-${facilityTypeId}`,
+            clickContext: getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes: nextSelectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
+    };
+
     const handleCapacityFilterChange = (e, newValue, id = null) => {
         clearJourneyIntentId();
 
@@ -705,8 +746,30 @@ export const SidebarFilters = ({
     const toggleFilterGroup = filterGroupId => {
         clearJourneyIntentId();
         const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
+        const isExpanded = !filterGroupPanelVisible;
+        const filterGroup = sortedUsedGroups()?.find(
+            group => Number(group?.facility_type_group_id) === Number(filterGroupId),
+        );
+        trackSpacesFilterGroupToggle({
+            isExpanded,
+            filterName: filterGroup?.facility_type_group_name || String(filterGroupId),
+            clickClass: `facility-type-group-${filterGroupId}`,
+            clickContext: getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
         // reverse the panel show/ hide
-        updateFacilityGroupOpenState(filterGroupId, !filterGroupPanelVisible);
+        updateFacilityGroupOpenState(filterGroupId, isExpanded);
     };
 
     const deSelectSelected = e => {
@@ -870,7 +933,7 @@ export const SidebarFilters = ({
         [isSameFacilityTypeId, selectedFacilityTypes],
     );
 
-    const getStyledInputListItem = facilityType => {
+    const getStyledInputListItem = (facilityType, filterGroup) => {
         const isCapacityFilter = facilityType?.facility_type_id === FILTER_CAPACITY_TYPE_ID;
         return (
             <StyledInputListItem
@@ -888,7 +951,10 @@ export const SidebarFilters = ({
                             className="selectedFilterTypeLabel"
                         >
                             <Checkbox
-                                onChange={e => handleFilterSelection(e?.target?.checked, facilityType)}
+                                onChange={e => {
+                                    trackFilterCheckboxSelection(e?.target?.checked, facilityType, filterGroup);
+                                    handleFilterSelection(e?.target?.checked, facilityType);
+                                }}
                                 data-testid={`filtertype-${facilityType?.facility_type_id}`}
                                 id={`filtertype-${facilityType?.facility_type_id}`}
                                 className="selectedFilterType"
@@ -1262,7 +1328,7 @@ export const SidebarFilters = ({
                                 <StyledFilterSpaceList id={`filter-group-list-${filterGroupId}`}>
                                     {group?.facility_type_children && group?.facility_type_children?.length > 0 ? (
                                         group?.facility_type_children?.map(facilityType =>
-                                            getStyledInputListItem(facilityType),
+                                            getStyledInputListItem(facilityType, group),
                                         )
                                     ) : (
                                         <li className="no-items">No filters available</li>
