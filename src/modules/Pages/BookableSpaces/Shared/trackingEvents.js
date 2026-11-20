@@ -13,6 +13,8 @@ const action = {
     CLICK: 'click',
     SELECT: 'select',
     DESELECT: 'deselect',
+    EXPAND: 'expand',
+    COLLAPSE: 'collapse',
 };
 
 export { event, category, action };

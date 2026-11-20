@@ -200,3 +200,19 @@ export const trackSpacesFilterSelection = ({ filterName, selection, clickClass, 
     console.log('GA SPACES CLICK PUSH', JSON.stringify(trackingData, null, 2));
     window.dataLayer.push(trackingData);
 };
+
+export const trackSpacesFilterGroupToggle = ({ isExpanded, filterName, clickClass, clickContext }) => {
+    window.dataLayer = window.dataLayer || [];
+    const trackingData = {
+        event: event.CLICK,
+        click_category: category.FILTERS,
+        click_action: isExpanded ? action.EXPAND : action.COLLAPSE,
+        click_label: filterName,
+        click_class: clickClass,
+        click_url: null,
+        click_space_name: null,
+        ...clickContext,
+    };
+    console.log('GA SPACES CLICK PUSH', JSON.stringify(trackingData, null, 2));
+    window.dataLayer.push(trackingData);
+};

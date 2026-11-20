@@ -314,6 +314,91 @@ describe('SidebarFilters campus selector', () => {
         expect(handleLibrarySelection).toHaveBeenCalledTimes(1);
     });
 
+    it('tracks expanding and collapsing the Availability filter group', () => {
+        delete window.dataLayer;
+        const availabilityGroup = {
+            facility_type_group_id: 12,
+            facility_type_group_name: 'Availability',
+            facility_type_group_order: 1,
+            facility_type_group_loads_open: false,
+            facility_type_children: [
+                { facility_type_id: 901, facility_type_name: 'Currently open', facility_special_action: 'open' },
+            ],
+        };
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: { data: { facility_type_groups: [availabilityGroup] } },
+            filteredFacilityTypeList: { data: { facility_type_groups: [availabilityGroup] } },
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 12,
+                    facility_type_id: 901,
+                    facility_type_name: 'Currently open',
+                    facility_special_action: 'open',
+                    selected: true,
+                },
+            ],
+        });
+
+        fireEvent.click(screen.getByTestId('facility-type-group-12'));
+        fireEvent.click(screen.getByTestId('facility-type-group-12'));
+
+        expect(window.dataLayer).toEqual([
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'expand',
+                click_label: 'Availability',
+                click_class: 'facility-type-group-12',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { availability: ['Currently open'] },
+            }),
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'collapse',
+                click_label: 'Availability',
+                click_class: 'facility-type-group-12',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { availability: ['Currently open'] },
+            }),
+        ]);
+    });
+
+    it('uses the group ID when an expanded filter group has no display name', () => {
+        delete window.dataLayer;
+        const unnamedGroup = {
+            facility_type_group_id: 99,
+            facility_type_group_name: '',
+            facility_type_group_order: 1,
+            facility_type_group_loads_open: false,
+            facility_type_children: [{ facility_type_id: 990, facility_type_name: 'Example filter' }],
+        };
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: { data: { facility_type_groups: [unnamedGroup] } },
+            filteredFacilityTypeList: { data: { facility_type_groups: [unnamedGroup] } },
+        });
+
+        fireEvent.click(screen.getByTestId('facility-type-group-99'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'expand',
+                click_label: '99',
+                click_class: 'facility-type-group-99',
+            }),
+        );
+    });
+
     it('shows the library selector when there is more than one library option', () => {
         renderWithTheme({
             ...baseProps,

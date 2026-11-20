@@ -29,6 +29,10 @@ import {
     readJourneyViewState,
     writeJourneyViewState,
 } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
+import {
+    getSpacesClickContext,
+    trackSpacesFilterGroupToggle,
+} from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
 
@@ -705,8 +709,30 @@ export const SidebarFilters = ({
     const toggleFilterGroup = filterGroupId => {
         clearJourneyIntentId();
         const filterGroupPanelVisible = document.getElementById(`filter-group-list-${filterGroupId}`);
+        const isExpanded = !filterGroupPanelVisible;
+        const filterGroup = sortedUsedGroups()?.find(
+            group => Number(group?.facility_type_group_id) === Number(filterGroupId),
+        );
+        trackSpacesFilterGroupToggle({
+            isExpanded,
+            filterName: filterGroup?.facility_type_group_name || String(filterGroupId),
+            clickClass: `facility-type-group-${filterGroupId}`,
+            clickContext: getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
         // reverse the panel show/ hide
-        updateFacilityGroupOpenState(filterGroupId, !filterGroupPanelVisible);
+        updateFacilityGroupOpenState(filterGroupId, isExpanded);
     };
 
     const deSelectSelected = e => {
