@@ -113,10 +113,9 @@ function run_pw_test_shard() {
     printf "\n--- [ENDED RUNNING E2E TESTS GROUP #${PW_SHARD_INDEX} AT $(date)] \n"
 }
 
-check_code_style
-
 case "$PIPE_NUM" in
 "1")
+    check_code_style
     run_type_check
     run_pw_test_shard "$PIPE_NUM"
 ;;
@@ -125,9 +124,6 @@ case "$PIPE_NUM" in
 ;;
 "3")
     printf "\n ### PIPELINE 3 ### \n\n"
-	printf "\n\n--- INSTALL JEST ---\n"
-	echo "$ npm install -g jest"
-	npm install -g jest
 	set -e
 	printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == 1 ]]; then
