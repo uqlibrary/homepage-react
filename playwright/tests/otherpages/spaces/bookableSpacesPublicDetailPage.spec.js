@@ -29,8 +29,8 @@ test.describe('Spaces Detail page', () => {
             'Designed for individual study',
         );
 
-        await expect(page.getByTestId(`space-2-booking-link`)).toContainText('Book this space');
-        await expect(page.getByTestId(`space-2-booking-link`)).toHaveAttribute(
+        await expect(page.getByTestId(`space-2-details-booking-link`)).toContainText('Book this space');
+        await expect(page.getByTestId(`space-2-details-booking-link`)).toHaveAttribute(
             'href',
             `https://uqbookit.uq.edu.au/#/app/booking-types/333`,
         );
@@ -153,7 +153,7 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-4-details-name')).toContainText('341');
 
             // the booking link is present
-            await expect(page.locator('a[data-testid="space-4-booking-link"]')).toBeVisible();
+            await expect(page.locator('a[data-testid="space-4-details-booking-link"]')).toBeVisible();
             await expect(page.getByTestId('space-4-booking-icon')).toBeVisible();
             await expect(page.getByTestId('space-4-not-bookable')).not.toBeVisible();
         });
@@ -166,7 +166,7 @@ test.describe('Spaces Detail page', () => {
             await expect(page.getByTestId('space-1-details-name')).toContainText('354');
 
             // the book it link appears
-            await expect(page.getByTestId('space-1-booking-link')).not.toBeVisible();
+            await expect(page.getByTestId('space-1-details-booking-link')).not.toBeVisible();
             await expect(page.getByTestId('space-1-not-bookable')).toBeVisible();
             // data-testid={`space-1-booking-icon`}
         });
