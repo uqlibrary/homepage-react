@@ -149,6 +149,8 @@ const JourneySpaceDetailsView = ({
     spacesFavouritesError = null,
     /* istanbul ignore next */
     showMap = true,
+    bookingLinkTestId,
+    onBookingClick,
 }) => {
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('sm')); // must be called unconditionally
@@ -344,7 +346,11 @@ const JourneySpaceDetailsView = ({
                     Space details
                 </StyledH3Typography>
                 <Stack spacing={2.5}>
-                    <BookingLink bookableSpace={selectedSpace} />
+                    <BookingLink
+                        bookableSpace={selectedSpace}
+                        analyticsId={bookingLinkTestId || `space-${selectedSpace?.space_id}-details-booking-link`}
+                        onBookingClick={onBookingClick}
+                    />
 
                     {!!(selectedSpace?.space_capacity && selectedSpace.space_capacity > 0) && (
                         <Box data-testid={`space-${selectedSpace?.space_id}-capacity`}>
@@ -420,6 +426,8 @@ JourneySpaceDetailsView.propTypes = {
     isFavourite: PropTypes.bool,
     spacesFavouritesError: PropTypes.any,
     showMap: PropTypes.bool,
+    bookingLinkTestId: PropTypes.string,
+    onBookingClick: PropTypes.func,
 };
 
 export default React.memo(JourneySpaceDetailsView);

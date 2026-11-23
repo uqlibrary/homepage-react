@@ -118,6 +118,31 @@ describe('SpacesPagination', () => {
         expect(onPageChange).toHaveBeenCalledTimes(2);
     });
 
+    it('reports the analytics label and class for page, skip, and arrow clicks', () => {
+        const onTrackClick = jest.fn();
+        renderPagination({ page: 6, count: 13, totalItems: 130, onTrackClick });
+
+        fireEvent.click(screen.getByRole('button', { name: 'Page 5' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Skip to page 3...' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Previous page' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Next page' }));
+
+        expect(onTrackClick.mock.calls.map(([click]) => click)).toEqual([
+            { clickLabel: 'Page 5', clickClass: 'spaces-pagination-page' },
+            { clickLabel: 'Skip to page 3...', clickClass: 'spaces-pagination-skip' },
+            { clickLabel: 'Previous page', clickClass: 'spaces-pagination-previous' },
+            { clickLabel: 'Next page', clickClass: 'spaces-pagination-next' },
+        ]);
+        expect(screen.getByRole('button', { name: 'Page 5' })).toHaveAttribute(
+            'data-analytics-id',
+            'spaces-pagination-page',
+        );
+        expect(screen.getByRole('button', { name: 'Skip to page 3...' })).toHaveAttribute(
+            'data-analytics-id',
+            'spaces-pagination-skip',
+        );
+    });
+
     it('uses 3-page skips when clicking ellipses in the middle range', () => {
         const onPageChange = jest.fn();
         renderPagination({ page: 6, count: 13, totalItems: 130, onPageChange });

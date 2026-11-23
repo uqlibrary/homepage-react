@@ -10,7 +10,12 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { Grid } from '@mui/material';
 import { useTitle } from 'hooks';
 import JourneyBreadcrumbs from '../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs';
-import { trackSpacesPageView } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
+import {
+    getSpacesClickContext,
+    trackSpacesBookingClick,
+    trackSpacesPageView,
+} from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
+import { readJourneyLiveFilterState } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 
 export const BookableSpacesDetailPage = ({
     actions,
@@ -20,6 +25,8 @@ export const BookableSpacesDetailPage = ({
     bookableSpaceGetting,
     bookableSpaceGetError,
     bookableSpaceGetResult,
+    bookableSpacesRoomList,
+    facilityTypeList,
     spacesFavouritesList,
     // spacesFavouritesLoading,
     spacesFavouritesError,
@@ -49,6 +56,54 @@ export const BookableSpacesDetailPage = ({
     const pageTitle = spaceName ? `Space Details - ${spaceName} - UQ Library` : 'Space Details - UQ Library';
     useTitle(pageTitle);
     const spaceRequestStateRef = React.useRef({ spaceUuid: null, loadingObserved: false });
+    const handleBookingClick = event => {
+        const filterState = readJourneyLiveFilterState() || {};
+        const currentSpace = bookableSpaceGetResult?.data;
+        const locations = [
+            ...(Array.isArray(bookableSpacesRoomList?.data?.locations) ? bookableSpacesRoomList.data.locations : []),
+            currentSpace,
+        ];
+        const campuses = new Map();
+        const libraries = new Map();
+
+        locations.forEach(space => {
+            if (space?.space_campus_id !== null && space?.space_campus_id !== undefined) {
+                campuses.set(String(space.space_campus_id), {
+                    campus_id: space.space_campus_id,
+                    campus_name: space.space_campus_name,
+                });
+            }
+            if (space?.space_library_id !== null && space?.space_library_id !== undefined) {
+                libraries.set(String(space.space_library_id), {
+                    library_id: space.space_library_id,
+                    library_name: space.space_library_name,
+                });
+            }
+        });
+
+        const selectedCapacityRange = filterState.capacityFilterValue;
+        const clickContext = getSpacesClickContext({
+            selectedCampus: Number(filterState.selectedCampus ?? 0),
+            campusList: Array.from(campuses.values()),
+            selectedLibrary: Number(filterState.selectedLibrary ?? 0),
+            librariesForCampus: Array.from(libraries.values()),
+            facilityTypeList,
+            filteredFacilityTypeList: facilityTypeList,
+            selectedFacilityTypes: filterState.selectedFacilityTypes,
+            capacityFilterValue: selectedCapacityRange,
+            minimumSpaceCapacity: 1,
+            maximumSpaceCapacity: Number.MAX_SAFE_INTEGER,
+            showFavouriteSpacesOnly: filterState.showFavouriteSpacesOnly === true,
+        });
+        const link = event.currentTarget;
+
+        trackSpacesBookingClick({
+            space: currentSpace,
+            clickClass: link.getAttribute('data-analytics-id'),
+            clickUrl: link.getAttribute('href'),
+            clickContext,
+        });
+    };
 
     React.useEffect(() => {
         setPageAnnouncement('Space Details');
@@ -191,6 +246,8 @@ export const BookableSpacesDetailPage = ({
                                     showMap
                                     narrowView={false}
                                     verticalView={false}
+                                    bookingLinkTestId={`space-${bookableSpaceGetResult?.data?.space_id}-details-booking-link`}
+                                    onBookingClick={handleBookingClick}
                                     isFavourite={spacesFavouritesList?.some(
                                         fav => fav.space_id === bookableSpaceGetResult?.data?.space_id,
                                     )}
@@ -216,6 +273,8 @@ BookableSpacesDetailPage.propTypes = {
     bookableSpaceGetting: PropTypes.any,
     bookableSpaceGetError: PropTypes.any,
     bookableSpaceGetResult: PropTypes.any,
+    bookableSpacesRoomList: PropTypes.any,
+    facilityTypeList: PropTypes.any,
     selectedSpace: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     // spacesFavouritesLoading: PropTypes.any,

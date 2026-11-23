@@ -31,7 +31,9 @@ import SidebarSpacesList from 'modules/Pages/BookableSpaces/SpacesListPage/MapLi
 import {
     getSpacesClickContext,
     getSpacesSpaceName,
+    trackSpacesBookingClick,
     trackSpacesFavouriteClick,
+    trackSpacesFilterGroupToggle,
     trackSpacesFilterSelection,
     trackSpacesNavigationClick,
     trackSpacesSpaceNavigationClick,
@@ -1427,11 +1429,42 @@ export const BookableSpacesList = ({
         };
     }, [bookableSpacesRoomListLoading, isMobileView]);
 
+    const getCurrentSpacesClickContext = () =>
+        getSpacesClickContext({
+            selectedCampus: correctedCampusId(selectedCampus),
+            campusList,
+            selectedLibrary,
+            librariesForCampus,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            selectedFacilityTypes,
+            capacityFilterValue,
+            minimumSpaceCapacity,
+            maximumSpaceCapacity,
+            showFavouriteSpacesOnly,
+        });
     const toggleFilterPopupVisibility = () => {
-        setShowFilterSelectorPopup(!showFilterSelectorPopup);
+        const isExpanded = !showFilterSelectorPopup;
+        const clickLabel = isExpanded ? 'Show filters' : 'Hide filters';
+        trackSpacesFilterGroupToggle({
+            isExpanded,
+            filterName: clickLabel,
+            clickClass: isExpanded ? 'spaces-filter-show-button' : 'spaces-filter-hide-button',
+            clickContext: getCurrentSpacesClickContext(),
+        });
+        setShowFilterSelectorPopup(isExpanded);
     };
     const toggleSpacesListPopupVisibility = () => {
-        setShowSpacesSelectorPopup(!showSpacesSelectorPopup);
+        const isExpanded = !showSpacesSelectorPopup;
+        const clickLabel = isExpanded ? 'Show spaces list' : 'Hide spaces list';
+        trackSpacesNavigationClick({
+            click_action: isExpanded ? 'expand' : 'collapse',
+            click_label: clickLabel,
+            click_class: 'spaces-open-spaces-list-button',
+            click_url: null,
+            ...getCurrentSpacesClickContext(),
+        });
+        setShowSpacesSelectorPopup(isExpanded);
     };
 
     const [liveMapCentre, setLiveMapCentre] = React.useState(() =>
@@ -1817,6 +1850,49 @@ export const BookableSpacesList = ({
             showFavouriteSpacesOnly,
         ],
     );
+    const handleSpaceExpandClick = React.useCallback(
+        (event, bookableSpace) => {
+            const title = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus: correctedCampusId(selectedCampus),
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesNavigationClick({
+                click_category: 'space',
+                click_action: 'expand',
+                click_label:
+                    title.getAttribute('aria-label') || title.textContent?.trim() || getSpacesSpaceName(bookableSpace),
+                click_class: title.getAttribute('data-analytics-id'),
+                click_url: null,
+                click_space_name: getSpacesSpaceName(bookableSpace),
+                ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            correctedCampusId,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
     const handleSpaceDetailsClick = React.useCallback(
         (event, bookableSpace) => {
             const link = event.currentTarget;
@@ -1833,12 +1909,51 @@ export const BookableSpacesList = ({
                 maximumSpaceCapacity,
                 showFavouriteSpacesOnly,
             });
-            const clickLabel = getSpacesSpaceName(bookableSpace) || 'Unnamed space';
+            const clickLabel = link.getAttribute('aria-label') || getSpacesSpaceName(bookableSpace) || 'Unnamed space';
 
             trackSpacesSpaceNavigationClick({
                 space: bookableSpace,
                 clickLabel,
                 clickClass: link.getAttribute('data-testid'),
+                clickUrl: link.getAttribute('href'),
+                clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            correctedCampusId,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+    const handleBookingClick = React.useCallback(
+        (event, bookableSpace) => {
+            const link = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus: correctedCampusId(selectedCampus),
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesBookingClick({
+                space: bookableSpace,
+                clickClass: link.getAttribute('data-analytics-id'),
                 clickUrl: link.getAttribute('href'),
                 clickContext,
             });
@@ -1954,6 +2069,9 @@ export const BookableSpacesList = ({
                                 ref={filterToggleRef}
                                 id="toggleFilterButton"
                                 data-testid="spaces-filter-show-hide-button"
+                                data-analytics-id={
+                                    showFilterSelectorPopup ? 'spaces-filter-hide-button' : 'spaces-filter-show-button'
+                                }
                                 onClick={() => toggleFilterPopupVisibility()}
                                 title={showFilterSelectorPopup ? 'Hide filters' : 'Show filters'}
                                 aria-expanded={showFilterSelectorPopup}
@@ -2025,6 +2143,7 @@ export const BookableSpacesList = ({
                                         <StyledSidebarTab
                                             id="toggleSpacesListButton"
                                             data-testid="spaces-open-spaces-list-button"
+                                            data-analytics-id="spaces-open-spaces-list-button"
                                             onClick={() => toggleSpacesListPopupVisibility()}
                                             title={showSpacesSelectorPopup ? 'Hide spaces list' : 'Show spaces list'}
                                             aria-expanded={showSpacesSelectorPopup}
@@ -2071,7 +2190,9 @@ export const BookableSpacesList = ({
                                                 spacesFavouritesList={spacesFavouritesList}
                                                 isLoggedIn={isLoggedIn}
                                                 onFavouriteToggleClick={handleFavouriteToggleClick}
+                                                onSpaceExpandClick={handleSpaceExpandClick}
                                                 onSpaceDetailsClick={handleSpaceDetailsClick}
+                                                onBookingClick={handleBookingClick}
                                                 onSpaceSelect={handleSpaceSelect}
                                                 onSpaceToggle={handleSpaceToggle}
                                                 expandedSpaceId={expandedSpaceId}
@@ -2125,6 +2246,8 @@ export const BookableSpacesList = ({
                                         sortedSpaceLocations={sortedSpaceLocations}
                                         spacesFavouritesList={spacesFavouritesList}
                                         onMarkerClick={handleMarkerClick}
+                                        onSpaceDetailsClick={handleSpaceDetailsClick}
+                                        onBookingClick={handleBookingClick}
                                         centreLatLong={activeMapCentre}
                                         onMapReady={setIsMapReady}
                                         onMapCenterChange={nextCenter => {

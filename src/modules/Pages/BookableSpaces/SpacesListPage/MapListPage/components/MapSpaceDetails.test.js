@@ -1,8 +1,9 @@
 import React from 'react';
 import MockDate from 'mockdate';
 
-import { rtlRender, screen } from 'test-utils';
+import { fireEvent, rtlRender, screen } from 'test-utils';
 
+import { BookingLink } from 'modules/Pages/BookableSpaces/Shared/BookingLink';
 import MapSpaceDetails from 'modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails';
 
 jest.mock(
@@ -16,6 +17,11 @@ jest.mock(
 
 describe('MapSpaceDetails collapsed summary', () => {
     it('matches the content shown in a journey result', () => {
+        const onToggle = jest.fn();
+        const onBookingClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('data-analytics-id', 'space-42-map-booking-link');
+        });
+
         rtlRender(
             <MapSpaceDetails
                 weeklyHours={[]}
@@ -30,13 +36,58 @@ describe('MapSpaceDetails collapsed summary', () => {
                     space_description: '<p>Quiet area near the windows.</p>',
                     space_external_book_url: 'https://example.com/book',
                 }}
+                onToggle={onToggle}
+                onBookingClick={onBookingClick}
             />,
         );
 
         expect(screen.getByText('Central Library')).toBeInTheDocument();
         expect(screen.getByText('Individual study space')).toBeInTheDocument();
         expect(screen.getByTestId('space-42-description')).toHaveTextContent('Quiet area near the windows.');
-        expect(screen.getByRole('link', { name: /book this space/i })).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('space-42-map-booking-link'));
+        expect(onBookingClick).toHaveBeenCalledTimes(1);
+        expect(onBookingClick.mock.calls[0][1]).toMatchObject({ space_id: 42 });
+        fireEvent.click(screen.getByTestId('space-42-toggle-panel-button'));
+        expect(onToggle).toHaveBeenCalledWith(expect.objectContaining({ space_id: 42 }), true);
+    });
+
+    it('uses the default booking link id when no analytics id is provided', () => {
+        rtlRender(
+            <BookingLink
+                bookableSpace={{
+                    space_id: 43,
+                    space_external_book_url: 'https://example.com/book',
+                }}
+            />,
+        );
+
+        expect(screen.getByTestId('space-43-booking-link')).toHaveAttribute('href', 'https://example.com/book');
+    });
+
+    it('renders collapsed outage details and supports a missing toggle callback', () => {
+        rtlRender(
+            <MapSpaceDetails
+                weeklyHours={[]}
+                weeklyHoursLoading={false}
+                weeklyHoursError={null}
+                collapsed
+                bookableSpace={{
+                    space_id: 44,
+                    space_name: 'Closed room',
+                    space_outages: [
+                        {
+                            space_outage_id: 5,
+                            space_outage_start: '2000-01-01 09:00:00',
+                            space_outage_end: '2999-01-01 10:00:00',
+                            space_outage_reason: 'Maintenance',
+                        },
+                    ],
+                }}
+            />,
+        );
+
+        expect(screen.getByTestId('space-44-outage-message')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('space-44-toggle-panel-button'));
     });
 });
 

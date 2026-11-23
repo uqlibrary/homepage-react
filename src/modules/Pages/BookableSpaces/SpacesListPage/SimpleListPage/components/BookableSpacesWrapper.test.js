@@ -721,6 +721,66 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         consoleError.mockRestore();
     });
 
+    it('tracks booking links in journey results with the result booking class', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
+
+        fireEvent.click(screen.getByTestId('space-101-results-booking-link'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Book this space',
+                click_class: 'space-101-results-booking-link',
+                click_url: 'https://example.com/book/quiet-room-a',
+                click_space_name: 'Silent study Space999',
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+        consoleError.mockRestore();
+    });
+
+    it('tracks result pagination clicks with the current Spaces context', () => {
+        const spaces = Array.from({ length: 12 }, (_, index) => ({
+            ...baseSpace,
+            space_id: 400 + index,
+            space_uuid: `pagination-space-${index + 1}`,
+            space_name: `Pagination room ${index + 1}`,
+        }));
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            filteredSpaceLocations: spaces,
+            allSpaceLocations: spaces,
+            highlightedSpace: null,
+            totalSpaceCount: spaces.length,
+        });
+
+        fireEvent.click(screen.getByRole('button', { name: 'Next page' }));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'Next page',
+                click_class: 'spaces-pagination-next',
+                click_url: '/spaces/results',
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+    });
+
     it('tracks a result with an unnamed space before navigating to its details', () => {
         const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
         const unnamedSpace = { space_id: 303, space_uuid: 'unnamed-space-uuid' };

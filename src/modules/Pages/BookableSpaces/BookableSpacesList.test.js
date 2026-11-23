@@ -417,6 +417,7 @@ describe('BookableSpacesList campus selection', () => {
                 ({
                     href: '/spaces/detail/st-lucia-space-uuid',
                     'data-testid': 'space-101-details',
+                    'aria-label': 'Open Space St Lucia space details',
                 })[attribute] || null,
         };
         const space = baseProps.bookableSpacesRoomList.data.locations[0];
@@ -428,9 +429,91 @@ describe('BookableSpacesList campus selection', () => {
                 event: 'library spaces click',
                 click_category: 'space',
                 click_action: 'click',
-                click_label: 'St Lucia space',
+                click_label: 'Open Space St Lucia space details',
                 click_class: 'space-101-details',
                 click_url: '/spaces/detail/st-lucia-space-uuid',
+                click_space_name: 'St Lucia space',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+
+        const latestMapProps = mockMapRender.mock.calls.at(-1)[0];
+        latestMapProps.onSpaceDetailsClick(
+            {
+                currentTarget: {
+                    getAttribute: attribute =>
+                        ({
+                            href: '/spaces/detail/st-lucia-space-uuid',
+                            'data-testid': 'space-101-map-popup',
+                        })[attribute] || null,
+                },
+            },
+            space,
+            '/spaces/detail/st-lucia-space-uuid',
+        );
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'St Lucia space',
+                click_class: 'space-101-map-popup',
+                click_url: '/spaces/detail/st-lucia-space-uuid',
+                click_space_name: 'St Lucia space',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+
+        const bookableSpace = {
+            ...space,
+            space_external_book_url: 'https://uqbookit.uq.edu.au/booking/st-lucia-space',
+        };
+        const sidebarBookingLink = {
+            getAttribute: attribute =>
+                ({
+                    href: bookableSpace.space_external_book_url,
+                    'data-analytics-id': 'space-101-map-booking-link',
+                })[attribute] || null,
+        };
+        latestSidebarListProps.onBookingClick({ currentTarget: sidebarBookingLink }, bookableSpace);
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Book this space',
+                click_class: 'space-101-map-booking-link',
+                click_url: bookableSpace.space_external_book_url,
+                click_space_name: 'St Lucia space',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+
+        const popupBookingLink = {
+            getAttribute: attribute =>
+                ({
+                    href: bookableSpace.space_external_book_url,
+                    'data-analytics-id': 'space-101-popup-booking-link',
+                })[attribute] || null,
+        };
+        latestMapProps.onBookingClick({ currentTarget: popupBookingLink }, bookableSpace);
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Book this space',
+                click_class: 'space-101-popup-booking-link',
+                click_url: bookableSpace.space_external_book_url,
                 click_space_name: 'St Lucia space',
                 click_campus: 'All campuses',
                 click_library: 'All libraries',
@@ -456,6 +539,51 @@ describe('BookableSpacesList campus selection', () => {
                 click_class: 'space-999-details',
                 click_url: null,
                 click_space_name: null,
+            }),
+        );
+    });
+
+    it('tracks expanding a room from its map-list title', async () => {
+        delete window.dataLayer;
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarListRender).toHaveBeenCalled());
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+        const space = baseProps.bookableSpacesRoomList.data.locations[0];
+        const title = {
+            textContent: 'St Lucia space',
+            getAttribute: attribute =>
+                ({
+                    'data-analytics-id': 'space-101-name',
+                })[attribute] || null,
+        };
+
+        latestSidebarListProps.onSpaceExpandClick({ currentTarget: title }, space);
+
+        expect(window.dataLayer).toContainEqual({
+            event: 'library spaces click',
+            click_category: 'space',
+            click_action: 'expand',
+            click_label: 'St Lucia space',
+            click_class: 'space-101-name',
+            click_url: null,
+            click_space_name: 'St Lucia space',
+            click_campus: 'All campuses',
+            click_library: 'All libraries',
+            click_active_filters: {},
+        });
+
+        latestSidebarListProps.onSpaceExpandClick({ currentTarget: { ...title, textContent: '' } }, space);
+        expect(window.dataLayer.filter(({ event }) => event === 'library spaces click')).toHaveLength(2);
+        expect(window.dataLayer.at(-1)).toEqual(
+            expect.objectContaining({
+                click_label: 'St Lucia space',
+                click_space_name: 'St Lucia space',
             }),
         );
     });
@@ -1309,6 +1437,8 @@ describe('BookableSpacesList campus selection', () => {
     });
 
     it('toggles the filter and spaces-list side panels open and closed', async () => {
+        delete window.dataLayer;
+
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
                 <BookableSpacesList {...baseProps} />
@@ -1318,16 +1448,72 @@ describe('BookableSpacesList campus selection', () => {
         const filterToggleButton = screen.getByTestId('spaces-filter-show-hide-button');
         expect(filterToggleButton).toHaveAttribute('title', 'Hide filters');
         expect(filterToggleButton).toHaveAccessibleName('Hide filters');
+        expect(filterToggleButton).toHaveAttribute('data-analytics-id', 'spaces-filter-hide-button');
         expect(filterToggleButton.style.left).toContain('calc(');
         fireEvent.click(filterToggleButton);
         expect(filterToggleButton).toHaveAttribute('title', 'Show filters');
         expect(filterToggleButton).toHaveAccessibleName('Show filters');
+        expect(filterToggleButton).toHaveAttribute('data-analytics-id', 'spaces-filter-show-button');
         expect(filterToggleButton).toHaveStyle({ left: '-1rem' });
+        fireEvent.click(filterToggleButton);
 
         const spacesListToggleButton = screen.getByTestId('spaces-open-spaces-list-button');
         expect(spacesListToggleButton).toHaveAttribute('title', 'Hide spaces list');
+        expect(spacesListToggleButton).toHaveAttribute('data-analytics-id', 'spaces-open-spaces-list-button');
         fireEvent.click(spacesListToggleButton);
         expect(spacesListToggleButton).toHaveAttribute('title', 'Show spaces list');
+        fireEvent.click(spacesListToggleButton);
+
+        expect(window.dataLayer.filter(({ event }) => event === 'library spaces click')).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'collapse',
+                click_label: 'Hide filters',
+                click_class: 'spaces-filter-hide-button',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'expand',
+                click_label: 'Show filters',
+                click_class: 'spaces-filter-show-button',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'collapse',
+                click_label: 'Hide spaces list',
+                click_class: 'spaces-open-spaces-list-button',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'expand',
+                click_label: 'Show spaces list',
+                click_class: 'spaces-open-spaces-list-button',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
+        ]);
     });
 
     it('keeps the mobile map toggle attached to the filter panel and scrolls it past the footer', () => {

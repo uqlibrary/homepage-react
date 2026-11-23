@@ -1,5 +1,5 @@
 import React from 'react';
-import { rtlRender, WithRouter, screen } from 'test-utils';
+import { fireEvent, rtlRender, WithRouter, screen } from 'test-utils';
 import { useAccountContext } from 'context';
 import { useTitle } from 'hooks';
 import { BookableSpacesDetailPage } from './BookableSpacesDetailPage';
@@ -12,16 +12,25 @@ jest.mock('hooks', () => ({
     useTitle: jest.fn(),
 }));
 
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView', () => ({
-    __esModule: true,
-    default: ({ selectedSpace, isFavourite, showMap }) => (
-        <div data-testid="journey-space-details-view">
-            <span>{selectedSpace?.space_name}</span>
-            <span data-testid="is-favourite-value">{String(Boolean(isFavourite))}</span>
-            {showMap ? <span data-testid="show-map">map</span> : null}
-        </div>
-    ),
-}));
+jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/JourneySpaceDetailsView', () => {
+    const { BookingLink } = jest.requireActual('modules/Pages/BookableSpaces/Shared/BookingLink');
+
+    return {
+        __esModule: true,
+        default: ({ selectedSpace, isFavourite, showMap, bookingLinkTestId, onBookingClick }) => (
+            <div data-testid="journey-space-details-view">
+                <span>{selectedSpace?.space_name}</span>
+                <span data-testid="is-favourite-value">{String(Boolean(isFavourite))}</span>
+                {showMap ? <span data-testid="show-map">map</span> : null}
+                <BookingLink
+                    bookableSpace={selectedSpace}
+                    analyticsId={bookingLinkTestId}
+                    onBookingClick={onBookingClick}
+                />
+            </div>
+        ),
+    };
+});
 
 jest.mock('../SpacesListPage/SimpleListPage/components/JourneyBreadcrumbs', () => ({
     __esModule: true,
@@ -48,6 +57,7 @@ function setup({
     bookableSpaceGetting = false,
     bookableSpaceGetError = false,
     bookableSpaceGetResult = buildDetailResult(),
+    bookableSpacesRoomList,
     spacesFavouritesList = [],
     spacesFavouritesError = false,
     weeklyHours = { locations: [] },
@@ -66,6 +76,7 @@ function setup({
                 bookableSpaceGetting={bookableSpaceGetting}
                 bookableSpaceGetError={bookableSpaceGetError}
                 bookableSpaceGetResult={bookableSpaceGetResult}
+                bookableSpacesRoomList={bookableSpacesRoomList}
                 spacesFavouritesList={spacesFavouritesList}
                 spacesFavouritesError={spacesFavouritesError}
             />
@@ -77,6 +88,7 @@ describe('Spaces Detail', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         delete window.dataLayer;
+        window.localStorage.clear();
         useAccountContext.mockReturnValue({ account: null });
         Object.defineProperty(window, 'scrollTo', {
             value: jest.fn(),
@@ -122,6 +134,71 @@ describe('Spaces Detail', () => {
                 page_title: 'Space Details - Logged in space - UQ Library',
             },
         ]);
+    });
+
+    it('tracks booking links on the space detail page', () => {
+        setup({
+            bookableSpaceGetResult: buildDetailResult({
+                space_type_details: { space_type_name: 'Training room' },
+                space_name: '621',
+                space_campus_name: 'St Lucia',
+                space_library_name: 'Central Library',
+                space_external_book_url: 'https://uqbookit.uq.edu.au/booking/room-621',
+            }),
+        });
+
+        fireEvent.click(screen.getByTestId('space-42-details-booking-link'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Book this space',
+                click_class: 'space-42-details-booking-link',
+                click_url: 'https://uqbookit.uq.edu.au/booking/room-621',
+                click_space_name: 'Training room 621',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+    });
+
+    it('maps current campus and library ids while tracking detail-page bookings', () => {
+        setup({
+            bookableSpacesRoomList: {
+                data: {
+                    locations: [
+                        {
+                            space_campus_id: 1,
+                            space_campus_name: 'St Lucia',
+                            space_library_id: 2,
+                            space_library_name: 'Central Library',
+                        },
+                    ],
+                },
+            },
+            bookableSpaceGetResult: buildDetailResult({
+                space_campus_id: 1,
+                space_library_id: 2,
+                space_type_details: { space_type_name: 'Training room' },
+                space_name: '621',
+                space_campus_name: 'St Lucia',
+                space_library_name: 'Central Library',
+                space_external_book_url: 'https://uqbookit.uq.edu.au/booking/room-621',
+            }),
+        });
+
+        fireEvent.click(screen.getByTestId('space-42-details-booking-link'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_class: 'space-42-details-booking-link',
+                click_space_name: 'Training room 621',
+            }),
+        );
     });
 
     it('waits for the space details to load before tracking its named pageview', () => {

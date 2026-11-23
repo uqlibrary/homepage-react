@@ -182,6 +182,15 @@ export const trackSpacesSpaceNavigationClick = ({ space, clickLabel, clickClass,
     });
 };
 
+export const trackSpacesBookingClick = ({ space, clickClass, clickUrl, clickContext }) =>
+    trackSpacesSpaceNavigationClick({
+        space,
+        clickLabel: 'Book this space',
+        clickClass,
+        clickUrl,
+        clickContext,
+    });
+
 export const trackSpacesFavouriteClick = ({ isFavourite, ...parameters }) => {
     window.dataLayer = window.dataLayer || [];
     const trackingData = {
