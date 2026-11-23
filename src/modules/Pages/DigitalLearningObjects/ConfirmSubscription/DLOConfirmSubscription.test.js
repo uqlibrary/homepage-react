@@ -9,17 +9,14 @@ jest.mock('react-router', () => ({
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardPage', () => ({
-    // eslint-disable-next-line react/prop-types
     StandardPage: ({ children }) => <div>{children}</div>,
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardCard', () => ({
-    // eslint-disable-next-line react/prop-types
     StandardCard: ({ children }) => <div>{children}</div>,
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/Loaders', () => ({
-    // eslint-disable-next-line react/prop-types
     InlineLoader: ({ message }) => <div data-testid="inline-loader">{message}</div>,
 }));
 

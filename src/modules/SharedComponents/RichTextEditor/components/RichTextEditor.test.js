@@ -19,7 +19,6 @@ jest.mock('mui-tiptap', () => {
         ...actual,
 
         useRichTextEditorContext: () => mockEditor,
-        /* eslint-disable-next-line react/prop-types */
         RichTextEditor: ({ children, renderControls, onUpdate, editorProps }) => {
             react.useEffect(() => {
                 onUpdate?.({ editor: mockEditor });
@@ -29,7 +28,6 @@ jest.mock('mui-tiptap', () => {
                 <div data-testid="mock-rich-text-editor">
                     {renderControls?.(mockEditor)}
 
-                    {/* eslint-disable-next-line react/prop-types */}
                     <div className="ProseMirror" {...editorProps?.attributes}>
                         {children?.(mockEditor)}
                     </div>
