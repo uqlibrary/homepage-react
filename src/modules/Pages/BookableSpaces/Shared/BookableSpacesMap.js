@@ -130,7 +130,7 @@ const StyledPopupBookingDiv = styled('div')(() => ({
     paddingTop: '0.4rem',
 }));
 
-export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) => {
+export const BookableSpacesMapPopupContent = ({ space, isFavourite = false, onSpaceDetailsClick, onBookingClick }) => {
     const visibleOutage = getVisibleSpaceOutage(space?.space_outages);
     const spaceTypeName = space?.space_type_details?.space_type_name ?? null;
     const trailingRoomNumberMatch = String(space?.space_name || '').match(
@@ -147,7 +147,12 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
 
     return (
         <StyledPopupContent data-testid={`space-${space?.space_id}-map-popup`}>
-            <StyledPopupTitleLink to={detailUrl} reloadDocument>
+            <StyledPopupTitleLink
+                to={detailUrl}
+                reloadDocument
+                data-analytics-id={`space-${space?.space_id}-map-popup`}
+                onClick={event => onSpaceDetailsClick?.(event, space, detailUrl)}
+            >
                 {!!spaceTypeName && <span>{spaceTypeName}</span>}
                 {!!space?.space_name && (
                     <>
@@ -166,7 +171,12 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
             )}
 
             <StyledPopupBookingDiv>
-                <BookingLink bookableSpace={space} hideNoBookingRequired />
+                <BookingLink
+                    bookableSpace={space}
+                    hideNoBookingRequired
+                    analyticsId={`space-${space?.space_id}-popup-booking-link`}
+                    onBookingClick={onBookingClick}
+                />
             </StyledPopupBookingDiv>
 
             {!!visibleOutage && (
@@ -189,11 +199,22 @@ export const BookableSpacesMapPopupContent = ({ space, isFavourite = false }) =>
 BookableSpacesMapPopupContent.propTypes = {
     space: PropTypes.object,
     isFavourite: PropTypes.bool,
+    onSpaceDetailsClick: PropTypes.func,
+    onBookingClick: PropTypes.func,
 };
 
 const BookableSpacesMap = React.forwardRef(
     (
-        { sortedSpaceLocations, spacesFavouritesList, onMarkerClick, centreLatLong, onMapReady, onMapCenterChange },
+        {
+            sortedSpaceLocations,
+            spacesFavouritesList,
+            onMarkerClick,
+            onSpaceDetailsClick,
+            onBookingClick,
+            centreLatLong,
+            onMapReady,
+            onMapCenterChange,
+        },
         ref,
     ) => {
         const [isMazeMapScriptReady, setIsMazeMapScriptReady] = React.useState(false);
@@ -345,7 +366,12 @@ const BookableSpacesMap = React.forwardRef(
                 popupRoot.render(
                     <MuiThemeProvider theme={mui1theme}>
                         <MemoryRouter initialEntries={[window.location.pathname || '/']}>
-                            <BookableSpacesMapPopupContent space={space} isFavourite={isFavourite} />
+                            <BookableSpacesMapPopupContent
+                                space={space}
+                                isFavourite={isFavourite}
+                                onSpaceDetailsClick={onSpaceDetailsClick}
+                                onBookingClick={onBookingClick}
+                            />
                         </MemoryRouter>
                     </MuiThemeProvider>,
                 );
@@ -630,6 +656,8 @@ BookableSpacesMap.propTypes = {
     sortedSpaceLocations: PropTypes.any,
     spacesFavouritesList: PropTypes.any,
     onMarkerClick: PropTypes.func.isRequired,
+    onSpaceDetailsClick: PropTypes.func,
+    onBookingClick: PropTypes.func,
     centreLatLong: PropTypes.object,
     onMapReady: PropTypes.func,
     onMapCenterChange: PropTypes.func,

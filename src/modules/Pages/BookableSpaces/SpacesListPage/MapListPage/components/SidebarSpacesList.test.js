@@ -71,12 +71,16 @@ describe('SidebarSpacesList', () => {
 
     it('renders space counts, handles selection, and shows the expanded details action', () => {
         const onSpaceSelect = jest.fn();
+        const onSpaceExpandClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('data-analytics-id', 'space-101-name');
+        });
         const onSpaceToggle = jest.fn();
 
         rtlRender(
             <SidebarSpacesList
                 {...baseProps}
                 onSpaceSelect={onSpaceSelect}
+                onSpaceExpandClick={onSpaceExpandClick}
                 onSpaceToggle={onSpaceToggle}
                 expandedSpaceId={101}
                 suppliedClassName="custom-sidebar"
@@ -91,9 +95,12 @@ describe('SidebarSpacesList', () => {
 
         const title = screen.getByTestId('space-101-name');
         expect(title).toHaveStyle({ cursor: 'pointer' });
+        expect(title).toHaveAttribute('data-analytics-id', 'space-101-name');
         fireEvent.click(title);
         fireEvent.keyDown(title, { key: 'Enter' });
 
+        expect(onSpaceExpandClick).toHaveBeenCalledTimes(1);
+        expect(onSpaceExpandClick.mock.calls[0][1]).toBe(baseProps.filteredSpaceLocations[0]);
         expect(onSpaceSelect).toHaveBeenCalledTimes(2);
         expect(onSpaceSelect).toHaveBeenNthCalledWith(1, baseProps.filteredSpaceLocations[0]);
         expect(onSpaceSelect).toHaveBeenNthCalledWith(2, baseProps.filteredSpaceLocations[0]);

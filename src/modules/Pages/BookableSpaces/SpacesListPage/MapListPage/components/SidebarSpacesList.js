@@ -52,8 +52,10 @@ const SidebarSpacesList = ({
     spacesFavouritesList = null,
     onFavouriteToggleClick,
     onSpaceSelect = null,
+    onSpaceExpandClick,
     onSpaceToggle = null,
     onSpaceDetailsClick,
+    onBookingClick,
     expandedSpaceId = null,
 }) => {
     // const markerRefs = React.useRef({});
@@ -114,11 +116,15 @@ const SidebarSpacesList = ({
                                         />
                                         <span
                                             className="spaceTitle"
-                                            onClick={() => onSpaceSelect?.(bookableSpace)}
+                                            onClick={event => {
+                                                onSpaceExpandClick?.(event, bookableSpace);
+                                                onSpaceSelect?.(bookableSpace);
+                                            }}
                                             onKeyDown={() => onSpaceSelect?.(bookableSpace)}
                                             style={onSpaceSelect ? { cursor: 'pointer' } : undefined}
                                             title="Show on map"
                                             data-testid={`space-${bookableSpace.space_id}-name`}
+                                            data-analytics-id={`space-${bookableSpace.space_id}-name`}
                                         >
                                             {bookableSpace?.space_type_details?.space_type_name}{' '}
                                             {!!bookableSpace?.space_name && (
@@ -148,6 +154,7 @@ const SidebarSpacesList = ({
                                     collapsed
                                     isExpanded={isExpanded}
                                     onToggle={onSpaceToggle}
+                                    onBookingClick={onBookingClick}
                                     isFavourite={spacesFavouritesList?.some(
                                         fav => fav.space_id === bookableSpace?.space_id,
                                     )}
@@ -173,8 +180,10 @@ SidebarSpacesList.propTypes = {
     spacesFavouritesList: PropTypes.any,
     onFavouriteToggleClick: PropTypes.func,
     onSpaceSelect: PropTypes.func,
+    onSpaceExpandClick: PropTypes.func,
     onSpaceToggle: PropTypes.func,
     onSpaceDetailsClick: PropTypes.func,
+    onBookingClick: PropTypes.func,
     expandedSpaceId: PropTypes.number,
 };
 

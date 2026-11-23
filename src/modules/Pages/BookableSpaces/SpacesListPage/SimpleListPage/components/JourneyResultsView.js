@@ -81,6 +81,8 @@ export const JourneyResultsView = ({
     intentSpaceLocations,
     totalSpaceCount,
     onSpaceDetailsClick,
+    onPaginationClick,
+    onBookingClick,
     onResetAllFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
@@ -343,7 +345,12 @@ export const JourneyResultsView = ({
                                         )}
                                         {!!space?.space_external_book_url && (
                                             <Box className="bookingLink">
-                                                <BookingLink bookableSpace={space} hideNoBookingRequired />
+                                                <BookingLink
+                                                    bookableSpace={space}
+                                                    hideNoBookingRequired
+                                                    analyticsId={`space-${space?.space_id}-results-booking-link`}
+                                                    onBookingClick={onBookingClick}
+                                                />
                                             </Box>
                                         )}
                                     </StyledListItemStack>
@@ -356,6 +363,7 @@ export const JourneyResultsView = ({
                             page={page}
                             count={totalPages}
                             onPageChange={setPage}
+                            onTrackClick={onPaginationClick}
                             totalItems={spaces.length}
                             itemsPerPage={itemsPerPage}
                         />
@@ -431,6 +439,8 @@ JourneyResultsView.propTypes = {
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
     onSpaceDetailsClick: PropTypes.func,
+    onPaginationClick: PropTypes.func,
+    onBookingClick: PropTypes.func,
     onResetAllFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,

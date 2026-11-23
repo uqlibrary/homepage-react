@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { isBookable } from 'modules/Pages/BookableSpaces/Shared/spacesHelpers';
 import { StyledIconWordWrapperDiv } from 'modules/Pages/BookableSpaces/Shared/SharedStyles';
 
-export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) => {
+export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false, analyticsId, onBookingClick }) => {
+    const bookingLinkId = analyticsId || `space-${bookableSpace?.space_id}-booking-link`;
     const uqBookitMakeABookingIcon = (
         <svg
             data-testid={`space-${bookableSpace?.space_id}-booking-icon`}
@@ -27,7 +28,9 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
                 <a
                     href={bookableSpace?.space_external_book_url}
                     target={'_blank'}
-                    data-testid={`space-${bookableSpace?.space_id}-booking-link`}
+                    data-testid={bookingLinkId}
+                    data-analytics-id={bookingLinkId}
+                    onClick={event => onBookingClick?.(event, bookableSpace)}
                 >
                     <span>Book this space</span>
                 </a>
@@ -42,6 +45,8 @@ export const BookingLink = ({ bookableSpace, hideNoBookingRequired = false }) =>
 BookingLink.propTypes = {
     bookableSpace: PropTypes.any,
     hideNoBookingRequired: PropTypes.bool,
+    analyticsId: PropTypes.string,
+    onBookingClick: PropTypes.func,
 };
 
 export default BookingLink;

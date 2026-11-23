@@ -91,7 +91,7 @@ const buildVisibleItems = (page, count) => {
     ];
 };
 
-const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage }) => {
+const SpacesPagination = ({ page, count, onPageChange, onTrackClick, totalItems, itemsPerPage }) => {
     if (!count || count < 1 || !totalItems) {
         return null;
     }
@@ -147,11 +147,12 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
         }
     };
 
-    const handlePageSelect = nextPage => {
+    const handlePageSelect = (nextPage, clickLabel, clickClass) => {
         if (nextPage === page || nextPage < 1 || nextPage > count) {
             return;
         }
 
+        onTrackClick?.({ clickLabel, clickClass });
         scrollListToTop();
         onPageChange?.(nextPage);
     };
@@ -163,7 +164,11 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <StyledPaginationRow aria-label="Spaces results pagination">
                     {page > 1 && (
-                        <StyledArrowButton onClick={() => handlePageSelect(page - 1)} aria-label="Previous page">
+                        <StyledArrowButton
+                            onClick={() => handlePageSelect(page - 1, 'Previous page', 'spaces-pagination-previous')}
+                            aria-label="Previous page"
+                            data-analytics-id="spaces-pagination-previous"
+                        >
                             <KeyboardArrowLeftIcon />
                         </StyledArrowButton>
                     )}
@@ -176,7 +181,10 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
                                     type="button"
                                     aria-label={`Page ${item.value}`}
                                     aria-current={item.value === page ? 'page' : undefined}
-                                    onClick={() => handlePageSelect(item.value)}
+                                    data-analytics-id="spaces-pagination-page"
+                                    onClick={() =>
+                                        handlePageSelect(item.value, `Page ${item.value}`, 'spaces-pagination-page')
+                                    }
                                 >
                                     {item.value}
                                 </StyledPaginationButton>
@@ -188,7 +196,14 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
                                 key={`ellipsis-${item.direction}-${idx}`}
                                 type="button"
                                 aria-label={`Skip to page ${item.targetPage}...`}
-                                onClick={() => handlePageSelect(item.targetPage)}
+                                data-analytics-id="spaces-pagination-skip"
+                                onClick={() =>
+                                    handlePageSelect(
+                                        item.targetPage,
+                                        `Skip to page ${item.targetPage}...`,
+                                        'spaces-pagination-skip',
+                                    )
+                                }
                             >
                                 ...
                             </StyledPaginationButton>
@@ -196,7 +211,11 @@ const SpacesPagination = ({ page, count, onPageChange, totalItems, itemsPerPage 
                     })}
 
                     {page < count && (
-                        <StyledArrowButton onClick={() => handlePageSelect(page + 1)} aria-label="Next page">
+                        <StyledArrowButton
+                            onClick={() => handlePageSelect(page + 1, 'Next page', 'spaces-pagination-next')}
+                            aria-label="Next page"
+                            data-analytics-id="spaces-pagination-next"
+                        >
                             <KeyboardArrowRightIcon />
                         </StyledArrowButton>
                     )}
@@ -215,6 +234,7 @@ SpacesPagination.propTypes = {
     page: PropTypes.number.isRequired,
     count: PropTypes.number.isRequired,
     onPageChange: PropTypes.func.isRequired,
+    onTrackClick: PropTypes.func,
     totalItems: PropTypes.number,
     itemsPerPage: PropTypes.number,
 };

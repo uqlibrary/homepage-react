@@ -1,7 +1,7 @@
 import React, { act } from 'react';
 import MockDate from 'mockdate';
 
-import { rtlRender, screen, waitFor, WithRouter } from 'test-utils';
+import { fireEvent, rtlRender, screen, waitFor, WithRouter } from 'test-utils';
 
 import BookableSpacesMap, {
     BookableSpacesMapPopupContent,
@@ -10,6 +10,30 @@ import BookableSpacesMap, {
 describe('BookableSpacesMapPopupContent', () => {
     afterEach(() => {
         MockDate.reset();
+    });
+
+    it('forwards map popup detail-link clicks for analytics', () => {
+        const space = {
+            space_id: 198,
+            space_uuid: 'a238b4a3-f709-450e-a46c-324fc8998662',
+            space_name: '353A',
+            space_type_details: { space_type_name: 'Individual study room' },
+        };
+        const onSpaceDetailsClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('data-analytics-id', 'space-198-map-popup');
+        });
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesMapPopupContent space={space} onSpaceDetailsClick={onSpaceDetailsClick} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByRole('link', { name: /Individual study room 353A/i }));
+
+        expect(onSpaceDetailsClick).toHaveBeenCalledTimes(1);
+        expect(onSpaceDetailsClick.mock.calls[0][1]).toEqual(space);
+        expect(onSpaceDetailsClick.mock.calls[0][2]).toBe('/spaces/detail/a238b4a3-f709-450e-a46c-324fc8998662');
     });
 
     it('renders a current outage in the popup using UserAttention styling content', () => {
@@ -82,6 +106,32 @@ describe('BookableSpacesMapPopupContent', () => {
         expect(screen.getByTestId('space-102-outage-message')).toHaveTextContent(
             'Currently unavailable until 1:00pm on 24 Apr. 2026.',
         );
+    });
+
+    it('tracks booking links in map popups with the popup booking class', () => {
+        const space = {
+            space_id: 198,
+            space_uuid: 'a238b4a3-f709-450e-a46c-324fc8998662',
+            space_name: '353A',
+            space_library_name: 'Architecture and Music Library',
+            space_type_details: { space_type_name: 'Individual study room' },
+            space_external_book_url:
+                'https://uqbookit.uq.edu.au/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb/resources/afd4233e-7225-428f-a76e-8068999837b9',
+        };
+        const onBookingClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('data-analytics-id', 'space-198-popup-booking-link');
+        });
+
+        rtlRender(
+            <WithRouter route="*" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesMapPopupContent space={space} onBookingClick={onBookingClick} />
+            </WithRouter>,
+        );
+
+        fireEvent.click(screen.getByTestId('space-198-popup-booking-link'));
+
+        expect(onBookingClick).toHaveBeenCalledTimes(1);
+        expect(onBookingClick.mock.calls[0][1]).toEqual(space);
     });
 
     it('renders an upcoming outage in the popup when it is within the notice window', () => {

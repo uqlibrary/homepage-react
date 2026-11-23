@@ -25,7 +25,14 @@ const StyledSpaceDiv = styled('div')(({ theme }) => ({
     },
 }));
 
-const CollapsedSection = ({ bookableSpace, visibleOutage, weeklyHoursLoading, weeklyHoursError, weeklyHours }) => {
+const CollapsedSection = ({
+    bookableSpace,
+    visibleOutage,
+    weeklyHoursLoading,
+    weeklyHoursError,
+    weeklyHours,
+    onBookingClick,
+}) => {
     return (
         <Stack spacing={1}>
             <Typography sx={{ color: 'designSystem.bodyCopy' }}>{bookableSpace?.space_library_name}</Typography>
@@ -60,7 +67,12 @@ const CollapsedSection = ({ bookableSpace, visibleOutage, weeklyHoursLoading, we
             )}
             {!!bookableSpace?.space_external_book_url && (
                 <Box sx={{ pt: 0.5 }}>
-                    <BookingLink bookableSpace={bookableSpace} hideNoBookingRequired />
+                    <BookingLink
+                        bookableSpace={bookableSpace}
+                        hideNoBookingRequired
+                        analyticsId={`space-${bookableSpace?.space_id}-map-booking-link`}
+                        onBookingClick={onBookingClick}
+                    />
                 </Box>
             )}
         </Stack>
@@ -72,6 +84,7 @@ CollapsedSection.propTypes = {
     weeklyHoursLoading: PropTypes.any,
     weeklyHoursError: PropTypes.any,
     weeklyHours: PropTypes.any,
+    onBookingClick: PropTypes.func,
 };
 
 const MapSpaceDetails = props => {
@@ -87,6 +100,7 @@ const MapSpaceDetails = props => {
         onToggle = null,
         showToggle = true,
         isFavourite = false,
+        onBookingClick,
     } = props;
 
     const isCollapsed = collapsed ? !isExpanded : false;
@@ -137,6 +151,7 @@ const MapSpaceDetails = props => {
                         weeklyHoursLoading={weeklyHoursLoading}
                         weeklyHoursError={weeklyHoursError}
                         weeklyHours={weeklyHours}
+                        onBookingClick={onBookingClick}
                     />
                 )}
                 {!isCollapsed && (
@@ -151,6 +166,8 @@ const MapSpaceDetails = props => {
                         showBackButton={false}
                         narrowView
                         verticalView={false}
+                        bookingLinkTestId={`space-${bookableSpace?.space_id}-map-booking-link`}
+                        onBookingClick={onBookingClick}
                     />
                 )}
             </StyledSpaceDiv>
@@ -169,6 +186,7 @@ MapSpaceDetails.propTypes = {
     onToggle: PropTypes.func,
     showToggle: PropTypes.bool,
     isFavourite: PropTypes.bool,
+    onBookingClick: PropTypes.func,
 };
 
 export default React.memo(MapSpaceDetails);

@@ -73,11 +73,11 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-name`)).toContainText('Individual study');
 
             // the booking link appears
-            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toBeVisible();
-            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toContainText(
+            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-map-booking-link"]`)).toBeVisible();
+            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-map-booking-link"]`)).toContainText(
                 'Book this space',
             );
-            const hrefValue = await page.getByTestId(`${ARCH_BOOKABLE}-booking-link`).getAttribute('href');
+            const hrefValue = await page.getByTestId(`${ARCH_BOOKABLE}-map-booking-link`).getAttribute('href');
             expect(hrefValue).toMatch(new RegExp(`^https://uqbookit.uq.edu.au`)); // we have put the correct value in the page
 
             // expand the panel
@@ -87,11 +87,11 @@ test.describe('Spaces', () => {
             // the panel has expanded
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-details-name`)).not.toBeVisible();
             // the booking link appears
-            // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toBeVisible();
-            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toBeVisible();
+            // await expect(page.getByTestId(`${ARCH_BOOKABLE}-map-booking-link`)).toBeVisible();
+            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-map-booking-link"]`)).toBeVisible();
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
-            // await expect(page.getByTestId(`${ARCH_BOOKABLE}-booking-link`)).toContainText('Book this space');
-            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-booking-link"]`)).toContainText(
+            // await expect(page.getByTestId(`${ARCH_BOOKABLE}-map-booking-link`)).toContainText('Book this space');
+            await expect(page.locator(`a[data-testid="${ARCH_BOOKABLE}-map-booking-link"]`)).toContainText(
                 'Book this space',
             );
 
@@ -103,7 +103,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-name`)).toContainText('Meeting room');
 
             // NO booking link appears
-            await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-map-booking-link`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-booking-icon`)).not.toBeVisible();
 
             // expand the panel
@@ -117,7 +117,7 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${LIV}-friendly-location`)).toBeVisible();
 
             // "no booking required" prompt appears
-            await expect(page.getByTestId(`${LIV}-booking-link`)).not.toBeVisible();
+            await expect(page.getByTestId(`${LIV}-map-booking-link`)).not.toBeVisible();
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toBeVisible();
             await expect(page.getByTestId(`${LIV}-not-bookable`)).toContainText('No booking required.');
         });
@@ -380,8 +380,13 @@ test.describe('Spaces', () => {
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}`).locator('h3')).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel')).not.toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'false');
+        await expect(
+            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel'),
+        ).not.toBeVisible();
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
+            'aria-expanded',
+            'false',
+        );
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
             'aria-label',
             'Show more information about 354',
@@ -395,9 +400,14 @@ test.describe('Spaces', () => {
 
         await expect(page.getByTestId(`${ARCH_REFERENCE}-facility`)).toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-details-description`)).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel')).not.toBeVisible();
+        await expect(
+            page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.closePanel'),
+        ).not.toBeVisible();
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`).locator('svg.openPanel')).toBeVisible();
-        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
+            'aria-expanded',
+            'true',
+        );
         await expect(page.getByTestId(`${ARCH_REFERENCE}-toggle-panel-button`)).toHaveAttribute(
             'aria-label',
             'Show fewer details for 354',
@@ -1391,10 +1401,10 @@ test.describe('Spaces', () => {
             await expect(page.getByTestId(`${ARCH_BOOKABLE}-not-bookable`)).not.toBeVisible();
 
             await expect(page.getByTestId(`${PACE}-not-bookable`)).not.toBeVisible();
-            await expect(page.locator(`a[data-testid="${PACE}-booking-link"]`)).toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-booking-link`)).toBeVisible();
-            // await expect(page.getByTestId(`${PACE}-booking-link`).locator('a')).toBeVisible();
-            await expect(page.locator(`a[data-testid="${PACE}-booking-link"]`)).toHaveAttribute(
+            await expect(page.locator(`a[data-testid="${PACE}-map-booking-link"]`)).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-map-booking-link`)).toBeVisible();
+            // await expect(page.getByTestId(`${PACE}-map-booking-link`).locator('a')).toBeVisible();
+            await expect(page.locator(`a[data-testid="${PACE}-map-booking-link"]`)).toHaveAttribute(
                 'href',
                 `https://uqbookit.uq.edu.au/#/app/booking-types/222`,
             );
@@ -1430,7 +1440,9 @@ test.describe('Spaces', () => {
             await page.getByTestId(`${PACE}-toggle-panel-button`).click();
             await expect(page.getByTestId(`${PACE}-friendly-location`).first()).toBeVisible();
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-precise')).not.toBeVisible();
-            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText('Level 6');
+            await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-floor')).toContainText(
+                'Level 6',
+            );
             await expect(page.getByTestId(`${PACE}-friendly-location`).locator('.location-library')).toContainText(
                 'Dutton Park Health Sciences',
             );

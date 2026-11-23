@@ -8,7 +8,7 @@ const mapStateToProps = state => {
     return {
         ...state.get('bookableSpacesRoomListReducer'),
         ...state.get('weeklyHoursReducer'),
-        // ...state.get('bookablespacesFacilityTypeReducer'),
+        ...state.get('bookablespacesFacilityTypeReducer'),
         ...state.get('bookableSpacesFavouritesReducer'),
         // ...state.get('drupalArticlesReducer'),
     };

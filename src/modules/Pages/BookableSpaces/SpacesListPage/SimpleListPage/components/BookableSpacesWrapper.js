@@ -32,6 +32,7 @@ import {
     buildSpacesActiveFilters,
     getSpacesClickContext,
     getSpacesSpaceName,
+    trackSpacesBookingClick,
     trackSpacesFavouriteClick,
     trackSpacesNavigationClick,
     trackSpacesPageView,
@@ -1136,6 +1137,85 @@ const BookableSpacesWrapper = ({
         ],
     );
 
+    const handleBookingClick = React.useCallback(
+        (event, space) => {
+            const link = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesBookingClick({
+                space,
+                clickClass: link.getAttribute('data-analytics-id'),
+                clickUrl: link.getAttribute('href'),
+                clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
+    const handlePaginationClick = React.useCallback(
+        ({ clickLabel, clickClass }) => {
+            const clickContext = getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+
+            trackSpacesNavigationClick({
+                click_label: clickLabel,
+                click_class: clickClass,
+                click_url: location.pathname,
+                click_space_name: null,
+                ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            location.pathname,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
     const handleFavouriteToggleClick = React.useCallback(
         (event, { bookableSpace, isFavourite }) => {
             const button = event.currentTarget;
@@ -1513,6 +1593,8 @@ const BookableSpacesWrapper = ({
                         intentSpaceLocations={intentSpaceLocations}
                         totalSpaceCount={totalSpaceCount}
                         onSpaceDetailsClick={handleSpaceDetailsClick}
+                        onPaginationClick={handlePaginationClick}
+                        onBookingClick={handleBookingClick}
                         selectedIntentId={activeIntentId}
                         setSelectedSpace={setSelectedSpace}
                         navigateToView={navigateToView}
