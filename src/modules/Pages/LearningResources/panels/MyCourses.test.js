@@ -1,5 +1,4 @@
 import React from 'react';
-/* eslint-disable react/prop-types */
 import { rtlRender, userEvent } from 'test-utils';
 import { useAccountContext } from 'context';
 import { MyCourses, courseTabLabel } from './MyCourses';
