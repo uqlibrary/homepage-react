@@ -268,6 +268,51 @@ describe('SidebarFilters campus selector', () => {
         expect(screen.queryByRole('button', { name: /remove all filters/i })).not.toBeInTheDocument();
     });
 
+    it('tracks the reset filters click with the active Spaces context', () => {
+        delete window.dataLayer;
+        const availabilityGroup = {
+            facility_type_group_id: 12,
+            facility_type_group_name: 'Availability',
+            facility_type_group_order: 1,
+            facility_type_group_loads_open: true,
+            facility_type_children: [
+                { facility_type_id: 901, facility_type_name: 'Currently open', facility_special_action: 'open' },
+            ],
+        };
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: { data: { facility_type_groups: [availabilityGroup] } },
+            filteredFacilityTypeList: { data: { facility_type_groups: [availabilityGroup] } },
+            selectedFacilityTypes: [
+                {
+                    facility_type_group_id: 12,
+                    facility_type_id: 901,
+                    facility_type_name: 'Currently open',
+                    facility_special_action: 'open',
+                    selected: true,
+                },
+            ],
+            activeFilterCount: 1,
+        });
+
+        fireEvent.click(screen.getByTestId('reset-filters-button'));
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'clear',
+                click_label: 'Reset filters',
+                click_class: 'reset-filters-button',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { availability: ['Currently open'] },
+            },
+        ]);
+    });
+
     it('offers an all-campuses option in the campus selector', async () => {
         renderWithTheme(baseProps);
 
@@ -399,7 +444,7 @@ describe('SidebarFilters campus selector', () => {
         );
     });
 
-    it('tracks filter checkbox selections and excludes the favourites-only checkbox', () => {
+    it('tracks facility filter checkbox selections', () => {
         delete window.dataLayer;
         const availabilityGroup = {
             facility_type_group_id: 12,
@@ -420,8 +465,6 @@ describe('SidebarFilters campus selector', () => {
         const filterGroups = [availabilityGroup, studyEnvironmentGroup];
         renderWithStatefulTheme({
             ...baseProps,
-            isLoggedIn: true,
-            hasFavouriteSpaces: true,
             facilityTypeList: { data: { facility_type_groups: filterGroups } },
             filteredFacilityTypeList: { data: { facility_type_groups: filterGroups } },
         });
@@ -429,7 +472,6 @@ describe('SidebarFilters campus selector', () => {
         fireEvent.click(screen.getByTestId('filtertype-78'));
         fireEvent.click(screen.getByTestId('filtertype-78'));
         fireEvent.click(screen.getByTestId('filtertype-901'));
-        fireEvent.click(screen.getByTestId('filter-show-favourite-spaces-only'));
 
         expect(window.dataLayer).toEqual([
             expect.objectContaining({
@@ -468,6 +510,56 @@ describe('SidebarFilters campus selector', () => {
                 click_library: 'All libraries',
                 click_active_filters: { availability: ['Currently open'] },
             }),
+        ]);
+    });
+
+    it('tracks selecting and deselecting the favourites-only filter', () => {
+        delete window.dataLayer;
+        const StatefulFavouritesSidebar = () => {
+            const [showFavouriteSpacesOnly, setShowFavouriteSpacesOnly] = React.useState(false);
+            return (
+                <ThemeProvider theme={theme}>
+                    <SidebarFilters
+                        {...baseProps}
+                        isLoggedIn
+                        hasFavouriteSpaces
+                        showFavouriteSpacesOnly={showFavouriteSpacesOnly}
+                        setShowFavouriteSpacesOnly={setShowFavouriteSpacesOnly}
+                    />
+                </ThemeProvider>
+            );
+        };
+        render(<StatefulFavouritesSidebar />);
+
+        const favouritesCheckbox = screen.getByTestId('filter-show-favourite-spaces-only');
+        fireEvent.click(favouritesCheckbox);
+        fireEvent.click(favouritesCheckbox);
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'select',
+                click_label: 'Favourites=Your favourites',
+                click_class: 'filter-show-favourite-spaces-only',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: { favourites: true },
+            },
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Favourites=Your favourites',
+                click_class: 'filter-show-favourite-spaces-only',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            },
         ]);
     });
 

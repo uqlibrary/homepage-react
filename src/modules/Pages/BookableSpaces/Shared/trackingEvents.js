@@ -15,6 +15,7 @@ const action = {
     DESELECT: 'deselect',
     EXPAND: 'expand',
     COLLAPSE: 'collapse',
+    CLEAR: 'clear',
 };
 
 export { event, category, action };

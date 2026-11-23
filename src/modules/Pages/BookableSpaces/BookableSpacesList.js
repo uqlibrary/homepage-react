@@ -33,6 +33,8 @@ import {
     getSpacesSpaceName,
     trackSpacesFavouriteClick,
     trackSpacesFilterSelection,
+    trackSpacesNavigationClick,
+    trackSpacesSpaceNavigationClick,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 
 import BookableSpacesMap from 'modules/Pages/BookableSpaces/Shared/BookableSpacesMap';
@@ -812,6 +814,26 @@ export const BookableSpacesList = ({
             selectedLibrary,
             capacityFilterValue,
             showFavouriteSpacesOnly,
+        });
+        const clickContext = getSpacesClickContext({
+            selectedCampus: correctedCampusId(selectedCampus),
+            campusList,
+            selectedLibrary,
+            librariesForCampus,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            selectedFacilityTypes,
+            capacityFilterValue,
+            minimumSpaceCapacity,
+            maximumSpaceCapacity,
+            showFavouriteSpacesOnly,
+        });
+        trackSpacesNavigationClick({
+            click_label: mapViewToggleLabel,
+            click_class: 'spaces-view-list',
+            click_url: nextUrl,
+            click_space_name: null,
+            ...clickContext,
         });
         window.location.assign(nextUrl);
     };
@@ -1795,6 +1817,47 @@ export const BookableSpacesList = ({
             showFavouriteSpacesOnly,
         ],
     );
+    const handleSpaceDetailsClick = React.useCallback(
+        (event, bookableSpace) => {
+            const link = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus: correctedCampusId(selectedCampus),
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+            const clickLabel = getSpacesSpaceName(bookableSpace) || 'Unnamed space';
+
+            trackSpacesSpaceNavigationClick({
+                space: bookableSpace,
+                clickLabel,
+                clickClass: link.getAttribute('data-testid'),
+                clickUrl: link.getAttribute('href'),
+                clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            correctedCampusId,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
     const mapViewToggleLabel = 'Help me find a space';
     const highlightedSpace = React.useMemo(() => {
         const validHighlightedSpaces =
@@ -2008,6 +2071,7 @@ export const BookableSpacesList = ({
                                                 spacesFavouritesList={spacesFavouritesList}
                                                 isLoggedIn={isLoggedIn}
                                                 onFavouriteToggleClick={handleFavouriteToggleClick}
+                                                onSpaceDetailsClick={handleSpaceDetailsClick}
                                                 onSpaceSelect={handleSpaceSelect}
                                                 onSpaceToggle={handleSpaceToggle}
                                                 expandedSpaceId={expandedSpaceId}
@@ -2036,6 +2100,7 @@ export const BookableSpacesList = ({
                                     >
                                         <Button
                                             data-testid="spaces-advanced-go-to-journey"
+                                            data-analytics-id="spaces-view-list"
                                             variant="contained"
                                             startIcon={<TravelExploreIcon />}
                                             onClick={goToJourney}

@@ -168,6 +168,20 @@ export const trackSpacesNavigationClick = parameters => {
 export const getSpacesSpaceName = space =>
     [space?.space_type_details?.space_type_name, space?.space_name].filter(Boolean).join(' ') || null;
 
+export const trackSpacesSpaceNavigationClick = ({ space, clickLabel, clickClass, clickUrl, clickContext }) => {
+    const hashRouteIndex = clickUrl?.indexOf('#/spaces/') ?? -1;
+    const normalizedClickUrl = hashRouteIndex >= 0 ? clickUrl.slice(hashRouteIndex + 1) : clickUrl;
+    trackSpacesNavigationClick({
+        click_category: category.SPACE,
+        click_action: action.CLICK,
+        click_label: clickLabel,
+        click_class: clickClass,
+        click_url: normalizedClickUrl,
+        click_space_name: getSpacesSpaceName(space),
+        ...clickContext,
+    });
+};
+
 export const trackSpacesFavouriteClick = ({ isFavourite, ...parameters }) => {
     window.dataLayer = window.dataLayer || [];
     const trackingData = {
@@ -224,6 +238,22 @@ export const trackSpacesFilterCheckbox = ({ isChecked, filterGroupName, filterNa
         click_category: category.FILTERS,
         click_action: isChecked ? action.SELECT : action.DESELECT,
         click_label: `${filterGroupName}=${filterName}`,
+        click_class: clickClass,
+        click_url: null,
+        click_space_name: null,
+        ...clickContext,
+    };
+    console.log('GA SPACES CLICK PUSH', JSON.stringify(trackingData, null, 2));
+    window.dataLayer.push(trackingData);
+};
+
+export const trackSpacesFilterReset = ({ clickLabel, clickClass, clickContext }) => {
+    window.dataLayer = window.dataLayer || [];
+    const trackingData = {
+        event: event.CLICK,
+        click_category: category.FILTERS,
+        click_action: action.CLEAR,
+        click_label: clickLabel,
         click_class: clickClass,
         click_url: null,
         click_space_name: null,

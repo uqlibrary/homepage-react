@@ -646,6 +646,32 @@ describe('BookableSpacesWrapper browser back navigation', () => {
         });
     });
 
+    it('tracks the results page View on map navigation with the current filter context', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-view-map'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'View on map',
+                click_class: 'spaces-view-map',
+                click_url: expect.stringContaining('/spaces/mapresults'),
+                click_space_name: null,
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+        consoleError.mockRestore();
+    });
+
     it('tracks intent card clicks with the clicked label, test id and href', async () => {
         renderJourney(defaultProps);
 
@@ -667,6 +693,60 @@ describe('BookableSpacesWrapper browser back navigation', () => {
                 }),
             );
         });
+    });
+
+    it('tracks a result space click before navigating to its details', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-result-list-item-101'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Silent study Space999',
+                click_class: 'spaces-result-list-item-101',
+                click_url: `/spaces/detail/${baseSpace.space_uuid}`,
+                click_space_name: 'Silent study Space999',
+                click_campus: 'St Lucia',
+                click_library: 'Central Library',
+                click_active_filters: {},
+            }),
+        );
+        consoleError.mockRestore();
+    });
+
+    it('tracks a result with an unnamed space before navigating to its details', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const unnamedSpace = { space_id: 303, space_uuid: 'unnamed-space-uuid' };
+        renderJourney({
+            ...defaultProps,
+            initialView: 'results',
+            filteredSpaceLocations: [unnamedSpace],
+            allSpaceLocations: [unnamedSpace],
+            highlightedSpace: null,
+            totalSpaceCount: 1,
+        });
+
+        fireEvent.click(screen.getByTestId('spaces-result-list-item-303'));
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Unnamed space',
+                click_class: 'spaces-result-list-item-303',
+                click_url: '/spaces/detail/unnamed-space-uuid',
+                click_space_name: null,
+            }),
+        );
+        consoleError.mockRestore();
     });
 
     it('tracks UQ Maps browse clicks with the current Spaces context', () => {

@@ -35,6 +35,7 @@ import {
     trackSpacesFavouriteClick,
     trackSpacesNavigationClick,
     trackSpacesPageView,
+    trackSpacesSpaceNavigationClick,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import { BookableSpacesJourneyView } from './BookableSpacesJourneyView';
 
@@ -724,7 +725,7 @@ const BookableSpacesWrapper = ({
     );
 
     /* istanbul ignore next */
-    const goToLegacyBrowse = () => {
+    const goToLegacyBrowse = event => {
         /* istanbul ignore next */
         if (typeof window !== 'undefined') {
             writeJourneyViewState({ view: 'results', intentId: null, spaceId: null });
@@ -738,6 +739,26 @@ const BookableSpacesWrapper = ({
             selectedLibrary,
             capacityFilterValue,
             showFavouriteSpacesOnly,
+        });
+        const clickContext = getSpacesClickContext({
+            selectedCampus,
+            campusList,
+            selectedLibrary,
+            librariesForCampus,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            selectedFacilityTypes,
+            capacityFilterValue,
+            minimumSpaceCapacity,
+            maximumSpaceCapacity,
+            showFavouriteSpacesOnly,
+        });
+        trackSpacesNavigationClick({
+            click_label: event?.currentTarget?.textContent?.trim() || 'View on map',
+            click_class: event?.currentTarget?.getAttribute('data-analytics-id') || 'spaces-view-map',
+            click_url: nextUrl,
+            click_space_name: null,
+            ...clickContext,
         });
         /* istanbul ignore next */
         window.location.assign(nextUrl);
@@ -1055,6 +1076,49 @@ const BookableSpacesWrapper = ({
                 click_url: link.getAttribute('href'),
                 click_space_name: spaceName,
                 ...clickContext,
+            });
+        },
+        [
+            campusList,
+            capacityFilterValue,
+            facilityTypeList,
+            filteredFacilityTypeList,
+            librariesForCampus,
+            maximumSpaceCapacity,
+            minimumSpaceCapacity,
+            selectedCampus,
+            selectedFacilityTypes,
+            selectedLibrary,
+            showFavouriteSpacesOnly,
+        ],
+    );
+
+    const handleSpaceDetailsClick = React.useCallback(
+        (event, space) => {
+            const link = event.currentTarget;
+            const clickContext = getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            });
+            const clickLabel = [space?.space_type_details?.space_type_name, space?.space_name || 'Unnamed space']
+                .filter(Boolean)
+                .join(' ');
+
+            trackSpacesSpaceNavigationClick({
+                space,
+                clickLabel,
+                clickClass: link.getAttribute('data-testid'),
+                clickUrl: link.getAttribute('href'),
+                clickContext,
             });
         },
         [
@@ -1448,6 +1512,7 @@ const BookableSpacesWrapper = ({
                         selectedIntent={selectedIntent}
                         intentSpaceLocations={intentSpaceLocations}
                         totalSpaceCount={totalSpaceCount}
+                        onSpaceDetailsClick={handleSpaceDetailsClick}
                         selectedIntentId={activeIntentId}
                         setSelectedSpace={setSelectedSpace}
                         navigateToView={navigateToView}

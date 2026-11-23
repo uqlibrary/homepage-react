@@ -401,6 +401,65 @@ describe('BookableSpacesList campus selection', () => {
         useAccountContext.mockReturnValue({ account: null });
     });
 
+    it('tracks opening a space from the map results list', async () => {
+        delete window.dataLayer;
+
+        rtlRender(
+            <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
+                <BookableSpacesList {...baseProps} />
+            </WithRouter>,
+        );
+
+        await waitFor(() => expect(mockSidebarListRender).toHaveBeenCalled());
+        const latestSidebarListProps = mockSidebarListRender.mock.calls.at(-1)[0];
+        const link = {
+            getAttribute: attribute =>
+                ({
+                    href: '/spaces/detail/st-lucia-space-uuid',
+                    'data-testid': 'space-101-details',
+                })[attribute] || null,
+        };
+        const space = baseProps.bookableSpacesRoomList.data.locations[0];
+
+        latestSidebarListProps.onSpaceDetailsClick({ currentTarget: link }, space);
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'St Lucia space',
+                click_class: 'space-101-details',
+                click_url: '/spaces/detail/st-lucia-space-uuid',
+                click_space_name: 'St Lucia space',
+                click_campus: 'All campuses',
+                click_library: 'All libraries',
+                click_active_filters: {},
+            }),
+        );
+
+        latestSidebarListProps.onSpaceDetailsClick(
+            {
+                currentTarget: {
+                    getAttribute: attribute => (attribute === 'data-testid' ? 'space-999-details' : null),
+                },
+            },
+            { space_id: 999 },
+        );
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Unnamed space',
+                click_class: 'space-999-details',
+                click_url: null,
+                click_space_name: null,
+            }),
+        );
+    });
+
     it('uses default view and handles unavailable room and article data while loading', () => {
         const props = {
             ...baseProps,
@@ -1797,6 +1856,7 @@ describe('BookableSpacesList campus selection', () => {
         // jsdom refuses to navigate, and says so rather than throwing - which is all this needs to prove the
         // click handler reaches window.location.assign.
         const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        delete window.dataLayer;
 
         rtlRender(
             <WithRouter route="/spaces/mapresults" initialEntries={['/spaces/mapresults']}>
@@ -1805,6 +1865,18 @@ describe('BookableSpacesList campus selection', () => {
         );
 
         expect(() => fireEvent.click(screen.getByTestId('spaces-advanced-go-to-journey'))).not.toThrow();
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'navigation',
+                click_action: 'click',
+                click_label: 'Help me find a space',
+                click_class: 'spaces-view-list',
+                click_url: expect.stringContaining('/spaces/results'),
+                click_space_name: null,
+                click_active_filters: {},
+            }),
+        );
 
         consoleError.mockRestore();
     });

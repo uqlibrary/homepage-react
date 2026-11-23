@@ -12,15 +12,6 @@ jest.mock('helpers/general', () => ({
     ),
 }));
 
-jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/OpenSpaceDetailsButton', () => ({
-    __esModule: true,
-    default: ({ spaceDetails }) => (
-        <button type="button" data-testid={`open-space-details-${spaceDetails?.space_id}`}>
-            Open details
-        </button>
-    ),
-}));
-
 jest.mock('modules/Pages/BookableSpaces/SpacesListPage/MapListPage/components/MapSpaceDetails', () => ({
     __esModule: true,
     default: ({ bookableSpace, onToggle, isExpanded }) => (
@@ -43,6 +34,7 @@ jest.mock('modules/Pages/BookableSpaces/Shared/SpacesFavouriteIcon', () => ({
 
 const buildSpace = overrides => ({
     space_id: 101,
+    space_uuid: 'st-lucia-space-uuid',
     space_name: 'Room A',
     space_type_details: { space_type_name: 'Meeting room' },
     space_library_name: 'Central Library',
@@ -109,7 +101,22 @@ describe('SidebarSpacesList', () => {
         fireEvent.click(screen.getByTestId('toggle-space-101'));
         expect(onSpaceToggle).toHaveBeenCalledWith(baseProps.filteredSpaceLocations[0], true);
 
-        expect(screen.getByTestId('open-space-details-101')).toBeInTheDocument();
+        expect(screen.getByTestId('space-101-details')).toBeInTheDocument();
+    });
+
+    it('forwards detail-button clicks to the navigation analytics handler', () => {
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const trackedClick = jest.fn(event => {
+            expect(event.currentTarget).toHaveAttribute('href', '/spaces/detail/st-lucia-space-uuid');
+        });
+
+        rtlRender(<SidebarSpacesList {...baseProps} onSpaceDetailsClick={trackedClick} expandedSpaceId={101} />);
+
+        fireEvent.click(screen.getByTestId('space-101-details'));
+
+        expect(trackedClick).toHaveBeenCalledTimes(1);
+        expect(trackedClick).toHaveBeenCalledWith(expect.anything(), baseProps.filteredSpaceLocations[0]);
+        consoleError.mockRestore();
     });
 
     it('uses default values when optional props are omitted', () => {

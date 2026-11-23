@@ -53,6 +53,7 @@ const SidebarSpacesList = ({
     onFavouriteToggleClick,
     onSpaceSelect = null,
     onSpaceToggle = null,
+    onSpaceDetailsClick,
     expandedSpaceId = null,
 }) => {
     // const markerRefs = React.useRef({});
@@ -126,7 +127,10 @@ const SidebarSpacesList = ({
                                         </span>
                                         {isExpanded && (
                                             <span className="openNewWrapper" style={{ paddingBlock: '0.2rem' }}>
-                                                <OpenSpaceDetailsButton spaceDetails={bookableSpace} />
+                                                <OpenSpaceDetailsButton
+                                                    spaceDetails={bookableSpace}
+                                                    onClick={onSpaceDetailsClick}
+                                                />
                                             </span>
                                         )}
                                     </StyledHeadingWrapperSpan>
@@ -170,6 +174,7 @@ SidebarSpacesList.propTypes = {
     onFavouriteToggleClick: PropTypes.func,
     onSpaceSelect: PropTypes.func,
     onSpaceToggle: PropTypes.func,
+    onSpaceDetailsClick: PropTypes.func,
     expandedSpaceId: PropTypes.number,
 };
 
