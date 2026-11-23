@@ -80,6 +80,7 @@ export const JourneyResultsView = ({
     actions,
     intentSpaceLocations,
     totalSpaceCount,
+    onSpaceDetailsClick,
     onResetAllFilters,
     goToLegacyBrowse,
     selectedFacilityTypes,
@@ -240,7 +241,13 @@ export const JourneyResultsView = ({
                         Skip to filters
                     </StyledSkipLinkAnchor>
                     <StyledButtonWrapperStack direction="row" spacing={1}>
-                        <StyledSecondaryButton onClick={goToLegacyBrowse}>View on map</StyledSecondaryButton>
+                        <StyledSecondaryButton
+                            onClick={goToLegacyBrowse}
+                            data-testid="spaces-view-map"
+                            data-analytics-id="spaces-view-map"
+                        >
+                            View on map
+                        </StyledSecondaryButton>
                     </StyledButtonWrapperStack>
                     {spaces.length > 0 && (
                         <Stack spacing={4} sx={{ mt: 1.5 }}>
@@ -258,6 +265,7 @@ export const JourneyResultsView = ({
                                             className="cardBody"
                                             href={detailUrl}
                                             data-testid={`spaces-result-list-item-${space?.space_id}`}
+                                            onClick={event => onSpaceDetailsClick?.(event, space)}
                                         >
                                             <Box sx={{ position: 'relative' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -422,6 +430,7 @@ JourneyResultsView.propTypes = {
     actions: PropTypes.any,
     intentSpaceLocations: PropTypes.array,
     totalSpaceCount: PropTypes.number,
+    onSpaceDetailsClick: PropTypes.func,
     onResetAllFilters: PropTypes.func,
     goToLegacyBrowse: PropTypes.func,
     selectedFacilityTypes: PropTypes.array,

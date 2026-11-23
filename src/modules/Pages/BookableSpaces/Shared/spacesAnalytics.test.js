@@ -6,6 +6,7 @@ import {
     trackSpacesFilterSelection,
     trackSpacesNavigationClick,
     trackSpacesPageView,
+    trackSpacesSpaceNavigationClick,
 } from './spacesAnalytics';
 
 describe('getSpacesSpaceName', () => {
@@ -17,6 +18,36 @@ describe('getSpacesSpaceName', () => {
             }),
         ).toBe('Communal space 342');
         expect(getSpacesSpaceName({})).toBeNull();
+    });
+});
+
+describe('trackSpacesSpaceNavigationClick', () => {
+    beforeEach(() => {
+        delete window.dataLayer;
+    });
+
+    it('handles a missing destination URL and uses the supplied click label', () => {
+        trackSpacesSpaceNavigationClick({
+            space: { space_id: 43, space_type_details: { space_type_name: 'Training room' }, space_name: 'D108' },
+            clickLabel: 'Training room D108',
+            clickClass: 'spaces-result-list-item-43',
+            clickUrl: null,
+        });
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'space',
+                click_action: 'click',
+                click_label: 'Training room D108',
+                click_class: 'spaces-result-list-item-43',
+                click_url: null,
+                click_space_name: 'Training room D108',
+                click_campus: null,
+                click_library: null,
+                click_active_filters: {},
+            },
+        ]);
     });
 });
 

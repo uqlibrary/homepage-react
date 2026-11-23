@@ -20,7 +20,7 @@ const StyledTooltip = styled(Tooltip)(() => ({
     padding: '0.25rem',
 }));
 
-export const OpenSpaceDetailsButton = ({ spaceDetails }) => {
+export const OpenSpaceDetailsButton = ({ spaceDetails, onClick }) => {
     const detailUrl = React.useMemo(
         () =>
             serialiseJourneyUrl({
@@ -35,6 +35,7 @@ export const OpenSpaceDetailsButton = ({ spaceDetails }) => {
             href={detailUrl}
             aria-label={`Open Space ${spaceDetails?.space_name} details`}
             data-testid={`space-${spaceDetails.space_id}-details`}
+            onClick={event => onClick?.(event, spaceDetails)}
         >
             <StyledTooltip title="Open this space details" arrow>
                 <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
@@ -59,6 +60,7 @@ export const OpenSpaceDetailsButton = ({ spaceDetails }) => {
 };
 OpenSpaceDetailsButton.propTypes = {
     spaceDetails: PropTypes.object,
+    onClick: PropTypes.func,
 };
 
 export default OpenSpaceDetailsButton;

@@ -33,6 +33,7 @@ import {
     getSpacesClickContext,
     trackSpacesFilterCheckbox,
     trackSpacesFilterGroupToggle,
+    trackSpacesFilterReset,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
 import ChooseLibrary from 'modules/Pages/BookableSpaces/Shared/ChooseLibrary';
@@ -835,7 +836,24 @@ export const SidebarFilters = ({
         handleLibrarySelection?.({ target: { value: 0 } });
         handleCampusSelection?.({ target: { value: 0 } });
     };
-    const handleResetFiltersButtonClick = () => {
+    const handleResetFiltersButtonClick = event => {
+        trackSpacesFilterReset({
+            clickLabel: event.currentTarget.textContent.trim(),
+            clickClass: event.currentTarget.getAttribute('data-analytics-id'),
+            clickContext: getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes,
+                capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
         deSelectAll();
     };
     const ValueLabelComponent = ({ children, value }) => {
@@ -1196,10 +1214,11 @@ export const SidebarFilters = ({
                     <Button
                         type="button"
                         data-testid="reset-filters-button"
+                        data-analytics-id="reset-filters-button"
                         onMouseDown={event => event.preventDefault()}
                         onClick={event => {
                             event.currentTarget.blur();
-                            handleResetFiltersButtonClick();
+                            handleResetFiltersButtonClick(event);
                         }}
                         variant="text"
                         disableRipple
@@ -1287,8 +1306,31 @@ export const SidebarFilters = ({
                         >
                             <Checkbox
                                 checked={Boolean(showFavouriteSpacesOnly)}
-                                onChange={event => setShowFavouriteSpacesOnly(event?.target?.checked)}
+                                onChange={event => {
+                                    const isChecked = Boolean(event?.target?.checked);
+                                    trackSpacesFilterCheckbox({
+                                        isChecked,
+                                        filterGroupName: 'Favourites',
+                                        filterName: 'Your favourites',
+                                        clickClass: 'filter-show-favourite-spaces-only',
+                                        clickContext: getSpacesClickContext({
+                                            selectedCampus,
+                                            campusList,
+                                            selectedLibrary,
+                                            librariesForCampus,
+                                            facilityTypeList,
+                                            filteredFacilityTypeList,
+                                            selectedFacilityTypes,
+                                            capacityFilterValue,
+                                            minimumSpaceCapacity,
+                                            maximumSpaceCapacity,
+                                            showFavouriteSpacesOnly: isChecked,
+                                        }),
+                                    });
+                                    setShowFavouriteSpacesOnly(isChecked);
+                                }}
                                 data-testid="filter-show-favourite-spaces-only"
+                                data-analytics-id="filter-show-favourite-spaces-only"
                                 id="filter-show-favourite-spaces-only"
                                 className="selectedFilterType"
                                 inputProps={{ 'aria-label': 'your favourites' }}
