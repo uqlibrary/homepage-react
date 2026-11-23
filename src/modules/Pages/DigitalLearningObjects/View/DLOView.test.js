@@ -20,17 +20,14 @@ jest.mock('context', () => ({
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardPage', () => ({
-    // eslint-disable-next-line react/prop-types
     StandardPage: ({ children }) => <div data-testid="standard-page">{children}</div>,
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardCard', () => ({
-    // eslint-disable-next-line react/prop-types
     StandardCard: ({ children }) => <div data-testid="standard-card">{children}</div>,
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/Loaders', () => ({
-    // eslint-disable-next-line react/prop-types
     InlineLoader: ({ message }) => <div data-testid="inline-loader">{message}</div>,
 }));
 
@@ -40,13 +37,11 @@ jest.mock('modules/Pages/DigitalLearningObjects/SharedComponents/LoginPrompt', (
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/ConfirmDialogBox', () => ({
-    // eslint-disable-next-line react/prop-types
     ConfirmationBox: ({ isOpen, locale, onAction }) => {
         if (!isOpen) return null;
 
         return (
             <div data-testid="dialogbox-dlor-save-notification">
-                {/* eslint-disable-next-line react/prop-types */}
                 <h2 data-testid="message-title">{locale.confirmationTitle}</h2>
                 <button type="button" onClick={onAction}>
                     OK

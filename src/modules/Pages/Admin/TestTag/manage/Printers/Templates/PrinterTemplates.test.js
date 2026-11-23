@@ -11,7 +11,6 @@ import { transformRow } from './utils';
 
 jest.mock('./PlaceholderEditor', () => {
     const React = require('react');
-    // eslint-disable-next-line react/prop-types
     return function MockPlaceholderEditor({ onChange, value, label, setIsEditing }) {
         return (
             <div data-testid="mock-placeholder-editor">

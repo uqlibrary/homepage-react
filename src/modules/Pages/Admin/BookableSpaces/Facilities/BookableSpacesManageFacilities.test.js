@@ -4,7 +4,6 @@ const mockDndDrag = jest.fn();
 const mockDndDrop = jest.fn();
 
 jest.mock('react-dnd', () => ({
-    // eslint-disable-next-line react/prop-types
     DndProvider: ({ children }) => <>{children}</>,
     useDrag: (...args) => mockDndDrag(...args),
     useDrop: (...args) => mockDndDrop(...args),

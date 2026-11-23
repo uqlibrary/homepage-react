@@ -14,7 +14,6 @@ jest.mock('context', () => ({
 }));
 
 jest.mock('modules/SharedComponents/Toolbox/StandardPage', () => ({
-    // eslint-disable-next-line react/prop-types
     StandardPage: ({ children }) => <div data-testid="standard-page">{children}</div>,
 }));
 
