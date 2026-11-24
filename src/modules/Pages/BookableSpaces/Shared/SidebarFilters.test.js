@@ -152,6 +152,105 @@ describe('SidebarFilters campus selector', () => {
         expect(selectedFilterButton).toHaveAttribute('title', 'Postgraduate only space selected - click to deselect');
     });
 
+    it('tracks dismissing a selected filter pill with the updated active-filter context', () => {
+        delete window.dataLayer;
+
+        renderWithTheme({
+            ...baseProps,
+            selectedCampus: 2,
+            selectedLibrary: 22,
+            librariesForCampus: [{ library_id: 22, library_name: 'Gatton Library' }],
+            facilityTypeList: facilityGroupFixture,
+            filteredFacilityTypeList: facilityGroupFixture,
+            selectedFacilityTypes: selectedNaturalLightFilter,
+        });
+
+        const selectedFilterButton = screen.getByTestId('button-deselect-selected-57');
+        expect(selectedFilterButton).toHaveAttribute('data-analytics-id', 'filter-pill-deselect-57');
+        fireEvent.click(selectedFilterButton);
+
+        expect(window.dataLayer).toEqual([
+            {
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Natural light',
+                click_class: 'filter-pill-deselect-57',
+                click_url: null,
+                click_space_name: null,
+                click_campus: 'Gatton',
+                click_library: 'Gatton Library',
+                click_active_filters: {},
+            },
+        ]);
+    });
+
+    it('tracks dismissing the capacity pill and clears it from active-filter context', () => {
+        delete window.dataLayer;
+        const capacityGroup = {
+            data: {
+                facility_type_groups: [
+                    {
+                        facility_type_group_id: 1,
+                        facility_type_group_name: 'Facilities',
+                        facility_type_group_order: 1,
+                        facility_type_group_loads_open: true,
+                        facility_type_children: [{ facility_type_id: 9003, facility_type_name: 'Space capacity' }],
+                    },
+                ],
+            },
+        };
+
+        renderWithTheme({
+            ...baseProps,
+            facilityTypeList: capacityGroup,
+            filteredFacilityTypeList: capacityGroup,
+            capacityFilterValue: [4, 8],
+        });
+
+        const capacityButton = screen.getByTestId('button-deselect-selected-capacity');
+        expect(capacityButton).toHaveAttribute('data-analytics-id', 'filter-pill-deselect-9003');
+        fireEvent.click(capacityButton);
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Space capacity',
+                click_class: 'filter-pill-deselect-9003',
+                click_url: null,
+                click_space_name: null,
+                click_active_filters: {},
+            }),
+        );
+    });
+
+    it('uses the fallback label when a capacity pill has no text or selected filter list', () => {
+        delete window.dataLayer;
+
+        renderWithTheme({
+            ...baseProps,
+            selectedFacilityTypes: undefined,
+            capacityFilterValue: [4, 8],
+        });
+
+        const capacityButton = screen.getByTestId('button-deselect-selected-capacity');
+        capacityButton.textContent = '';
+        fireEvent.click(capacityButton);
+
+        expect(window.dataLayer).toContainEqual(
+            expect.objectContaining({
+                event: 'library spaces click',
+                click_category: 'filters',
+                click_action: 'deselect',
+                click_label: 'Selected filter',
+                click_class: 'filter-pill-deselect-9003',
+                click_url: null,
+            }),
+        );
+    });
+
     it('falls back to action labels when no facility name is available and ignores malformed facility ids', () => {
         const mixedFixture = {
             data: {
