@@ -33,6 +33,7 @@ import {
     getSpacesClickContext,
     trackSpacesFilterCheckbox,
     trackSpacesFilterGroupToggle,
+    trackSpacesFilterPillDismissal,
     trackSpacesFilterReset,
 } from 'modules/Pages/BookableSpaces/Shared/spacesAnalytics';
 import ChooseCampus from 'modules/Pages/BookableSpaces/Shared/ChooseCampus';
@@ -784,17 +785,8 @@ export const SidebarFilters = ({
         const shouldClearCapacityFilter =
             selectedFacilityType?.facility_special_action === FILTER_SPACE_CAPACITY_ACTION_NAME ||
             isSameFacilityTypeId(facilityTypeId, FILTER_CAPACITY_TYPE_ID);
-        if (shouldClearCapacityFilter) {
-            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
-        }
-        showHideActiveFilterListItems(facilityTypeId, false);
-        if (shouldClearCapacityFilter) {
-            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
-        }
-
-        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
-            const existingFilters = prevSelectedFacilityTypes || /* istanbul ignore next */ [];
-            return existingFilters.map(ft => {
+        const deselectFilters = filters =>
+            filters.map(ft => {
                 const isMatchingFilter = isSameFacilityTypeId(ft?.facility_type_id, facilityTypeId);
                 const isSiblingFilter =
                     shouldClearCapacityFilter && isSameFacilityTypeId(ft?.facility_type_id, FILTER_CAPACITY_TYPE_ID);
@@ -807,6 +799,37 @@ export const SidebarFilters = ({
                     unselected: false,
                 };
             });
+        const nextSelectedFacilityTypes = deselectFilters(selectedFacilityTypes || []);
+        trackSpacesFilterPillDismissal({
+            filterName: button?.textContent?.trim() || 'Selected filter',
+            clickClass: button?.getAttribute('data-analytics-id'),
+            clickContext: getSpacesClickContext({
+                selectedCampus,
+                campusList,
+                selectedLibrary,
+                librariesForCampus,
+                facilityTypeList,
+                filteredFacilityTypeList,
+                selectedFacilityTypes: nextSelectedFacilityTypes,
+                capacityFilterValue: shouldClearCapacityFilter
+                    ? [minimumSpaceCapacity, maximumSpaceCapacity]
+                    : capacityFilterValue,
+                minimumSpaceCapacity,
+                maximumSpaceCapacity,
+                showFavouriteSpacesOnly,
+            }),
+        });
+        if (shouldClearCapacityFilter) {
+            setCapacityFilterValue([minimumSpaceCapacity, maximumSpaceCapacity]);
+        }
+        showHideActiveFilterListItems(facilityTypeId, false);
+        if (shouldClearCapacityFilter) {
+            showHideActiveFilterListItems(FILTER_CAPACITY_TYPE_ID, false);
+        }
+
+        setSelectedFacilityTypes(prevSelectedFacilityTypes => {
+            const existingFilters = prevSelectedFacilityTypes || /* istanbul ignore next */ [];
+            return deselectFilters(existingFilters);
         });
     };
     const deSelectAll = () => {
@@ -1119,6 +1142,7 @@ export const SidebarFilters = ({
                     <Button
                         id={`button-deselect-selected-${selectedFilterId}`}
                         data-testid={`button-deselect-selected-${selectedFilterId}`}
+                        data-analytics-id={`filter-pill-deselect-${selectedFilterId}`}
                         onClick={deSelectSelected}
                         className="selectedFilter"
                         title={`${selectedFilterLabel} selected - click to deselect`}
@@ -1135,6 +1159,7 @@ export const SidebarFilters = ({
                     <Button
                         id="button-deselect-selected-9003"
                         data-testid="button-deselect-selected-capacity"
+                        data-analytics-id="filter-pill-deselect-9003"
                         onClick={deSelectSelected}
                         className="selectedFilter"
                         title="Space capacity selected - click to deselect"
