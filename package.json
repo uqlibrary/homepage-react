@@ -239,9 +239,9 @@
                         "@babel/preset-env",
                         {
                             "modules": false,
-                            "targets": {
-                                "ie": "11"
-                            }
+                            "targets": "defaults and not dead",
+                            "useBuiltIns": "usage",
+                            "corejs": 3
                         }
                     ],
                     "@babel/react",
