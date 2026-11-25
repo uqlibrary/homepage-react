@@ -417,6 +417,7 @@ describe('Backend routes method', () => {
 
             expect(routes.DLOR_DEMOGRAPHICS_SAVE_API()).toEqual({ apiUrl: 'dlor/auth/demographics' });
             expect(routes.DLOR_AUTHENTICATED_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/auth/find/100' });
+            expect(routes.DLOR_EDIT_GET_BY_ID_API({ id: 100 })).toEqual({ apiUrl: 'dlor/auth/object/100/edit' });
             expect(routes.DLOR_OWNED_UPDATE_API(100)).toEqual({ apiUrl: 'dlor/auth/object/100' });
             expect(routes.DLOR_SERIES_LOAD_API(100)).toEqual({ apiUrl: 'dlor/public/series/find/100' });
             expect(routes.DLOR_FAVOURITES_API()).toEqual({ apiUrl: 'dlor/auth/favourites' });

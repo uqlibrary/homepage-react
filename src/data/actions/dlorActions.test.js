@@ -5,6 +5,7 @@ import {
     createDlor,
     deleteObjectFile,
     loadADLOR,
+    loadADLORForEdit,
     loadCurrentDLORs,
     loadDlorSubscriptionConfirmation,
     loadDlorUnsubscribe,
@@ -94,6 +95,19 @@ describe('Digital Learning Hub actions', () => {
             const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.DLOR_DETAIL_LOADED];
 
             await mockActionsStore.dispatch(loadADLOR('e895b270-d62b-11e7-954e-57c2cc19d151'));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('loads an object from the edit endpoint', async () => {
+            const dlorId = 'e895b270-d62b-11e7-954e-57c2cc19d151';
+            mockApi.onGet(repositories.routes.DLOR_EDIT_GET_BY_ID_API({ id: dlorId }).apiUrl).reply(200, {
+                object_id: dlorId,
+                object_title: 'Test digital learning object',
+            });
+
+            const expectedActions = [actions.DLOR_DETAIL_LOADING, actions.DLOR_DETAIL_LOADED];
+
+            await mockActionsStore.dispatch(loadADLORForEdit(dlorId));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 

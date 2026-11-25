@@ -656,7 +656,20 @@ function getSpecificDlorObject(dlorId) {
         : [200, { data: { ...singleRecord, ...JSON.parse(parsedQueryString?.responseBody?.getDlorObject || '{}') } }];
 }
 
-mock.onGet(/dlor\/(public|auth)\/find\/.*/)
+mock.onGet(/dlor\/auth\/object\/.*\/edit/)
+    .reply(config => {
+        const dlorId = config.url.split('/').at(-2).split('?')[0];
+        if (responseType === 'error') {
+            return [500, {}];
+        } else if (dlorId === 'missingRecord') {
+            return [200, { data: {} }];
+        } else if (dlorId === 'object_404') {
+            return [404, { status: 'error', message: 'No records found for that UUID' }];
+        } else {
+            return getSpecificDlorObject(dlorId);
+        }
+    })
+    .onGet(/dlor\/(public|auth)\/find\/.*/)
     .reply(config => {
         const urlparts = config.url.split('/').pop();
         const dlorId = urlparts.split('?')[0];

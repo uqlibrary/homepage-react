@@ -252,6 +252,7 @@ export const DLOR_ALL_API = () => ({ apiUrl: 'dlor/public/list/full' }); // is a
 export const DLOR_ALL_CURRENT_API = () => ({ apiUrl: 'dlor/public/list/current' });
 export const DLOR_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/public/find/${id}` });
 export const DLOR_AUTHENTICATED_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/auth/find/${id}` });
+export const DLOR_EDIT_GET_BY_ID_API = ({ id }) => ({ apiUrl: `dlor/auth/object/${id}/edit` });
 export const DLOR_GET_FILTER_LIST = () => ({ apiUrl: 'dlor/public/facet/list' });
 export const DLOR_SERIES_LIST_API = () => ({ apiUrl: 'dlor/public/series/list' });
 export const DLOR_SUBSCRIPTION_CONFIRMATION_API = ({ id }) => ({ apiUrl: `dlor/public/${id}/confirm/subscribe` });
