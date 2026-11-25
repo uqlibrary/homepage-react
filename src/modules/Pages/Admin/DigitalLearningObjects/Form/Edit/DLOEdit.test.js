@@ -58,7 +58,7 @@ const baseProps = {
         loadOwningTeams: jest.fn(),
         loadDlorKeywords: jest.fn(),
         clearADlor: jest.fn(),
-        loadADLOR: jest.fn(),
+        loadADLORForEdit: jest.fn(),
     },
     dlorItemLoading: false,
     dlorItemError: null,
@@ -137,7 +137,7 @@ describe('DLOEdit', () => {
             loadOwningTeams: jest.fn(),
             loadDlorKeywords: jest.fn(),
             clearADlor: jest.fn(),
-            loadADLOR: jest.fn(),
+            loadADLORForEdit: jest.fn(),
         };
 
         renderDloEdit({
@@ -160,7 +160,7 @@ describe('DLOEdit', () => {
         });
 
         await waitFor(() => {
-            expect(actions.loadADLOR).toHaveBeenCalledWith('abc-123', true);
+            expect(actions.loadADLORForEdit).toHaveBeenCalledWith('abc-123');
         });
 
         expect(screen.getByTestId('dlor-form')).toHaveAttribute('data-mode', 'edit');

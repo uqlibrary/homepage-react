@@ -10,6 +10,7 @@ import {
     DLOR_FILE_TYPE_LIST_API,
     DLOR_GET_BY_ID_API,
     DLOR_AUTHENTICATED_GET_BY_ID_API,
+    DLOR_EDIT_GET_BY_ID_API,
     DLOR_GET_FILTER_LIST,
     DLOR_SUBSCRIPTION_CONFIRMATION_API,
     DLOR_TEAM_CREATE_API,
@@ -92,6 +93,26 @@ export function loadADLOR(dlorId, isauthenticated = false) {
         return get(
             isauthenticated ? DLOR_AUTHENTICATED_GET_BY_ID_API({ id: dlorId }) : DLOR_GET_BY_ID_API({ id: dlorId }),
         )
+            .then(response => {
+                dispatch({
+                    type: actions.DLOR_DETAIL_LOADED,
+                    payload: response.data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.DLOR_DETAIL_FAILED,
+                    payload: error.message,
+                });
+                checkExpireSession(dispatch, error);
+            });
+    };
+}
+
+export function loadADLORForEdit(dlorId) {
+    return dispatch => {
+        dispatch({ type: actions.DLOR_DETAIL_LOADING });
+        return get(DLOR_EDIT_GET_BY_ID_API({ id: dlorId }))
             .then(response => {
                 dispatch({
                     type: actions.DLOR_DETAIL_LOADED,

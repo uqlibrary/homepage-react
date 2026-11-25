@@ -61,7 +61,7 @@ export const DLOEdit = ({
         /* istanbul ignore next */
         if (!!dlorId) {
             actions.clearADlor();
-            actions.loadADLOR(dlorId, true);
+            actions.loadADLORForEdit(dlorId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dlorId]);
