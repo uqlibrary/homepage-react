@@ -19,7 +19,7 @@ function triggerBrowserUpdate() {
 function configureBu() {
     // customisation details at https://browser-update.org/customize.html
     buConfig = {
-        required: { e: -2, i: 12, f: -2, s: -2, c: -2 },
+        required: { e: -1, i: 12, f: -1, s: -1, c: -1 },
         insecure: true,
         style: 'top',
         shift_page_down: true,
