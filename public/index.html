@@ -35,6 +35,49 @@
             </iframe>
         </noscript>
         <div id="react-root" class="layout-fill"></div>
+        <div id="old-browser-error" style="display:none;">
+            <style>
+                body,
+                html,
+                #old-browser-error {
+                    overflow: hidden;
+                    margin: 0;
+                    height: 100%;
+                }
+                #old-browser-error {
+                    position: absolute;
+                    top: 0;
+                    height: 100%;
+                    width: 100%;
+                }
+                #old-browser-error div {
+                    height: 100%;
+                    background: linear-gradient(135deg, rgb(81, 36, 122) 55%, rgb(150, 42, 139) 100%);
+                    color: white;
+                    padding: 1rem 2rem;
+                    font-family: Roboto, Helvetica, sans-serif;
+                    line-height: 1.5rem;
+                }
+                #old-browser-error p {
+                    max-width: 55rem;
+                }
+                #old-browser-error a {
+                    color: white;
+                    text-decoration: underline;
+                }
+            </style>
+            <div>
+                <p>
+                    <span id="browser-name"></span>
+                    cannot display this part of the Library website. Please visit our&nbsp;<a
+                        href="https://web.library.uq.edu.au/library-and-student-it-help/supported-web-browsers"
+                        target="_blank"
+                        >browser compatibility page</a
+                    >
+                    for more information on supported browsers and try again with one of those.
+                </p>
+            </div>
+        </div>
         <script type="text/javascript" src="<%= htmlWebpackPlugin.options.reusablejs %>" defer></script>
     </body>
 </html>

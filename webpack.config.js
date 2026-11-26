@@ -30,6 +30,7 @@ module.exports = {
     // coverage to source via the instrumentation itself, so no webpack source map is needed under cc.
     devtool: process.env.PW_IS_RUNNING ? false : 'source-map',
     entry: {
+        browserUpdate: join(__dirname, 'public', 'browser-update.js'),
         webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
         webPackDevServer: 'webpack/hot/only-dev-server',
         index: join(__dirname, 'src', 'index.js'),
