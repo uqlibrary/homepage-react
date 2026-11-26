@@ -1,6 +1,6 @@
 'use strict';
 
-const { resolve, join } = require('path');
+const { resolve } = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -82,7 +82,6 @@ const webpackConfig = {
     },
     // The entry file. All your app roots from here.
     entry: {
-        browserUpdate: join(__dirname, 'public', 'browser-update.js'),
         main: resolve(__dirname, './src/index.js'),
     },
     // Where you want the output to go
