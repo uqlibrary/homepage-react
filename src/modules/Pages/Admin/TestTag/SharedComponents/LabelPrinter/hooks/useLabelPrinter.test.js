@@ -511,12 +511,12 @@ describe('useLabelPrinter', () => {
             expect(result).toEqual([]);
         });
 
-        it('should return empty array when printer instance has no getAvailablePrinters method', async () => {
+        it('should reject when printer instance has no getAvailablePrinters method', async () => {
             const incompletePrinterInstance = {};
 
             // When the object exists but the method doesn't, optional chaining still throws
             await expect(getAvailablePrinters(incompletePrinterInstance)).rejects.toThrow(
-                'printerInstance.getAvailablePrinters is not a function',
+                'getAvailablePrinters is not a function',
             );
         });
 
