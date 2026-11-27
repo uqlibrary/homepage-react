@@ -2,28 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Routes, useLocation } from 'react-router';
 import { routes } from 'config';
-import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@mui/material/Grid';
 import { getHomepageLink } from 'modules/Pages/LearningResources/shared/learningResourcesHelpers';
-
-browserUpdate({
-    required: {
-        e: -2,
-        i: 11,
-        f: -2,
-        o: -2,
-        s: -1,
-        c: -2,
-        samsung: 7.0,
-        vivaldi: 1.2,
-    },
-    insecure: true,
-    style: 'top',
-    shift_page_down: true,
-});
 
 const isAdminPage = () => {
     return window.location.pathname.startsWith('/admin/') || window.location.hash.startsWith('#/admin/');

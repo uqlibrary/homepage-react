@@ -227,6 +227,15 @@
         "npm": ">=11.12.1",
         "node": ">=24"
     },
+    "browserslist": [
+        "last 2 Chrome versions",
+        "last 2 ChromeAndroid versions",
+        "last 2 Firefox versions",
+        "last 2 FirefoxAndroid versions",
+        "last 2 Edge versions",
+        "last 2 Safari versions",
+        "last 2 iOS versions"
+    ],
     "babel": {
         "presets": [
             "@babel/env",
@@ -240,9 +249,8 @@
                         "@babel/preset-env",
                         {
                             "modules": false,
-                            "targets": {
-                                "ie": "11"
-                            }
+                            "useBuiltIns": "usage",
+                            "corejs": 3
                         }
                     ],
                     "@babel/react",

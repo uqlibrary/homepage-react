@@ -493,45 +493,6 @@ export const BookableSpacesList = ({
         window.localStorage.setItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, String(expandedSpaceId));
     }, [BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY, expandedSpaceId, useJourneyExperience]);
 
-    React.useEffect(() => {
-        if (useJourneyExperience || !isMapReady || !sortedSpaceLocations?.length) {
-            return;
-        }
-
-        const savedSelectedSpaceId = getPersistedSelectedSpaceId();
-        if (savedSelectedSpaceId === null) {
-            return;
-        }
-
-        const selectedSpace = sortedSpaceLocations.find(
-            space => Number(space?.space_id) === Number(savedSelectedSpaceId),
-        );
-
-        if (!selectedSpace) {
-            /* istanbul ignore else */
-            if (typeof window !== 'undefined' && window.localStorage) {
-                window.localStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
-            }
-            setExpandedSpaceId(null);
-            return;
-        }
-        /* istanbul ignore next */
-        if (Number(expandedSpaceId) !== Number(savedSelectedSpaceId)) {
-            // Guard only - likely never used
-            /* istanbul ignore next */
-            setExpandedSpaceId(Number(savedSelectedSpaceId));
-        }
-
-        mapRef.current?.flyToSpace(selectedSpace, ZOOM_IN_TO_LIBRARY);
-    }, [
-        BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY,
-        expandedSpaceId,
-        getPersistedSelectedSpaceId,
-        isMapReady,
-        sortedSpaceLocations,
-        useJourneyExperience,
-    ]);
-
     const [cookies, setCookie, removeCookie] = useCookies();
 
     const getCampusCookieValue = React.useCallback(() => {
@@ -1744,6 +1705,46 @@ export const BookableSpacesList = ({
         activeMapCentre,
         getCampusDistanceKm,
     ]);
+
+    React.useEffect(() => {
+        if (useJourneyExperience || !isMapReady || !sortedSpaceLocations?.length) {
+            return;
+        }
+
+        const savedSelectedSpaceId = getPersistedSelectedSpaceId();
+        if (savedSelectedSpaceId === null) {
+            return;
+        }
+
+        const selectedSpace = sortedSpaceLocations.find(
+            space => Number(space?.space_id) === Number(savedSelectedSpaceId),
+        );
+
+        if (!selectedSpace) {
+            /* istanbul ignore else */
+            if (typeof window !== 'undefined' && window.localStorage) {
+                window.localStorage.removeItem(BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY);
+            }
+            setExpandedSpaceId(null);
+            return;
+        }
+        /* istanbul ignore next */
+        if (Number(expandedSpaceId) !== Number(savedSelectedSpaceId)) {
+            // Guard only - likely never used
+            /* istanbul ignore next */
+            setExpandedSpaceId(Number(savedSelectedSpaceId));
+        }
+
+        mapRef.current?.flyToSpace(selectedSpace, ZOOM_IN_TO_LIBRARY);
+    }, [
+        BOOKABLE_SPACES_SELECTED_SPACE_STORAGE_KEY,
+        expandedSpaceId,
+        getPersistedSelectedSpaceId,
+        isMapReady,
+        sortedSpaceLocations,
+        useJourneyExperience,
+    ]);
+
     // const visibleSpacesCountBadge = () => {
     //     return sortedSpaceLocations?.length > 0 &&
     //         sortedSpaceLocations?.length < bookableSpacesRoomList?.data?.locations?.length ? (
